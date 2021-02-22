@@ -30,6 +30,8 @@
 
 #include "nbi-private.h"
 
+GTimer *timer ;
+gchar *progname ;
 
 static gint make_sources(nbi_surface_t *s,
 			 gdouble *xs, gdouble q,
@@ -176,7 +178,7 @@ gint nbi_surface_integrate_self(nbi_surface_t *s, gdouble eta,
 				gint pt, gdouble *f)
 
 {
-  gint i, j, order, nst0, nst, xstr ;
+  gint i, j, order, nst0, nst, xstr, nlocal ;
   gint lda, one = 1 ;
   gdouble c[3], r, NK0, K0[453*453], *q, *st, Ast[2*453*453] ;
   gdouble *xs, *xt, al, bt, *work ;
@@ -185,11 +187,11 @@ gint nbi_surface_integrate_self(nbi_surface_t *s, gdouble eta,
   
   sqt_quadrature_select(nq, &q, &order) ;
 
-  g_assert(pt < nbi_surface_patch_node_number(s, pt)) ;
+  g_assert(pt < nbi_surface_patch_number(s)) ;
   
   nst0 = nbi_surface_patch_node_number(s, pt) ;
 
-  tol /= nst0*nst0 ;
+  /* tol /= nst0*nst0 ; */
   
   memset(f, 0, nst0*sizeof(gdouble)) ;
 
@@ -210,10 +212,17 @@ gint nbi_surface_integrate_self(nbi_surface_t *s, gdouble eta,
   r = nbi_surface_patch_radius(nbi_surface_node(s,i),
 			       NBI_SURFACE_NODE_LENGTH, nst0, c) ;
 
+  fprintf(stderr, "%s: starting point source summation; t=%lg\n",
+	  __FUNCTION__, g_timer_elapsed(timer, NULL)) ;  
   for ( i = 0 ; i < nst0 ; i ++ ) {
     point_source_field_laplace(s, p, pstr, pn, nstr, &(xt[i*xstr]), &(f[i])) ;
   }
+  fprintf(stderr, "%s: point source summation complete; t=%lg\n",
+	  __FUNCTION__, g_timer_elapsed(timer, NULL)) ;  
 
+  fprintf(stderr, "%s: starting local corrections; t=%lg\n",
+	  __FUNCTION__, g_timer_elapsed(timer, NULL)) ;
+  nlocal = 0 ;
   for ( i = 0 ; i < nbi_surface_patch_number(s) ; i ++ ) {
     /*near-field and self terms with point source terms subtracted*/
     nst = nbi_surface_patch_node_number(s, i) ;
@@ -223,6 +232,7 @@ gint nbi_surface_integrate_self(nbi_surface_t *s, gdouble eta,
     xs = nbi_surface_node(s, j) ;    
     if ( patch_encroaches(c, eta*r, xs, xstr, nst) ) {
       if ( i != pt ) {
+	nlocal ++ ;
 	sqt_laplace_source_target_kw_adaptive(xs, xstr, nst,
 					      q, nq, K0, NK0,
 					      tol, dmax,
@@ -249,6 +259,8 @@ gint nbi_surface_integrate_self(nbi_surface_t *s, gdouble eta,
 		     &(pn[j*nstr]), nstr, bt, f, one) ;      
     }
   }
+  fprintf(stderr, "%s: %d local corrections applied; t=%lg\n",
+	  __FUNCTION__, g_timer_elapsed(timer, NULL)) ;  
   
   return 0 ;
 }
@@ -258,7 +270,7 @@ gint main(gint argc, gchar **argv)
 {
   nbi_surface_t *s ;
   gint nth, nph, nq, i, np, pt, nqa, dmax, N ;
-  gdouble r, S, x[3], xs[512], f[453], eta, *xp, *src, tol ;
+  gdouble r, S, x[3], xs[512], f[453], eta, *xp, *src, tol, t ;
   FILE *output ;
   gchar ch ;
   
@@ -267,7 +279,9 @@ gint main(gint argc, gchar **argv)
   r = 1.0 ; nth = 16 ; nph = 8 ; nq = 25 ;
   eta = 1.25 ; dmax = 8 ; tol = 1e-12 ; N = 8 ; nqa = 54 ;
   pt = 0 ;
-  
+
+  progname = g_strdup(g_path_get_basename(argv[0])) ;
+
   while ( (ch = getopt(argc, argv, "a:d:e:l:N:n:p:q:r:t:")) != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
@@ -290,19 +304,25 @@ gint main(gint argc, gchar **argv)
   fprintf(stderr, "allocating surface with %d nodes, %d patches\n", np*nq, np) ;
   
   s = nbi_surface_alloc(np*nq, np) ;
+
+  timer = g_timer_new() ;
   
   /* nbi_geometry_sphere(s, r, nth, nph, nq) ;   */
-  nbi_geometry_ellipsoid(s, r, 1.0, 1.0, nth, nph, nq) ;  
-
-  fprintf(stderr, "spherical surface with %d nodes, %d patches generated\n",
-	  nbi_surface_node_number(s), nbi_surface_patch_number(s)) ;
-
-  S = 0.0 ;
-  for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ )
-    S += nbi_surface_node_weight(s, i) ;
+  fprintf(stderr, "%s: initializing geometry r=%lg; t=%lg\n",
+	  progname, r, g_timer_elapsed(timer, NULL)) ;
   
-  fprintf(stderr, "surface area: %lg (%lg, %lg)\n",
-	  S, 4.0*M_PI*r*r, fabs(4.0*M_PI*r*r - S)) ;
+  nbi_geometry_ellipsoid(s, r, 1.0, 1.0, nth, nph, nq) ;  
+  fprintf(stderr,
+	  "%s: geometry initialized, %d nodes, %d patches generated; t=%lg\n",
+	  progname, nbi_surface_node_number(s), nbi_surface_patch_number(s),
+	  g_timer_elapsed(timer, NULL)) ;
+
+  /* S = 0.0 ; */
+  /* for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) */
+  /*   S += nbi_surface_node_weight(s, i) ; */
+  
+  /* fprintf(stderr, "surface area: %lg (%lg, %lg)\n", */
+  /* 	  S, 4.0*M_PI*r*r, fabs(4.0*M_PI*r*r - S)) ; */
   
   /* nbi_surface_write(s, output) ; */
 
@@ -310,14 +330,20 @@ gint main(gint argc, gchar **argv)
     integration*/
 
   /*boundary point sources*/
+  fprintf(stderr, "%s: making surface sources; t=%lg\n",
+	  progname, g_timer_elapsed(timer, NULL)) ;
   src = (gdouble *)g_malloc0(nbi_surface_node_number(s)*2*sizeof(gdouble)) ;
 
   xs[0] = 0.3 ; xs[1] = -0.4 ; xs[2] = 0.2 ;
 
   make_sources(s, xs, 1.0, &(src[0]), 2, &(src[1]), 2) ;
   
+  fprintf(stderr, "%s: starting surface integration; t=%lg\n",
+	  progname, g_timer_elapsed(timer, NULL)) ;
   nbi_surface_integrate_self(s, eta, nqa, dmax, tol, N,
 			     &(src[0]), 2, &(src[1]), 2, pt, f) ;
+  fprintf(stderr, "%s: surface integration complete; t=%lg\n",
+	  progname, g_timer_elapsed(timer, NULL)) ;
 
   for ( i = 0 ; i < nbi_surface_patch_node_number(s, pt) ; i ++ ) {
     xp = nbi_surface_patch_local_node(s,pt,i) ;
