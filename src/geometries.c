@@ -173,15 +173,16 @@ gint nbi_geometry_ellipsoid(nbi_surface_t *s,
   nbi_surface_patch_number(s) = 0 ;
   
   for ( j = 0 ; j < nph ; j ++ ) {
-    ph0 = M_PI*j/nph ; ph1 = M_PI*(j+1)/nph ;
+    /* ph0 = M_PI*j/nph ; ph1 = M_PI*(j+1)/nph ; */
+    ph0 = acos(1.0 - 2.0*(j+0)/nph) ;
+    ph1 = acos(1.0 - 2.0*(j+1)/nph) ;
+
     for ( i = 0 ; i < nth ; i ++ ) {
       th0 = 2.0*M_PI*i/nth ; th1 = 2.0*M_PI*(i+1)/nth ;
 
       ellipsoid_patch_pair(s, a, b, c, th0, th1, ph0, ph1, st, nq) ;  
     }
   }
-
-  /* return 0 ; */
   
   {
     gdouble K[453*453], ce[453*3], al, bt, *xi, xx[3], work[3*453], J ;

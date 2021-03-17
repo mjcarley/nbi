@@ -1,0 +1,22 @@
+#!/bin/bash
+
+np=8
+nt=16
+nqa=25
+nqp=54
+nqu=85
+tol=1e-9
+radius=1.5
+eta=1.25
+depth=6
+order=12
+
+bin=../tools
+
+opts="-e ${tol} -p ${np} -t ${nt} -a ${nqa} -q ${nqp} -u ${nqu} \
+      -r ${radius} -n ${eta} -d ${depth} -N ${order} \
+      -m matrix1.dat -g ellipsoid.dat"
+echo -- ${opts}
+${bin}/nbi-assemble ${opts}
+
+${bin}/nbi-solve -m matrix1.dat -g ellipsoid.dat > field.dat

@@ -286,6 +286,7 @@ SHELL = @SHELL@
 SQT = @SQT@
 STRIP = @STRIP@
 VERSION = @VERSION@
+WBFMM = @WBFMM@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@

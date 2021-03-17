@@ -22,9 +22,14 @@
 
 #include <glib.h>
 
+#include <sqt.h>
+
 #include <nbi.h>
 
 #include "nbi-private.h"
+
+gdouble **_Ku = NULL, **_Ki = NULL ;
+gint _Nk[16] ;
 
 nbi_surface_t *nbi_surface_alloc(gint nnmax, gint npmax)
 
@@ -38,8 +43,8 @@ nbi_surface_t *nbi_surface_alloc(gint nnmax, gint npmax)
   nbi_surface_patch_number(s) = 0 ;
   nbi_surface_patch_number_max(s) = npmax ;
 
-  s->x = (gdouble *)g_malloc0(nnmax*NBI_SURFACE_NODE_LENGTH*sizeof(gdouble)) ;
-  s->ip = (gint *)g_malloc0(2*npmax*sizeof(gint)) ;
+  s->xc = (gdouble *)g_malloc0(nnmax*NBI_SURFACE_NODE_LENGTH*sizeof(gdouble)) ;
+  s->ip = (gint *)g_malloc0(NBI_SURFACE_PATCH_LENGTH*npmax*sizeof(gint)) ;
   
   return s ;
 }
@@ -50,7 +55,8 @@ gint nbi_surface_write(nbi_surface_t *s, FILE *f)
   gint i, j ;
   
   fprintf(f, "%d %d\n",
-	  nbi_surface_node_number(s), nbi_surface_patch_number(s)) ;
+	  nbi_surface_node_number(s),
+	  nbi_surface_patch_number(s)) ;
 
   for ( i = 0 ; i < nbi_surface_patch_number(s) ; i ++ ) {
     fprintf(f, "%d %d\n",
@@ -60,11 +66,40 @@ gint nbi_surface_write(nbi_surface_t *s, FILE *f)
 
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
     for ( j = 0 ; j < NBI_SURFACE_NODE_LENGTH ; j ++ )
-      fprintf(f, " %lg", nbi_surface_node_element(s,i,j)) ;
+      fprintf(f, " %1.16e", nbi_surface_node_element(s,i,j)) ;
     fprintf(f, "\n") ;
   }
   
   return 0 ;
+}
+
+nbi_surface_t *nbi_surface_read(FILE *f)
+
+{
+  nbi_surface_t *s ;
+  gint nn, nu, np, i, j ;
+
+  fscanf(f, "%d", &nn) ;
+  /* fscanf(f, "%d", &nu) ; */
+  fscanf(f, "%d", &np) ;
+
+  s = nbi_surface_alloc(nn, np) ;
+  nbi_surface_node_number(s) = nn ;
+  nbi_surface_patch_number(s) = np ;
+
+  for ( i = 0 ; i < np ; i ++ ) {
+    fscanf(f, "%d", &(nbi_surface_patch_node(s, i))) ;
+    fscanf(f, "%d", &(nbi_surface_patch_node_number(s, i))) ;
+    /* fscanf(f, "%d", &(nbi_surface_patch_upsample_node(s, i))) ; */
+    /* fscanf(f, "%d", &(nbi_surface_patch_upsample_node_number(s, i))) ; */
+  }
+
+  for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+    for ( j = 0 ; j < NBI_SURFACE_NODE_LENGTH ; j ++ )
+      fscanf(f, "%lg", &(nbi_surface_node_element(s,i,j))) ;
+  }
+  
+  return s ;
 }
 
 gint nbi_surface_patch_centroid(gdouble *x, gint xstr,
@@ -103,4 +138,71 @@ gdouble nbi_surface_patch_radius(gdouble *x, gint xstr, gint nx, gdouble *c)
   }
   
   return r ;
+}
+
+gint nbi_patch_neighbours(gdouble *c, gdouble r,
+			  gdouble *x, gint xstr, gint nx,
+			  gint n0, gint n1,
+			  gint *nbrs, gint *nnbrs, gint nnmax)
+
+{
+  gdouble r2 = r*r, rx2 ;
+  gint i ;
+  
+  for ( i = n0 ; (i < n1) && (*nnbrs < nnmax) ; i ++ ) {
+    if ( (rx2 = nbi_vector_distance2(c, &(x[i*xstr]))) < r2 ) {
+      nbrs[(*nnbrs)] = i ; (*nnbrs) ++ ;
+    }
+  }
+  
+  return 0 ;
+}
+
+gint nbi_element_interp_matrix(gint ns, gdouble **K, gint *Nk)
+
+{
+  gint nqi[] = {7, 25, 54, 85, 126, 175, 453} ;
+  gint i, nq = 7, order ;
+  gdouble *st ;
+  
+  if ( _Ki == NULL ) _Ki = (gdouble **)g_malloc0(nq*   sizeof(gdouble *)) ;
+  
+  for ( i = 0 ; i < nq ; i ++ ) if ( nqi[i] == ns ) break ;
+
+  if ( _Ki[i] == NULL ) {
+    sqt_quadrature_select(ns, &st, &order) ;
+    _Ki[i] = (gdouble *)g_malloc0(ns*ns*sizeof(gdouble)) ;
+    _Nk[i] = sqt_koornwinder_interp_matrix(&(st[0]), 3, &(st[1]), 3,
+					   &(st[2]), 3,
+					   ns, _Ki[i]) ;
+  }
+
+  *K = _Ki[i] ; *Nk = _Nk[i] ;
+  
+  return 0 ;
+}
+
+gdouble *nbi_patch_upsample_matrix(gint ns, gint nu)
+
+{
+  gint nqi[] = {7, 25, 54, 85, 126, 175, 453} ;
+  gint i, j, nq = 7, order, Nk ;
+  gdouble *st, work[453*3], *Ki ;
+  
+  if ( _Ku == NULL ) _Ku = (gdouble **)g_malloc0(nq*nq*sizeof(gdouble *)) ;
+  
+  for ( i = 0 ; i < nq ; i ++ ) if ( nqi[i] == ns ) break ;
+  for ( j = 0 ; j < nq ; j ++ ) if ( nqi[j] == nu ) break ;
+
+  nbi_element_interp_matrix(ns, &Ki, &Nk) ;
+  
+  if ( _Ku[i*nq+j] == NULL ) {
+    /*generate the matrix*/
+    sqt_quadrature_select(nu, &st, &order) ;
+    _Ku[i*nq+j] = (gdouble *)g_malloc0((ns+8)*nu*sizeof(gdouble)) ;
+    sqt_interp_matrix(Ki, ns, Nk, &(st[0]), 3, &(st[1]), 3, nu,
+		      _Ku[i*nq+j], work) ;
+  }
+
+  return _Ku[i*nq+j] ;
 }

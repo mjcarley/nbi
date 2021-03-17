@@ -88,7 +88,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = x86_64-unknown-linux-gnu
 host_triplet = x86_64-unknown-linux-gnu
-bin_PROGRAMS = nbi-solve$(EXEEXT)
+bin_PROGRAMS = nbi-solve$(EXEEXT) nbi-assemble$(EXEEXT)
 subdir = tools
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -106,13 +106,16 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-nbi_solve_SOURCES = nbi-solve.c
-nbi_solve_OBJECTS = nbi-solve.$(OBJEXT)
-nbi_solve_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
+nbi_assemble_SOURCES = nbi-assemble.c
+nbi_assemble_OBJECTS = nbi-assemble.$(OBJEXT)
+nbi_assemble_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+nbi_solve_SOURCES = nbi-solve.c
+nbi_solve_OBJECTS = nbi-solve.$(OBJEXT)
+nbi_solve_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -147,8 +150,8 @@ AM_V_CCLD = $(am__v_CCLD_$(V))
 am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = nbi-solve.c
-DIST_SOURCES = nbi-solve.c
+SOURCES = nbi-assemble.c nbi-solve.c
+DIST_SOURCES = nbi-assemble.c nbi-solve.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -187,7 +190,7 @@ BLASWRAP = yes
 BLAS_LIBS = -lblas
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -fopenmp  -mavx  -g -O2 -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -mavx -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -fopenmp -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include -O0 -g -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations 
+CFLAGS = -fopenmp  -mavx  -fopenmp -I/home/michael/Codes/include -g -O2 -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -mavx -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -fopenmp -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include -g -O2 -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations 
 CPP = gcc -E
 CPPFLAGS = 
 CYGPATH_W = echo
@@ -213,7 +216,7 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LAPACK_LIBS = 
 LD = /usr/x86_64-slackware-linux/bin/ld -m elf_x86_64
-LDFLAGS =   -L/home/michael/Codes/lib -lsqt -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../x86_64-slackware-linux/lib -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../.. -lgfortran -lm -lquadmath
+LDFLAGS =   -L/home/michael/Codes/lib -lwbfmm -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../x86_64-slackware-linux/lib -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../.. -lgfortran -lquadmath -lm -L/home/michael/Codes/lib -lsqt -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../x86_64-slackware-linux/lib -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../.. -lgfortran -lm -lquadmath
 LIBOBJS = 
 LIBS =   -lblas -lm   -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../x86_64-slackware-linux/lib -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../.. -lgfortran -lm -lquadmath
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
@@ -254,6 +257,7 @@ SHELL = /bin/sh
 SQT = yes
 STRIP = strip
 VERSION = 0.1
+WBFMM = yes
 abs_builddir = /home/michael/Codes/C/nbi/tools
 abs_srcdir = /home/michael/Codes/C/nbi/tools
 abs_top_builddir = /home/michael/Codes/C/nbi
@@ -312,6 +316,9 @@ top_srcdir = ..
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir)
 DEPS = $(top_builddir)/src/libnbi.la
 nbi_solve_LDADD = \
+	$(top_builddir)/src/.libs/libnbi.a 
+
+nbi_assemble_LDADD = \
 	$(top_builddir)/src/.libs/libnbi.a 
 
 all: all-am
@@ -397,6 +404,10 @@ clean-binPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
+nbi-assemble$(EXEEXT): $(nbi_assemble_OBJECTS) $(nbi_assemble_DEPENDENCIES) $(EXTRA_nbi_assemble_DEPENDENCIES) 
+	@rm -f nbi-assemble$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(nbi_assemble_OBJECTS) $(nbi_assemble_LDADD) $(LIBS)
+
 nbi-solve$(EXEEXT): $(nbi_solve_OBJECTS) $(nbi_solve_DEPENDENCIES) $(EXTRA_nbi_solve_DEPENDENCIES) 
 	@rm -f nbi-solve$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(nbi_solve_OBJECTS) $(nbi_solve_LDADD) $(LIBS)
@@ -407,6 +418,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/nbi-assemble.Po
 include ./$(DEPDIR)/nbi-solve.Po
 
 .c.o:

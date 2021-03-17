@@ -79,6 +79,23 @@ else
   exit
 fi
 
+AC_CHECK_PROG(WBFMM, wbfmm-config, yes, no)
+if test x$WBFMM = xyes ; then
+   AC_DEFINE(HAVE_WBFMM, 1, [wide band FMM library available])
+   wbfmm_cflags=`wbfmm-config --cflags`
+   wbfmm_libs=`wbfmm-config --libs`
+else
+  echo \#################################################################
+  echo \#
+  echo \# Wide Band Fast Multipole Method library not installed or
+  echo \# not properly installed. You can get it from
+  echo \#
+  echo \# https://github.com/mjcarley/wbfmm
+  echo \#
+  echo \#################################################################
+  exit
+fi
+
 AC_CHECK_PROG(BLASWRAP, blaswrap-config, yes, no)
 if test x$BLASWRAP = xyes ; then
    AC_DEFINE(HAVE_BLASWRAP, 1, [BLAS wrapper header available])
@@ -133,8 +150,8 @@ lapack_libs="$LAPACK_LIBS"
 ##DX_PS_FEATURE(OFF)
 #DX_INIT_DOXYGEN(nbi, doc/nbi.dxy)
 
-CFLAGS="$OPENMP_CFLAGS $SIMD_FLAGS $glib_cflags $sqt_cflags $blaswrap_cflags $CFLAGS "
-LDFLAGS="$LDFLAGS $glib_libs $sqt_libs"
+CFLAGS="$OPENMP_CFLAGS $SIMD_FLAGS $glib_cflags $wbfmm_cflags $sqt_cflags $blaswrap_cflags $CFLAGS "
+LDFLAGS="$LDFLAGS $glib_libs $wbfmm_libs $sqt_libs"
 
 AC_SUBST(blas_libs)
 AC_SUBST(lapack_libs)
