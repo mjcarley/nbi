@@ -31,6 +31,8 @@
 
 #include "nbi-private.h"
 
+#define LOCAL_CUTOFF_RADIUS 1e-6
+
 GTimer *timer ;
 gchar *progname ;
 
@@ -99,30 +101,20 @@ static gdouble greens_function_laplace(gdouble *x, gdouble *y)
 
 static gint point_source_field_laplace(/* nbi_surface_t *s, */
 				       gdouble *xs, gint xstr, gint ns,
-				       gdouble *p , gint pstr,
-				       gdouble *pn, gint nstr,
+				       gdouble *p , gint pstr, gdouble pwt,
+				       gdouble *pn, gint nstr, gdouble nwt,
 				       gdouble *x, gdouble wt, gdouble *f)
   
 {
   gint i ;  
   gdouble R, r[3] ;
 
-  /* for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) { */
-  /*   nbi_vector_diff(r, x, nbi_surface_node(s, i)) ; */
-  /*   R = nbi_vector_length(r) ; */
-  /*   if ( R > 1e-12 ) { */
-  /*     *f += (p[i*pstr]*nbi_vector_scalar(r,nbi_surface_normal(s,i))/R/R - */
-  /* 	     pn[i*nstr])*0.25*M_1_PI/R ; */
-  /*   } */
-  /* } */
   for ( i = 0 ; i < ns ; i ++ ) {
     nbi_vector_diff(r, x, &(xs[i*xstr])) ;
     R = nbi_vector_length(r) ;
-    if ( R > 1e-12 ) {
-      /* *f += (p[i*pstr]*nbi_vector_scalar(r,nbi_surface_normal(s,i))/R/R - */
-      /* 	     pn[i*nstr])*0.25*M_1_PI/R ; */
-      *f += wt*(p[i*pstr]*nbi_vector_scalar(r,&(xs[i*xstr+3]))/R/R -
-		pn[i*nstr])*0.25*M_1_PI/R ;
+    if ( R > LOCAL_CUTOFF_RADIUS ) {
+      *f += wt*(pwt*p[i*pstr]*nbi_vector_scalar(r,&(xs[i*xstr+3]))/R/R -
+		nwt*pn[i*nstr])*0.25*M_1_PI/R ;
     }
   }
   
@@ -134,8 +126,8 @@ gint nbi_surface_integrate_matrix(nbi_surface_t *s, gint *idx, gint *idxp,
 				  gdouble *p , gint pstr,
 				  gdouble *pn, gint nstr,
 				  gdouble *xu, gint ustr, gint *idxu,
-				  gdouble *pu, gint pustr,
-				  gdouble *pnu, gint nustr,
+				  gdouble *pu, gint pustr, gdouble pwt,
+				  gdouble *pnu, gint nustr, gdouble nwt,
 				  wbfmm_tree_t *tree,
 				  wbfmm_target_list_t *targets,
 				  wbfmm_shift_operators_t *shifts,
@@ -159,7 +151,8 @@ gint nbi_surface_integrate_matrix(nbi_surface_t *s, gint *idx, gint *idxp,
     nu = idxu[np] ;
     for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
       point_source_field_laplace(xu, ustr, nu,
-				 pu, pustr, pnu, nustr,
+				 pu, pustr, pwt,
+				 pnu, nustr, nwt,
 				 nbi_surface_node(s, i),
 				 1.0, &(f[i])) ;
     }
@@ -170,9 +163,6 @@ gint nbi_surface_integrate_matrix(nbi_surface_t *s, gint *idx, gint *idxp,
     gint level, depth, nsrc ;
     nsrc = idxu[nbi_surface_patch_number(s)] ;
 
-    /*"source strength" for FMM is negative of pnu*/
-    for ( i = 0 ; i < nsrc ; i ++ ) pnu[i*nustr] *= -1 ;
-    
     depth = wbfmm_tree_depth(tree) ;
     fprintf(stderr, "%s: initializing leaf expansions; %lg\n",
 	    __FUNCTION__, g_timer_elapsed(timer, NULL)) ;
@@ -200,21 +190,24 @@ gint nbi_surface_integrate_matrix(nbi_surface_t *s, gint *idx, gint *idxp,
     fprintf(stderr, "%s: downward pass completed; %lg\n",
 	    __FUNCTION__, g_timer_elapsed(timer, NULL)) ;
 
-    for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
-      guint64 box ;
-      box = wbfmm_point_box(tree, tree->depth, nbi_surface_node(s, i)) ;
-      wbfmm_tree_laplace_box_local_field(tree, tree->depth, box,
-					 nbi_surface_node(s,i),
-					 &(f[i]),
-					 pnu, nustr,
-					 &(xu[3]), ustr,
-					 pu, pustr,
-					 TRUE, work) ;
+    if ( targets != NULL ) {
+      wbfmm_target_list_local_field(targets, pnu, nustr, pu, pustr, f, 1) ;
+    } else {
+      for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+	guint64 box ;
+	box = wbfmm_point_box(tree, tree->depth, nbi_surface_node(s, i)) ;
+	wbfmm_tree_laplace_box_local_field(tree, tree->depth, box,
+					   nbi_surface_node(s,i),
+					   &(f[i]),
+					   pnu, nustr,
+					   &(xu[3]), ustr,
+					   pu, pustr,
+					   TRUE, work) ;
+      }
     }
-    /*put the source strength back so it will be correct for the
-      correction terms*/
-    for ( i = 0 ; i < nsrc ; i ++ ) pnu[i*nustr] *= -1 ;
   }
+
+  /* return 0 ; */
   
   fprintf(stderr, "%s: starting local corrections; t=%lg\n",
 	  __FUNCTION__, g_timer_elapsed(timer, NULL)) ;
@@ -240,8 +233,8 @@ gint nbi_surface_integrate_matrix(nbi_surface_t *s, gint *idx, gint *idxp,
     for ( i = 0 ; i < nnbrs ; i ++ ) {
       f[nbrs[i]] += work[i] ;
       point_source_field_laplace(&(xu[ip*ustr]), ustr, nu,
-      				 &(pu [ip*pustr]), pustr,
-      				 &(pnu[ip*nustr]), nustr,
+      				 &(pu [ip*pustr]), pustr, pwt,
+      				 &(pnu[ip*nustr]), nustr, nwt,
       				 nbi_surface_node(s, nbrs[i]),
       				 -1.0, &(f[nbrs[i]])) ;
     }
@@ -306,7 +299,8 @@ static gint read_upsampled_patches(FILE *f, gint **idxu,
 gint upsample_sources(nbi_surface_t *s,
 		      gdouble *p, gint pstr, gdouble *pn, gint nstr,
 		      gdouble *wt, gint wstr, gint *idxu,
-		      gdouble *pu, gint pustr, gdouble *pnu, gint nustr)
+		      gdouble *pu, gint pustr, gdouble pwt,
+		      gdouble *pnu, gint nustr, gdouble nwt)
 
 {
   gint i, j, pt, ns, nu, Nk ;
@@ -325,8 +319,8 @@ gint upsample_sources(nbi_surface_t *s,
     blaswrap_dgemv(FALSE, nu, ns, al, K, ns,
 		   &(pn[i*pstr]), nstr, bt, &(pnu[j*pustr]), nustr) ;
     for ( i = 0 ; i < nu ; i ++ ) {
-      pu [(j+i)*pustr] *= wt[(j+i)*wstr] ;
-      pnu[(j+i)*nustr] *= wt[(j+i)*wstr] ;
+      pu [(j+i)*pustr] *= pwt*wt[(j+i)*wstr] ;
+      pnu[(j+i)*nustr] *= nwt*wt[(j+i)*wstr] ;
     }
   }
   
@@ -340,7 +334,7 @@ gint main(gint argc, gchar **argv)
   gint i, *idx, *idxp, ustr, *idxu, nsrc ;
   gdouble xs[512], *f, *xp, *src, tol, t, *xu, *su, xf[3] ;
   gdouble emax, fmax, G, *Ast ;
-  gdouble xtree[3], xtmax[3], D, dtree ;
+  gdouble xtree[3], xtmax[3], D, dtree, pwt, nwt ;
   FILE *output, *input ;
   gchar ch, *gfile, *mfile ;
   wbfmm_tree_t *tree ;
@@ -349,7 +343,7 @@ gint main(gint argc, gchar **argv)
   gdouble *work ;
   gint fmm_work_size, nqfmm ;
   guint depth, order[48] = {0}, order_s, order_r, order_max, level, field ;
-  gboolean fmm, shift_bw ;
+  gboolean fmm, shift_bw, target_list ;
   
   output = stdout ;
   mfile = NULL ; gfile = NULL ;
@@ -357,21 +351,31 @@ gint main(gint argc, gchar **argv)
   tol = 1e-3 ; dtree = 1e-2 ; fmm = FALSE ; nqfmm = 1 ; shift_bw = TRUE ;
   tree = NULL ; targets = NULL ; shifts = NULL ;
   field = WBFMM_FIELD_SCALAR ;
-
+  target_list = FALSE ;
+  
+  pwt = 1.0 ; nwt = 1.0 ;
   progname = g_strdup(g_path_get_basename(argv[0])) ;
 
-  while ( (ch = getopt(argc, argv, "e:fg:m:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "e:fg:lm:")) != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
     case 'e': tol  = atof(optarg) ; break ;
     case 'f': fmm = TRUE ; break ;
     case 'g': gfile = g_strdup(optarg) ; break ;
+    case 'l': target_list = TRUE ; break ;
     case 'm': mfile = g_strdup(optarg) ; break ;
     }
   }
 
   if ( gfile == NULL ) gfile = g_strdup("geometry.dat") ;
   if ( mfile == NULL ) mfile = g_strdup("matrix.dat") ;
+
+  if ( fmm == TRUE ) {
+    /*FMM solver sums contributions from sources directly, so single
+      layer potential sources need to be negative to give correct
+      contribution to Green's identity*/
+    pwt = 1.0 ; nwt = -1.0 ;
+  }
   
   fprintf(stderr, "%s: reading geometry from %s\n", progname, gfile) ;
   input = fopen(gfile, "r") ;
@@ -411,13 +415,15 @@ gint main(gint argc, gchar **argv)
 			    sizeof(gdouble)) ;
   upsample_sources(s, &(src[0]), 2, &(src[1]), 2,
 		   &(xu[6]), ustr, idxu,
-		   &(su[0]), 2, &(su[1]), 2) ;
+		   &(su[0]), 2, pwt, &(su[1]), 2, nwt) ;
 
   if ( fmm ) {
     gint fmmpstr ;
-    
+    wbfmm_source_t source ;
+
+    source = WBFMM_SOURCE_MONOPOLE | WBFMM_SOURCE_DIPOLE ;
     depth = 4 ;
-    order_s = 8 ; order_r = 8 ;
+    order_s = 20 ; order_r = 20 ;
     order[2*depth+0] = order_s ; 
     order[2*depth+1] = order_r ; 
     order_max = MAX(order_s, order_r) ;
@@ -462,7 +468,9 @@ gint main(gint argc, gchar **argv)
     fprintf(stderr, "%s: coaxial translation coefficients initialized; %lg\n",
 	    progname, g_timer_elapsed(timer, NULL)) ;
 
-    wbfmm_tree_add_points(tree, (gpointer)xu, nsrc, fmmpstr) ;
+    wbfmm_tree_add_points(tree,
+			  (gpointer)xu, fmmpstr,
+			  (gpointer)(&(xu[3])), fmmpstr, nsrc) ;
     for ( i = 0 ; i < depth ; i ++ ) wbfmm_tree_refine(tree) ;
     wbfmm_tree_problem(tree) = WBFMM_PROBLEM_LAPLACE ;
     wbfmm_tree_source_size(tree) = nqfmm ;
@@ -470,28 +478,30 @@ gint main(gint argc, gchar **argv)
       wbfmm_tree_laplace_coefficient_init(tree, i,
 					  order[2*i+1], order[2*i+0]) ;
     }
-    fprintf(stderr, "%s: initializing target point list; %lg\n",
-	    progname, g_timer_elapsed(timer, NULL)) ;
-    targets = wbfmm_target_list_new(tree, nbi_surface_node_number(s)) ;
-    wbfmm_target_list_coefficients_init(targets, field) ;
-    wbfmm_target_list_add_points(targets,
-				 nbi_surface_node(s,0),
-				 nbi_surface_node_number(s),
-				 NBI_SURFACE_NODE_LENGTH*sizeof(gdouble)) ;
-    wbfmm_laplace_target_list_local_coefficients(targets, work) ;
-    fprintf(stderr, "%s: target point list initialized; %lg\n",
-	    progname, g_timer_elapsed(timer, NULL)) ;
+
+    if ( target_list ) {
+      fprintf(stderr, "%s: initializing target point list; %lg\n",
+	      progname, g_timer_elapsed(timer, NULL)) ;
+      targets = wbfmm_target_list_new(tree, nbi_surface_node_number(s)) ;
+      wbfmm_target_list_coefficients_init(targets, field) ;
+      wbfmm_target_list_add_points(targets,
+				   nbi_surface_node(s,0),
+				   NBI_SURFACE_NODE_LENGTH*sizeof(gdouble),
+				   nbi_surface_node_number(s)) ;
+      wbfmm_laplace_target_list_local_coefficients(targets, source, work) ;
+      fprintf(stderr, "%s: target point list initialized; %lg\n",
+	      progname, g_timer_elapsed(timer, NULL)) ;
+    }
   } else {
-    work = (gdouble *)g_malloc0(16384*sizeof(gdouble)) ;    
+      work = (gdouble *)g_malloc0(16384*sizeof(gdouble)) ;    
   }
-  
 
   fprintf(stderr, "%s: starting surface integration; t=%lg\n",
 	  progname, t = g_timer_elapsed(timer, NULL)) ;
   nbi_surface_integrate_matrix(s, idx, idxp, Ast,
 			       &(src[0]), 2, &(src[1]), 2,
 			       xu, ustr, idxu,
-			       &(su[0]), 2, &(su[1]), 2,
+			       &(su[0]), 2, pwt, &(su[1]), 2, nwt,
 			       tree, targets, shifts, work,
 			       f) ;
   fprintf(stderr, "%s: surface integration complete; t=%lg (%lg)\n",

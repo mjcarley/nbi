@@ -33,6 +33,7 @@
 GTimer *timer ;
 gchar *progname ;
 
+#define LOCAL_CUTOFF_RADIUS 1e-6
 
 static gint matrix_scale_weights(gdouble *A, gint nr, gint nc,
 				 gdouble *w, gint wstr)
@@ -75,7 +76,7 @@ static gint source_target_correction_indexed(gdouble *xt, gint xstr,
     for ( j = 0 ; j < ns ; j ++ ) {
       nbi_vector_diff(r, &(xt[i*xstr]), &(xs[j*sstr])) ;
       R = nbi_vector_length(r) ;
-      if ( R > 1e-12 ) {
+      if ( R > LOCAL_CUTOFF_RADIUS ) {
 	Rn = nbi_vector_scalar(r,&(xs[j*sstr+3]))/R ;
 	G  = 0.25*M_1_PI/R ;
 	dG = G*Rn/R ;
@@ -226,12 +227,6 @@ gint nbi_surface_assemble_write(nbi_surface_t *s, gdouble eta,
 				      K0, NK0, N,
 				      &(st[0]), 3, &(st[1]), 3,
 				      &(Ast[2*(nnbrs-nsts)*nsts])) ;
-    /* matrix_scale_weights(Ast, nnbrs, nsts, */
-    /* 			 &(nbi_surface_node_weight(s, ip)), */
-    /* 			 NBI_SURFACE_NODE_LENGTH) ; */
-    /* source_target_correction_indexed(nbi_surface_node(s,0), xstr, */
-    /* 				     &(idx[idxp[pt]]), nnbrs, */
-    /* 				     xs, xstr, nsts, Ast) ; */
     lda = 2*nsts ;
 
     for ( i = 0 ; i < nnbrs ; i ++ ) {
@@ -249,6 +244,7 @@ gint main(gint argc, gchar **argv)
 {
   nbi_surface_t *s ;
   gint nth, nph, nq, np, nqa, dmax, N, *idx, *idxp, nnmax, nqu, *idxu ;
+  gint ico ;
   gdouble r, eta, tol, t ;
   FILE *output ;
   gchar ch, *mfile, *gfile ;
@@ -257,18 +253,20 @@ gint main(gint argc, gchar **argv)
   
   r = 1.0 ; nth = 16 ; nph = 8 ; nq = 25 ; nqu = 54 ;
   eta = 1.25 ; dmax = 8 ; tol = 1e-12 ; N = 8 ; nqa = 54 ;
+  ico = -1 ;
   nnmax = 10000 ; 
   gfile = NULL ; mfile = NULL ;
   
   progname = g_strdup(g_path_get_basename(argv[0])) ;
 
-  while ( (ch = getopt(argc, argv, "a:d:e:g:m:N:n:p:q:r:t:u:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "a:d:e:g:i:m:N:n:p:q:r:t:u:")) != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
     case 'a': nqa  = atoi(optarg) ; break ;      
     case 'd': dmax = atoi(optarg) ; break ;
     case 'e': tol  = atof(optarg) ; break ;      
     case 'g': gfile = g_strdup(optarg) ; break ;
+    case 'i': ico = atoi(optarg) ; break ;
     case 'm': mfile = g_strdup(optarg) ; break ;
     case 'N': N    = atoi(optarg) ; break ;
     case 'n': eta  = atof(optarg) ; break ;      
@@ -283,26 +281,40 @@ gint main(gint argc, gchar **argv)
   if ( gfile == NULL ) gfile = g_strdup("geometry.dat") ;
   if ( mfile == NULL ) mfile = g_strdup("matrix.dat") ;
   
-  np = 2*nth*nph ;
-  fprintf(stderr, "nth = %d; nph = %d; nq = %d\n", nth, nph, nq) ;
-  fprintf(stderr, "r = %lg\n", r) ;
-  fprintf(stderr, "allocating surface with %d nodes, %d patches\n", np*nq, np) ;
-  
-  s = nbi_surface_alloc(np*nq, np) ;
-
   timer = g_timer_new() ;
   
-  /* nbi_geometry_sphere(s, r, nth, nph, nq) ;   */
+  /* nbi_geometry_sphere(s, r, nth, nph, nq) ; */
   fprintf(stderr, "%s: initializing geometry r=%lg; t=%lg\n",
 	  progname, r, g_timer_elapsed(timer, NULL)) ;
   output = fopen(gfile, "w") ;
-  nbi_geometry_ellipsoid(s, r, 1.0, 1.0, nth, nph, nq) ;  
+  if ( ico == -1 ) {
+    np = 2*nth*nph ;
+    fprintf(stderr, "nth = %d; nph = %d; nq = %d\n", nth, nph, nq) ;
+    fprintf(stderr, "r = %lg\n", r) ;
+    fprintf(stderr, "allocating surface with %d nodes, %d patches\n",
+	    np*nq, np) ;
+  
+    s = nbi_surface_alloc(np*nq, np) ;
+    nbi_geometry_ellipsoid(s, r, 1.0, 1.0, nth, nph, nq) ;
+  } else {
+    np = 20*(1 << 2*ico) ;
+    fprintf(stderr, "ico = %d; nq = %d\n", ico, nq) ;
+    fprintf(stderr, "r = %lg\n", r) ;
+    fprintf(stderr, "allocating surface with %d nodes, %d patches\n",
+	    np*nq, np) ;
+    s = nbi_surface_alloc(np*nq, np) ;    
+    /* nbi_geometry_sphere_ico(s, r, ico, nq) ; */
+    nbi_geometry_ellipsoid_ico(s, r, 1.0, 1.0, ico, nq) ;
+  }
+
   fprintf(stderr,
 	  "%s: geometry initialized, %d nodes, %d patches generated; t=%lg\n",
 	  progname, nbi_surface_node_number(s), nbi_surface_patch_number(s),
 	  g_timer_elapsed(timer, NULL)) ;
   nbi_surface_write(s, output) ;
   fclose(output) ;
+
+  /* return 0 ; */
   
   idx = (gint *)g_malloc0(nbi_surface_node_number(s)*nnmax*sizeof(gint)) ;
   idxp = (gint *)g_malloc0((nbi_surface_patch_number(s)+1)*sizeof(gint)) ;

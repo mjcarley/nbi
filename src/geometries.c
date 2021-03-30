@@ -28,6 +28,8 @@
 
 #include <nbi.h>
 
+#include "nbi-private.h"
+
 static gint sphere_patch_pair(nbi_surface_t *s, gdouble r,
 			      gdouble th0, gdouble th1,
 			      gdouble ph0, gdouble ph1,
@@ -166,7 +168,7 @@ gint nbi_geometry_ellipsoid(nbi_surface_t *s,
 {
   gdouble th0, th1, ph0, ph1, *st ;
   gint i, j, k, order ;
-  
+
   sqt_quadrature_select(nq, &st, &order) ;
 
   nbi_surface_node_number(s) = 0 ;
@@ -205,3 +207,183 @@ gint nbi_geometry_ellipsoid(nbi_surface_t *s,
   
   return 0 ;
 }
+
+static gint cart2sph(gdouble *x, gdouble *r, gdouble *th, gdouble *ph)
+
+{
+  *r = nbi_vector_length(x) ;
+
+  *ph = acos(x[2]/(*r)) ;
+  *th = atan2(x[1], x[0]) ;
+
+  if ( *th < 0.0 ) *th += 2.0*M_PI ;
+  
+  return 0 ;
+}
+
+static gint sphere_ico_add_patches(nbi_surface_t *s,
+				   gdouble *x0, gdouble *x1, gdouble *x2,
+				   gint nr, gdouble *st, gint nst)
+
+{
+  if ( nr == 0 ) {
+    gdouble xe[9] ;
+    gint np = nbi_surface_patch_number(s) ;
+    gint nn = nbi_surface_node_number(s) ;
+
+    memcpy(&(xe[3*0]), x0, 3*sizeof(gdouble)) ;
+    memcpy(&(xe[3*1]), x1, 3*sizeof(gdouble)) ;
+    memcpy(&(xe[3*2]), x2, 3*sizeof(gdouble)) ;
+
+    nbi_surface_patch_node(s, np) = nn ;
+    nbi_surface_patch_node_number(s, np) = nst ;
+    g_assert(nn + nst <= nbi_surface_node_number_max(s)) ;
+
+    sqt_patch_nodes_tri(xe, 3, 3, &(st[0]), 3, &(st[1]), 3, &(st[2]), 3,
+			nst, 
+			nbi_surface_node(s,nn),
+			NBI_SURFACE_NODE_LENGTH,
+			nbi_surface_normal(s,nn),
+			NBI_SURFACE_NODE_LENGTH,
+			&(nbi_surface_node_weight(s,nn)),
+			NBI_SURFACE_NODE_LENGTH) ;
+    nbi_surface_patch_number(s) ++ ;
+    np = nbi_surface_patch_number(s) ;
+    nn = (nbi_surface_node_number(s) += nst) ;  
+    return 0 ;
+  }
+ 
+  /*split and recurse*/
+  gdouble x01[3], x12[3], x20[3] ;
+
+  x01[0] = 0.5*(x0[0] + x1[0]) ;
+  x01[1] = 0.5*(x0[1] + x1[1]) ;
+  x01[2] = 0.5*(x0[2] + x1[2]) ;
+
+  x12[0] = 0.5*(x1[0] + x2[0]) ;
+  x12[1] = 0.5*(x1[1] + x2[1]) ;
+  x12[2] = 0.5*(x1[2] + x2[2]) ;
+
+  x20[0] = 0.5*(x2[0] + x0[0]) ;
+  x20[1] = 0.5*(x2[1] + x0[1]) ;
+  x20[2] = 0.5*(x2[2] + x0[2]) ;
+
+  sphere_ico_add_patches(s,  x0, x01, x20, nr-1, st, nst) ;
+  sphere_ico_add_patches(s,  x1, x12, x01, nr-1, st, nst) ;
+  sphere_ico_add_patches(s,  x2, x20, x12, nr-1, st, nst) ;
+  sphere_ico_add_patches(s, x01, x12, x20, nr-1, st, nst) ;
+  
+  return 0 ;
+}
+
+static gint basic_sphere_ico(nbi_surface_t *s, gdouble r, gint nr, gint nq)
+
+/*http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html*/  
+
+{
+  gdouble *st, rt, xs[60] ;
+  gint i, order ;
+  gint faces[] = {0,  11,  5,
+		  0 ,  5,  1,
+		  0 ,  1,  7,
+		  0 ,  7, 10,
+		  0 , 10, 11,
+		  1 ,  5,  9,
+		  5 , 11,  4,
+		  11, 10,  2,
+		  10,  7,  6,
+		  7 ,  1,  8,
+		  3 ,  9,  4,
+		  3 ,  4,  2,
+		  3 ,  2,  6,
+		  3 ,  6,  8,
+		  3 ,  8,  9,
+		  4 ,  9,  5,
+		  2 ,  4, 11,
+		  6 ,  2, 10,
+		  8 ,  6,  7,
+		  9 ,  8,  1} ;
+  
+  sqt_quadrature_select(nq, &st, &order) ;
+
+  nbi_surface_node_number(s) = 0 ;
+  nbi_surface_patch_number(s) = 0 ;
+
+  rt = 0.5*(1.0 + sqrt(5.0)) ;
+
+  xs[ 0*3 + 0] = -1.0 ; xs[ 0*3 + 1] =  rt  ; xs[ 0*3 + 2] =  0.0 ; 
+  xs[ 1*3 + 0] =  1.0 ; xs[ 1*3 + 1] =  rt  ; xs[ 1*3 + 2] =  0.0 ; 
+  xs[ 2*3 + 0] = -1.0 ; xs[ 2*3 + 1] = -rt  ; xs[ 2*3 + 2] =  0.0 ; 
+  xs[ 3*3 + 0] =  1.0 ; xs[ 3*3 + 1] = -rt  ; xs[ 3*3 + 2] =  0.0 ; 
+  
+  xs[ 4*3 + 0] =  0.0 ; xs[ 4*3 + 1] = -1.0 ; xs[ 4*3 + 2] =   rt ; 
+  xs[ 5*3 + 0] =  0.0 ; xs[ 5*3 + 1] =  1.0 ; xs[ 5*3 + 2] =   rt ; 
+  xs[ 6*3 + 0] =  0.0 ; xs[ 6*3 + 1] = -1.0 ; xs[ 6*3 + 2] =  -rt ; 
+  xs[ 7*3 + 0] =  0.0 ; xs[ 7*3 + 1] =  1.0 ; xs[ 7*3 + 2] =  -rt ; 
+
+  xs[ 8*3 + 0] =  rt  ; xs[ 8*3 + 1] =  0.0 ; xs[ 8*3 + 2] =  -1.0 ; 
+  xs[ 9*3 + 0] =  rt  ; xs[ 9*3 + 1] =  0.0 ; xs[ 9*3 + 2] =   1.0 ; 
+  xs[10*3 + 0] = -rt  ; xs[10*3 + 1] =  0.0 ; xs[10*3 + 2] =  -1.0 ; 
+  xs[11*3 + 0] = -rt  ; xs[11*3 + 1] =  0.0 ; xs[11*3 + 2] =   1.0 ; 
+
+  for ( i = 0 ; i < 20 ; i ++ ) {
+    sphere_ico_add_patches(s,
+			   &(xs[3*faces[3*i+0]]),
+			   &(xs[3*faces[3*i+1]]),
+			   &(xs[3*faces[3*i+2]]),
+			   nr, st, nq) ;
+  }
+
+  return 0 ;
+}
+  
+gint nbi_geometry_sphere_ico(nbi_surface_t *s, gdouble r, gint nr, gint nq)
+  
+{
+  gint i ;
+
+  basic_sphere_ico(s, r, nr, nq) ;
+  
+  for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+    gdouble *n, *x, th, ph, rho ;
+    x = nbi_surface_node(s, i) ;
+    n = nbi_surface_normal(s, i) ;
+    cart2sph(x, &rho, &th, &ph) ;
+    n[0] = x[0]/rho ;
+    n[1] = x[1]/rho ;
+    n[2] = x[2]/rho ;
+    x[0] = r*n[0] ; x[1] = r*n[1] ; x[2] = r*n[2] ; 
+  }
+  
+  return 0 ;
+}
+
+gint nbi_geometry_ellipsoid_ico(nbi_surface_t *s,
+				gdouble a, gdouble b, gdouble c,
+				gint nr, gint nq)
+
+{
+  gint i ;
+
+  basic_sphere_ico(s, 1.0, nr, nq) ;
+  
+  for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+    gdouble *n, *x, th, ph, rho, Cp, Sp, Ct, St ;
+    x = nbi_surface_node(s, i) ;
+    n = nbi_surface_normal(s, i) ;
+    cart2sph(x, &rho, &th, &ph) ;
+    Cp = cos(ph) ; Sp = sin(ph) ;
+    Ct = cos(th) ; St = sin(th) ;
+    n[0] = b*c*Ct*Sp*Sp ;
+    n[1] = a*c*St*Sp*Sp ;
+    n[2] = a*b*Sp*Cp ;
+    rho = nbi_vector_length(n) ;
+    n[0] /= rho ; n[1] /= rho ; n[2] /= rho ;
+    x[0] = a*Ct*Sp ;
+    x[1] = b*St*Sp ;
+    x[2] = c*   Cp ;
+  }
+  
+  return 0 ;
+}
+

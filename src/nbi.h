@@ -73,6 +73,11 @@ gint nbi_geometry_ellipsoid(nbi_surface_t *s,
 			    gdouble a, gdouble b, gdouble c,
 			    gint nth, gint nph,
 			    gint nq) ;
+gint nbi_geometry_sphere_ico(nbi_surface_t *s, gdouble r, gint nr, gint nq) ;
+gint nbi_geometry_ellipsoid_ico(nbi_surface_t *s,
+				gdouble a, gdouble b, gdouble c,
+				gint nr, gint nq) ;
+
 gint nbi_patch_neighbours(gdouble *c, gdouble r,
 			  gdouble *x, gint xstr, gint nx,
 			  gint n0, gint n1,
