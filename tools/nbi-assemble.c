@@ -124,7 +124,8 @@ gint nbi_surface_assemble_write(nbi_surface_t *s, gdouble eta,
 
 {
   gint i, j, ip, order, nsts, nst, xstr, nntot, lda, pt, *nbrs, nnbrs ;
-  gdouble c[3], r, NK0, K0[453*453], Ku[453*543], *q, *st, *Ast, *xs, *work ;
+  gint wsize ;
+  gdouble *c, r, NK0, K0[453*453], Ku[453*543], *q, *st, *Ast, *xs, *work ;
   gdouble *xu ;
   
   xstr = NBI_SURFACE_NODE_LENGTH ;
@@ -137,7 +138,9 @@ gint nbi_surface_assemble_write(nbi_surface_t *s, gdouble eta,
   NK0 = sqt_koornwinder_interp_matrix(&(st[0]), 3, &(st[1]), 3, &(st[2]), 3,
 				      nst, K0) ;
 
-  work = (gdouble *)g_malloc(nnmax*4*dmax*2*nst*sizeof(gdouble)) ;
+  /*size workspace for adaptive quadrature*/
+  wsize = 4*dmax*2*nst*nnmax + 12*nst + 3*nst ;
+  work = (gdouble *)g_malloc(wsize*sizeof(gdouble)) ;
   Ast  = (gdouble *)g_malloc((nnmax+nst)*2*nst*sizeof(gdouble)) ;
   xu = (gdouble *)g_malloc(nu*nbi_surface_patch_number(s)*
 			   NBI_SURFACE_NODE_LENGTH*sizeof(gdouble)) ;
@@ -149,34 +152,25 @@ gint nbi_surface_assemble_write(nbi_surface_t *s, gdouble eta,
   memset(idx, 0, nbi_surface_node_number(s)*nnmax*sizeof(gint)) ;
 
   nntot = 0 ; idxu[0] = 0 ;
+
+  nbi_surface_set_patch_data(s) ;
+  
   for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
     /*loop on patches treated as sources*/
     nsts = nbi_surface_patch_node_number(s, pt) ;
   
     ip = nbi_surface_patch_node(s, pt) ;
     xs = nbi_surface_node(s,ip) ; xstr = NBI_SURFACE_NODE_LENGTH ;
-    nbi_surface_patch_centroid(nbi_surface_node(s,ip),
-			       NBI_SURFACE_NODE_LENGTH,
-			       &(nbi_surface_node_weight(s, ip)),
-			       NBI_SURFACE_NODE_LENGTH,
-			       nsts, c) ;
-    r = nbi_surface_patch_radius(nbi_surface_node(s,ip),
-				 NBI_SURFACE_NODE_LENGTH, nsts, c) ;
-
+    c = nbi_surface_patch_centre(s, pt) ;
+    r = nbi_surface_patch_sphere_radius(s, pt) ;
+    
     /*find the neighbours*/
     nnbrs = 0 ;
-    nbi_patch_neighbours(c, eta*r,
-			 nbi_surface_node(s, 0), xstr,
-			 nbi_surface_node_number(s),
-			 0, ip,
-			 &(idx[nntot]), &nnbrs, nnmax-nsts) ;
-    nbi_patch_neighbours(c, eta*r,
-			 nbi_surface_node(s, 0), xstr,
-			 nbi_surface_node_number(s),
-			 ip+nbi_surface_patch_node_number(s,pt),
-			 nbi_surface_node_number(s),
-			 &(idx[nntot]), &nnbrs, nnmax-nsts) ;
-    g_assert(nnbrs < nnmax-nsts) ;
+    nbi_surface_patch_neighbours(s, pt, eta*r, 
+				 &(idx[nntot]), &nnbrs, nnmax-nsts) ;
+    if ( nnbrs >= nnmax - nsts )
+      g_error("%s: too many neighbours (%d) for limit (%d)",
+	      __FUNCTION__, nnmax-nsts, nnbrs) ;
     for ( i = 0 ; i < nbi_surface_patch_node_number(s, pt) ; i ++ )
       idx[nntot+nnbrs+i] = ip + i ;
     nnbrs += nbi_surface_patch_node_number(s, pt) ;
@@ -209,6 +203,7 @@ gint nbi_surface_assemble_write(nbi_surface_t *s, gdouble eta,
   }
 
   for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
+  /* for ( pt = 0 ; pt < 1 ; pt ++ ) { */
     /*local correction matrices*/
     nnbrs = idxp[pt+1] - idxp[pt] ;
     nbrs = &(idx[idxp[pt]]) ;
@@ -218,6 +213,8 @@ gint nbi_surface_assemble_write(nbi_surface_t *s, gdouble eta,
     fprintf(stderr, "patch %d/%d; %d neighbours (%lg)\n",
 	    pt, nbi_surface_patch_number(s), nnbrs,
 	    g_timer_elapsed(timer, NULL)) ;
+    g_assert(4*dmax*2*nsts*(nnbrs-nsts) + 12*nsts + 3*nsts +
+	     2*(nnbrs-nsts) <= wsize) ;
     sqt_laplace_source_indexed_kw_adaptive(xs, xstr, nsts, q, nq, K0, NK0,
     					   tol, dmax,
     					   nbi_surface_node(s,0), xstr,
@@ -226,7 +223,7 @@ gint nbi_surface_assemble_write(nbi_surface_t *s, gdouble eta,
     sqt_laplace_source_target_kw_self(xs, xstr, nsts,
 				      K0, NK0, N,
 				      &(st[0]), 3, &(st[1]), 3,
-				      &(Ast[2*(nnbrs-nsts)*nsts])) ;
+				      &(Ast[2*(nnbrs-nsts)*nsts]), work) ;
     lda = 2*nsts ;
 
     for ( i = 0 ; i < nnbrs ; i ++ ) {
@@ -254,7 +251,7 @@ gint main(gint argc, gchar **argv)
   r = 1.0 ; nth = 16 ; nph = 8 ; nq = 25 ; nqu = 54 ;
   eta = 1.25 ; dmax = 8 ; tol = 1e-12 ; N = 8 ; nqa = 54 ;
   ico = -1 ;
-  nnmax = 10000 ; 
+  nnmax = 1024 ; 
   gfile = NULL ; mfile = NULL ;
   
   progname = g_strdup(g_path_get_basename(argv[0])) ;

@@ -36,6 +36,20 @@
 GTimer *timer ;
 gchar *progname ;
 
+gint nbi_surface_greens_identity_laplace(nbi_surface_t *s, gint *idx,
+					 gint *idxp,
+					 gdouble *A,
+					 gdouble *p , gint pstr,
+					 gdouble *pn, gint nstr,
+					 gdouble *xu, gint ustr, gint *idxu,
+					 gdouble *pu, gint pustr, gdouble pwt,
+					 gdouble *pnu, gint nustr, gdouble nwt,
+					 wbfmm_tree_t *tree,
+					 wbfmm_target_list_t *targets,
+					 wbfmm_shift_operators_t *shifts,
+					 gdouble *work,
+					 gdouble *f) ;
+
 static gint make_sources(nbi_surface_t *s,
 			 gdouble *xs, gdouble q,
 			 gdouble *p , gint pstr,
@@ -60,33 +74,6 @@ static gint make_sources(nbi_surface_t *s,
   
   return 0 ;
 }
-
-/* static gint source_field_laplace(nbi_surface_t *s, */
-/* 				 gdouble *p , gint pstr, */
-/* 				 gdouble *pn, gint nstr, */
-/* 				 gdouble *x, gdouble *f) */
-
-/* { */
-/*   gint i ; */
-/*   gdouble G, dG, *y, *n, r[3], R, Rn ; */
-  
-/*   *f = 0 ; */
-
-/*   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) { */
-/*     y = nbi_surface_node(s, i) ; */
-/*     n = nbi_surface_normal(s, i) ; */
-
-/*     nbi_vector_diff(r, x, y) ; */
-/*     R = nbi_vector_length(r) ; */
-/*     Rn = nbi_vector_scalar(r,n)/R ; */
-/*     G  = 0.25*M_1_PI/R ; */
-/*     dG = G*Rn/R ; */
-
-/*     *f += p[i*pstr]*dG - pn[i*nstr]*G ; */
-/*   } */
-  
-/*   return 0 ; */
-/* } */
 
 static gdouble greens_function_laplace(gdouble *x, gdouble *y)
 
@@ -121,18 +108,19 @@ static gint point_source_field_laplace(/* nbi_surface_t *s, */
   return 0 ;
 }
 
-gint nbi_surface_integrate_matrix(nbi_surface_t *s, gint *idx, gint *idxp,
-				  gdouble *A,
-				  gdouble *p , gint pstr,
-				  gdouble *pn, gint nstr,
-				  gdouble *xu, gint ustr, gint *idxu,
-				  gdouble *pu, gint pustr, gdouble pwt,
-				  gdouble *pnu, gint nustr, gdouble nwt,
-				  wbfmm_tree_t *tree,
-				  wbfmm_target_list_t *targets,
-				  wbfmm_shift_operators_t *shifts,
-				  gdouble *work,
-				  gdouble *f)
+gint nbi_surface_greens_identity_laplace(nbi_surface_t *s, gint *idx,
+					 gint *idxp,
+					 gdouble *A,
+					 gdouble *p , gint pstr,
+					 gdouble *pn, gint nstr,
+					 gdouble *xu, gint ustr, gint *idxu,
+					 gdouble *pu, gint pustr, gdouble pwt,
+					 gdouble *pnu, gint nustr, gdouble nwt,
+					 wbfmm_tree_t *tree,
+					 wbfmm_target_list_t *targets,
+					 wbfmm_shift_operators_t *shifts,
+					 gdouble *work,
+					 gdouble *f)
 
 {
   gint i, ip, nsts, nu, np ;
@@ -160,8 +148,8 @@ gint nbi_surface_integrate_matrix(nbi_surface_t *s, gint *idx, gint *idxp,
 	    __FUNCTION__, g_timer_elapsed(timer, NULL)) ;  
   } else {
     /*FMM summation*/
-    gint level, depth, nsrc ;
-    nsrc = idxu[nbi_surface_patch_number(s)] ;
+    gint level, depth ;
+    /* nsrc = idxu[nbi_surface_patch_number(s)] ; */
 
     depth = wbfmm_tree_depth(tree) ;
     fprintf(stderr, "%s: initializing leaf expansions; %lg\n",
@@ -296,14 +284,14 @@ static gint read_upsampled_patches(FILE *f, gint **idxu,
   return 0 ;
 }
 
-gint upsample_sources(nbi_surface_t *s,
-		      gdouble *p, gint pstr, gdouble *pn, gint nstr,
-		      gdouble *wt, gint wstr, gint *idxu,
-		      gdouble *pu, gint pustr, gdouble pwt,
-		      gdouble *pnu, gint nustr, gdouble nwt)
+static gint upsample_sources(nbi_surface_t *s,
+			     gdouble *p, gint pstr, gdouble *pn, gint nstr,
+			     gdouble *wt, gint wstr, gint *idxu,
+			     gdouble *pu, gint pustr, gdouble pwt,
+			     gdouble *pnu, gint nustr, gdouble nwt)
 
 {
-  gint i, j, pt, ns, nu, Nk ;
+  gint i, j, pt, ns, nu ;
   gdouble *K, al, bt ;
 
   al =  1.0 ; bt = 0.0 ;
@@ -332,7 +320,7 @@ gint main(gint argc, gchar **argv)
 {
   nbi_surface_t *s ;
   gint i, *idx, *idxp, ustr, *idxu, nsrc ;
-  gdouble xs[512], *f, *xp, *src, tol, t, *xu, *su, xf[3] ;
+  gdouble xs[512], *f, *xp, *src, t, *xu, *su ;
   gdouble emax, fmax, G, *Ast ;
   gdouble xtree[3], xtmax[3], D, dtree, pwt, nwt ;
   FILE *output, *input ;
@@ -341,29 +329,35 @@ gint main(gint argc, gchar **argv)
   wbfmm_target_list_t *targets ;
   wbfmm_shift_operators_t *shifts ;
   gdouble *work ;
-  gint fmm_work_size, nqfmm ;
-  guint depth, order[48] = {0}, order_s, order_r, order_max, level, field ;
-  gboolean fmm, shift_bw, target_list ;
+  gint fmm_work_size, nqfmm, order_fmm, order_inc ;
+  guint depth, order[48] = {0}, order_s, order_r, order_max, field ;
+  gboolean fmm, shift_bw, target_list, greens_id ;
   
   output = stdout ;
   mfile = NULL ; gfile = NULL ;
   
-  tol = 1e-3 ; dtree = 1e-2 ; fmm = FALSE ; nqfmm = 1 ; shift_bw = TRUE ;
+  dtree = 1e-2 ; fmm = FALSE ; nqfmm = 1 ; shift_bw = TRUE ;
   tree = NULL ; targets = NULL ; shifts = NULL ;
   field = WBFMM_FIELD_SCALAR ;
   target_list = FALSE ;
+  greens_id = TRUE ;
   
   pwt = 1.0 ; nwt = 1.0 ;
   progname = g_strdup(g_path_get_basename(argv[0])) ;
 
-  while ( (ch = getopt(argc, argv, "e:fg:lm:")) != EOF ) {
+  order_fmm = 12 ; order_inc = 2 ; depth = 4 ;
+  
+  while ( (ch = getopt(argc, argv, "d:fGg:lm:o:T:")) != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
-    case 'e': tol  = atof(optarg) ; break ;
+    case 'd': order_inc = atoi(optarg) ; break ;
     case 'f': fmm = TRUE ; break ;
+    case 'G': greens_id = TRUE ; break ;
     case 'g': gfile = g_strdup(optarg) ; break ;
     case 'l': target_list = TRUE ; break ;
     case 'm': mfile = g_strdup(optarg) ; break ;
+    case 'o': order_fmm = atoi(optarg) ; break ;
+    case 'T': depth = atoi(optarg) ; break ;
     }
   }
 
@@ -422,15 +416,15 @@ gint main(gint argc, gchar **argv)
     wbfmm_source_t source ;
 
     source = WBFMM_SOURCE_MONOPOLE | WBFMM_SOURCE_DIPOLE ;
-    depth = 4 ;
-    order_s = 20 ; order_r = 20 ;
+    /* order_s = 20 ; order_r = 20 ; */
+    order_s = order_fmm ; order_r = order_fmm ;
     order[2*depth+0] = order_s ; 
     order[2*depth+1] = order_r ; 
     order_max = MAX(order_s, order_r) ;
     for ( i = depth-1 ; i > 0 ; i -- ) {
       order[2*i+0] = order[2*(i+1)+0] ;
-      order[2*i+0] = order[2*(i+1)+0] + 4 ;
-      order[2*i+1] = order[2*(i+1)+1] + 4 ;
+      order[2*i+0] = order[2*(i+1)+0] + order_inc ;
+      order[2*i+1] = order[2*(i+1)+1] + order_inc ;
       /* order[2*i+1] = order[2*(i+1)+1] ; */
       order_max = MAX(order_max, order[2*i+0]) ;
       order_max = MAX(order_max, order[2*i+1]) ;
@@ -496,29 +490,34 @@ gint main(gint argc, gchar **argv)
       work = (gdouble *)g_malloc0(16384*sizeof(gdouble)) ;    
   }
 
-  fprintf(stderr, "%s: starting surface integration; t=%lg\n",
-	  progname, t = g_timer_elapsed(timer, NULL)) ;
-  nbi_surface_integrate_matrix(s, idx, idxp, Ast,
-			       &(src[0]), 2, &(src[1]), 2,
-			       xu, ustr, idxu,
-			       &(su[0]), 2, pwt, &(su[1]), 2, nwt,
-			       tree, targets, shifts, work,
-			       f) ;
-  fprintf(stderr, "%s: surface integration complete; t=%lg (%lg)\n",
-	  progname,
-	  g_timer_elapsed(timer, NULL), g_timer_elapsed(timer, NULL) - t) ;
+  if ( greens_id ) {
+    fprintf(stderr, "%s: evaluating Green's identity; t=%lg\n",
+	    progname, t = g_timer_elapsed(timer, NULL)) ;
+    nbi_surface_greens_identity_laplace(s, idx, idxp, Ast,
+					&(src[0]), 2, &(src[1]), 2,
+					xu, ustr, idxu,
+					&(su[0]), 2, pwt, &(su[1]), 2, nwt,
+					tree, targets, shifts, work,
+					f) ;
+    fprintf(stderr, "%s: surface integration complete; t=%lg (%lg)\n",
+	    progname,
+	    g_timer_elapsed(timer, NULL), g_timer_elapsed(timer, NULL) - t) ;
+    
+    emax = 0.0 ; fmax = 0.0 ;
+    for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+      xp = nbi_surface_node(s,i) ;
+      G = greens_function_laplace(xp, xs)*0.5 ;
+      fmax = MAX(fmax, G) ;
+      emax = MAX(emax, fabs(G - f[i])) ;
+      fprintf(output, "%lg %lg %lg %lg %lg\n",
+	      xp[0], xp[1], xp[2], f[i], fabs(G - f[i])) ;
+    }
+    
+    fprintf(stderr, "L_inf norm: %lg\n", emax/fmax) ;
 
-  emax = 0.0 ; fmax = 0.0 ;
-  for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
-    xp = nbi_surface_node(s,i) ;
-    G = greens_function_laplace(xp, xs)*0.5 ;
-    fmax = MAX(fmax, G) ;
-    emax = MAX(emax, fabs(G - f[i])) ;
-    fprintf(output, "%lg %lg %lg %lg %lg\n",
-	    xp[0], xp[1], xp[2], f[i], fabs(G - f[i])) ;
+    return 0 ;
   }
 
-  fprintf(stderr, "L_inf norm: %lg\n", emax/fmax) ;
   
   return 0 ;
 }

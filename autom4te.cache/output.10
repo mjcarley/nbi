@@ -642,8 +642,6 @@ ac_ct_F77
 FFLAGS
 F77
 OPENMP_CFLAGS
-BLASWRAP
-SQT
 GLIB_CONFIG
 GLIB_COMPILE_RESOURCES
 GLIB_MKENUMS
@@ -654,6 +652,9 @@ GLIB_CFLAGS
 PKG_CONFIG_LIBDIR
 PKG_CONFIG_PATH
 PKG_CONFIG
+BLASWRAP
+WBFMM
+SQT
 CPP
 LT_SYS_LIBRARY_PATH
 OTOOL64
@@ -12981,6 +12982,175 @@ $as_echo "@%:@define STDC_HEADERS 1" >>confdefs.h
 fi
 
 
+
+# Extract the first word of "sqt-config", so it can be a program name with args.
+set dummy sqt-config; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_SQT+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$SQT"; then
+  ac_cv_prog_SQT="$SQT" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_SQT="yes"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  test -z "$ac_cv_prog_SQT" && ac_cv_prog_SQT="no"
+fi
+fi
+SQT=$ac_cv_prog_SQT
+if test -n "$SQT"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $SQT" >&5
+$as_echo "$SQT" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+if test x$SQT = xyes ; then
+   
+$as_echo "@%:@define HAVE_SQT 1" >>confdefs.h
+
+   sqt_cflags=`sqt-config --cflags`
+   sqt_libs=`sqt-config --libs`
+else
+  echo \#################################################################
+  echo \#
+  echo \# Singular Quadrature on Triangles library not installed or
+  echo \# not properly installed. You can get it from
+  echo \#
+  echo \# https://github.com/mjcarley/sqt
+  echo \#
+  echo \#################################################################
+  exit
+fi
+
+# Extract the first word of "wbfmm-config", so it can be a program name with args.
+set dummy wbfmm-config; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_WBFMM+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$WBFMM"; then
+  ac_cv_prog_WBFMM="$WBFMM" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_WBFMM="yes"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  test -z "$ac_cv_prog_WBFMM" && ac_cv_prog_WBFMM="no"
+fi
+fi
+WBFMM=$ac_cv_prog_WBFMM
+if test -n "$WBFMM"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $WBFMM" >&5
+$as_echo "$WBFMM" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+if test x$WBFMM = xyes ; then
+   
+$as_echo "@%:@define HAVE_WBFMM 1" >>confdefs.h
+
+   wbfmm_cflags=`wbfmm-config --cflags`
+   wbfmm_libs=`wbfmm-config --libs`
+else
+  echo \#################################################################
+  echo \#
+  echo \# Wide Band Fast Multipole Method library not installed or
+  echo \# not properly installed. You can get it from
+  echo \#
+  echo \# https://github.com/mjcarley/wbfmm
+  echo \#
+  echo \#################################################################
+  exit
+fi
+
+# Extract the first word of "blaswrap-config", so it can be a program name with args.
+set dummy blaswrap-config; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_BLASWRAP+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$BLASWRAP"; then
+  ac_cv_prog_BLASWRAP="$BLASWRAP" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_BLASWRAP="yes"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  test -z "$ac_cv_prog_BLASWRAP" && ac_cv_prog_BLASWRAP="no"
+fi
+fi
+BLASWRAP=$ac_cv_prog_BLASWRAP
+if test -n "$BLASWRAP"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $BLASWRAP" >&5
+$as_echo "$BLASWRAP" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+if test x$BLASWRAP = xyes ; then
+   
+$as_echo "@%:@define HAVE_BLASWRAP 1" >>confdefs.h
+
+   blaswrap_cflags=`blaswrap-config --cflags`
+   blaswrap_libs=`blaswrap-config --libs`
+else
+  echo \#################################################################
+  echo \#
+  echo \# BLAS wrapper library not installed or not properly installed.
+  echo \# You can get it from
+  echo \#
+  echo \# https://github.com/mjcarley/blaswrap
+  echo \#
+  echo \#################################################################
+  exit
+fi
+
 @%:@ Check whether --enable-glibtest was given.
 if test "${enable_glibtest+set}" = set; then :
   enableval=$enable_glibtest; 
@@ -13672,118 +13842,6 @@ rm -f core conftest.err conftest.$ac_objext \
     
     
   fi
-fi
-
-# Extract the first word of "sqt-config", so it can be a program name with args.
-set dummy sqt-config; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_SQT+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$SQT"; then
-  ac_cv_prog_SQT="$SQT" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_SQT="yes"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_prog_SQT" && ac_cv_prog_SQT="no"
-fi
-fi
-SQT=$ac_cv_prog_SQT
-if test -n "$SQT"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $SQT" >&5
-$as_echo "$SQT" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-if test x$SQT = xyes ; then
-   
-$as_echo "@%:@define HAVE_SQT 1" >>confdefs.h
-
-   sqt_cflags=`sqt-config --cflags`
-   sqt_libs=`sqt-config --libs`
-else
-  echo \#################################################################
-  echo \#
-  echo \# Singular Quadrature on Triangles library not installed or
-  echo \# not properly installed. You can get it from
-  echo \#
-  echo \# https://github.com/mjcarley/sqt
-  echo \#
-  echo \#################################################################
-  exit
-fi
-
-# Extract the first word of "blaswrap-config", so it can be a program name with args.
-set dummy blaswrap-config; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_BLASWRAP+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$BLASWRAP"; then
-  ac_cv_prog_BLASWRAP="$BLASWRAP" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_BLASWRAP="yes"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_prog_BLASWRAP" && ac_cv_prog_BLASWRAP="no"
-fi
-fi
-BLASWRAP=$ac_cv_prog_BLASWRAP
-if test -n "$BLASWRAP"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $BLASWRAP" >&5
-$as_echo "$BLASWRAP" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-if test x$BLASWRAP = xyes ; then
-   
-$as_echo "@%:@define HAVE_BLASWRAP 1" >>confdefs.h
-
-   blaswrap_cflags=`blaswrap-config --cflags`
-   blaswrap_libs=`blaswrap-config --libs`
-else
-  echo \#################################################################
-  echo \#
-  echo \# BLAS wrapper library not installed or not properly installed.
-  echo \# You can get it from
-  echo \#
-  echo \# https://github.com/mjcarley/blaswrap
-  echo \#
-  echo \#################################################################
-  exit
 fi
 
 ac_ext=c
@@ -19137,8 +19195,8 @@ lapack_libs="$LAPACK_LIBS"
 ##DX_PS_FEATURE(OFF)
 #DX_INIT_DOXYGEN(nbi, doc/nbi.dxy)
 
-CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $glib_cflags $sqt_cflags $blaswrap_cflags"
-LDFLAGS="$LDFLAGS $glib_libs $sqt_libs"
+CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $glib_cflags $wbfmm_cflags $sqt_cflags $blaswrap_cflags"
+LDFLAGS="$LDFLAGS $glib_libs $wbfmm_libs $sqt_libs"
 
 
 

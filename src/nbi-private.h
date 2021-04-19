@@ -18,9 +18,37 @@
 #define NBI_PRIVATE_H_INCLUDED
 
 #ifdef NBI_SINGLE_PRECISION
-#define SQRT(_x) sqrtf(_x)
-#else  /*NBI_SINGLE_PRECISION*/
-#define SQRT(_x) sqrt(_x)
+
+#define NBI_REAL gfloat
+
+#define NBI_FUNCTION_NAME(NBI_func) NBI_func##_f
+
+#define SQRT(NBI_x) sqrtf((NBI_x))
+#define CBRT(NBI_x) cbrtf((NBI_x))
+#define SIN(NBI_x) sinf((NBI_x))
+#define COS(NBI_x) cosf((NBI_x))
+#define ACOS(NBI_x) acosf((NBI_x))
+#define ATAN(NBI_x) atanf((NBI_x))
+#define ATAN2(NBI_y,NBI_x) atan2f((NBI_y),(NBI_x))
+#define LOG(NBI_x) logf((NBI_x))
+#define EXP(NBI_x) expf(NBI_x)
+
+#else
+
+#define NBI_REAL gdouble
+
+#define NBI_FUNCTION_NAME(NBI_func) NBI_func
+
+#define SQRT(NBI_x) sqrt((NBI_x))
+#define CBRT(NBI_x) cbrt((NBI_x))
+#define SIN(NBI_x) sin((NBI_x))
+#define COS(NBI_x) cos((NBI_x))
+#define ACOS(NBI_x) acos((NBI_x))
+#define ATAN(NBI_x) atan((NBI_x))
+#define ATAN2(NBI_y,NBI_x) atan2((NBI_y),(NBI_x))
+#define LOG(NBI_x) log((NBI_x))
+#define EXP(NBI_x) exp(NBI_x)
+
 #endif /*NBI_SINGLE_PRECISION*/
 
 #define nbi_vector_scalar(NBI_A,NBI_B)				\

@@ -18477,7 +18477,7 @@ lapack_libs="$LAPACK_LIBS"
 ##DX_PS_FEATURE(OFF)
 #DX_INIT_DOXYGEN(nbi, doc/nbi.dxy)
 
-CFLAGS="$OPENMP_CFLAGS $SIMD_FLAGS $glib_cflags $wbfmm_cflags $sqt_cflags $blaswrap_cflags $CFLAGS "
+CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $glib_cflags $wbfmm_cflags $sqt_cflags $blaswrap_cflags"
 LDFLAGS="$LDFLAGS $glib_libs $wbfmm_libs $sqt_libs"
 
 

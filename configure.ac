@@ -113,6 +113,79 @@ else
   exit
 fi
 
+AM_PATH_GLIB_2_0(2.4.0, has_glib2=yes, has_glib2=no, gthread gmodule)
+if test x$has_glib2 = xyes; then
+  glib_cflags=`$PKG_CONFIG glib-2.0 --cflags`
+  glib_thread_cflags=`$PKG_CONFIG glib-2.0 --cflags gthread-2.0`
+  glib_module_cflags=`$PKG_CONFIG glib-2.0 --cflags gmodule-2.0`
+  glib_libs=`$PKG_CONFIG glib-2.0 --libs`
+  glib_thread_libs=`$PKG_CONFIG glib-2.0 --libs gthread-2.0`
+  glib_module_libs=`$PKG_CONFIG glib-2.0 --libs gmodule-2.0`
+  GLIB_LIBS="$glib_libs"
+  GLIB_DEPLIBS="$glib_libs"
+else
+  if test x$with_glib = xyes ; then
+    AC_MSG_ERROR([
+*** Directory must be specified for --with-glib])
+  fi
+
+  if test x$with_glib = x ; then 
+    # Look for separately installed glib
+
+    GLIB_REQUIRED_VERSION=1.2.8
+    AM_PATH_GLIB($GLIB_REQUIRED_VERSION,,
+      AC_MSG_ERROR([
+*** GLIB $GLIB_REQUIRED_VERSION or better is required. The latest version of GLIB
+*** is always available from ftp://ftp.gtk.org/.]),
+      gmodule gthread)
+
+    glib_cflags=`$GLIB_CONFIG --cflags`
+    glib_thread_cflags=`$GLIB_CONFIG --cflags gthread`
+    glib_module_cflags=`$GLIB_CONFIG --cflags gmodule`
+    glib_libs=`$GLIB_CONFIG --libs`
+    glib_thread_libs=`$GLIB_CONFIG --libs gthread`
+    glib_module_libs=`$GLIB_CONFIG --libs gmodule`
+    GLIB_LIBS="$glib_libs"
+    GLIB_DEPLIBS="$glib_libs"
+  else
+    # Use uninstalled glib (assume they got the version right)
+
+    GLIB_CONFIG=$with_glib/glib-config
+    if test -x $GLIB_CONFIG ; then 
+      :
+    else
+      AC_MSG_ERROR([GLIB directory ($with_glib) not present or not configured])
+    fi
+
+    # For use in wmpi-config
+    glib_cflags=`$GLIB_CONFIG --cflags`
+    glib_thread_cflags=`$GLIB_CONFIG --cflags gthread`
+    glib_module_cflags=`$GLIB_CONFIG --cflags gmodule`
+    glib_libs=`$GLIB_CONFIG --libs`
+    glib_thread_libs=`$GLIB_CONFIG --libs gthread`
+    glib_module_libs=`$GLIB_CONFIG --libs gmodule`
+
+    glib_release=`$GLIB_CONFIG --version | sed 's%\\.[[0-9]]*$%%'`
+
+    # canonicalize relative paths
+    case $with_glib in 
+      /*)
+        glib_dir=$with_glib
+        ;;
+      *)
+        glib_dir="\$(top_builddir)/$with_glib"
+        ;;
+    esac
+
+    GLIB_CFLAGS="-I$glib_dir -I$glib_dir/gmodule"
+    GLIB_LIBS="$glib_dir/libglib.la $glib_dir/gmodule.la"
+    GLIB_DEPLIBS=
+
+    AC_SUBST(GLIB_CFLAGS)
+    AC_SUBST(GLIB_LIBS)
+  fi
+fi
+
 AX_GCC_X86_CPU_SUPPORTS(avx, hasavx=yes) 
 AX_GCC_X86_CPU_SUPPORTS(avx2, hasavx2=yes) 
 AX_GCC_X86_CPU_SUPPORTS(fma, hasfma=yes) 
@@ -150,7 +223,7 @@ lapack_libs="$LAPACK_LIBS"
 ##DX_PS_FEATURE(OFF)
 #DX_INIT_DOXYGEN(nbi, doc/nbi.dxy)
 
-CFLAGS="$OPENMP_CFLAGS $SIMD_FLAGS $glib_cflags $wbfmm_cflags $sqt_cflags $blaswrap_cflags $CFLAGS "
+CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $glib_cflags $wbfmm_cflags $sqt_cflags $blaswrap_cflags"
 LDFLAGS="$LDFLAGS $glib_libs $wbfmm_libs $sqt_libs"
 
 AC_SUBST(blas_libs)
