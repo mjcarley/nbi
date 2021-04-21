@@ -24,6 +24,8 @@
 
 #include <sqt.h>
 
+#include <blaswrap.h>
+
 #include <nbi.h>
 
 #include "nbi-private.h"
@@ -43,10 +45,8 @@ nbi_surface_t *NBI_FUNCTION_NAME(nbi_surface_alloc)(gint nnmax, gint npmax)
   nbi_surface_patch_number(s) = 0 ;
   nbi_surface_patch_number_max(s) = npmax ;
 
-  s->xc  = (NBI_REAL *)
-    g_malloc0(nnmax*NBI_SURFACE_NODE_LENGTH*sizeof(NBI_REAL)) ;
-  s->pcr = (NBI_REAL *)
-    g_malloc0(npmax*NBI_SURFACE_PATCH_DATA_LENGTH*sizeof(NBI_REAL)) ;
+  s->xc  = g_malloc0(nnmax*NBI_SURFACE_NODE_LENGTH*sizeof(NBI_REAL)) ;
+  s->pcr = g_malloc0(npmax*NBI_SURFACE_PATCH_DATA_LENGTH*sizeof(NBI_REAL)) ;
   s->ip  = (gint *)g_malloc0(NBI_SURFACE_PATCH_LENGTH*npmax*sizeof(gint)) ;
 
   s->fpsize = sizeof(NBI_REAL) ;
@@ -58,6 +58,7 @@ gint NBI_FUNCTION_NAME(nbi_surface_write)(nbi_surface_t *s, FILE *f)
 
 {
   gint i, j ;
+  NBI_REAL *e ;
   
   fprintf(f, "%d %d\n",
 	  nbi_surface_node_number(s),
@@ -70,8 +71,9 @@ gint NBI_FUNCTION_NAME(nbi_surface_write)(nbi_surface_t *s, FILE *f)
   }
 
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+    e = (NBI_REAL *)nbi_surface_node(s,i) ;
     for ( j = 0 ; j < NBI_SURFACE_NODE_LENGTH ; j ++ )
-      fprintf(f, " %1.16e", nbi_surface_node_element(s,i,j)) ;
+      fprintf(f, " %1.16e", e[j]) ;
     fprintf(f, "\n") ;
   }
   
@@ -83,7 +85,8 @@ nbi_surface_t *NBI_FUNCTION_NAME(nbi_surface_read)(FILE *f)
 {
   nbi_surface_t *s ;
   gint nn, np, i, j ;
-
+  NBI_REAL *e ;
+  
   fscanf(f, "%d", &nn) ;
   fscanf(f, "%d", &np) ;
 
@@ -97,17 +100,18 @@ nbi_surface_t *NBI_FUNCTION_NAME(nbi_surface_read)(FILE *f)
   }
 
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+    e = (NBI_REAL *)nbi_surface_node(s,i) ;    
     for ( j = 0 ; j < NBI_SURFACE_NODE_LENGTH ; j ++ )
-      fscanf(f, "%lg", &(nbi_surface_node_element(s,i,j))) ;
+      fscanf(f, "%lg", &(e[j])) ;
   }
   
   return s ;
 }
 
 gint NBI_FUNCTION_NAME(nbi_surface_patch_centroid)(NBI_REAL *x, gint xstr,
-						  NBI_REAL *w, gint wstr,
-						  gint nx,
-						  NBI_REAL *c)
+						   NBI_REAL *w, gint wstr,
+						   gint nx,
+						   NBI_REAL *c)
 
 {
   gint i ;
@@ -182,13 +186,13 @@ gint NBI_FUNCTION_NAME(nbi_surface_patch_neighbours)(nbi_surface_t *s,
   gint i, n0, n1 ;
   NBI_REAL *cp, rp, *ci, ri, *x ;
 
-  cp = nbi_surface_patch_centre(s, p) ;
-  rp = nbi_surface_patch_sphere_radius(s, p) ;
+  cp = (NBI_REAL *)nbi_surface_patch_centre(s, p) ;
+  rp = *((NBI_REAL *)nbi_surface_patch_sphere_radius(s, p)) ;
   
-  x = nbi_surface_node(s, 0) ;
+  x = (NBI_REAL *)nbi_surface_node(s, 0) ;
   for ( i = 0 ; i < p ; i ++ ) {
-    ci = nbi_surface_patch_centre(s, i) ;
-    ri = nbi_surface_patch_sphere_radius(s, i) ;
+    ci = (NBI_REAL *)nbi_surface_patch_centre(s, i) ;
+    ri = *((NBI_REAL *)nbi_surface_patch_sphere_radius(s, i)) ;
     if ( patch_boxes_encroach(cp, rp+r, ci, ri) ) {
       n0 = nbi_surface_patch_node(s, i) ;
       n1 = n0 + nbi_surface_patch_node_number(s, i) ;
@@ -201,8 +205,8 @@ gint NBI_FUNCTION_NAME(nbi_surface_patch_neighbours)(nbi_surface_t *s,
   }
 
   for ( i = p+1 ; i < nbi_surface_patch_number(s) ; i ++ ) {
-    ci = nbi_surface_patch_centre(s, i) ;
-    ri = nbi_surface_patch_sphere_radius(s, i) ;
+    ci = (NBI_REAL *)nbi_surface_patch_centre(s, i) ;
+    ri = *((NBI_REAL *)nbi_surface_patch_sphere_radius(s, i)) ;
     if ( patch_boxes_encroach(cp, rp+r, ci, ri) ) {
       n0 = nbi_surface_patch_node(s, i) ;
       n1 = n0 + nbi_surface_patch_node_number(s, i) ;
@@ -275,20 +279,174 @@ gint NBI_FUNCTION_NAME(nbi_surface_set_patch_data)(nbi_surface_t *s)
   gint i, ip ;
 
   for ( i = 0 ; i < nbi_surface_patch_number(s) ; i ++ ) {
+    NBI_REAL *w, *n, *c, *r ;
+    gint nnodes ;
+    
     ip = nbi_surface_patch_node(s, i) ;
-    NBI_FUNCTION_NAME(nbi_surface_patch_centroid)(nbi_surface_node(s,ip),
-						 NBI_SURFACE_NODE_LENGTH,
-						 &(nbi_surface_node_weight(s, ip)),
-						 NBI_SURFACE_NODE_LENGTH,
-						 nbi_surface_patch_node_number(s, i),
-						 nbi_surface_patch_centre(s, i)) ;
-    nbi_surface_patch_sphere_radius(s, i) =
-      NBI_FUNCTION_NAME(nbi_surface_patch_radius)(nbi_surface_node(s,ip),
-						 NBI_SURFACE_NODE_LENGTH, 
-						 nbi_surface_patch_node_number(s, i),
-						 nbi_surface_patch_centre(s, i)) ;
-			       
+    nnodes = nbi_surface_patch_node_number(s, i),
+    n = (NBI_REAL *) nbi_surface_node(s,ip) ;
+    w = (NBI_REAL *) nbi_surface_node_weight(s, ip) ;
+    c = (NBI_REAL *) nbi_surface_patch_centre(s, i) ;
+    r = (NBI_REAL *)nbi_surface_patch_sphere_radius(s, i) ;
+
+    NBI_FUNCTION_NAME(nbi_surface_patch_centroid)(n, NBI_SURFACE_NODE_LENGTH,
+						  w, NBI_SURFACE_NODE_LENGTH,
+						  nnodes,
+						  c) ;
+    *r = NBI_FUNCTION_NAME(nbi_surface_patch_radius)(n,
+						     NBI_SURFACE_NODE_LENGTH, 
+						     nnodes, c) ;
   }    
   
   return 0 ;
 }
+
+nbi_matrix_t *NBI_FUNCTION_NAME(nbi_matrix_new)(nbi_surface_t *s)
+
+{
+  nbi_matrix_t *m ;
+
+  g_assert(s->fpsize == sizeof(NBI_REAL)) ;
+
+  m = (nbi_matrix_t *)g_malloc(sizeof(nbi_matrix_t)) ;
+
+  m->problem = 0 ;
+  m->s = s ;
+  m->fpsize = sizeof(NBI_REAL) ;
+
+  m->ustr = m->pstr = m->nstr = 0 ;
+  m->idxu = NULL ;
+  m->xu = m->p = m->pn = NULL ;
+
+  m->tree    = NULL ;
+  m->targets = NULL ;
+  m->shifts  = NULL ;
+  
+  return m ;
+}
+
+static gint read_upsampled_patches(FILE *f, nbi_matrix_t *m)
+
+{
+  gint np, i, j ;
+  NBI_REAL *xu, *bc ;
+  
+  fscanf(f, "%d", &np) ;
+  fscanf(f, "%d", &(m->ustr)) ;
+
+  m->idxu = (gint *)g_malloc((np+1)*sizeof(gint)) ;
+  for ( i = 0 ; i < np + 1 ; i ++ ) {
+    fscanf(f, "%d", &j) ;
+    g_assert(j == i) ;
+    fscanf(f, "%d", &(m->idxu[i])) ;
+  }
+  
+  m->xu = g_malloc(m->idxu[np]*(m->ustr)*sizeof(NBI_REAL)) ;
+  xu = (NBI_REAL *)(m->xu) ;
+  for ( i = 0 ; i < (m->idxu)[np]*(m->ustr) ; i ++ )
+    fscanf(f, "%lg", &(xu[i])) ;
+
+  switch ( m->problem ) {
+  default: g_assert_not_reached() ; break ;
+  case NBI_PROBLEM_LAPLACE: m->pstr = m->nstr = 2 ; break ;
+  }
+  m->bc = g_malloc(m->idxu[np]*(m->pstr)*sizeof(NBI_REAL)) ;
+  bc = (NBI_REAL *)(m->bc) ;
+  
+  m->p  = (gchar *)(&(bc[0])) ;
+  m->pn = (gchar *)(&(bc[(m->pstr)/2])) ;
+  
+  return 0 ;
+}
+
+static gint read_correction_matrices(FILE *f, nbi_matrix_t *m)
+
+{
+  gint i, j, np, nst ;
+  NBI_REAL *Ast ;
+  
+  fscanf(f, "%d", &np) ;
+  fscanf(f, "%d", &nst) ;
+
+  m->idxp = (gint *)g_malloc0((np+1)*sizeof(gint)) ;
+
+  for ( i = 0 ; i < np+1 ; i ++ ) {
+    fscanf(f, "%d", &j) ;
+    g_assert(j == i) ;
+    fscanf(f, "%d", &(m->idxp[i])) ;
+  }
+  
+  m->idx = (gint *)g_malloc0((m->idxp[np])*sizeof(gint)) ;
+  for ( i = 0 ; i < m->idxp[np] ; i ++ ) {
+    fscanf(f, "%d", &(m->idx[i])) ;
+  }
+
+  Ast = (NBI_REAL *)g_malloc0(nst*2*(m->idxp[np])*sizeof(NBI_REAL)) ;
+  m->Ast = (gchar *)Ast ;
+  for ( i = 0 ; i < 2*nst*(m->idxp[np]) ; i ++ ) {
+    fscanf(f, "%lg", &(Ast[i])) ;
+  }  
+
+  return np ;
+}
+
+gint NBI_FUNCTION_NAME(nbi_matrix_read)(FILE *input, nbi_matrix_t *m)
+
+{
+  read_upsampled_patches(input, m) ;
+  read_correction_matrices(input, m) ;
+
+  return 0 ;
+}
+
+static gint upsample_sources(nbi_surface_t *s,
+			     NBI_REAL *p, gint pstr, NBI_REAL *pn, gint nstr,
+			     NBI_REAL *wt, gint wstr, gint *idxu,
+			     NBI_REAL *pu, gint pustr, NBI_REAL pwt,
+			     NBI_REAL *pnu, gint nustr, NBI_REAL nwt)
+
+{
+  gint i, j, pt, ns, nu ;
+  gdouble *K, al, bt ;
+
+  al =  1.0 ; bt = 0.0 ;
+  for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
+    ns = nbi_surface_patch_node_number(s, pt) ;
+    nu = idxu[pt+1] - idxu[pt] ;
+    K = NBI_FUNCTION_NAME(nbi_patch_upsample_matrix)(ns, nu) ;
+
+    i = nbi_surface_patch_node(s, pt) ;
+    j = idxu[pt] ;
+    /* if ( pstr != 0 )  */
+    blaswrap_dgemv(FALSE, nu, ns, al, K, ns,
+		   &(p[i*pstr]), pstr, bt, &(pu[j*pustr]), pustr) ;
+    /* if ( nstr != 0 )  */
+    blaswrap_dgemv(FALSE, nu, ns, al, K, ns,
+		   &(pn[i*pstr]), nstr, bt, &(pnu[j*pustr]), nustr) ;
+    for ( i = 0 ; i < nu ; i ++ ) {
+      pu [(j+i)*pustr] *= pwt*wt[(j+i)*wstr] ;
+      pnu[(j+i)*nustr] *= nwt*wt[(j+i)*wstr] ;
+    }
+  }
+  
+  return 0 ;
+}
+
+gint NBI_FUNCTION_NAME(nbi_matrix_upsample_laplace)(nbi_matrix_t *m,
+						    NBI_REAL *p, gint pstr,
+						    NBI_REAL *pn, gint nstr,
+						    NBI_REAL pwt, NBI_REAL nwt)
+
+{
+  NBI_REAL *xu, *su, *sn ;
+
+  su = (NBI_REAL *)(m->p ) ;
+  sn = (NBI_REAL *)(m->pn) ;
+  xu = (NBI_REAL *)(m->xu) ;
+  upsample_sources(m->s, p, pstr, pn, nstr, 
+		   &(xu[6]), m->ustr, m->idxu,
+		   su, m->pstr, pwt, sn, m->nstr, nwt) ;
+  
+  return 0 ;
+}
+						    

@@ -1,4 +1,4 @@
-geometries.lo: geometries.c /usr/include/stdc-predef.h \
+nbi-assemble-laplace.o: nbi-assemble-laplace.c /usr/include/stdc-predef.h \
  /usr/include/stdio.h /usr/include/features.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
  /usr/include/gnu/stubs-64.h \
@@ -100,9 +100,9 @@ geometries.lo: geometries.c /usr/include/stdc-predef.h \
  /usr/include/glib-2.0/glib/deprecated/gthread.h /usr/include/pthread.h \
  /usr/include/sched.h /usr/include/bits/sched.h \
  /usr/include/bits/setjmp.h \
- /usr/include/glib-2.0/glib/glib-autocleanups.h \
- /home/michael/Codes/include/blaswrap.h /home/michael/Codes/include/sqt.h \
- nbi.h /home/michael/Codes/include/wbfmm.h nbi-private.h
+ /usr/include/glib-2.0/glib/glib-autocleanups.h ../src/nbi.h \
+ /home/michael/Codes/include/wbfmm.h /home/michael/Codes/include/sqt.h \
+ /home/michael/Codes/include/blaswrap.h ../src/nbi-private.h
 
 /usr/include/stdc-predef.h:
 
@@ -412,12 +412,12 @@ geometries.lo: geometries.c /usr/include/stdc-predef.h \
 
 /usr/include/glib-2.0/glib/glib-autocleanups.h:
 
-/home/michael/Codes/include/blaswrap.h:
-
-/home/michael/Codes/include/sqt.h:
-
-nbi.h:
+../src/nbi.h:
 
 /home/michael/Codes/include/wbfmm.h:
 
-nbi-private.h:
+/home/michael/Codes/include/sqt.h:
+
+/home/michael/Codes/include/blaswrap.h:
+
+../src/nbi-private.h:

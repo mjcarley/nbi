@@ -88,7 +88,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = nbi-solve$(EXEEXT) nbi-assemble$(EXEEXT)
+bin_PROGRAMS = nbi-solve-laplace$(EXEEXT) \
+	nbi-assemble-laplace$(EXEEXT)
 subdir = tools
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -106,16 +107,17 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-nbi_assemble_SOURCES = nbi-assemble.c
-nbi_assemble_OBJECTS = nbi-assemble.$(OBJEXT)
-nbi_assemble_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
+nbi_assemble_laplace_SOURCES = nbi-assemble-laplace.c
+nbi_assemble_laplace_OBJECTS = nbi-assemble-laplace.$(OBJEXT)
+nbi_assemble_laplace_DEPENDENCIES =  \
+	$(top_builddir)/src/.libs/libnbi.a
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-nbi_solve_SOURCES = nbi-solve.c
-nbi_solve_OBJECTS = nbi-solve.$(OBJEXT)
-nbi_solve_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
+nbi_solve_laplace_SOURCES = nbi-solve-laplace.c
+nbi_solve_laplace_OBJECTS = nbi-solve-laplace.$(OBJEXT)
+nbi_solve_laplace_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -150,8 +152,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = nbi-assemble.c nbi-solve.c
-DIST_SOURCES = nbi-assemble.c nbi-solve.c
+SOURCES = nbi-assemble-laplace.c nbi-solve-laplace.c
+DIST_SOURCES = nbi-assemble-laplace.c nbi-solve-laplace.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -325,10 +327,10 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir)
 DEPS = $(top_builddir)/src/libnbi.la
-nbi_solve_LDADD = \
+nbi_solve_laplace_LDADD = \
 	$(top_builddir)/src/.libs/libnbi.a 
 
-nbi_assemble_LDADD = \
+nbi_assemble_laplace_LDADD = \
 	$(top_builddir)/src/.libs/libnbi.a 
 
 all: all-am
@@ -414,13 +416,13 @@ clean-binPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
-nbi-assemble$(EXEEXT): $(nbi_assemble_OBJECTS) $(nbi_assemble_DEPENDENCIES) $(EXTRA_nbi_assemble_DEPENDENCIES) 
-	@rm -f nbi-assemble$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(nbi_assemble_OBJECTS) $(nbi_assemble_LDADD) $(LIBS)
+nbi-assemble-laplace$(EXEEXT): $(nbi_assemble_laplace_OBJECTS) $(nbi_assemble_laplace_DEPENDENCIES) $(EXTRA_nbi_assemble_laplace_DEPENDENCIES) 
+	@rm -f nbi-assemble-laplace$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(nbi_assemble_laplace_OBJECTS) $(nbi_assemble_laplace_LDADD) $(LIBS)
 
-nbi-solve$(EXEEXT): $(nbi_solve_OBJECTS) $(nbi_solve_DEPENDENCIES) $(EXTRA_nbi_solve_DEPENDENCIES) 
-	@rm -f nbi-solve$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(nbi_solve_OBJECTS) $(nbi_solve_LDADD) $(LIBS)
+nbi-solve-laplace$(EXEEXT): $(nbi_solve_laplace_OBJECTS) $(nbi_solve_laplace_DEPENDENCIES) $(EXTRA_nbi_solve_laplace_DEPENDENCIES) 
+	@rm -f nbi-solve-laplace$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(nbi_solve_laplace_OBJECTS) $(nbi_solve_laplace_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -428,8 +430,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbi-assemble.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbi-solve.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbi-assemble-laplace.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbi-solve-laplace.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\

@@ -45,11 +45,11 @@ static gint sphere_patch_pair(nbi_surface_t *s, NBI_REAL r,
 
   sqt_patch_nodes_sphere(r, th0, ph0, th0, ph1, th1, ph1,
 			 &(st[0]), 3, &(st[1]), 3, &(st[2]), 3, nq,
-			 nbi_surface_node(s,nn),
+			 (NBI_REAL *)nbi_surface_node(s,nn),
 			 NBI_SURFACE_NODE_LENGTH,
-			 nbi_surface_normal(s,nn),
+			 (NBI_REAL *)nbi_surface_normal(s,nn),
 			 NBI_SURFACE_NODE_LENGTH,
-			 &(nbi_surface_node_weight(s,nn)),
+			 (NBI_REAL *)nbi_surface_node_weight(s,nn),
 			 NBI_SURFACE_NODE_LENGTH) ;
   nbi_surface_patch_number(s) ++ ;
   np = nbi_surface_patch_number(s) ;
@@ -61,11 +61,12 @@ static gint sphere_patch_pair(nbi_surface_t *s, NBI_REAL r,
 
   sqt_patch_nodes_sphere(r, th0, ph0, th1, ph1, th1, ph0,
 			 &(st[0]), 3, &(st[1]), 3, &(st[2]), 3, nq,
-			 nbi_surface_node(s,nn),
+			 (NBI_REAL *)nbi_surface_node(s,nn),
 			 NBI_SURFACE_NODE_LENGTH,
-			 nbi_surface_normal(s,nn),
+			 (NBI_REAL *)nbi_surface_normal(s,nn),
 			 NBI_SURFACE_NODE_LENGTH,
-			 &(nbi_surface_node_weight(s,nn)),
+			 (NBI_REAL *)
+			 nbi_surface_node_weight(s,nn),
 			 NBI_SURFACE_NODE_LENGTH) ;			     
   nbi_surface_patch_number(s) ++ ;
   nbi_surface_node_number(s) += nq ;
@@ -106,12 +107,13 @@ gint NBI_FUNCTION_NAME(nbi_geometry_sphere)(nbi_surface_t *s,
     al = 1.0 ; bt = 0.0 ; xstr = NBI_SURFACE_NODE_LENGTH ;
     for ( i = 0 ; i < nbi_surface_patch_number(s) ; i ++ ) {
       j = nbi_surface_patch_node(s, i) ;
-      xi = nbi_surface_node(s, j) ;
+      xi = (NBI_REAL *)nbi_surface_node(s, j) ;
       blaswrap_dgemm(FALSE, FALSE, nq, i3, nq, al, K, nq, xi, xstr,
 		     bt, ce, i3) ;
       for ( k = 0 ; k < nq ; k ++ ) {
 	NBI_FUNCTION_NAME(sqt_element_interp)(ce, nq, Nk,
 					      st[3*k+0], st[3*k+1], xx,
+					      (NBI_REAL *)
 					      nbi_surface_normal(s, j+k),
 					      &J, NULL, work) ;
       }
@@ -139,11 +141,14 @@ static gint ellipsoid_patch_pair(nbi_surface_t *s,
 					       th0, ph0, th0, ph1, th1, ph1,
 					       &(st[0]), 3, &(st[1]), 3,
 					       &(st[2]), 3, nq,
+					       (NBI_REAL *)
 					       nbi_surface_node(s,nn),
 					       NBI_SURFACE_NODE_LENGTH,
+					       (NBI_REAL *)
 					       nbi_surface_normal(s,nn),
 					       NBI_SURFACE_NODE_LENGTH,
-					       &(nbi_surface_node_weight(s,nn)),
+					       (NBI_REAL *)
+					       nbi_surface_node_weight(s,nn),
 					       NBI_SURFACE_NODE_LENGTH) ;
   nbi_surface_patch_number(s) ++ ;
   np = nbi_surface_patch_number(s) ;
@@ -157,11 +162,14 @@ static gint ellipsoid_patch_pair(nbi_surface_t *s,
 					       th0, ph0, th1, ph1, th1, ph0,
 					       &(st[0]), 3, &(st[1]), 3,
 					       &(st[2]), 3, nq,
+					       (NBI_REAL *)
 					       nbi_surface_node(s,nn),
 					       NBI_SURFACE_NODE_LENGTH,
+					       (NBI_REAL *)
 					       nbi_surface_normal(s,nn),
 					       NBI_SURFACE_NODE_LENGTH,
-					       &(nbi_surface_node_weight(s,nn)),
+					       (NBI_REAL *)
+					       nbi_surface_node_weight(s,nn),
 					       NBI_SURFACE_NODE_LENGTH) ;
   nbi_surface_patch_number(s) ++ ;
   nbi_surface_node_number(s) += nq ;
@@ -207,12 +215,13 @@ gint NBI_FUNCTION_NAME(nbi_geometry_ellipsoid)(nbi_surface_t *s,
     al = 1.0 ; bt = 0.0 ; xstr = NBI_SURFACE_NODE_LENGTH ;
     for ( i = 0 ; i < nbi_surface_patch_number(s) ; i ++ ) {
       j = nbi_surface_patch_node(s, i) ;
-      xi = nbi_surface_node(s, j) ;
+      xi = (NBI_REAL *)nbi_surface_node(s, j) ;
       blaswrap_dgemm(FALSE, FALSE, nq, i3, nq, al, K, nq, xi, xstr,
 		     bt, ce, i3) ;
       for ( k = 0 ; k < nq ; k ++ ) {
 	NBI_FUNCTION_NAME(sqt_element_interp)(ce, nq, Nk,
 					      st[3*k+0], st[3*k+1], xx,
+					      (NBI_REAL *)
 					      nbi_surface_normal(s, j+k),
 					      &J, NULL, work) ;
       }
@@ -256,11 +265,12 @@ static gint sphere_ico_add_patches(nbi_surface_t *s,
     NBI_FUNCTION_NAME(sqt_patch_nodes_tri)(xe, 3, 3, &(st[0]), 3, &(st[1]), 3,
 					   &(st[2]), 3,
 					   nst, 
-					   nbi_surface_node(s,nn),
+					   (NBI_REAL *)nbi_surface_node(s,nn),
 					   NBI_SURFACE_NODE_LENGTH,
-					   nbi_surface_normal(s,nn),
+					   (NBI_REAL *)nbi_surface_normal(s,nn),
 					   NBI_SURFACE_NODE_LENGTH,
-					   &(nbi_surface_node_weight(s,nn)),
+					   (NBI_REAL *)
+					   nbi_surface_node_weight(s,nn),
 					   NBI_SURFACE_NODE_LENGTH) ;
     nbi_surface_patch_number(s) ++ ;
     np = nbi_surface_patch_number(s) ;
@@ -363,8 +373,8 @@ gint NBI_FUNCTION_NAME(nbi_geometry_sphere_ico)(nbi_surface_t *s,
   
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
     NBI_REAL *n, *x, th, ph, rho ;
-    x = nbi_surface_node(s, i) ;
-    n = nbi_surface_normal(s, i) ;
+    x = (NBI_REAL *)nbi_surface_node(s, i) ;
+    n = (NBI_REAL *)nbi_surface_normal(s, i) ;
     cart2sph(x, &rho, &th, &ph) ;
     n[0] = x[0]/rho ;
     n[1] = x[1]/rho ;
@@ -387,8 +397,8 @@ gint NBI_FUNCTION_NAME(nbi_geometry_ellipsoid_ico)(nbi_surface_t *s,
   
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
     NBI_REAL *n, *x, th, ph, rho, Cp, Sp, Ct, St ;
-    x = nbi_surface_node(s, i) ;
-    n = nbi_surface_normal(s, i) ;
+    x = (NBI_REAL *)nbi_surface_node(s, i) ;
+    n = (NBI_REAL *)nbi_surface_normal(s, i) ;
     cart2sph(x, &rho, &th, &ph) ;
     Cp = cos(ph) ; Sp = sin(ph) ;
     Ct = cos(th) ; St = sin(th) ;

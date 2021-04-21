@@ -101,7 +101,8 @@ nbi.lo: nbi.c /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/sched.h /usr/include/bits/sched.h \
  /usr/include/bits/setjmp.h \
  /usr/include/glib-2.0/glib/glib-autocleanups.h \
- /home/michael/Codes/include/sqt.h nbi.h nbi-private.h
+ /home/michael/Codes/include/sqt.h /home/michael/Codes/include/blaswrap.h \
+ nbi.h /home/michael/Codes/include/wbfmm.h nbi-private.h
 
 /usr/include/stdc-predef.h:
 
@@ -413,6 +414,10 @@ nbi.lo: nbi.c /usr/include/stdc-predef.h /usr/include/stdio.h \
 
 /home/michael/Codes/include/sqt.h:
 
+/home/michael/Codes/include/blaswrap.h:
+
 nbi.h:
+
+/home/michael/Codes/include/wbfmm.h:
 
 nbi-private.h:

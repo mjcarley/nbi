@@ -60,8 +60,8 @@ static gint make_sources(nbi_surface_t *s,
   gint i ;
 
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
-    x = nbi_surface_node(s, i) ;
-    n = nbi_surface_normal(s, i) ;
+    x = (NBI_REAL *)nbi_surface_node(s, i) ;
+    n = (NBI_REAL *)nbi_surface_normal(s, i) ;
 
     nbi_vector_diff(r, x, xs) ;
     R = nbi_vector_length(r) ;
@@ -86,8 +86,7 @@ static gdouble greens_function_laplace(gdouble *x, gdouble *y)
   return G ;
 }
 
-static gint point_source_field_laplace(/* nbi_surface_t *s, */
-				       gdouble *xs, gint xstr, gint ns,
+static gint point_source_field_laplace(gdouble *xs, gint xstr, gint ns,
 				       gdouble *p , gint pstr, gdouble pwt,
 				       gdouble *pn, gint nstr, gdouble nwt,
 				       gdouble *x, gdouble wt, gdouble *f)
@@ -130,8 +129,6 @@ gint nbi_surface_greens_identity_laplace(nbi_surface_t *s, gint *idx,
   
   memset(f, 0, nbi_surface_node_number(s)*sizeof(gdouble)) ;
 
-  /* work = (gdouble *)g_malloc(16384*sizeof(gdouble)) ; */
-
   if ( tree == NULL ) {
     fprintf(stderr, "%s: starting point source summation; t=%lg\n",
 	    __FUNCTION__, g_timer_elapsed(timer, NULL)) ;
@@ -141,7 +138,7 @@ gint nbi_surface_greens_identity_laplace(nbi_surface_t *s, gint *idx,
       point_source_field_laplace(xu, ustr, nu,
 				 pu, pustr, pwt,
 				 pnu, nustr, nwt,
-				 nbi_surface_node(s, i),
+				 (NBI_REAL *)nbi_surface_node(s, i),
 				 1.0, &(f[i])) ;
     }
     fprintf(stderr, "%s: point source summation complete; t=%lg\n",
@@ -149,7 +146,6 @@ gint nbi_surface_greens_identity_laplace(nbi_surface_t *s, gint *idx,
   } else {
     /*FMM summation*/
     gint level, depth ;
-    /* nsrc = idxu[nbi_surface_patch_number(s)] ; */
 
     depth = wbfmm_tree_depth(tree) ;
     fprintf(stderr, "%s: initializing leaf expansions; %lg\n",
@@ -183,9 +179,10 @@ gint nbi_surface_greens_identity_laplace(nbi_surface_t *s, gint *idx,
     } else {
       for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
 	guint64 box ;
-	box = wbfmm_point_box(tree, tree->depth, nbi_surface_node(s, i)) ;
+	box = wbfmm_point_box(tree, tree->depth,
+			      (NBI_REAL *)nbi_surface_node(s, i)) ;
 	wbfmm_tree_laplace_box_local_field(tree, tree->depth, box,
-					   nbi_surface_node(s,i),
+					   (NBI_REAL *)nbi_surface_node(s,i),
 					   &(f[i]),
 					   pnu, nustr,
 					   &(xu[3]), ustr,
@@ -195,8 +192,6 @@ gint nbi_surface_greens_identity_laplace(nbi_surface_t *s, gint *idx,
     }
   }
 
-  /* return 0 ; */
-  
   fprintf(stderr, "%s: starting local corrections; t=%lg\n",
 	  __FUNCTION__, g_timer_elapsed(timer, NULL)) ;
 
@@ -223,7 +218,7 @@ gint nbi_surface_greens_identity_laplace(nbi_surface_t *s, gint *idx,
       point_source_field_laplace(&(xu[ip*ustr]), ustr, nu,
       				 &(pu [ip*pustr]), pustr, pwt,
       				 &(pnu[ip*nustr]), nustr, nwt,
-      				 nbi_surface_node(s, nbrs[i]),
+      				 (NBI_REAL *)nbi_surface_node(s, nbrs[i]),
       				 -1.0, &(f[nbrs[i]])) ;
     }
   }
@@ -416,7 +411,6 @@ gint main(gint argc, gchar **argv)
     wbfmm_source_t source ;
 
     source = WBFMM_SOURCE_MONOPOLE | WBFMM_SOURCE_DIPOLE ;
-    /* order_s = 20 ; order_r = 20 ; */
     order_s = order_fmm ; order_r = order_fmm ;
     order[2*depth+0] = order_s ; 
     order[2*depth+1] = order_r ; 
@@ -434,7 +428,8 @@ gint main(gint argc, gchar **argv)
 	    progname, t = g_timer_elapsed(timer, NULL)) ;
     xtree[0] = xtree[1] = xtree[2] = 0.0 ;
     wbfmm_points_origin_width(xu, ustr, nsrc, xtree, xtmax, &D, TRUE) ;
-    wbfmm_points_origin_width(nbi_surface_node(s,0), NBI_SURFACE_NODE_LENGTH,
+    wbfmm_points_origin_width((NBI_REAL *)nbi_surface_node(s,0),
+			      NBI_SURFACE_NODE_LENGTH,
 			      nbi_surface_node_number(s),
 			      xtree, xtmax, &D, FALSE) ;
 
@@ -444,7 +439,6 @@ gint main(gint argc, gchar **argv)
 	    progname, t = g_timer_elapsed(timer, NULL)) ;
 
     fmmpstr = ustr*sizeof(gdouble) ;
-    /* fmmfstr = strf*sizeof(gdouble) ; */
     tree = wbfmm_tree_new(xtree, D, 2*nsrc) ;
     fmm_work_size = wbfmm_element_number_rotation(2*order_max) ;
     fmm_work_size = MAX(fmm_work_size, (order_max+1)*(order_max+1)*nqfmm*16) ;
@@ -505,7 +499,7 @@ gint main(gint argc, gchar **argv)
     
     emax = 0.0 ; fmax = 0.0 ;
     for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
-      xp = nbi_surface_node(s,i) ;
+      xp = (NBI_REAL *)nbi_surface_node(s,i) ;
       G = greens_function_laplace(xp, xs)*0.5 ;
       fmax = MAX(fmax, G) ;
       emax = MAX(emax, fabs(G - f[i])) ;

@@ -4,16 +4,60 @@
 ##nqp=54
 ##nqu=85
 ##tol=1e-9
-nqa=25
+
+## error 2e-7
+#nqa=25
+#nqp=54
+#nqu=126
+#tol=1e-9
+#radius=1.5
+#eta=2.0
+#depth=7
+#order=16
+#ico=2
+
+## error  0.0003
+#nqa=7
+#nqp=25
+#nqu=85
+#tol=1e-6
+#radius=1.5
+#eta=2.0
+#depth=7
+#order=8
+#ico=2
+
+## error 0.0003
+#nqa=25
+#nqp=25
+#nqu=85
+#tol=1e-6
+#radius=1.5
+#eta=2.0
+#depth=7
+#order=8
+#ico=2
+
+## error 5.8e-6
+#nqa=7
+#nqp=54
+#nqu=126
+#tol=1e-6
+#radius=1.5
+#eta=2.0
+#depth=7
+#order=12
+#ico=2
+
+## error 1.6e-5
+nqa=7
 nqp=54
-nqu=126
-tol=1e-9
+nqu=175
+tol=1e-6
 radius=1.5
-##eta=1.25
-##depth=6
-eta=2.0
-depth=7
-order=16
+eta=1.25
+depth=6
+order=4
 ico=2
 
 bin=../tools
@@ -25,10 +69,14 @@ opts="-e ${tol} -a ${nqa} -q ${nqp} -u ${nqu} \
       -r ${radius} -n ${eta} -d ${depth} -N ${order} \
       -m ${mfile} -g ${gfile} -i ${ico}"
 echo -- ${opts}
-#${bin}/nbi-assemble ${opts}
+#${bin}/nbi-assemble-laplace ${opts}
 
-#${bin}/nbi-solve -m ${mfile} -g ${gfile} > field.dat
-${bin}/nbi-solve -f -m ${mfile} -g ${gfile} -l -T 3 -o 16 -d 1 > fieldfmm.dat
+#${bin}/nbi-solve-laplace -m ${mfile} -g ${gfile} -G > field.dat
+${bin}/nbi-solve-laplace -m ${mfile} -g ${gfile} -L > field.dat
+#${bin}/nbi-solve-laplace -f -m ${mfile} -g ${gfile} -T 3 -o 16 -d 1 -G \
+#      > fieldfmm.dat
+${bin}/nbi-solve-laplace -f -m ${mfile} -g ${gfile} -T 3 -o 16 -d 1 -L \
+      > fieldfmm.dat
 
 ## -g ellipsoid-ico-2-85.dat -m matrix-ico-2-85-175.dat L_inf norm: 5.83179e-07
 ## -g ellipsoid-ico-2-54.dat -m matrix-ico-2-54-85.dat L_inf norm: 6.97742e-07

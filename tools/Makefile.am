@@ -5,11 +5,11 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir)
 DEPS = $(top_builddir)/src/libnbi.la
 
 bin_PROGRAMS = \
-	nbi-solve \
-	nbi-assemble
+	nbi-solve-laplace \
+	nbi-assemble-laplace
 
-nbi_solve_LDADD = \
+nbi_solve_laplace_LDADD = \
 	$(top_builddir)/src/.libs/libnbi.a 
 
-nbi_assemble_LDADD = \
+nbi_assemble_laplace_LDADD = \
 	$(top_builddir)/src/.libs/libnbi.a 
