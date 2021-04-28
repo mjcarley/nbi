@@ -139,7 +139,8 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libnbi_la_LIBADD =
-am_libnbi_la_OBJECTS = nbi.lo geometries.lo laplace.lo solvers.lo
+am_libnbi_la_OBJECTS = nbi.lo geometries.lo laplace.lo solvers.lo \
+	tinyexpr.lo expressions.lo
 libnbi_la_OBJECTS = $(am_libnbi_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -372,10 +373,13 @@ libnbi_la_SOURCES = \
 	geometries.c \
 	nbi-private.h \
 	laplace.c \
-	solvers.c
+	solvers.c \
+	tinyexpr.c \
+	expressions.c
 
 include_HEADERS = \
-	nbi.h
+	nbi.h \
+	tinyexpr.h
 
 CLEANFILES = $(BUILT_SOURCES)
 all: $(BUILT_SOURCES)
@@ -494,10 +498,12 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/expressions.Plo
 include ./$(DEPDIR)/geometries.Plo
 include ./$(DEPDIR)/laplace.Plo
 include ./$(DEPDIR)/nbi.Plo
 include ./$(DEPDIR)/solvers.Plo
+include ./$(DEPDIR)/tinyexpr.Plo
 
 .c.o:
 	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\

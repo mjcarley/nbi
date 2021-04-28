@@ -19,9 +19,12 @@ libnbi_la_SOURCES = \
 	geometries.c \
 	nbi-private.h \
 	laplace.c \
-	solvers.c
+	solvers.c \
+	tinyexpr.c \
+	expressions.c
 
 include_HEADERS = \
-	nbi.h
+	nbi.h \
+	tinyexpr.h
 
 CLEANFILES = $(BUILT_SOURCES)

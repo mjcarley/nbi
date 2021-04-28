@@ -22,6 +22,8 @@
 #define NBI_SURFACE_PATCH_LENGTH  2
 #define NBI_SURFACE_PATCH_DATA_LENGTH     4
 
+#define NBI_EXPRESSION_VARIABLE_NUMBER 6
+
 #include <stdio.h>
 
 #include <wbfmm.h>
@@ -111,6 +113,23 @@ struct _nbi_matrix_t {
   *shifts ;   /*< FMM shift operators if applicable */
 } ;
 
+typedef struct _nbi_expression_t nbi_expression_t ;
+
+struct _nbi_expression_t {
+  gchar *expression ; /*< text of the expression to be evaluated */
+  gdouble x[NBI_EXPRESSION_VARIABLE_NUMBER] ;
+  gpointer compiled ; /*< compiled version for evaluation by tinyexpr */
+  gpointer vars ;
+} ;
+
+typedef struct _nbi_boundary_condition_t nbi_boundary_condition_t ;
+
+struct _nbi_boundary_condition_t {
+  nbi_problem_t problem ;
+  nbi_expression_t *e[4] ;
+} ;
+  
+
 nbi_surface_t *nbi_surface_alloc(gint nnmax, gint npmax) ;
 gint nbi_surface_write(nbi_surface_t *s, FILE *f) ;
 nbi_surface_t *nbi_surface_read(FILE *f) ;
@@ -173,5 +192,10 @@ gint nbi_matrix_multiply_laplace(nbi_matrix_t *A,
 				 gdouble *x, gint xstr, gdouble al,
 				 gdouble *y, gint ystr, gdouble bt,
 				 gdouble *work) ;
+
+nbi_expression_t *nbi_expression_new(gchar *expression) ;
+gdouble nbi_expression_eval(nbi_expression_t *e, gdouble *x, gdouble *n) ;
+nbi_boundary_condition_t *nbi_boundary_condition_new(nbi_problem_t problem) ;
+gint nbi_boundary_condition_add(nbi_boundary_condition_t *b, gchar *e) ;
 
 #endif /*NBI_H_INCLUDED*/
