@@ -28,6 +28,10 @@
 
 #include <nbi.h>
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif /*HAVE_CONFIG_H*/
+
 #include "nbi-private.h"
 
 static gint sphere_patch_pair(nbi_surface_t *s, NBI_REAL r,

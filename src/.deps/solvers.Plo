@@ -1,4 +1,4 @@
-nbi.lo: nbi.c /usr/include/stdc-predef.h /usr/include/stdio.h \
+solvers.lo: solvers.c /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/features.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
  /usr/include/gnu/stubs-64.h \

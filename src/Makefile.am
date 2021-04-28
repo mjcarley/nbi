@@ -17,7 +17,9 @@ libnbi_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)\
 libnbi_la_SOURCES = \
 	nbi.c \
 	geometries.c \
-	nbi-private.h
+	nbi-private.h \
+	laplace.c \
+	solvers.c
 
 include_HEADERS = \
 	nbi.h

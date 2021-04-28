@@ -28,12 +28,14 @@
 
 typedef enum
   {
+   NBI_PROBLEM_UNDEFINED = 0,
    NBI_PROBLEM_LAPLACE = 1, /**< Laplace equation */
    NBI_PROBLEM_HELMHOLTZ = 2 /**< Helmholtz equation */	      
   } nbi_problem_t ;	      
 
 typedef enum
   {
+   NBI_POTENTIAL_UNDEFINED = 0,
    NBI_POTENTIAL_SINGLE = 1, /*< single-layer potential 
 			       \f$\int G\sigma dS\f$*/
    NBI_POTENTIAL_DOUBLE = 2  /*< double-layer potential 
@@ -55,8 +57,6 @@ struct _nbi_surface_t {
   gsize
   fpsize ; /*< size of floating point data (single or double precision)*/
 } ;
-
-typedef struct _nbi_matrix_t nbi_matrix_t ;
 
 
 #define nbi_surface_node_number(_s)  ((_s)->nn)
@@ -83,10 +83,14 @@ typedef struct _nbi_matrix_t nbi_matrix_t ;
 #define nbi_surface_node_weight(_s,_i)		\
   &((_s)->xc[((_i)*NBI_SURFACE_NODE_LENGTH+6)*((_s)->fpsize)])
 
+typedef struct _nbi_matrix_t nbi_matrix_t ;
+
 struct _nbi_matrix_t {
   nbi_surface_t *s ;
   gsize fpsize ; /*< floating point data size */
+  gdouble diag ; /*< in multiplications add diag*I */
   nbi_problem_t problem ;
+  nbi_potential_t potential ;
   gint
   ustr,     /*< upsampled patch node stride */
     pstr,   /*< upsampled node potential stride */
@@ -143,8 +147,31 @@ gint nbi_element_interp_matrix(gint ns, gdouble **K, gint *Nk) ;
 nbi_matrix_t *nbi_matrix_new(nbi_surface_t *s) ;
 gint nbi_matrix_read(FILE *input, nbi_matrix_t *m) ;
 gint nbi_matrix_upsample_laplace(nbi_matrix_t *m,
-				 gdouble *p, gint pstr,
-				 gdouble *pn, gint nstr,
-				 gdouble pwt, gdouble nwt) ;
-  
+				 gdouble *p, gint pstr, gdouble pwt, 
+				 gdouble *pn, gint nstr, gdouble nwt) ;
+
+gint nbi_matrix_fmm_init(nbi_matrix_t *m,
+			 nbi_problem_t problem,
+			 wbfmm_shift_operators_t *shifts,
+			 guint *order_s, gint sstr,
+			 guint *order_r, gint rstr,
+			 gint depth,
+			 gdouble dtree,
+			 gboolean shift_bw,
+			 gdouble *work) ;
+gint nbi_matrix_multiply(nbi_matrix_t *A,
+			 gdouble *x, gint xstr, gdouble al,
+			 gdouble *y, gint ystr, gdouble bt,
+			 gdouble *work) ;
+
+gint nbi_surface_greens_identity_laplace(nbi_matrix_t *m,
+					 gdouble *p , gint pstr, gdouble pwt,
+					 gdouble *pn, gint nstr, gdouble nwt,
+					 gdouble *f , gint fstr,
+					 gdouble *work) ;
+gint nbi_matrix_multiply_laplace(nbi_matrix_t *A,
+				 gdouble *x, gint xstr, gdouble al,
+				 gdouble *y, gint ystr, gdouble bt,
+				 gdouble *work) ;
+
 #endif /*NBI_H_INCLUDED*/

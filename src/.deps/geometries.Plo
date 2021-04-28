@@ -102,7 +102,7 @@ geometries.lo: geometries.c /usr/include/stdc-predef.h \
  /usr/include/bits/setjmp.h \
  /usr/include/glib-2.0/glib/glib-autocleanups.h \
  /home/michael/Codes/include/blaswrap.h /home/michael/Codes/include/sqt.h \
- nbi.h /home/michael/Codes/include/wbfmm.h nbi-private.h
+ nbi.h /home/michael/Codes/include/wbfmm.h ../config.h nbi-private.h
 
 /usr/include/stdc-predef.h:
 
@@ -419,5 +419,7 @@ geometries.lo: geometries.c /usr/include/stdc-predef.h \
 nbi.h:
 
 /home/michael/Codes/include/wbfmm.h:
+
+../config.h:
 
 nbi-private.h:

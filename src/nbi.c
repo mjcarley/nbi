@@ -28,6 +28,10 @@
 
 #include <nbi.h>
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif /*HAVE_CONFIG_H*/
+
 #include "nbi-private.h"
 
 NBI_REAL **_Ku = NULL, **_Ki = NULL ;
@@ -310,7 +314,10 @@ nbi_matrix_t *NBI_FUNCTION_NAME(nbi_matrix_new)(nbi_surface_t *s)
 
   m = (nbi_matrix_t *)g_malloc(sizeof(nbi_matrix_t)) ;
 
-  m->problem = 0 ;
+  m->diag = 0.0 ;
+  
+  m->problem = NBI_PROBLEM_UNDEFINED ;
+  m->potential = NBI_POTENTIAL_UNDEFINED ;
   m->s = s ;
   m->fpsize = sizeof(NBI_REAL) ;
 
@@ -399,54 +406,104 @@ gint NBI_FUNCTION_NAME(nbi_matrix_read)(FILE *input, nbi_matrix_t *m)
   return 0 ;
 }
 
-static gint upsample_sources(nbi_surface_t *s,
-			     NBI_REAL *p, gint pstr, NBI_REAL *pn, gint nstr,
-			     NBI_REAL *wt, gint wstr, gint *idxu,
-			     NBI_REAL *pu, gint pustr, NBI_REAL pwt,
-			     NBI_REAL *pnu, gint nustr, NBI_REAL nwt)
+
+gint NBI_FUNCTION_NAME(nbi_matrix_fmm_init)(nbi_matrix_t *m,
+					    nbi_problem_t problem,
+					    wbfmm_shift_operators_t *shifts,
+					    guint *order_s, gint sstr,
+					    guint *order_r, gint rstr,
+					    gint depth,
+					    NBI_REAL dtree,
+					    gboolean shift_bw,
+					    NBI_REAL *work)
 
 {
-  gint i, j, pt, ns, nu ;
-  gdouble *K, al, bt ;
+  gint fmmpstr, ustr, nsrc, i, nqfmm ;
+  wbfmm_source_t source ;
+  NBI_REAL xtree[3], xtmax[3], *xu, D ;
+  guint order_max, field ;
+  nbi_surface_t *s = m->s ;
 
-  al =  1.0 ; bt = 0.0 ;
-  for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
-    ns = nbi_surface_patch_node_number(s, pt) ;
-    nu = idxu[pt+1] - idxu[pt] ;
-    K = NBI_FUNCTION_NAME(nbi_patch_upsample_matrix)(ns, nu) ;
-
-    i = nbi_surface_patch_node(s, pt) ;
-    j = idxu[pt] ;
-    /* if ( pstr != 0 )  */
-    blaswrap_dgemv(FALSE, nu, ns, al, K, ns,
-		   &(p[i*pstr]), pstr, bt, &(pu[j*pustr]), pustr) ;
-    /* if ( nstr != 0 )  */
-    blaswrap_dgemv(FALSE, nu, ns, al, K, ns,
-		   &(pn[i*pstr]), nstr, bt, &(pnu[j*pustr]), nustr) ;
-    for ( i = 0 ; i < nu ; i ++ ) {
-      pu [(j+i)*pustr] *= pwt*wt[(j+i)*wstr] ;
-      pnu[(j+i)*nustr] *= nwt*wt[(j+i)*wstr] ;
-    }
+  nqfmm = 1 ;
+  order_max = 0 ;
+  for ( i = 0 ; i <= depth ; i ++ ) {
+    order_max = MAX(order_s[i*sstr], order_max) ;
+    order_max = MAX(order_r[i*rstr], order_max) ;
   }
-  
-  return 0 ;
-}
 
-gint NBI_FUNCTION_NAME(nbi_matrix_upsample_laplace)(nbi_matrix_t *m,
-						    NBI_REAL *p, gint pstr,
-						    NBI_REAL *pn, gint nstr,
-						    NBI_REAL pwt, NBI_REAL nwt)
-
-{
-  NBI_REAL *xu, *su, *sn ;
-
-  su = (NBI_REAL *)(m->p ) ;
-  sn = (NBI_REAL *)(m->pn) ;
   xu = (NBI_REAL *)(m->xu) ;
-  upsample_sources(m->s, p, pstr, pn, nstr, 
-		   &(xu[6]), m->ustr, m->idxu,
-		   su, m->pstr, pwt, sn, m->nstr, nwt) ;
+  ustr = m->ustr ;
+  nsrc = m->idxu[nbi_surface_patch_number(s)] ;
   
+  source = WBFMM_SOURCE_MONOPOLE | WBFMM_SOURCE_DIPOLE ;
+  field = WBFMM_FIELD_SCALAR ;
+  xtree[0] = xtree[1] = xtree[2] = 0.0 ;
+  wbfmm_points_origin_width(xu, ustr, nsrc, xtree, xtmax, &D, TRUE) ;
+  wbfmm_points_origin_width((NBI_REAL *)nbi_surface_node(s,0),
+			    NBI_SURFACE_NODE_LENGTH,
+			    nbi_surface_node_number(s),
+			    xtree, xtmax, &D, FALSE) ;
+
+  xtree[0] -= dtree ; xtree[1] -= dtree ; xtree[2] -= dtree ;
+  D += 2.0*dtree ;
+
+  fmmpstr = ustr*sizeof(NBI_REAL) ;
+  m->tree = wbfmm_tree_new(xtree, D, 2*nsrc) ;
+
+  if ( shifts != NULL )
+    m->shifts = shifts ;
+  else
+    m->shifts = wbfmm_shift_operators_new(order_max, shift_bw, work) ;
+
+  wbfmm_tree_add_points(m->tree,
+			(gpointer)xu, fmmpstr,
+			(gpointer)(&(xu[3])), fmmpstr, nsrc) ;
+  
+  for ( i = 0 ; i < depth ; i ++ ) wbfmm_tree_refine(m->tree) ;
+
+  switch ( problem ) {
+  default: g_assert_not_reached() ; break ;
+  case NBI_PROBLEM_LAPLACE:
+    wbfmm_tree_problem(m->tree) = WBFMM_PROBLEM_LAPLACE ;
+    wbfmm_tree_source_size(m->tree) = nqfmm ;
+    for ( i = 1 ; i <= depth ; i ++ ) {
+      wbfmm_tree_laplace_coefficient_init(m->tree, i,
+					  order_r[i*rstr], order_s[i*sstr]) ;
+    }
+    
+    m->targets = wbfmm_target_list_new(m->tree, nbi_surface_node_number(s)) ;
+    wbfmm_target_list_coefficients_init(m->targets, field) ;
+    wbfmm_target_list_add_points(m->targets,
+				 (gpointer)nbi_surface_node(s,0),
+				 NBI_SURFACE_NODE_LENGTH*sizeof(gdouble),
+				 nbi_surface_node_number(s)) ;
+  
+    wbfmm_laplace_target_list_local_coefficients(m->targets, source, work) ;
+    return 0 ;
+    break ;
+  }
+
   return 0 ;
 }
 						    
+gint NBI_FUNCTION_NAME(nbi_matrix_multiply)(nbi_matrix_t *A,
+					    NBI_REAL *x, gint xstr, NBI_REAL al,
+					    NBI_REAL *y, gint ystr, NBI_REAL bt,
+					    NBI_REAL *work)
+
+/*
+  y := al*A*x + bt*y
+*/
+  
+{
+  switch ( A-> problem ) {
+  default: g_assert_not_reached() ; break ;
+  case NBI_PROBLEM_LAPLACE:
+    NBI_FUNCTION_NAME(nbi_matrix_multiply_laplace)(A,
+						   x, xstr, al,
+						   y, ystr, bt, work) ;
+    break ;
+  }  
+
+  return 0 ;
+}

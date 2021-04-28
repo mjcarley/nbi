@@ -1,4 +1,4 @@
-nbi.lo: nbi.c /usr/include/stdc-predef.h /usr/include/stdio.h \
+laplace.lo: laplace.c /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/features.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
  /usr/include/gnu/stubs-64.h \
@@ -101,8 +101,8 @@ nbi.lo: nbi.c /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/sched.h /usr/include/bits/sched.h \
  /usr/include/bits/setjmp.h \
  /usr/include/glib-2.0/glib/glib-autocleanups.h \
- /home/michael/Codes/include/sqt.h /home/michael/Codes/include/blaswrap.h \
- nbi.h /home/michael/Codes/include/wbfmm.h ../config.h nbi-private.h
+ /home/michael/Codes/include/sqt.h /home/michael/Codes/include/wbfmm.h \
+ /home/michael/Codes/include/blaswrap.h nbi.h ../config.h nbi-private.h
 
 /usr/include/stdc-predef.h:
 
@@ -414,11 +414,11 @@ nbi.lo: nbi.c /usr/include/stdc-predef.h /usr/include/stdio.h \
 
 /home/michael/Codes/include/sqt.h:
 
+/home/michael/Codes/include/wbfmm.h:
+
 /home/michael/Codes/include/blaswrap.h:
 
 nbi.h:
-
-/home/michael/Codes/include/wbfmm.h:
 
 ../config.h:
 
