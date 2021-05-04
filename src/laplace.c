@@ -52,6 +52,8 @@
 #define NBI_THREAD_DATA_RSTR     12
 #define NBI_THREAD_DATA_NTHREADS 13
 
+#define NBI_THREAD_NUMBER_MAX     8
+
 static gint point_source_field_laplace(NBI_REAL *xs, gint xstr, gint ns,
 				       NBI_REAL *p , gint pstr, NBI_REAL pwt,
 				       NBI_REAL *pn, gint nstr, NBI_REAL nwt,
@@ -301,7 +303,7 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_laplace)(nbi_matrix_t *m,
 							    NBI_REAL *work)
 
 {
-  gint i, nsts, lda, *idx, *idxp ;
+  gint i, *idx, *idxp ;
   NBI_REAL *A, sgn ;
   nbi_surface_t *s ;
 
@@ -321,8 +323,9 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_laplace)(nbi_matrix_t *m,
 
   /*local corrections*/
 #ifdef _OPENMP
-  GThread *threads[16] ;
-  gpointer data[NBI_THREAD_DATA_SIZE], main_data[48] ;
+  GThread *threads[NBI_THREAD_NUMBER_MAX] ;
+  gpointer data[NBI_THREAD_DATA_SIZE],
+    main_data[NBI_THREAD_NUMBER_MAX*3] ;
   gint nnmax = 512 ;
   
   data[NBI_THREAD_DATA_SURFACE  ] = s ;
