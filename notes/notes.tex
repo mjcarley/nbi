@@ -1,0 +1,30 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{times}
+\usepackage{amsmath}
+
+\begin{document}
+
+(Notes on some details of implementation for reference during development)
+
+
+Local correction integrals are implemented as matrix multiplications
+of the source vector at patch nodes:
+\begin{align}
+  \phi(\mathbf{x}_{i})
+  &=
+  \sum_{j} A_{ij}\sigma_{j},
+\end{align}
+where $A_{ij}$ is a matrix of size $N_{n}\times n_{p}$, with $N_{n}$
+the number of neighbours, including the patch nodes, and $n_{p}$ the
+number of patch nodes. The result of the matrix multiplication is
+given at nodes $\mathbf{x}_{i}$, the location of the $i$th entry in
+the neighbour list of the patch. The correction matrices are computed
+for the single and double layer potentials and packed together. 
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

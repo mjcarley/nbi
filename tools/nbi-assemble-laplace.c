@@ -28,12 +28,23 @@
 
 #include <blaswrap.h>
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif /*HAVE_CONFIG_H*/
+
 #include "nbi-private.h"
 
 GTimer *timer ;
 gchar *progname ;
 
-#define LOCAL_CUTOFF_RADIUS 1e-6
+gint nbi_surface_assemble_write(nbi_surface_t *s, gdouble eta,
+				gint nq, gint dmax, gdouble tol, gint N,
+				gint nu,				
+				gint *idx, gint *idxp, gint nnmax,
+				gint *idxu, gint nqu,
+				FILE *output) ;
+
+/* #define LOCAL_CUTOFF_RADIUS 1e-6 */
 
 /* static gint matrix_scale_weights(gdouble *A, gint nr, gint nc, */
 /* 				 gdouble *w, gint wstr) */
@@ -115,6 +126,36 @@ static gint upsample_patch(gdouble *xs, gint sstr, gint ns,
   return nu ;
 }
 
+static gint correct_matrix(gdouble *xp, gint pstr, gint np,
+			   gdouble *xu, gint ustr, gint nu,
+			   gdouble *x , gint xstr,
+			   gint *nbrs, gint nnbrs,
+			   gdouble *Ku, gdouble *Ast)
+
+{
+  gint lda = 2*np, i, j, one = 1 ;
+  gdouble R, *xf, *xup, r[3], al ;
+
+  for ( i = 0 ; i < nnbrs ; i ++ ) {
+    /*field point for correction*/
+    xf = &(x[nbrs[i]*xstr]) ;
+    for ( j = 0 ; j < nu ; j ++ ) {
+      xup = &(xu[j*ustr]) ;
+      nbi_vector_diff(r, xf, xup) ; 
+      R = nbi_vector_length(r) ;
+      /* g_assert(R > NBI_LOCAL_CUTOFF_RADIUS) ; */
+      if ( R > NBI_LOCAL_CUTOFF_RADIUS ) {
+	al = -0.25*M_1_PI/R*xup[6] ;
+	blaswrap_daxpy(np, al, &(Ku[j*np]), one, &(Ast[i*lda+0*np]), one) ;
+	al *= nbi_vector_scalar(r,&(xup[3]))/R/R ;
+	blaswrap_daxpy(np, al, &(Ku[j*np]), one, &(Ast[i*lda+1*np]), one) ;
+      }
+    }
+  }
+  
+  return 0 ;
+}
+  
 gint nbi_surface_assemble_write(nbi_surface_t *s, gdouble eta,
 				gint nq, gint dmax, gdouble tol, gint N,
 				gint nu,				
@@ -125,8 +166,8 @@ gint nbi_surface_assemble_write(nbi_surface_t *s, gdouble eta,
 {
   gint i, j, ip, order, nsts, nst, xstr, nntot, lda, pt, *nbrs, nnbrs ;
   gint wsize ;
-  gdouble r, NK0, K0[453*453], *q, *st, *Ast, *xs, *work ;
-  gdouble *xu ;
+  gdouble r, NK0, K0[453*453], *q, *st, *Ast, *xs, *work, *xu, *Ku ;
+  gchar header[NBI_HEADER_LENGTH+1], buf[40] ;
   
   xstr = NBI_SURFACE_NODE_LENGTH ;
 
@@ -162,7 +203,6 @@ gint nbi_surface_assemble_write(nbi_surface_t *s, gdouble eta,
     ip = nbi_surface_patch_node(s, pt) ;
     xs = (NBI_REAL *)nbi_surface_node(s,ip) ;
     xstr = NBI_SURFACE_NODE_LENGTH ;
-    /* c = nbi_surface_patch_centre(s, pt) ; */
     r = *((NBI_REAL *)nbi_surface_patch_sphere_radius(s, pt)) ;
     
     /*find the neighbours*/
@@ -184,7 +224,16 @@ gint nbi_surface_assemble_write(nbi_surface_t *s, gdouble eta,
 		     nqu, &(xu[idxu[pt]*xstr]), xstr) ;
   }
 
-  fprintf(output, "%d %d\n", nbi_surface_patch_number(s), xstr) ;
+  nbi_header_init(header, "NBI", "1.0", "MAT", "A") ;
+  sprintf(buf, "%d %d %d",
+	  nbi_surface_patch_number(s), xstr, nst) ;
+	  /* nbi_surface_patch_number(s), nst) ;	   */
+
+  nbi_header_insert_string(header, NBI_HEADER_DATA, 40, buf) ;
+
+  nbi_header_write(output, header) ;
+  
+  /* fprintf(output, "%d %d\n", nbi_surface_patch_number(s), xstr) ; */
   for ( i = 0 ; i < nbi_surface_patch_number(s)+1 ; i ++ ) {
     fprintf(output, "%d %d\n", i, idxu[i]) ;
   }
@@ -194,7 +243,7 @@ gint nbi_surface_assemble_write(nbi_surface_t *s, gdouble eta,
     fprintf(output, "\n") ;
   }
   
-  fprintf(output, "%d %d\n", nbi_surface_patch_number(s), nst) ;
+  /* fprintf(output, "%d %d\n", nbi_surface_patch_number(s), nst) ; */
   for ( i = 0 ; i < nbi_surface_patch_number(s)+1 ; i ++ ) {
     fprintf(output, "%d %d\n", i, idxp[i]) ;
   }
@@ -226,8 +275,14 @@ gint nbi_surface_assemble_write(nbi_surface_t *s, gdouble eta,
 				      K0, NK0, N,
 				      &(st[0]), 3, &(st[1]), 3,
 				      &(Ast[2*(nnbrs-nsts)*nsts]), work) ;
-    lda = 2*nsts ;
+    /*correct for the upsampled point sources*/
+    Ku = nbi_patch_upsample_matrix(nsts, nqu) ;
+    correct_matrix(xs, xstr, nsts,
+		   &(xu[idxu[pt]*xstr]), xstr, nqu,
+		   (gdouble *)nbi_surface_node(s,0), xstr,
+		   nbrs, nnbrs, Ku, Ast) ;
 
+    lda = 2*nsts ;
     for ( i = 0 ; i < nnbrs ; i ++ ) {
       for ( j = 0 ; j < lda ; j ++ )
 	fprintf(output, " %1.16e", Ast[i*lda+j]) ;
@@ -242,42 +297,36 @@ gint main(gint argc, gchar **argv)
 
 {
   nbi_surface_t *s ;
-  gint nth, nph, nq, np, nqa, dmax, N, *idx, *idxp, nnmax, nqu, *idxu ;
-  gint ico ;
+  gint nqa, dmax, N, *idx, *idxp, nnmax, nqu, *idxu ;
   gdouble r, eta, tol, t ;
-  FILE *output ;
+  FILE *output, *input ;
   gchar ch, *mfile, *gfile ;
   
-  output = stdout ;
+  output = stdout ; input = stdin ;
   
-  r = 1.0 ; nth = 16 ; nph = 8 ; nq = 25 ; nqu = 54 ;
+  r = 1.0 ; nqu = 54 ;
   eta = 1.25 ; dmax = 8 ; tol = 1e-12 ; N = 8 ; nqa = 54 ;
-  ico = -1 ;
-  nnmax = 1024 ; 
+  nnmax = 2048 ; 
   gfile = NULL ; mfile = NULL ;
   
   progname = g_strdup(g_path_get_basename(argv[0])) ;
 
-  while ( (ch = getopt(argc, argv, "a:d:e:g:i:m:N:n:p:q:r:t:u:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "a:d:e:g:m:N:n:r:u:")) != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
     case 'a': nqa  = atoi(optarg) ; break ;      
     case 'd': dmax = atoi(optarg) ; break ;
     case 'e': tol  = atof(optarg) ; break ;      
     case 'g': gfile = g_strdup(optarg) ; break ;
-    case 'i': ico = atoi(optarg) ; break ;
     case 'm': mfile = g_strdup(optarg) ; break ;
     case 'N': N    = atoi(optarg) ; break ;
     case 'n': eta  = atof(optarg) ; break ;      
-    case 'p': nph  = atoi(optarg) ; break ;
-    case 'q': nq   = atoi(optarg) ; break ;
     case 'r': r    = atof(optarg) ; break ;
-    case 't': nth  = atoi(optarg) ; break ;      
     case 'u': nqu  = atoi(optarg) ; break ;      
     }
   }
   
-  if ( gfile == NULL ) gfile = g_strdup("geometry.dat") ;
+  /* if ( gfile == NULL ) gfile = g_strdup("geometry.dat") ; */
   if ( mfile == NULL ) mfile = g_strdup("matrix.dat") ;
   
   timer = g_timer_new() ;
@@ -285,36 +334,44 @@ gint main(gint argc, gchar **argv)
   /* nbi_geometry_sphere(s, r, nth, nph, nq) ; */
   fprintf(stderr, "%s: initializing geometry r=%lg; t=%lg\n",
 	  progname, r, g_timer_elapsed(timer, NULL)) ;
-  output = fopen(gfile, "w") ;
-  if ( ico == -1 ) {
-    np = 2*nth*nph ;
-    fprintf(stderr, "nth = %d; nph = %d; nq = %d\n", nth, nph, nq) ;
-    fprintf(stderr, "r = %lg\n", r) ;
-    fprintf(stderr, "allocating surface with %d nodes, %d patches\n",
-	    np*nq, np) ;
-  
-    s = nbi_surface_alloc(np*nq, np) ;
-    nbi_geometry_ellipsoid(s, r, 1.0, 1.0, nth, nph, nq) ;
-  } else {
-    np = 20*(1 << 2*ico) ;
-    fprintf(stderr, "ico = %d; nq = %d\n", ico, nq) ;
-    fprintf(stderr, "r = %lg\n", r) ;
-    fprintf(stderr, "allocating surface with %d nodes, %d patches\n",
-	    np*nq, np) ;
-    s = nbi_surface_alloc(np*nq, np) ;    
-    /* nbi_geometry_sphere_ico(s, r, ico, nq) ; */
-    nbi_geometry_ellipsoid_ico(s, r, 1.0, 1.0, ico, nq) ;
+  if ( gfile != NULL ) {
+    input = fopen(gfile, "r") ;
+    if ( input == NULL ) {
+      fprintf(stderr, "%s: cannot open geometry file %s\n",
+	      progname, gfile) ;
+      exit(1) ;
+    }
   }
 
-  fprintf(stderr,
-	  "%s: geometry initialized, %d nodes, %d patches generated; t=%lg\n",
-	  progname, nbi_surface_node_number(s), nbi_surface_patch_number(s),
-	  g_timer_elapsed(timer, NULL)) ;
-  nbi_surface_write(s, output) ;
-  fclose(output) ;
-
-  /* return 0 ; */
+  s = nbi_surface_read(input) ;
   
+  /* if ( ico == -1 ) { */
+  /*   np = 2*nth*nph ; */
+  /*   fprintf(stderr, "nth = %d; nph = %d; nq = %d\n", nth, nph, nq) ; */
+  /*   fprintf(stderr, "r = %lg\n", r) ; */
+  /*   fprintf(stderr, "allocating surface with %d nodes, %d patches\n", */
+  /* 	    np*nq, np) ; */
+  
+  /*   s = nbi_surface_alloc(np*nq, np) ; */
+  /*   nbi_geometry_ellipsoid(s, r, 1.0, 1.0, nth, nph, nq) ; */
+  /* } else { */
+  /*   np = 20*(1 << 2*ico) ; */
+  /*   fprintf(stderr, "ico = %d; nq = %d\n", ico, nq) ; */
+  /*   fprintf(stderr, "r = %lg\n", r) ; */
+  /*   fprintf(stderr, "allocating surface with %d nodes, %d patches\n", */
+  /* 	    np*nq, np) ; */
+  /*   s = nbi_surface_alloc(np*nq, np) ;     */
+  /*   nbi_geometry_ellipsoid_ico(s, r, 1.0, 1.0, ico, nq) ; */
+  /* } */
+
+  /* fprintf(stderr, */
+  /* 	  "%s: geometry initialized, %d nodes, %d patches generated; t=%lg\n", */
+  /* 	  progname, nbi_surface_node_number(s), nbi_surface_patch_number(s), */
+  /* 	  g_timer_elapsed(timer, NULL)) ; */
+  /* nbi_surface_write(s, output) ; */
+
+  if ( gfile != NULL ) fclose(input) ;
+
   idx = (gint *)g_malloc0(nbi_surface_node_number(s)*nnmax*sizeof(gint)) ;
   idxp = (gint *)g_malloc0((nbi_surface_patch_number(s)+1)*sizeof(gint)) ;
   idxu = (gint *)g_malloc0((nbi_surface_patch_number(s)+1)*sizeof(gint)) ;

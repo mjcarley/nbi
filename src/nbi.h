@@ -24,6 +24,14 @@
 
 #define NBI_EXPRESSION_VARIABLE_NUMBER 6
 
+#define NBI_HEADER_LENGTH  80
+#define NBI_HEADER_ID       0
+#define NBI_HEADER_VERSION  4
+#define NBI_HEADER_TYPE     8
+#define NBI_HEADER_FORMAT  12
+
+#define NBI_HEADER_DATA    40
+
 #include <stdio.h>
 
 #include <wbfmm.h>
@@ -133,6 +141,16 @@ struct _nbi_boundary_condition_t {
 nbi_surface_t *nbi_surface_alloc(gint nnmax, gint npmax) ;
 gint nbi_surface_write(nbi_surface_t *s, FILE *f) ;
 nbi_surface_t *nbi_surface_read(FILE *f) ;
+
+gint nbi_header_read(FILE *f, gchar header[]) ;
+gint nbi_header_write(FILE *f, gchar header[]) ;
+gint nbi_header_init(gchar *header,
+		     gchar *id,
+		     gchar *version,
+		     gchar *type,
+		     gchar *format) ;
+gint nbi_header_insert_string(gchar *header, gint i, gint len, gchar *str) ;
+
 gint nbi_surface_patch_centroid(gdouble *x, gint xstr,
 				gdouble *w, gint wstr,
 				gint nx,
@@ -187,6 +205,7 @@ gint nbi_surface_greens_identity_laplace(nbi_matrix_t *m,
 					 gdouble *p , gint pstr, gdouble pwt,
 					 gdouble *pn, gint nstr, gdouble nwt,
 					 gdouble *f , gint fstr,
+					 gint nthreads,
 					 gdouble *work) ;
 gint nbi_matrix_multiply_laplace(nbi_matrix_t *A,
 				 gdouble *x, gint xstr, gdouble al,

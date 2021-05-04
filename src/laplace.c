@@ -36,6 +36,22 @@
 
 #include "nbi-private.h"
 
+#define NBI_THREAD_DATA_SIZE    16
+#define NBI_THREAD_DATA_SURFACE   0
+#define NBI_THREAD_DATA_POTENTIAL 1
+#define NBI_THREAD_DATA_PSTR      2
+#define NBI_THREAD_DATA_PWT       3
+#define NBI_THREAD_DATA_GRADIENT  4
+#define NBI_THREAD_DATA_NSTR      5
+#define NBI_THREAD_DATA_NWT       6
+#define NBI_THREAD_DATA_SIGN      7 
+#define NBI_THREAD_DATA_IDX       8
+#define NBI_THREAD_DATA_IDXP      9
+#define NBI_THREAD_DATA_MATRIX   10
+#define NBI_THREAD_DATA_RESULT   11
+#define NBI_THREAD_DATA_RSTR     12
+#define NBI_THREAD_DATA_NTHREADS 13
+
 static gint point_source_field_laplace(NBI_REAL *xs, gint xstr, gint ns,
 				       NBI_REAL *p , gint pstr, NBI_REAL pwt,
 				       NBI_REAL *pn, gint nstr, NBI_REAL nwt,
@@ -188,53 +204,27 @@ static gint point_source_summation(nbi_matrix_t *m,
   return 0 ;
 }
 
-gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_laplace)(nbi_matrix_t *m,
-							    NBI_REAL *p ,
-							    gint pstr,
-							    NBI_REAL pwt,
-							    NBI_REAL *pn,
-							    gint nstr,
-							    NBI_REAL nwt,
-							    NBI_REAL *f,
-							    gint fstr,
-							    NBI_REAL *work) 
+static gint local_matrix_correction(nbi_surface_t *s,
+				    gdouble *p, gint pstr, gdouble pwt,
+				    gdouble *pn, gint nstr, gdouble nwt,
+				    gdouble sgn,  gint pt,
+				    gint *idx, gint *idxp,
+				    gdouble *A, gdouble *f, gint fstr,
+				    gdouble *work)
 
 {
-  gint i, ip, nsts, nu, lda, one = 1, pt, *nbrs, nnbrs ;
-  gint *idx, *idxp, ustr, *idxu, pustr, nustr ;
-  NBI_REAL *A, *xu, *pu, *pnu, *Ast, al, bt, sgn ;
-  nbi_surface_t *s ;
+  gint nsts, ip, *nbrs, nnbrs, lda, i, one = 1 ;
+  gdouble *Ast, al, bt ;
   
-  idx = m->idx ; idxp = m->idxp ; ustr = m->ustr ;
-  idxu = m->idxu ; pustr = m->pstr ; nustr = m->nstr ;
-  A = (NBI_REAL *)(m->Ast) ;
-  xu = (NBI_REAL *)(m->xu) ;
-  pu  = (NBI_REAL *)(m->p) ;
-  pnu = (NBI_REAL *)(m->pn) ;
-  s = m->s ;
+  nsts = nbi_surface_patch_node_number(s, pt) ;
 
-  sgn = 1.0 ;
-  if ( m->tree != NULL ) { sgn = -1.0 ; }
-  nwt *= sgn ;
-  
-  NBI_FUNCTION_NAME(nbi_matrix_upsample_laplace)(m,
-						 p , pstr, pwt,
-						 pn, nstr, nwt) ;
-  /*point source approximation (FMM handled internally)*/
-  point_source_summation(m, f, fstr, work) ;
+  ip = nbi_surface_patch_node(s, pt) ;
+  nnbrs = idxp[pt+1] - idxp[pt] ;
+  nbrs = &(idx[idxp[pt]]) ;
+  Ast = &(A[2*nsts*idxp[pt]]) ;
 
-  /*local corrections*/
-  for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
-    /*loop on patches treated as sources*/
-    nsts = nbi_surface_patch_node_number(s, pt) ;
-
-    ip = nbi_surface_patch_node(s, pt) ;
-    nnbrs = idxp[pt+1] - idxp[pt] ;
-    nbrs = &(idx[idxp[pt]]) ;
-    Ast = &(A[2*nsts*idxp[pt]]) ;
-
-    lda = 2*nsts ;
-    al =  pwt ; bt = 0.0 ;
+  lda = 2*nsts ;
+  al =  pwt ; bt = 0.0 ;
 #ifdef NBI_SINGLE_PRECISION
     g_assert_not_reached() ; /*unchecked code*/
     blaswrap_sgemv(FALSE, nnbrs, nsts, al, &(Ast[1*nsts]), lda,
@@ -249,18 +239,127 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_laplace)(nbi_matrix_t *m,
     blaswrap_dgemv(FALSE, nnbrs, nsts, al, &(Ast[0*nsts]), lda,
 		   &(pn[ip*nstr]), nstr, bt, work, one) ;
 #endif /*NBI_SINGLE_PRECISION*/    
-
-    ip = idxu[pt] ; nu = idxu[pt+1] - idxu[pt] ;
     
     for ( i = 0 ; i < nnbrs ; i ++ ) {
       f[fstr*nbrs[i]] += work[i] ;
-      point_source_field_laplace(&(xu[ip*ustr]), ustr, nu,
-      				 &(pu [ip*pustr]), pustr, 1.0,
-      				 &(pnu[ip*nustr]), nustr, sgn,
-      				 (NBI_REAL *)nbi_surface_node(s, nbrs[i]),
-      				 -1.0, &(f[fstr*nbrs[i]])) ;
     }
+
+  return 0 ;
+}
+
+static gpointer local_correction_thread(gpointer tdata)
+
+{
+  gpointer *mdata = tdata ;
+  gint th = GPOINTER_TO_INT(mdata[0]) ;
+  gpointer *data = mdata[1] ;
+  NBI_REAL *work = mdata[2] ;
+  nbi_surface_t *s = data[NBI_THREAD_DATA_SURFACE  ] ;
+  NBI_REAL      *p = data[NBI_THREAD_DATA_POTENTIAL] ;
+  gint        pstr = *(gint *)data[NBI_THREAD_DATA_PSTR     ] ;
+  NBI_REAL     pwt = *(NBI_REAL *)data[NBI_THREAD_DATA_PWT      ] ;
+  NBI_REAL     *pn = data[NBI_THREAD_DATA_GRADIENT ] ;
+  gint        nstr = *(gint *)data[NBI_THREAD_DATA_NSTR     ] ;
+  NBI_REAL     nwt = *(NBI_REAL *)data[NBI_THREAD_DATA_NWT      ] ;
+  NBI_REAL     sgn = *(NBI_REAL *)data[NBI_THREAD_DATA_SIGN     ] ;
+  gint        *idx =  data[NBI_THREAD_DATA_IDX      ] ;
+  gint       *idxp =  data[NBI_THREAD_DATA_IDXP     ] ;
+  NBI_REAL      *A =  data[NBI_THREAD_DATA_MATRIX   ] ;
+  NBI_REAL      *f =  data[NBI_THREAD_DATA_RESULT   ] ;
+  gint        fstr =  *(gint *)data[NBI_THREAD_DATA_RSTR     ] ;
+  gint        nth = *(gint *)data[NBI_THREAD_DATA_NTHREADS   ] ;
+  gint np, pt0, pt1, pt ;
+  
+  np = nbi_surface_patch_number(s) ;
+
+  pt0 = th*(np/nth) ;
+  pt1 = (th+1)*(np/nth) ;
+  pt1 = MIN(pt1, np) ;
+
+  fprintf(stderr, "thread %d/%d: %d-%d (%d)\n",
+	  th, nth, pt0, pt1, np) ;
+  
+  /* return NULL ; */
+  for ( pt = pt0 ; pt < pt1 ; pt ++ ) {
+    local_matrix_correction(s, p, pstr, pwt, pn, nstr, nwt, sgn, pt,
+			    idx, idxp, A, f, fstr, work) ;
   }
+  
+  return NULL ;
+}
+
+gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_laplace)(nbi_matrix_t *m,
+							    NBI_REAL *p ,
+							    gint pstr,
+							    NBI_REAL pwt,
+							    NBI_REAL *pn,
+							    gint nstr,
+							    NBI_REAL nwt,
+							    NBI_REAL *f,
+							    gint fstr,
+							    gint nthreads,
+							    NBI_REAL *work)
+
+{
+  gint i, nsts, lda, *idx, *idxp ;
+  NBI_REAL *A, sgn ;
+  nbi_surface_t *s ;
+
+  idx = m->idx ; idxp = m->idxp ;
+  A = (NBI_REAL *)(m->Ast) ;
+  s = m->s ;
+
+  sgn = 1.0 ;
+  if ( m->tree != NULL ) { sgn = -1.0 ; }
+  nwt *= sgn ;
+  
+  NBI_FUNCTION_NAME(nbi_matrix_upsample_laplace)(m,
+						 p , pstr, pwt,
+						 pn, nstr, nwt) ;
+  /*point source approximation (FMM handled internally)*/
+  point_source_summation(m, f, fstr, work) ;
+
+  /*local corrections*/
+#ifdef _OPENMP
+  GThread *threads[16] ;
+  gpointer data[NBI_THREAD_DATA_SIZE], main_data[48] ;
+  gint nnmax = 512 ;
+  
+  data[NBI_THREAD_DATA_SURFACE  ] = s ;
+  data[NBI_THREAD_DATA_POTENTIAL] = p ; 
+  data[NBI_THREAD_DATA_PSTR     ] = &pstr ;
+  data[NBI_THREAD_DATA_PWT      ] = &pwt ;
+  data[NBI_THREAD_DATA_GRADIENT ] = pn ;
+  data[NBI_THREAD_DATA_NSTR     ] = &nstr ;
+  data[NBI_THREAD_DATA_NWT      ] = &nwt ;
+  data[NBI_THREAD_DATA_SIGN     ] = &sgn ; 
+  data[NBI_THREAD_DATA_IDX      ] = idx ; 
+  data[NBI_THREAD_DATA_IDXP     ] = idxp ; 
+  data[NBI_THREAD_DATA_MATRIX   ] = A ; 
+  data[NBI_THREAD_DATA_RESULT   ] = f ; 
+  data[NBI_THREAD_DATA_RSTR     ] = &fstr ; 
+  data[NBI_THREAD_DATA_NTHREADS ] = &nthreads ;
+  
+  for ( i = 0 ; i < nthreads ; i ++ ) {
+    main_data[3*i+0] = GINT_TO_POINTER(i) ;
+    main_data[3*i+1] = data ;
+    main_data[3*i+2] = &(work[i*nnmax]) ;
+
+    threads[i] = g_thread_new(NULL, local_correction_thread,
+			      &(main_data[3*i])) ;
+  }
+  
+  /*make sure all threads complete before we move on*/
+  for ( i = 0 ; i < nthreads ; i ++ ) g_thread_join(threads[i]) ;
+  
+#else /*_OPENMP*/
+  gint pt ;
+  for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
+    /*loop on patches treated as sources*/
+    local_matrix_correction(s, p, pstr, pwt, pn, nstr, nwt,
+			    sgn, pt, idx, idxp, A, f, fstr, work) ;
+  }
+#endif /*_OPENMP*/
   
   return 0 ;
 }
@@ -345,7 +444,7 @@ static gint matrix_multiply_single(nbi_matrix_t *m,
 				   NBI_REAL *work) 
 
 {
-  gint i, ip, nsts, nu, lda, one = 1, pt ;
+  gint i, ip, nsts, lda, one = 1, pt ;
   gint *nbrs, nnbrs, *idx, *idxp, ustr, *idxu, pustr, nustr ;
   NBI_REAL *Ast, al, bt, *A, *xu, *pu, *pnu, sgn ;
   nbi_surface_t *s ;
@@ -388,16 +487,9 @@ static gint matrix_multiply_single(nbi_matrix_t *m,
     blaswrap_dgemv(FALSE, nnbrs, nsts, al, &(Ast[0*nsts]), lda,
 		   &(pn[ip*nstr]), nstr, bt, work, one) ;
 #endif /*NBI_SINGLE_PRECISION*/    
-
-    ip = idxu[pt] ; nu = idxu[pt+1] - idxu[pt] ;
     
     for ( i = 0 ; i < nnbrs ; i ++ ) {
       f[fstr*nbrs[i]] += work[i] ;
-      point_source_field_laplace(&(xu[ip*ustr]), ustr, nu,
-      				 &(pu [ip*pustr]), pustr, 1.0,
-      				 &(pnu[ip*nustr]), nustr, sgn,
-      				 (NBI_REAL *)nbi_surface_node(s, nbrs[i]),
-      				 -1.0, &(f[fstr*nbrs[i]])) ;
     }
   }
   
@@ -410,7 +502,7 @@ static gint matrix_multiply_double(nbi_matrix_t *m,
 				   NBI_REAL *work) 
 
 {
-  gint i, ip, nsts, nu, lda, one = 1, pt ;
+  gint i, ip, nsts, lda, one = 1, pt ;
   gint *nbrs, nnbrs, *idx, *idxp, ustr, *idxu, pustr, nustr ;
   NBI_REAL *Ast, al, bt, *A, *xu, *pu, *pnu ;
   nbi_surface_t *s ;
@@ -449,15 +541,8 @@ static gint matrix_multiply_double(nbi_matrix_t *m,
 		   &(p[ip*pstr]) , pstr, bt, work, one) ;
 #endif /*NBI_SINGLE_PRECISION*/    
 
-    ip = idxu[pt] ; nu = idxu[pt+1] - idxu[pt] ;
-    
     for ( i = 0 ; i < nnbrs ; i ++ ) {
       f[fstr*nbrs[i]] += work[i] ;
-      point_source_field_laplace(&(xu[ip*ustr]), ustr, nu,
-      				 &(pu [ip*pustr]), pustr, 1.0,
-      				 &(pnu[ip*nustr]), nustr, 1.0,
-      				 (NBI_REAL *)nbi_surface_node(s, nbrs[i]),
-      				 -1.0, &(f[fstr*nbrs[i]])) ;
     }
   }
   

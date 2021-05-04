@@ -29,6 +29,10 @@
 
 #include <blaswrap.h>
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif /*HAVE_CONFIG_H*/
+
 #include "nbi-private.h"
 
 GTimer *timer ;
@@ -86,8 +90,18 @@ gint main(gint argc, gchar **argv)
   gdouble *work, tol ;
   gint fmm_work_size, nqfmm, order_fmm, order_inc, i, fstr, solver_work_size ;
   gint gmres_max_iter, gmres_restart ;
+  gint nthreads, nproc ;
   guint depth, order[48] = {0}, order_s, order_r, order_max ;
   gboolean fmm, shift_bw, greens_id, layer_potentials ;
+
+  nthreads = 1 ;
+
+#ifdef _OPENMP
+  nproc = g_get_num_processors() ;
+  nthreads = nproc ;
+#else  /*_OPENMP*/
+  nproc = 1 ;
+#endif /*_OPENMP*/
   
   output = stdout ;
   mfile = NULL ; gfile = NULL ;
@@ -120,6 +134,8 @@ gint main(gint argc, gchar **argv)
 
   if ( gfile == NULL ) gfile = g_strdup("geometry.dat") ;
   if ( mfile == NULL ) mfile = g_strdup("matrix.dat") ;
+
+  fprintf(stderr, "%s: %d threads\n", progname, nthreads) ;
   
   fprintf(stderr, "%s: reading geometry from %s\n", progname, gfile) ;
   if ( (input = fopen(gfile, "r")) == NULL ) {
@@ -157,7 +173,6 @@ gint main(gint argc, gchar **argv)
   fprintf(stderr, "%s: setting boundary conditions; t=%lg\n",
 	  progname, g_timer_elapsed(timer, NULL)) ;
   src = (gdouble *)g_malloc0(nbi_surface_node_number(s)*2*sizeof(gdouble)) ;
-  f   = (gdouble *)g_malloc0(nbi_surface_node_number(s)*fstr*sizeof(gdouble)) ;
 
   xs[0] = 0.3 ; xs[1] = -0.4 ; xs[2] = 0.7 ;
 
@@ -215,10 +230,11 @@ gint main(gint argc, gchar **argv)
   if ( greens_id ) {
     fprintf(stderr, "%s: evaluating Green's identity; t=%lg\n",
 	    progname, t = g_timer_elapsed(timer, NULL)) ;
+    f = (gdouble *)g_malloc0(nbi_surface_node_number(s)*fstr*sizeof(gdouble)) ;
     nbi_surface_greens_identity_laplace(matrix,
 					&(src[0]), 2, pwt,
 					&(src[1]), 2, nwt,
-					f, fstr, work) ;
+					f, fstr, nthreads, work) ;
     fprintf(stderr, "%s: surface integration complete; t=%lg (%lg)\n",
 	    progname,
 	    g_timer_elapsed(timer, NULL), g_timer_elapsed(timer, NULL) - t) ;
@@ -242,6 +258,7 @@ gint main(gint argc, gchar **argv)
     fprintf(stderr, "%s: evaluating double-layer potential; t=%lg\n",
     	    progname, t = g_timer_elapsed(timer, NULL)) ;
     matrix->potential = NBI_POTENTIAL_DOUBLE ;
+    f = (gdouble *)g_malloc0(nbi_surface_node_number(s)*fstr*sizeof(gdouble)) ;
     nbi_matrix_multiply(matrix, &(src[0]), 2, 1.0, f, fstr, 0.0, work) ;
     fprintf(stderr, "%s: evaluating single-layer potential; t=%lg\n",
     	    progname, t = g_timer_elapsed(timer, NULL)) ;

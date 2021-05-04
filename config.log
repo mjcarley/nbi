@@ -716,18 +716,18 @@ Reading specs from /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/specs
 Target: x86_64-slackware-linux
 Thread model: posix
 gcc version 5.5.0 (GCC) 
- /usr/libexec/gcc/x86_64-slackware-linux/5.5.0/f951 conftest.f -ffixed-form -quiet -dumpbase conftest.f -mtune=generic -march=x86-64 -auxbase conftest -g -O2 -version -fintrinsic-modules-path /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/finclude -o /tmp/cchXjTiA.s
+ /usr/libexec/gcc/x86_64-slackware-linux/5.5.0/f951 conftest.f -ffixed-form -quiet -dumpbase conftest.f -mtune=generic -march=x86-64 -auxbase conftest -g -O2 -version -fintrinsic-modules-path /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/finclude -o /tmp/ccVHB3lX.s
 GNU Fortran (GCC) version 5.5.0 (x86_64-slackware-linux)
 	compiled by GNU C version 5.5.0, GMP version 6.1.1, MPFR version 3.1.4, MPC version 1.0.3
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 GNU Fortran2008 (GCC) version 5.5.0 (x86_64-slackware-linux)
 	compiled by GNU C version 5.5.0, GMP version 6.1.1, MPFR version 3.1.4, MPC version 1.0.3
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
- /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../x86_64-slackware-linux/bin/as -v --64 -o /tmp/cc19dPcd.o /tmp/cchXjTiA.s
+ /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../x86_64-slackware-linux/bin/as -v --64 -o /tmp/ccx50Vb2.o /tmp/ccVHB3lX.s
 GNU assembler version 2.26 (x86_64-slackware-linux) using BFD version version 2.26.20160125
 Reading specs from /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64/libgfortran.spec
 rename spec lib to liborig
- /usr/libexec/gcc/x86_64-slackware-linux/5.5.0/collect2 -plugin /usr/libexec/gcc/x86_64-slackware-linux/5.5.0/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-slackware-linux/5.5.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccPmwy7P.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o conftest /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64/crt1.o /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64/crti.o /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/crtbegin.o -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../x86_64-slackware-linux/lib -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../.. /tmp/cc19dPcd.o -lgfortran -lm -lgfortran -lm -lgcc_s -lgcc -lquadmath -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/crtend.o /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64/crtn.o
+ /usr/libexec/gcc/x86_64-slackware-linux/5.5.0/collect2 -plugin /usr/libexec/gcc/x86_64-slackware-linux/5.5.0/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-slackware-linux/5.5.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccQG2D26.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o conftest /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64/crt1.o /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64/crti.o /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/crtbegin.o -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../x86_64-slackware-linux/lib -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../.. /tmp/ccx50Vb2.o -lgfortran -lm -lgfortran -lm -lgcc_s -lgcc -lquadmath -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/crtend.o /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64/crtn.o
 configure:17470: result: -v
 configure:17472: checking for Fortran 77 libraries of g77
 configure:17495: g77 -o conftest -g -O2 -v conftest.f -lm
@@ -735,18 +735,18 @@ Reading specs from /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/specs
 Target: x86_64-slackware-linux
 Thread model: posix
 gcc version 5.5.0 (GCC) 
- /usr/libexec/gcc/x86_64-slackware-linux/5.5.0/f951 conftest.f -ffixed-form -quiet -dumpbase conftest.f -mtune=generic -march=x86-64 -auxbase conftest -g -O2 -version -fintrinsic-modules-path /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/finclude -o /tmp/cc1wXlaG.s
+ /usr/libexec/gcc/x86_64-slackware-linux/5.5.0/f951 conftest.f -ffixed-form -quiet -dumpbase conftest.f -mtune=generic -march=x86-64 -auxbase conftest -g -O2 -version -fintrinsic-modules-path /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/finclude -o /tmp/cc6EFRd1.s
 GNU Fortran (GCC) version 5.5.0 (x86_64-slackware-linux)
 	compiled by GNU C version 5.5.0, GMP version 6.1.1, MPFR version 3.1.4, MPC version 1.0.3
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 GNU Fortran2008 (GCC) version 5.5.0 (x86_64-slackware-linux)
 	compiled by GNU C version 5.5.0, GMP version 6.1.1, MPFR version 3.1.4, MPC version 1.0.3
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
- /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../x86_64-slackware-linux/bin/as -v --64 -o /tmp/cceZNafj.o /tmp/cc1wXlaG.s
+ /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../x86_64-slackware-linux/bin/as -v --64 -o /tmp/cc76i9e6.o /tmp/cc6EFRd1.s
 GNU assembler version 2.26 (x86_64-slackware-linux) using BFD version version 2.26.20160125
 Reading specs from /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64/libgfortran.spec
 rename spec lib to liborig
- /usr/libexec/gcc/x86_64-slackware-linux/5.5.0/collect2 -plugin /usr/libexec/gcc/x86_64-slackware-linux/5.5.0/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-slackware-linux/5.5.0/lto-wrapper -plugin-opt=-fresolution=/tmp/cc7mvTkW.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o conftest /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64/crt1.o /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64/crti.o /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/crtbegin.o -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../x86_64-slackware-linux/lib -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../.. /tmp/cceZNafj.o -lgfortran -lm -lgfortran -lm -lgcc_s -lgcc -lquadmath -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/crtend.o /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64/crtn.o
+ /usr/libexec/gcc/x86_64-slackware-linux/5.5.0/collect2 -plugin /usr/libexec/gcc/x86_64-slackware-linux/5.5.0/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-slackware-linux/5.5.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccbAsghb.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o conftest /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64/crt1.o /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64/crti.o /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/crtbegin.o -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../x86_64-slackware-linux/lib -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../.. /tmp/cc76i9e6.o -lgfortran -lm -lgfortran -lm -lgcc_s -lgcc -lquadmath -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/crtend.o /usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64/crtn.o
 configure:17691: result:  -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../x86_64-slackware-linux/lib -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../.. -lgfortran -lm -lquadmath
 configure:17707: checking for dummy main to link with Fortran 77 libraries
 configure:17741: gcc -o conftest -g -O2 -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations   conftest.c -lm   -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../../../x86_64-slackware-linux/lib -L/usr/lib64/gcc/x86_64-slackware-linux/5.5.0/../../.. -lgfortran -lm -lquadmath >&5
@@ -765,7 +765,7 @@ conftest.c:41:1: warning: function declaration isn't a prototype [-Wstrict-proto
 conftest.c:51:1: warning: function declaration isn't a prototype [-Wstrict-prototypes]
  main ()
  ^
-/tmp/cc3mfOAv.o: In function `main':
+/tmp/ccoHzVQi.o: In function `main':
 /home/michael/Codes/C/nbi/conftest.c:53: undefined reference to `foobar'
 collect2: error: ld returned 1 exit status
 configure:17873: $? = 1
@@ -851,7 +851,7 @@ conftest.c:59:1: warning: function declaration isn't a prototype [-Wstrict-proto
 conftest.c:68:1: warning: function declaration isn't a prototype [-Wstrict-prototypes]
  main ()
  ^
-/tmp/cc6EseIC.o: In function `main':
+/tmp/ccQethKp.o: In function `main':
 /home/michael/Codes/C/nbi/conftest.c:70: undefined reference to `sgemm_'
 collect2: error: ld returned 1 exit status
 configure:18155: $? = 1
@@ -1877,20 +1877,3 @@ target_alias=''
 #define HAVE_LAPACK 1
 
 configure: exit 0
-
-## ---------------------- ##
-## Running config.status. ##
-## ---------------------- ##
-
-This file was extended by nbi config.status 0.1, which was
-generated by GNU Autoconf 2.69.  Invocation command line was
-
-  CONFIG_FILES    = 
-  CONFIG_HEADERS  = 
-  CONFIG_LINKS    = 
-  CONFIG_COMMANDS = 
-  $ ./config.status src/nbi-config
-
-on michael
-
-config.status:1191: creating src/nbi-config

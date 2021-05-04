@@ -89,7 +89,7 @@ POST_UNINSTALL = :
 build_triplet = x86_64-unknown-linux-gnu
 host_triplet = x86_64-unknown-linux-gnu
 bin_PROGRAMS = nbi-solve-laplace$(EXEEXT) \
-	nbi-assemble-laplace$(EXEEXT)
+	nbi-assemble-laplace$(EXEEXT) nbi-surface$(EXEEXT)
 subdir = tools
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -118,6 +118,9 @@ am__v_lt_1 =
 nbi_solve_laplace_SOURCES = nbi-solve-laplace.c
 nbi_solve_laplace_OBJECTS = nbi-solve-laplace.$(OBJEXT)
 nbi_solve_laplace_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
+nbi_surface_SOURCES = nbi-surface.c
+nbi_surface_OBJECTS = nbi-surface.$(OBJEXT)
+nbi_surface_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -152,8 +155,9 @@ AM_V_CCLD = $(am__v_CCLD_$(V))
 am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = nbi-assemble-laplace.c nbi-solve-laplace.c
-DIST_SOURCES = nbi-assemble-laplace.c nbi-solve-laplace.c
+SOURCES = nbi-assemble-laplace.c nbi-solve-laplace.c nbi-surface.c
+DIST_SOURCES = nbi-assemble-laplace.c nbi-solve-laplace.c \
+	nbi-surface.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -333,6 +337,9 @@ nbi_solve_laplace_LDADD = \
 nbi_assemble_laplace_LDADD = \
 	$(top_builddir)/src/.libs/libnbi.a 
 
+nbi_surface_LDADD = \
+	$(top_builddir)/src/.libs/libnbi.a 
+
 all: all-am
 
 .SUFFIXES:
@@ -424,6 +431,10 @@ nbi-solve-laplace$(EXEEXT): $(nbi_solve_laplace_OBJECTS) $(nbi_solve_laplace_DEP
 	@rm -f nbi-solve-laplace$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(nbi_solve_laplace_OBJECTS) $(nbi_solve_laplace_LDADD) $(LIBS)
 
+nbi-surface$(EXEEXT): $(nbi_surface_OBJECTS) $(nbi_surface_DEPENDENCIES) $(EXTRA_nbi_surface_DEPENDENCIES) 
+	@rm -f nbi-surface$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(nbi_surface_OBJECTS) $(nbi_surface_LDADD) $(LIBS)
+
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
@@ -432,6 +443,7 @@ distclean-compile:
 
 include ./$(DEPDIR)/nbi-assemble-laplace.Po
 include ./$(DEPDIR)/nbi-solve-laplace.Po
+include ./$(DEPDIR)/nbi-surface.Po
 
 .c.o:
 	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\

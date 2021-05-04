@@ -1,4 +1,4 @@
-nbi-assemble-laplace.o: nbi-assemble-laplace.c /usr/include/stdc-predef.h \
+nbi-surface.o: nbi-surface.c /usr/include/stdc-predef.h \
  /usr/include/stdio.h /usr/include/features.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
  /usr/include/gnu/stubs-64.h \

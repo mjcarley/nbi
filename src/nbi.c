@@ -58,16 +58,89 @@ nbi_surface_t *NBI_FUNCTION_NAME(nbi_surface_alloc)(gint nnmax, gint npmax)
   return s ;
 }
 
+gint nbi_header_insert_string(gchar *header, gint i, gint len, gchar *str)
+
+{
+  gint slen, j ;
+  
+  if ( (slen = strlen(str)) > len )
+    g_error("%s: string %s is too long (%d) for header (%d)", __FUNCTION__,
+	    str, slen, len) ;
+
+  if ( slen + i > NBI_HEADER_LENGTH )
+    g_error("%s: not enough space in header for string ""%s"" of length %d "
+	    "at position %d",  __FUNCTION__, str, slen, i) ;
+  
+  for ( j = 0 ; j < slen ; j ++ ) {
+    header[i+j] = str[j] ;
+  }
+  
+  return 0 ;
+}
+
+gint nbi_header_init(gchar *header,
+		     gchar *id,
+		     gchar *version,
+		     gchar *type,
+		     gchar *format)
+
+{
+  gint i ;
+
+  for ( i = 0 ; i < NBI_HEADER_LENGTH ; i ++ ) header[i] = ' ' ;
+  header[NBI_HEADER_LENGTH] = '\0' ;
+
+  nbi_header_insert_string(header, NBI_HEADER_ID,      3, id) ;
+  nbi_header_insert_string(header, NBI_HEADER_VERSION, 3, version) ;
+  nbi_header_insert_string(header, NBI_HEADER_TYPE,    3, type) ;
+  nbi_header_insert_string(header, NBI_HEADER_FORMAT,  1, format) ;
+
+  if ( format[0] != 'A' && format[0] != 'B' )
+    g_error("%s: data format must be `A' or `B' (ASCII or binary)",
+	    __FUNCTION__) ;
+
+  return 0 ;
+}
+
+gint nbi_header_read(FILE *f, gchar header[])
+
+{
+  gchar c ;
+  
+  fread(header, sizeof(gchar), NBI_HEADER_LENGTH, f) ;
+  fread(&c    , sizeof(gchar), 1,                 f) ;
+
+  return 0 ;
+}
+
+gint nbi_header_write(FILE *f, gchar header[])
+
+{
+  gchar c = '\n' ;
+
+  fwrite(header, sizeof(gchar), NBI_HEADER_LENGTH, f) ;
+  fwrite(&c    , sizeof(gchar), 1,                 f) ;
+
+  return 0 ;
+}
+
 gint NBI_FUNCTION_NAME(nbi_surface_write)(nbi_surface_t *s, FILE *f)
 
 {
   gint i, j ;
   NBI_REAL *e ;
-  
-  fprintf(f, "%d %d\n",
+  gchar header[NBI_HEADER_LENGTH], buf[40] ;
+
+  nbi_header_init(header, "NBI", "1.0", "GEO", "A") ;
+
+  sprintf(buf, "%d %d",
 	  nbi_surface_node_number(s),
 	  nbi_surface_patch_number(s)) ;
 
+  nbi_header_insert_string(header, NBI_HEADER_DATA, 40, buf) ;
+
+  nbi_header_write(f, header) ;
+  
   for ( i = 0 ; i < nbi_surface_patch_number(s) ; i ++ ) {
     fprintf(f, "%d %d\n",
 	    nbi_surface_patch_node(s, i),
@@ -90,9 +163,11 @@ nbi_surface_t *NBI_FUNCTION_NAME(nbi_surface_read)(FILE *f)
   nbi_surface_t *s ;
   gint nn, np, i, j ;
   NBI_REAL *e ;
-  
-  fscanf(f, "%d", &nn) ;
-  fscanf(f, "%d", &np) ;
+  gchar header[NBI_HEADER_LENGTH] ;
+
+  nbi_header_read(f, header) ;
+
+  sscanf(&(header[NBI_HEADER_DATA]), "%d %d", &nn, &np) ;
 
   s = nbi_surface_alloc(nn, np) ;
   nbi_surface_node_number(s) = nn ;
@@ -332,15 +407,15 @@ nbi_matrix_t *NBI_FUNCTION_NAME(nbi_matrix_new)(nbi_surface_t *s)
   return m ;
 }
 
-static gint read_upsampled_patches(FILE *f, nbi_matrix_t *m)
+static gint read_upsampled_patches(FILE *f,
+				   gint np, gint ustr,
+				   nbi_matrix_t *m)
 
 {
-  gint np, i, j ;
+  gint i, j ;
   NBI_REAL *xu, *bc ;
-  
-  fscanf(f, "%d", &np) ;
-  fscanf(f, "%d", &(m->ustr)) ;
 
+  m->ustr = ustr ;
   m->idxu = (gint *)g_malloc((np+1)*sizeof(gint)) ;
   for ( i = 0 ; i < np + 1 ; i ++ ) {
     fscanf(f, "%d", &j) ;
@@ -366,14 +441,13 @@ static gint read_upsampled_patches(FILE *f, nbi_matrix_t *m)
   return 0 ;
 }
 
-static gint read_correction_matrices(FILE *f, nbi_matrix_t *m)
+static gint read_correction_matrices(FILE *f,
+				     gint np, gint nst,
+				     nbi_matrix_t *m)
 
 {
-  gint i, j, np, nst ;
+  gint i, j ;
   NBI_REAL *Ast ;
-  
-  fscanf(f, "%d", &np) ;
-  fscanf(f, "%d", &nst) ;
 
   m->idxp = (gint *)g_malloc0((np+1)*sizeof(gint)) ;
 
@@ -400,8 +474,15 @@ static gint read_correction_matrices(FILE *f, nbi_matrix_t *m)
 gint NBI_FUNCTION_NAME(nbi_matrix_read)(FILE *input, nbi_matrix_t *m)
 
 {
-  read_upsampled_patches(input, m) ;
-  read_correction_matrices(input, m) ;
+  gchar header[NBI_HEADER_LENGTH] ;
+  gint np, str, nst ;
+  
+  nbi_header_read(input, header) ;
+
+  sscanf(&(header[NBI_HEADER_DATA]), "%d %d %d", &np, &str, &nst) ;
+  
+  read_upsampled_patches(input, np, str, m) ;
+  read_correction_matrices(input, np, nst, m) ;
 
   return 0 ;
 }
