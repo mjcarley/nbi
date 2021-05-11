@@ -53,6 +53,38 @@
 
 #endif /*NBI_SINGLE_PRECISION*/
 
+#define NBI_THREAD_DATA_SIZE         8
+#define NBI_THREAD_DATA_MATRIX       0
+#define NBI_THREAD_DATA_INT          1
+#define NBI_THREAD_DATA_INT_POINTER  2
+#define NBI_THREAD_DATA_REAL         3
+#define NBI_THREAD_DATA_REAL_POINTER 4
+
+#define NBI_THREAD_DATA_INT_SIZE     8
+#define NBI_THREAD_DATA_INT_PSTR     0
+#define NBI_THREAD_DATA_INT_NSTR     1
+#define NBI_THREAD_DATA_INT_FSTR     2
+#define NBI_THREAD_DATA_INT_OFFSET   3
+
+#define NBI_THREAD_DATA_REAL_SIZE    8
+#define NBI_THREAD_DATA_REAL_WT1     0
+#define NBI_THREAD_DATA_REAL_WT2     2
+#define NBI_THREAD_DATA_REAL_SIGN    4
+/* #define NBI_THREAD_DATA_REAL_ */
+
+#define NBI_THREAD_DATA_REAL_PTR_SIZE 8
+#define NBI_THREAD_DATA_REAL_PTR_P    0
+#define NBI_THREAD_DATA_REAL_PTR_PN   1
+#define NBI_THREAD_DATA_REAL_PTR_F    2
+
+#define NBI_THREAD_MAIN_DATA_SIZE    4
+#define NBI_THREAD_MAIN_DATA_THREAD  0
+#define NBI_THREAD_MAIN_DATA_NTHREAD 1
+#define NBI_THREAD_MAIN_DATA_DATA    2
+#define NBI_THREAD_MAIN_DATA_WORK    3
+
+#define NBI_THREAD_NUMBER_MAX     8
+
 #define nbi_vector_scalar(NBI_A,NBI_B)				\
   (((NBI_A)[0])*((NBI_B)[0])+					\
    ((NBI_A)[1])*((NBI_B)[1])+					\

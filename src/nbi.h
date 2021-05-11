@@ -177,12 +177,16 @@ gint nbi_surface_patch_neighbours(nbi_surface_t *s,
 				  gint p, gdouble r,
 				  gint *nbrs, gint *nnbrs, gint nnmax) ;
 
+gint nbi_matrix_neighbour_number_max(nbi_matrix_t *m) ;
+
 gdouble *nbi_patch_upsample_matrix(gint ns, gint nu) ;
 gint nbi_element_interp_matrix(gint ns, gdouble **K, gint *Nk) ;
 
 
 nbi_matrix_t *nbi_matrix_new(nbi_surface_t *s) ;
 gint nbi_matrix_read(FILE *input, nbi_matrix_t *m) ;
+gint nbi_matrix_write(FILE *f, nbi_matrix_t *m) ;
+
 gint nbi_matrix_upsample_laplace(nbi_matrix_t *m,
 				 gdouble *p, gint pstr, gdouble pwt, 
 				 gdouble *pn, gint nstr, gdouble nwt) ;
@@ -199,6 +203,7 @@ gint nbi_matrix_fmm_init(nbi_matrix_t *m,
 gint nbi_matrix_multiply(nbi_matrix_t *A,
 			 gdouble *x, gint xstr, gdouble al,
 			 gdouble *y, gint ystr, gdouble bt,
+			 gint nthreads,
 			 gdouble *work) ;
 
 gint nbi_surface_greens_identity_laplace(nbi_matrix_t *m,
@@ -210,11 +215,21 @@ gint nbi_surface_greens_identity_laplace(nbi_matrix_t *m,
 gint nbi_matrix_multiply_laplace(nbi_matrix_t *A,
 				 gdouble *x, gint xstr, gdouble al,
 				 gdouble *y, gint ystr, gdouble bt,
+				 gint nthreads,
 				 gdouble *work) ;
 
 nbi_expression_t *nbi_expression_new(gchar *expression) ;
 gdouble nbi_expression_eval(nbi_expression_t *e, gdouble *x, gdouble *n) ;
 nbi_boundary_condition_t *nbi_boundary_condition_new(nbi_problem_t problem) ;
 gint nbi_boundary_condition_add(nbi_boundary_condition_t *b, gchar *e) ;
+
+gint nbi_gmres_real(nbi_matrix_t *A, 
+		    gdouble *x, gint xstr,
+		    gdouble *b, gint bstr,
+		    gint m, gint max_it,
+		    gdouble tol, gdouble *error,
+		    gint nthreads,
+		    gdouble *work) ;
+
 
 #endif /*NBI_H_INCLUDED*/

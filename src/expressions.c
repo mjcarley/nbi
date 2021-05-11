@@ -79,7 +79,7 @@ gdouble nbi_expression_eval(nbi_expression_t *e, gdouble *x, gdouble *n)
 
 {
   gdouble f ;
-  te_variable *vars = e->vars ;
+  /* te_variable *vars = e->vars ; */
 
   e->x[0] = x[0] ; e->x[1] = x[1] ; e->x[2] = x[2] ; 
   e->x[3] = n[0] ; e->x[4] = n[1] ; e->x[5] = n[2] ; 

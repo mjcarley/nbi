@@ -191,10 +191,10 @@ AX_GCC_X86_CPU_SUPPORTS(avx2, hasavx2=yes)
 AX_GCC_X86_CPU_SUPPORTS(fma, hasfma=yes) 
 
 if test x$hasavx = xyes; then
-   SIMD_FLAGS="$SIMD_FLAGS -mavx"
+   SIMD_FLAGS="$SIMD_FLAGS -mavx -DWBFMM_USE_AVX"
 fi
 if test x$hasfma = xyes; then
-   SIMD_FLAGS="$SIMD_FLAGS -mfma"
+   SIMD_FLAGS="$SIMD_FLAGS -mfma -DWBFMM_USE_AVX"
 fi
 
 AC_CHECK_LIB(m, cos)

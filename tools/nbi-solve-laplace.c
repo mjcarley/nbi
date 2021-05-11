@@ -38,19 +38,13 @@
 GTimer *timer ;
 gchar *progname ;
 
-gint nbi_gmres_real(nbi_matrix_t *A, 
-		    gdouble *x, gint xstr, gdouble *b, gint bstr,
-		    gint m, gint max_it, gdouble tol, gdouble *error,
-		    gdouble *work) ;
 
 static gint make_sources(nbi_surface_t *s,
-			 /* gdouble *xs, gdouble q, */
 			 gdouble *p , gint pstr,
 			 gdouble *pn, gint nstr,
 			 nbi_boundary_condition_t *bc) 
 
 {
-  /* gdouble R, Rn, r[3], *x, *n, G ; */
   gdouble *x, *n ;
   gint i ;
   
@@ -98,7 +92,7 @@ gint main(gint argc, gchar **argv)
 
 #ifdef _OPENMP
   nproc = g_get_num_processors() ;
-  nthreads = nproc ;
+  nthreads = -1 ;
 #else  /*_OPENMP*/
   nproc = 1 ;
 #endif /*_OPENMP*/
@@ -118,9 +112,10 @@ gint main(gint argc, gchar **argv)
   gmres_max_iter = 128 ; gmres_restart = 40 ; tol = 1e-9 ;
     
   fstr = 3 ;
-  while ( (ch = getopt(argc, argv, "d:fGg:Lm:o:T:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "D:d:fGg:Lm:o:T:")) != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
+    case 'D': depth = atoi(optarg) ; break ;
     case 'd': order_inc = atoi(optarg) ; break ;
     case 'f': fmm = TRUE ; break ;
     case 'G': greens_id = TRUE ; break ;
@@ -128,14 +123,15 @@ gint main(gint argc, gchar **argv)
     case 'L': layer_potentials = TRUE ; break ;
     case 'm': mfile = g_strdup(optarg) ; break ;
     case 'o': order_fmm = atoi(optarg) ; break ;
-    case 'T': depth = atoi(optarg) ; break ;
+    case 'T': nthreads = atoi(optarg) ; break ;
     }
   }
 
   if ( gfile == NULL ) gfile = g_strdup("geometry.dat") ;
   if ( mfile == NULL ) mfile = g_strdup("matrix.dat") ;
 
-  fprintf(stderr, "%s: %d threads\n", progname, nthreads) ;
+  fprintf(stderr, "%s: %d threads (%d processors)\n",
+	  progname, nthreads, nproc) ;
   
   fprintf(stderr, "%s: reading geometry from %s\n", progname, gfile) ;
   if ( (input = fopen(gfile, "r")) == NULL ) {
@@ -259,11 +255,13 @@ gint main(gint argc, gchar **argv)
     	    progname, t = g_timer_elapsed(timer, NULL)) ;
     matrix->potential = NBI_POTENTIAL_DOUBLE ;
     f = (gdouble *)g_malloc0(nbi_surface_node_number(s)*fstr*sizeof(gdouble)) ;
-    nbi_matrix_multiply(matrix, &(src[0]), 2, 1.0, f, fstr, 0.0, work) ;
+    nbi_matrix_multiply(matrix, &(src[0]), 2, 1.0, f, fstr, 0.0, nthreads,
+			work) ;
     fprintf(stderr, "%s: evaluating single-layer potential; t=%lg\n",
     	    progname, t = g_timer_elapsed(timer, NULL)) ;
     matrix->potential = NBI_POTENTIAL_SINGLE ;
-    nbi_matrix_multiply(matrix, &(src[1]), 2, -2.0, f, fstr, 2.0, work) ;
+    nbi_matrix_multiply(matrix, &(src[1]), 2, -2.0, f, fstr, 2.0, nthreads,
+			work) ;
     fprintf(stderr, "%s: surface integration complete; t=%lg (%lg)\n",
 	    progname,
 	    g_timer_elapsed(timer, NULL), g_timer_elapsed(timer, NULL) - t) ;
@@ -296,14 +294,14 @@ gint main(gint argc, gchar **argv)
   fprintf(stderr, "%s: forming right hand side, t=%lg\n", progname,
 	  t=g_timer_elapsed(timer, NULL)) ;
 
-  nbi_matrix_multiply(matrix, &(src[1]), 2, 1.0, rhs, 1, 0.0, work) ;
+  nbi_matrix_multiply(matrix, &(src[1]), 2, 1.0, rhs, 1, 0.0, nthreads, work) ;
   
   matrix->diag = -0.5 ;
   matrix->potential = NBI_POTENTIAL_DOUBLE ;
   fprintf(stderr, "%s: starting solver\n", progname) ;
 
   i = nbi_gmres_real(matrix, p, 1, rhs, 1, gmres_restart, gmres_max_iter, tol,
-		     &error, work) ;
+		     &error, nthreads, work) ;
 
   fprintf(stderr, "%s: %d iterations; error = %lg, t=%lg (%lg)\n",
 	  progname, i, error,

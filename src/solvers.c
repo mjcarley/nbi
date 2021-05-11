@@ -50,10 +50,13 @@ static gint gmres_update(gdouble *x, gint xstr, gint k, gdouble *H,
   return 0 ;
 }
 
-gint nbi_gmres_real(nbi_matrix_t *A, 
-		    gdouble *x, gint xstr, gdouble *b, gint bstr,
-		    gint m, gint max_it, gdouble tol, gdouble *error,
-		    gdouble *work)
+gint NBI_FUNCTION_NAME(nbi_gmres_real)(nbi_matrix_t *A, 
+				       NBI_REAL *x, gint xstr,
+				       NBI_REAL *b, gint bstr,
+				       gint m, gint max_it,
+				       NBI_REAL tol, NBI_REAL *error,
+				       gint nthreads,
+				       NBI_REAL *work)
 
 /*
   A is n x n matrix, vectors are appropriate sizes
@@ -89,7 +92,7 @@ gint nbi_gmres_real(nbi_matrix_t *A,
   al = -1.0 ; bt = 1.0 ;
   blaswrap_dcopy(n, b, bstr, r, one) ;
   /* blaswrap_dgemv(FALSE, n, n, al, A, lda, x, xstr, bt, r, one) ; */
-  nbi_matrix_multiply(A, x, xstr, al, r, one, bt, mwork) ;
+  nbi_matrix_multiply(A, x, xstr, al, r, one, bt, nthreads, mwork) ;
   
   *error = blaswrap_dnrm2(n, r, one)/bnrm2 ;
 
@@ -98,7 +101,7 @@ gint nbi_gmres_real(nbi_matrix_t *A,
     al = -1.0 ; bt = 1.0 ;
     blaswrap_dcopy(n, b, bstr, r, one) ;
     /* blaswrap_dgemv(FALSE, n, n, al, A, lda, x, xstr, bt, r, one) ; */
-    nbi_matrix_multiply(A, x, xstr, al, r, one, bt, mwork) ;
+    nbi_matrix_multiply(A, x, xstr, al, r, one, bt, nthreads, mwork) ;
 
     str = m+1 ;
     blaswrap_dcopy(n, r, one, &(V[0]), str) ;
@@ -113,7 +116,7 @@ gint nbi_gmres_real(nbi_matrix_t *A,
     for ( i = 0 ; i < m ; i ++ ) {
       al = 1.0 ; bt = 0.0 ; str = m+1 ;
       /* blaswrap_dgemv(FALSE, n, n, al, A, lda, &(V[i]), str, bt, w, one) ; */
-      nbi_matrix_multiply(A, &(V[i]), str, al, w, one, bt, mwork) ;
+      nbi_matrix_multiply(A, &(V[i]), str, al, w, one, bt, nthreads, mwork) ;
       for ( k = 0 ; k <= i ; k ++ ) {
 	H[k*m+i] = blaswrap_ddot(n, w, one, &(V[k]), str) ;
 	bt = -H[k*m+i] ; str = m+1 ;
@@ -153,7 +156,7 @@ gint nbi_gmres_real(nbi_matrix_t *A,
     al = -1.0 ; bt = 1.0 ;
     blaswrap_dcopy(n, b, bstr, r, one) ;
     /* blaswrap_dgemv(FALSE, n, n, al, A, lda, x, xstr, bt, r, one) ; */
-    nbi_matrix_multiply(A, x, xstr, al, r, one, bt, mwork) ;
+    nbi_matrix_multiply(A, x, xstr, al, r, one, bt, nthreads, mwork) ;
 
     s[i+1] = blaswrap_dnrm2(n, r, one) ;
     *error = s[i+1]/bnrm2 ;

@@ -14080,10 +14080,10 @@ fi
  
 
 if test x$hasavx = xyes; then
-   SIMD_FLAGS="$SIMD_FLAGS -mavx"
+   SIMD_FLAGS="$SIMD_FLAGS -mavx -DWBFMM_USE_AVX"
 fi
 if test x$hasfma = xyes; then
-   SIMD_FLAGS="$SIMD_FLAGS -mfma"
+   SIMD_FLAGS="$SIMD_FLAGS -mfma -DWBFMM_USE_AVX"
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cos in -lm" >&5

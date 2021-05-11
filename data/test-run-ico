@@ -55,7 +55,7 @@ nqp=25
 nqu=54
 tol=1e-9
 radius=1.5
-eta=2.0
+eta=1.5
 depth=8
 order=16
 ico=3
@@ -65,22 +65,24 @@ bin=../tools
 gfile=ellipsoid-ico-${ico}-${nqp}.dat
 mfile=matrix-ico-${ico}-${nqp}-${nqu}-${order}-${depth}.dat
 
-opts="-e ${tol} -a ${nqa} -q ${nqp} -u ${nqu} \
+opts="-e ${tol} -a ${nqa} -u ${nqu} \
       -r ${radius} -n ${eta} -d ${depth} -N ${order} \
-      -m ${mfile} -g ${gfile} -i ${ico}"
+      -m ${mfile} -g ${gfile}"
 echo -- ${opts}
 
 #${bin}/nbi-surface -d ${radius} -i ${ico} -q ${nqp} -g ellipsoid-ico -o ${gfile}
 
-#${bin}/nbi-assemble-laplace ${opts}
+#${bin}/nbi-assemble-laplace ${opts} -T 4
 
 ##${bin}/nbi-solve-laplace -m ${mfile} -g ${gfile} -G > field.dat
 ##${bin}/nbi-solve-laplace -m ${mfile} -g ${gfile} -L
-${bin}/nbi-solve-laplace -f -m ${mfile} -g ${gfile} -T 5 -o 10 -d 2 -G \
+${bin}/nbi-solve-laplace -f -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -G -T 4 \
       > fieldfmm.dat
-#${bin}/nbi-solve-laplace -f -m ${mfile} -g ${gfile} -T 3 -o 16 -d 1 -L \
+${bin}/nbi-solve-laplace -f -m ${mfile} -g ${gfile} -D 5 -o 10 \
+      -d 2 -L -T 4 > /dev/null
 
-#${bin}/nbi-solve-laplace -f -m ${mfile} -g ${gfile} -T 5 -o 10 -d 2 > test.dat
+#${bin}/nbi-solve-laplace -f -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 \
+#      -T 4 > test.dat
 
 ##  eta=1.25 -m matrix-ico-3-25-54-12-7.dat L_inf norm: 4.34474e-05
 ## -o 16 eta=1.25 -m  matrix-ico-3-25-85-16-7.datL_inf norm: 4.34495e-05 (722s)

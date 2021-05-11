@@ -397,7 +397,7 @@ nbi_matrix_t *NBI_FUNCTION_NAME(nbi_matrix_new)(nbi_surface_t *s)
   m->fpsize = sizeof(NBI_REAL) ;
 
   m->ustr = m->pstr = m->nstr = 0 ;
-  m->idxu = NULL ;
+  m->idxu = m->idx = NULL ;
   m->xu = m->p = m->pn = NULL ;
 
   m->tree    = NULL ;
@@ -487,6 +487,56 @@ gint NBI_FUNCTION_NAME(nbi_matrix_read)(FILE *input, nbi_matrix_t *m)
   return 0 ;
 }
 
+gint NBI_FUNCTION_NAME(nbi_matrix_write)(FILE *f, nbi_matrix_t *m)
+
+{
+  gchar header[80], buf[40] ;
+  NBI_REAL *Ast, *xu ;
+  gint i, j, xstr, lda, nst, nntot ;
+  
+  g_assert(m->problem == NBI_PROBLEM_LAPLACE) ;
+  
+  nst = nbi_surface_patch_node_number(m->s,0) ;
+  xstr = NBI_SURFACE_NODE_LENGTH ;
+  lda = 2*nst ;
+  nntot = m->idxp[nbi_surface_patch_number(m->s)] ;
+  
+  nbi_header_init(header, "NBI", "1.0", "MAT", "A") ;
+  sprintf(buf, "%d %d %d",
+	  nbi_surface_patch_number(m->s), xstr, nst) ;
+
+  nbi_header_insert_string(header, NBI_HEADER_DATA, 40, buf) ;
+
+  nbi_header_write(f, header) ;
+  
+  for ( i = 0 ; i < nbi_surface_patch_number(m->s)+1 ; i ++ ) {
+    fprintf(f, "%d %d\n", i, m->idxu[i]) ;
+  }
+
+  xu = (NBI_REAL *)(m->xu) ;  
+  for ( i = 0 ; i < m->idxu[nbi_surface_patch_number(m->s)] ; i ++ ) {
+    for ( j = 0 ; j < xstr ; j ++ )
+      fprintf(f, " %1.16e", xu[i*xstr+j]) ;
+    fprintf(f, "\n") ;
+  }
+  
+  for ( i = 0 ; i < nbi_surface_patch_number(m->s)+1 ; i ++ ) {
+    fprintf(f, "%d %d\n", i, m->idxp[i]) ;
+  }
+
+  for ( i = 0 ; i < m->idxp[nbi_surface_patch_number(m->s)] ; i ++ ) {
+    fprintf(f, "%d\n", m->idx[i]) ;
+  }
+
+  Ast = (NBI_REAL *)(m->Ast) ;
+  for ( i = 0 ; i < nntot ; i ++ ) {
+    for ( j = 0 ; j < lda ; j ++ )
+      fprintf(f, " %1.16e", Ast[i*lda+j]) ;
+    fprintf(f, "\n") ;
+  }
+  
+  return 0 ;
+}
 
 gint NBI_FUNCTION_NAME(nbi_matrix_fmm_init)(nbi_matrix_t *m,
 					    nbi_problem_t problem,
@@ -570,6 +620,7 @@ gint NBI_FUNCTION_NAME(nbi_matrix_fmm_init)(nbi_matrix_t *m,
 gint NBI_FUNCTION_NAME(nbi_matrix_multiply)(nbi_matrix_t *A,
 					    NBI_REAL *x, gint xstr, NBI_REAL al,
 					    NBI_REAL *y, gint ystr, NBI_REAL bt,
+					    gint nthreads,
 					    NBI_REAL *work)
 
 /*
@@ -582,9 +633,24 @@ gint NBI_FUNCTION_NAME(nbi_matrix_multiply)(nbi_matrix_t *A,
   case NBI_PROBLEM_LAPLACE:
     NBI_FUNCTION_NAME(nbi_matrix_multiply_laplace)(A,
 						   x, xstr, al,
-						   y, ystr, bt, work) ;
+						   y, ystr, bt,
+						   nthreads,
+						   work) ;
     break ;
   }  
 
   return 0 ;
+}
+
+gint nbi_matrix_neighbour_number_max(nbi_matrix_t *m)
+
+{
+  gint i, nnmax ;
+
+  nnmax = 0 ;
+  for ( i = 0 ; i < nbi_surface_patch_number(m->s) ; i ++ ) {
+    nnmax = MAX(nnmax, m->idxp[i+1] - m->idxp[i]) ;
+  }  
+  
+  return nnmax ;
 }

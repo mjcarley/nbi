@@ -197,7 +197,6 @@ gint NBI_FUNCTION_NAME(nbi_geometry_ellipsoid)(nbi_surface_t *s,
   nbi_surface_patch_number(s) = 0 ;
   
   for ( j = 0 ; j < nph ; j ++ ) {
-    /* ph0 = M_PI*j/nph ; ph1 = M_PI*(j+1)/nph ; */
     ph0 = acos(1.0 - 2.0*(j+0)/nph) ;
     ph1 = acos(1.0 - 2.0*(j+1)/nph) ;
 
