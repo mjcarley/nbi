@@ -72,7 +72,7 @@ echo -- ${opts}
 
 #${bin}/nbi-surface -d ${radius} -i ${ico} -q ${nqp} -g ellipsoid-ico -o ${gfile}
 
-#${bin}/nbi-assemble-laplace ${opts} -T 4
+${bin}/nbi-assemble-laplace ${opts} -T 4
 
 ##${bin}/nbi-solve-laplace -m ${mfile} -g ${gfile} -G > field.dat
 ##${bin}/nbi-solve-laplace -m ${mfile} -g ${gfile} -L

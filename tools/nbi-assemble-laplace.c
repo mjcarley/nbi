@@ -156,14 +156,23 @@ static gpointer local_correction_thread(gpointer tdata)
 
 {
   gpointer *mdata = tdata ;
-  gint th = GPOINTER_TO_INT(mdata[0]) ;
-  gint nth = GPOINTER_TO_INT(mdata[3]) ;
-  gpointer *data = mdata[1] ;
-  NBI_REAL *work = mdata[2] ;
-  gint *idata = data[0] ;
-  gdouble **dpdata = data[1] ;
-  gdouble *ddata = data[2] ;
-  nbi_matrix_t *m = data[3] ;
+  gint th  = GPOINTER_TO_INT(mdata[NBI_THREAD_MAIN_DATA_THREAD]) ;
+  gint nth = GPOINTER_TO_INT(mdata[NBI_THREAD_MAIN_DATA_NTHREAD]) ;
+  gpointer *data = mdata[NBI_THREAD_MAIN_DATA_DATA] ;
+  NBI_REAL *work = mdata[NBI_THREAD_MAIN_DATA_WORK] ;
+  
+  /* gint th = GPOINTER_TO_INT(mdata[0]) ; */
+  /* gint nth = GPOINTER_TO_INT(mdata[3]) ; */
+  /* gpointer *data = mdata[1] ; */
+  /* NBI_REAL *work = mdata[2] ; */
+  nbi_matrix_t *m = data[NBI_THREAD_DATA_MATRIX] ;
+  gint *idata = data[NBI_THREAD_DATA_INT] ;
+  NBI_REAL *ddata = data[NBI_THREAD_DATA_REAL] ;
+  NBI_REAL **dpdata = data[NBI_THREAD_DATA_REAL_POINTER] ;
+  /* gint *idata = data[0] ; */
+  /* gdouble **dpdata = data[1] ; */
+  /* gdouble *ddata = data[2] ; */
+  /* nbi_matrix_t *m = data[3] ; */
   gint NK0, nqu, nq, dmax, N, nst, wsize, np, pt0, pt1, pt ;
   gdouble *st, *K0, *q, tol ;
 
@@ -288,13 +297,19 @@ nbi_matrix_t *nbi_surface_assemble_matrix(nbi_surface_t *s, gdouble eta,
     }
   } else {
     GThread *threads[NBI_THREAD_NUMBER_MAX] ;
-    gpointer data[8], main_data[NBI_THREAD_NUMBER_MAX*4] ;
+    gpointer data[NBI_THREAD_DATA_SIZE],
+      main_data[NBI_THREAD_NUMBER_MAX*NBI_THREAD_MAIN_DATA_SIZE] ;
+    /* gpointer data[8], main_data[NBI_THREAD_NUMBER_MAX*4] ; */
     gint *ipdata[8], idata[16] ;
     gdouble *dpdata[8], ddata[8] ;
 
-    data[0] = idata ;
-    data[1] = dpdata ; data[2] = ddata ;
-    data[3] = m ;
+    data[NBI_THREAD_DATA_MATRIX] = m ;
+    data[NBI_THREAD_DATA_INT] = idata ;
+    data[NBI_THREAD_DATA_REAL] = ddata ;
+    data[NBI_THREAD_DATA_REAL_POINTER] = dpdata ;
+    /* data[0] = idata ; */
+    /* data[1] = dpdata ; data[2] = ddata ; */
+    /* data[3] = m ; */
 
     idata[0] = nst ;
     idata[1] = NK0 ;
@@ -310,13 +325,22 @@ nbi_matrix_t *nbi_surface_assemble_matrix(nbi_surface_t *s, gdouble eta,
     ddata[0] = tol ;
     
     for ( i = 0 ; i < nthreads ; i ++ ) {
-      main_data[4*i+0] = GINT_TO_POINTER(i) ;
-      main_data[4*i+1] = data ;
-      main_data[4*i+2] = &(work[i*wstr]) ;
-      main_data[4*i+3] = GINT_TO_POINTER(nthreads) ;
+      main_data[NBI_THREAD_MAIN_DATA_SIZE*i+NBI_THREAD_MAIN_DATA_THREAD] =
+	GINT_TO_POINTER(i) ;
+      main_data[NBI_THREAD_MAIN_DATA_SIZE*i+NBI_THREAD_MAIN_DATA_DATA] =
+	data ;
+      main_data[NBI_THREAD_MAIN_DATA_SIZE*i+NBI_THREAD_MAIN_DATA_WORK] =
+	&(work[i*wstr]) ;
+      main_data[NBI_THREAD_MAIN_DATA_SIZE*i+NBI_THREAD_MAIN_DATA_NTHREAD] =
+	GINT_TO_POINTER(nthreads) ;
+
+      /* main_data[4*i+0] = GINT_TO_POINTER(i) ; */
+      /* main_data[4*i+1] = data ; */
+      /* main_data[4*i+2] = &(work[i*wstr]) ; */
+      /* main_data[4*i+3] = GINT_TO_POINTER(nthreads) ; */
       
       threads[i] = g_thread_new(NULL, local_correction_thread,
-				&(main_data[4*i])) ;
+				&(main_data[NBI_THREAD_MAIN_DATA_SIZE*i])) ;
     }
     /*make sure all threads complete before we move on*/
     for ( i = 0 ; i < nthreads ; i ++ ) g_thread_join(threads[i]) ;
@@ -398,9 +422,9 @@ gint main(gint argc, gchar **argv)
 
   if ( gfile != NULL ) fclose(input) ;
 
-  idx = (gint *)g_malloc0(nbi_surface_patch_number(s)*nnmax*sizeof(gint)) ;
-  idxp = (gint *)g_malloc0((nbi_surface_patch_number(s)+1)*sizeof(gint)) ;
-  idxu = (gint *)g_malloc0((nbi_surface_patch_number(s)+1)*sizeof(gint)) ;
+  /* idx = (gint *)g_malloc0(nbi_surface_patch_number(s)*nnmax*sizeof(gint)) ; */
+  /* idxp = (gint *)g_malloc0((nbi_surface_patch_number(s)+1)*sizeof(gint)) ; */
+  /* idxu = (gint *)g_malloc0((nbi_surface_patch_number(s)+1)*sizeof(gint)) ; */
   fprintf(stderr, "%s: starting surface assembly; t=%lg\n",
 	  progname, t = g_timer_elapsed(timer, NULL)) ;
 
