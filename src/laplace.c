@@ -683,6 +683,7 @@ gint NBI_FUNCTION_NAME(nbi_matrix_multiply_laplace)(nbi_matrix_t *A,
   diag = (NBI_REAL)(A->diag)*al ;
 
 #ifdef NBI_SINGLE_PRECISION
+  g_assert_not_reached() ; /*untested code*/
   blaswrap_sscal(nbi_surface_node_number(A->s), bt, y, ystr) ;
   blaswrap_saxpy(nbi_surface_node_number(A->s), diag, x, xstr, y, ystr) ;
 #else /*NBI_SINGLE_PRECISION*/

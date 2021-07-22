@@ -14,8 +14,6 @@
 
 @SET_MAKE@
 
-#bin_PROGRAMS=hello
-
 
 
 VPATH = @srcdir@

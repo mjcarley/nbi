@@ -89,7 +89,8 @@ POST_UNINSTALL = :
 build_triplet = x86_64-unknown-linux-gnu
 host_triplet = x86_64-unknown-linux-gnu
 bin_PROGRAMS = nbi-solve-laplace$(EXEEXT) \
-	nbi-assemble-laplace$(EXEEXT) nbi-surface$(EXEEXT)
+	nbi-assemble-laplace$(EXEEXT) nbi-surface$(EXEEXT) \
+	nbi-process$(EXEEXT)
 subdir = tools
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -115,6 +116,9 @@ AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+nbi_process_SOURCES = nbi-process.c
+nbi_process_OBJECTS = nbi-process.$(OBJEXT)
+nbi_process_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
 nbi_solve_laplace_SOURCES = nbi-solve-laplace.c
 nbi_solve_laplace_OBJECTS = nbi-solve-laplace.$(OBJEXT)
 nbi_solve_laplace_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
@@ -155,9 +159,10 @@ AM_V_CCLD = $(am__v_CCLD_$(V))
 am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = nbi-assemble-laplace.c nbi-solve-laplace.c nbi-surface.c
-DIST_SOURCES = nbi-assemble-laplace.c nbi-solve-laplace.c \
+SOURCES = nbi-assemble-laplace.c nbi-process.c nbi-solve-laplace.c \
 	nbi-surface.c
+DIST_SOURCES = nbi-assemble-laplace.c nbi-process.c \
+	nbi-solve-laplace.c nbi-surface.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -265,7 +270,7 @@ PACKAGE_VERSION = 0.1
 PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 PKG_CONFIG_LIBDIR = 
-PKG_CONFIG_PATH = /usr/local/lib64/pkgconfig:/usr/local/share/pkgconfig:/usr/lib64/pkgconfig:/usr/share/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/share/pkgconfig
+PKG_CONFIG_PATH = /usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/share/pkgconfig:/usr/lib64/pkgconfig:/usr/share/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/share/pkgconfig
 RANLIB = ranlib
 SED = /usr/bin/sed
 SET_MAKE = 
@@ -338,6 +343,9 @@ nbi_assemble_laplace_LDADD = \
 	$(top_builddir)/src/.libs/libnbi.a 
 
 nbi_surface_LDADD = \
+	$(top_builddir)/src/.libs/libnbi.a 
+
+nbi_process_LDADD = \
 	$(top_builddir)/src/.libs/libnbi.a 
 
 all: all-am
@@ -427,6 +435,10 @@ nbi-assemble-laplace$(EXEEXT): $(nbi_assemble_laplace_OBJECTS) $(nbi_assemble_la
 	@rm -f nbi-assemble-laplace$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(nbi_assemble_laplace_OBJECTS) $(nbi_assemble_laplace_LDADD) $(LIBS)
 
+nbi-process$(EXEEXT): $(nbi_process_OBJECTS) $(nbi_process_DEPENDENCIES) $(EXTRA_nbi_process_DEPENDENCIES) 
+	@rm -f nbi-process$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(nbi_process_OBJECTS) $(nbi_process_LDADD) $(LIBS)
+
 nbi-solve-laplace$(EXEEXT): $(nbi_solve_laplace_OBJECTS) $(nbi_solve_laplace_DEPENDENCIES) $(EXTRA_nbi_solve_laplace_DEPENDENCIES) 
 	@rm -f nbi-solve-laplace$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(nbi_solve_laplace_OBJECTS) $(nbi_solve_laplace_LDADD) $(LIBS)
@@ -442,6 +454,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 include ./$(DEPDIR)/nbi-assemble-laplace.Po
+include ./$(DEPDIR)/nbi-process.Po
 include ./$(DEPDIR)/nbi-solve-laplace.Po
 include ./$(DEPDIR)/nbi-surface.Po
 

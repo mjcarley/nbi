@@ -1,5 +1,3 @@
-#bin_PROGRAMS=hello
-
 AM_CPPFLAGS = -I$(top_srcdir) -I$(includedir) -DG_LOG_DOMAIN=\"NBI\"
 
 bin_SCRIPTS=nbi-config

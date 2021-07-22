@@ -14,8 +14,6 @@
 
 
 
-#bin_PROGRAMS=hello
-
 
 
 
@@ -295,7 +293,7 @@ PACKAGE_VERSION = 0.1
 PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 PKG_CONFIG_LIBDIR = 
-PKG_CONFIG_PATH = /usr/local/lib64/pkgconfig:/usr/local/share/pkgconfig:/usr/lib64/pkgconfig:/usr/share/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/share/pkgconfig
+PKG_CONFIG_PATH = /usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/share/pkgconfig:/usr/lib64/pkgconfig:/usr/share/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/share/pkgconfig
 RANLIB = ranlib
 SED = /usr/bin/sed
 SET_MAKE = 

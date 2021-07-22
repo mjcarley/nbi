@@ -189,8 +189,8 @@ static gpointer local_correction_thread(gpointer tdata)
     if ( pt1 < np ) pt1 = np ;
   }
   
-  fprintf(stderr, "thread %d/%d: %d-%d (%d)\n",
-  	  th, nth, pt0, pt1, np) ;
+  /* fprintf(stderr, "thread %d/%d: %d-%d (%d)\n", */
+  /* 	  th, nth, pt0, pt1, np) ; */
   
   for ( pt = pt0 ; pt < pt1 ; pt ++ ) {
     local_correction_matrices(m, st, nst, K0, NK0, nqu, q, nq, tol, dmax, N,
@@ -329,7 +329,7 @@ nbi_matrix_t *nbi_surface_assemble_matrix(nbi_surface_t *s, gdouble eta,
     }
     /*make sure all threads complete before we move on*/
     for ( i = 0 ; i < nthreads ; i ++ ) g_thread_join(threads[i]) ;
-    fprintf(stderr, "threads joined\n") ;
+    /* fprintf(stderr, "threads joined\n") ; */
   }
 #else /*_OPENMP*/
   for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
@@ -407,11 +407,14 @@ gint main(gint argc, gchar **argv)
 
   if ( gfile != NULL ) fclose(input) ;
 
-  fprintf(stderr, "%s: starting surface assembly; t=%lg\n",
+  fprintf(stderr, "%s: starting matrix assembly; t=%lg\n",
 	  progname, t = g_timer_elapsed(timer, NULL)) ;
 
   m = nbi_surface_assemble_matrix(s, eta, nqa, dmax, tol, N, nqu, nnmax,
   				  nthreads) ;
+  fprintf(stderr, "%s: matrix assembly complete; t=%lg\n",
+	  progname, t = g_timer_elapsed(timer, NULL)) ;
+
   
   output = fopen(mfile, "w") ;
   nbi_matrix_write(output, m) ;

@@ -301,7 +301,7 @@ gint NBI_FUNCTION_NAME(nbi_surface_patch_neighbours)(nbi_surface_t *s,
 }
 
 gint NBI_FUNCTION_NAME(nbi_element_interp_matrix)(gint ns, NBI_REAL **K,
-						 gint *Nk)
+						  gint *Nk)
 
 {
   gint nqi[] = {7, 25, 54, 85, 126, 175, 453} ;
@@ -538,6 +538,47 @@ gint NBI_FUNCTION_NAME(nbi_matrix_write)(FILE *f, nbi_matrix_t *m)
   return 0 ;
 }
 
+gint NBI_FUNCTION_NAME(nbi_data_write)(FILE *f, NBI_REAL *dat,
+				       gint dstr, gint ne, gint nd)
+
+{
+  gchar header[NBI_HEADER_LENGTH], buf[40] ;
+  gint i, j ;
+  
+  nbi_header_init(header, "NBI", "1.0", "DAT", "A") ;
+  sprintf(buf, "%d %d", ne, nd) ;
+  nbi_header_insert_string(header, NBI_HEADER_DATA, 40, buf) ;
+  nbi_header_write(f, header) ;
+  
+  for ( i = 0 ; i < nd ; i ++ ) {
+    for ( j = 0 ; j < ne ; j ++ ) {
+      fprintf(f, " %1.16e", dat[i*dstr+j]) ;
+    }
+    fprintf(f, "\n") ;
+  }
+  
+  return 0 ;
+}
+
+NBI_REAL *NBI_FUNCTION_NAME(nbi_data_read)(FILE *f, gint *nd, gint *ne)
+
+{
+  NBI_REAL *dat ;
+  gchar header[NBI_HEADER_LENGTH] ;
+  gint i ;
+  
+  nbi_header_read(f, header) ;
+
+  sscanf(&(header[NBI_HEADER_DATA]), "%d %d", ne, nd) ;
+  
+  dat = (NBI_REAL *)g_malloc0((*ne)*(*nd)*sizeof(NBI_REAL)) ;
+
+  for ( i = 0 ; i < (*nd)*(*ne) ; i ++ ) 
+    fscanf(f, "%lg", &(dat[i])) ;
+  
+  return dat ;
+}
+
 gint NBI_FUNCTION_NAME(nbi_matrix_fmm_init)(nbi_matrix_t *m,
 					    nbi_problem_t problem,
 					    wbfmm_shift_operators_t *shifts,
@@ -653,4 +694,23 @@ gint nbi_matrix_neighbour_number_max(nbi_matrix_t *m)
   }  
   
   return nnmax ;
+}
+
+gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *bc)
+
+{
+  gchar *line ;
+  gsize n ;
+  ssize_t nc ;
+  
+  nc = 0 ; line = NULL ; n = 0 ;
+  while ( nc != -1 ) {
+    nc = getline(&line, &n, f) ;
+    if ( nc > 0 ) {
+      fprintf(stderr, "%s\n", line) ;
+      nbi_boundary_condition_add(bc, line) ;
+    }
+  }
+  
+  return 0 ;
 }
