@@ -59,16 +59,16 @@ static gint make_sources(nbi_surface_t *s,
   return 0 ;
 }
 
-static gdouble greens_function_laplace(gdouble *x, gdouble *y)
+/* static gdouble greens_function_laplace(gdouble *x, gdouble *y) */
 
-{
-  gdouble G, R ;
+/* { */
+/*   gdouble G, R ; */
 
-  R = nbi_vector_distance(x, y) ;
-  G = 0.25*M_1_PI/R ;
+/*   R = nbi_vector_distance(x, y) ; */
+/*   G = 0.25*M_1_PI/R ; */
   
-  return G ;
-}
+/*   return G ; */
+/* } */
 
 gint main(gint argc, gchar **argv)
 
@@ -76,11 +76,9 @@ gint main(gint argc, gchar **argv)
   nbi_surface_t *s ;
   nbi_matrix_t *matrix ;
   nbi_boundary_condition_t *bc ;
-  gdouble xs[512], *f, *xp, *src, t ;
-  gdouble emax, fmax, G ;
-  gdouble dtree, pwt, nwt ;
+  gdouble *f, *xp, *src, t, emax, fmax, G, dtree, pwt, nwt ;
   FILE *output, *input ;
-  gchar ch, *gfile, *mfile ;
+  gchar ch, *gfile, *mfile, *bfile ;
   gdouble *work, tol ;
   gint fmm_work_size, nqfmm, order_fmm, order_inc, i, fstr, solver_work_size ;
   gint gmres_max_iter, gmres_restart ;
@@ -98,7 +96,7 @@ gint main(gint argc, gchar **argv)
 #endif /*_OPENMP*/
   
   output = stdout ;
-  mfile = NULL ; gfile = NULL ;
+  mfile = NULL ; gfile = NULL ; bfile = NULL ;
   
   dtree = 1e-2 ; fmm = FALSE ; nqfmm = 1 ; shift_bw = TRUE ;
   greens_id = FALSE ; layer_potentials = FALSE ;
@@ -112,9 +110,10 @@ gint main(gint argc, gchar **argv)
   gmres_max_iter = 128 ; gmres_restart = 40 ; tol = 1e-9 ;
     
   fstr = 3 ;
-  while ( (ch = getopt(argc, argv, "D:d:fGg:Lm:o:T:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "b:D:d:fGg:Lm:o:T:")) != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
+    case 'b': bfile = g_strdup(optarg) ; break ;
     case 'D': depth = atoi(optarg) ; break ;
     case 'd': order_inc = atoi(optarg) ; break ;
     case 'f': fmm = TRUE ; break ;
@@ -170,14 +169,23 @@ gint main(gint argc, gchar **argv)
 	  progname, g_timer_elapsed(timer, NULL)) ;
   src = (gdouble *)g_malloc0(nbi_surface_node_number(s)*2*sizeof(gdouble)) ;
 
-  xs[0] = 0.3 ; xs[1] = -0.4 ; xs[2] = 0.7 ;
+  if ( bfile == NULL ) {
+    fprintf(stderr, "%s: no boundary condition specified\n", progname) ;
+    exit(1) ;
+  }
+
+  fprintf(stderr, "%s: reading boundary conditions from %s\n",
+	  progname, bfile) ;
+  if ( (input = fopen(bfile, "r")) == NULL ) {
+    fprintf(stderr, "%s: cannot open boundary condition file %s\n",
+	    progname, bfile) ;
+    return 1 ;
+  }
 
   bc = nbi_boundary_condition_new(NBI_PROBLEM_LAPLACE) ;
-  nbi_boundary_condition_add(bc,
-			     "1.0/sqrt((x-0.3)^2+(y+0.4)^2+(z-0.7)^2)/4/pi") ;
-  nbi_boundary_condition_add(bc,
-			     "-((x-0.3)*nx+(y+0.4)*ny+(z-0.7)*nz)/"
-			     "sqrt((x-0.3)^2+(y+0.4)^2+(z-0.7)^2)^3/4/pi") ;
+  nbi_boundary_condition_read(input, bc) ;
+  
+  fclose(input) ;
   
   make_sources(s, &(src[0]), 2, &(src[1]), 2, bc) ;
 
@@ -187,6 +195,7 @@ gint main(gint argc, gchar **argv)
         
     solver_work_size = 2*i + 4*gmres_restart +
       (gmres_restart+1)*(i+gmres_restart) + 2 ;
+    solver_work_size *= 2 ;
   }
   
   if ( fmm ) {
@@ -238,7 +247,8 @@ gint main(gint argc, gchar **argv)
     emax = 0.0 ; fmax = 0.0 ;
     for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
       xp = (NBI_REAL *)nbi_surface_node(s,i) ;
-      G = greens_function_laplace(xp, xs) ;
+      /* G = greens_function_laplace(xp, xs) ; */
+      G = src[2*i+0] ;
       fmax = MAX(fmax, G) ;
       emax = MAX(emax, fabs(G - f[i*fstr])) ;
       fprintf(output, "%lg %lg %lg %lg %lg\n",
@@ -269,7 +279,8 @@ gint main(gint argc, gchar **argv)
     emax = 0.0 ; fmax = 0.0 ;
     for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
       xp = (NBI_REAL *)nbi_surface_node(s,i) ;
-      G = greens_function_laplace(xp, xs) ;
+      /* G = greens_function_laplace(xp, xs) ; */
+      G = src[2*i+0] ;
       fmax = MAX(fmax, G) ;
       emax = MAX(emax, fabs(G - f[i*fstr])) ;
       fprintf(output, "%lg %lg %lg %lg %lg\n",
@@ -312,10 +323,13 @@ gint main(gint argc, gchar **argv)
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
     emax = MAX(emax,fabs(p[i]-src[2*i])) ;
     fmax = MAX(fmax, fabs(src[2*i])) ;
-    fprintf(stdout, "%1.16e %1.16e\n", p[i], src[2*i+1]) ;
+    /* fprintf(stdout, "%1.16e %1.16e\n", p[i], src[2*i+1]) ; */
   }
 
-  fprintf(stderr, "%s: L_inf norm %lg\n", progname, emax/fmax) ;
+  fprintf(stderr, "%s: emax = %lg; fmax = %lg; L_inf norm = %lg\n",
+	  progname, emax, fmax, emax/fmax) ;
+
+  nbi_data_write(stdout, p, 1, 1, nbi_surface_node_number(s)) ;
   
   return 0 ;
 }

@@ -16,3 +16,5 @@
 ## scratch directory
 scratch
 
+## m4 cache
+autom4te.cache

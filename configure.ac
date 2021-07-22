@@ -1,6 +1,5 @@
 AC_INIT([nbi], 0.1)
 AC_CONFIG_SRCDIR([src/nbi.h])
-AC_CONFIG_MACRO_DIR([m4])
 
 NBI_MAJOR_VERSION=0
 NBI_MINOR_VERSION=1
@@ -60,7 +59,6 @@ fi
 AC_PROG_AWK
 AC_ISC_POSIX
 AC_HEADER_STDC
-
 
 AC_CHECK_PROG(SQT, sqt-config, yes, no)
 if test x$SQT = xyes ; then

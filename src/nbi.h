@@ -231,5 +231,8 @@ gint nbi_gmres_real(nbi_matrix_t *A,
 		    gint nthreads,
 		    gdouble *work) ;
 
+gdouble *nbi_data_read(FILE *f, gint *nd, gint *ne) ;
+gint nbi_data_write(FILE *f, gdouble *dat, gint dstr, gint ne, gint nd) ;
+gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *bc) ;
 
 #endif /*NBI_H_INCLUDED*/
