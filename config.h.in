@@ -14,6 +14,9 @@
 /* Define if F77 and FC dummy `main' functions are identical. */
 #undef FC_DUMMY_MAIN_EQ_F77
 
+/* aerodynamic geometry library available */
+#undef HAVE_AGG
+
 /* Define if you have an ATLAS BLAS library. */
 #undef HAVE_ATLAS_BLAS
 

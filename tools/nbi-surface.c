@@ -114,6 +114,27 @@ static gint list_geometries(FILE *f)
   return 0 ;
 }
 
+static void print_help_text(FILE *output)
+
+{
+  fprintf(output,
+	  "Usage:\n\n"
+	  "  %s <options>\n\n",
+	  progname) ;
+
+  fprintf(output,
+	  "Options:\n\n"
+	  "  -h print this message and exit\n"
+	  "  -d # append a real argument for geometry specification\n"
+	  "  -g # select a geometry\n"
+	  "  -G list available geometries\n"
+	  "  -i # append an integer argument for geometry specification\n"
+	  "  -o # output file\n"
+	  "  -q # number of quadrature points per surface patch\n"
+	  ) ;
+  return ;
+}
+
 gint main(gint argc, gchar **argv)
 
 {
@@ -134,9 +155,10 @@ gint main(gint argc, gchar **argv)
 
   argci = argcd = 0 ;
   
-  while ( (ch = getopt(argc, argv, "d:Gg:i:o:q:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "hd:Gg:i:o:q:")) != EOF ) {
     switch (ch ) {
     default: g_assert_not_reached() ; break ;
+    case 'h': print_help_text(stderr) ; return 0 ; break ;
     case 'd': argd[argcd] = atof(optarg) ; argcd ++ ; break ;
     case 'g': gfunc = parse_geometry(optarg) ; break ;
     case 'G':

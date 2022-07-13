@@ -77,6 +77,23 @@ else
   exit
 fi
 
+AC_CHECK_PROG(AGG, agg-config, yes, no)
+if test x$AGG = xyes ; then
+   AC_DEFINE(HAVE_AGG, 1, [aerodynamic geometry library available])
+   agg_cflags=`agg-config --cflags`
+   agg_libs=`agg-config --libs`
+else
+  echo \#################################################################
+  echo \#
+  echo \# Aerodynamic Geometry Generator library not installed or
+  echo \# not properly installed. Some geometry features will be
+  echo \# unavailable. You can get the library from
+  echo \#
+  echo \# https://github.com/mjcarley/agg
+  echo \#
+  echo \#################################################################
+fi
+
 AC_CHECK_PROG(WBFMM, wbfmm-config, yes, no)
 if test x$WBFMM = xyes ; then
    AC_DEFINE(HAVE_WBFMM, 1, [wide band FMM library available])

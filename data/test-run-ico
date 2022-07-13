@@ -39,15 +39,15 @@
 #ico=2
 
 ## error 5.8e-6
-#nqa=7
-#nqp=54
-#nqu=126
-#tol=1e-6
-#radius=1.5
-#eta=2.0
-#depth=7
-#order=12
-#ico=2
+nqa=7
+nqp=54
+nqu=126
+tol=1e-6
+radius=1.5
+eta=2.0
+depth=7
+order=12
+ico=2
 
 ## error 1.6e-5
 nqa=7
@@ -70,9 +70,9 @@ opts="-e ${tol} -a ${nqa} -u ${nqu} \
       -m ${mfile} -g ${gfile}"
 echo -- ${opts}
 
-#${bin}/nbi-surface -d ${radius} -i ${ico} -q ${nqp} -g ellipsoid-ico -o ${gfile}
+##${bin}/nbi-surface -d ${radius} -i ${ico} -q ${nqp} -g ellipsoid-ico -o ${gfile}
 
-#${bin}/nbi-assemble-laplace ${opts} -T 4
+##${bin}/nbi-assemble-laplace ${opts} -T 4
 
 ##${bin}/nbi-solve-laplace -m ${mfile} -g ${gfile} -G > field.dat
 ##${bin}/nbi-solve-laplace -m ${mfile} -g ${gfile} -L
@@ -81,8 +81,8 @@ echo -- ${opts}
 #${bin}/nbi-solve-laplace -f -m ${mfile} -g ${gfile} -D 5 -o 10 \
 #      -d 2 -L -T 4 -b psource.bc > /dev/null
 
-${bin}/nbi-solve-laplace -f -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 \
-      -T 4 -b psource.bc > surface-data.dat
+${bin}/nbi-solve-laplace -f -m ${mfile} -g ${gfile} -D 5 -o 12 -d 4 \
+      -T 2 -b psource.bc > surface-data.dat
 
 ##  eta=1.25 -m matrix-ico-3-25-54-12-7.dat L_inf norm: 4.34474e-05
 ## -o 16 eta=1.25 -m  matrix-ico-3-25-85-16-7.datL_inf norm: 4.34495e-05 (722s)

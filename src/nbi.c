@@ -629,7 +629,7 @@ gint NBI_FUNCTION_NAME(nbi_matrix_fmm_init)(nbi_matrix_t *m,
 
   wbfmm_tree_add_points(m->tree,
 			(gpointer)xu, fmmpstr,
-			(gpointer)(&(xu[3])), fmmpstr, nsrc) ;
+			(gpointer)(&(xu[3])), fmmpstr, nsrc, FALSE) ;
   
   for ( i = 0 ; i < depth ; i ++ ) wbfmm_tree_refine(m->tree) ;
 

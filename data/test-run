@@ -17,13 +17,13 @@ bin=../tools
 gfile=ellipsoid-${np}-${nt}-${nqp}.dat
 mfile=matrix-${np}-${nt}-${nqp}-${nqu}.dat
 
-opts="-e ${tol} -p ${np} -t ${nt} -a ${nqa} -q ${nqp} -u ${nqu} \
+opts="-e ${tol} -a ${nqa} -u ${nqu} \
       -r ${radius} -n ${eta} -d ${depth} -N ${order} \
       -m ${mfile} -g ${gfile}"
 echo -- ${opts}
-#${bin}/nbi-assemble ${opts}
+${bin}/nbi-assemble-laplace ${opts}
 
-${bin}/nbi-solve -m ${mfile} -g ${gfile} > field.dat
+${bin}/nbi-solve-laplace -m ${mfile} -g ${gfile} > field.dat
 #${bin}/nbi-solve -f -m ${mfile} -g ${gfile} > fieldfmm.dat
 
 ## ellipsoid-8-16-54.dat matrix-8-16-54-85.dat norm: 4.64319e-05
