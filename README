@@ -1,7 +1,0 @@
-NBI is a library and codes for the Nystrom Boundary Integral method.
-
-It contains the tinyexpr parser and evaluation library written by
-Lewis Van Winkle and released under the zlib licence. It is maintained
-here:
-
-https://github.com/codeplea/tinyexpr

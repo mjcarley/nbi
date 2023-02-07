@@ -1,6 +1,6 @@
 /* This file is part of NBI, a library for Nystrom Boundary Integral solvers
  *
- * Copyright (C) 2021 Michael Carley
+ * Copyright (C) 2021, 2023 Michael Carley
  *
  * NBI is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -40,6 +40,11 @@
 
 const gchar *variables[] = {"x", "y", "z", "nx", "ny", "nz", NULL} ;
 
+const te_variable functions[NBI_EXPRESSION_FUNCTION_NUMBER] = {
+  {"laplace_G" , nbi_function_gfunc_laplace_G , TE_FUNCTION3},
+  {"laplace_dG", nbi_function_gfunc_laplace_dG, TE_FUNCTION6}
+} ;
+
 nbi_expression_t *nbi_expression_new(gchar *expression)
 
 {
@@ -49,7 +54,8 @@ nbi_expression_t *nbi_expression_new(gchar *expression)
 
   e = (nbi_expression_t *)g_malloc0(sizeof(nbi_expression_t)) ;
 
-  e->vars = g_malloc(NBI_EXPRESSION_VARIABLE_NUMBER*sizeof(te_variable)) ;
+  e->vars = g_malloc((NBI_EXPRESSION_VARIABLE_NUMBER+
+		      NBI_EXPRESSION_FUNCTION_NUMBER)*sizeof(te_variable)) ;
   vars = e->vars ;
 
   for ( i = 0 ; i < NBI_EXPRESSION_VARIABLE_NUMBER ; i ++ ) {
@@ -59,8 +65,18 @@ nbi_expression_t *nbi_expression_new(gchar *expression)
     vars[i].context = NULL ;
   }
 
-  e->compiled = te_compile(expression, vars, NBI_EXPRESSION_VARIABLE_NUMBER,
-			    &err) ;
+  for ( i = 0 ; i <  NBI_EXPRESSION_FUNCTION_NUMBER ; i ++ ) {
+    vars[NBI_EXPRESSION_VARIABLE_NUMBER+i] = functions[i] ;
+    /*   .name = g_strdup(functions[i].name) ; */
+    /* vars[i].address = &(e->x[i]) ; */
+    /* vars[i].type = TE_VARIABLE ; */
+    vars[i].context = NULL ;
+  }
+  
+  e->compiled = te_compile(expression, vars,
+			   NBI_EXPRESSION_VARIABLE_NUMBER + 
+			   NBI_EXPRESSION_FUNCTION_NUMBER,
+			   &err) ;
 
   if ( err != 0 ) {
     fprintf(stderr,

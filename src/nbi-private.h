@@ -60,7 +60,7 @@
 #define NBI_THREAD_DATA_REAL         3
 #define NBI_THREAD_DATA_REAL_POINTER 4
 
-#define NBI_THREAD_DATA_INT_SIZE     8
+#define NBI_THREAD_DATA_INT_SIZE     16
 #define NBI_THREAD_DATA_INT_PSTR     0
 #define NBI_THREAD_DATA_INT_NSTR     1
 #define NBI_THREAD_DATA_INT_FSTR     2
@@ -77,11 +77,12 @@
 #define NBI_THREAD_DATA_REAL_PTR_PN   1
 #define NBI_THREAD_DATA_REAL_PTR_F    2
 
-#define NBI_THREAD_MAIN_DATA_SIZE    4
+#define NBI_THREAD_MAIN_DATA_SIZE    5
 #define NBI_THREAD_MAIN_DATA_THREAD  0
 #define NBI_THREAD_MAIN_DATA_NTHREAD 1
 #define NBI_THREAD_MAIN_DATA_DATA    2
 #define NBI_THREAD_MAIN_DATA_WORK    3
+#define NBI_THREAD_MAIN_DATA_CONV    4
 
 #define NBI_THREAD_NUMBER_MAX     8
 
@@ -89,10 +90,11 @@
   (((NBI_A)[0])*((NBI_B)[0])+					\
    ((NBI_A)[1])*((NBI_B)[1])+					\
    ((NBI_A)[2])*((NBI_B)[2]))
-#define nbi_vector_length(NBI_A)				\
-  (SQRT(((NBI_A)[0])*((NBI_A)[0])+				\
-	((NBI_A)[1])*((NBI_A)[1]) +				\
-	((NBI_A)[2])*((NBI_A)[2])))
+#define nbi_vector_length2(NBI_A)				\
+  (((NBI_A)[0])*((NBI_A)[0]) +					\
+   ((NBI_A)[1])*((NBI_A)[1]) +					\
+   ((NBI_A)[2])*((NBI_A)[2]))
+#define nbi_vector_length(NBI_A) (SQRT(nbi_vector_length2(NBI_A)))
 #define nbi_vector_cross(NBI_C,NBI_A,NBI_B)				\
   ((NBI_C)[0] = (NBI_A)[1]*(NBI_B)[2] - (NBI_A)[2]*(NBI_B)[1],		\
    (NBI_C)[1] = (NBI_A)[2]*(NBI_B)[0] - (NBI_A)[0]*(NBI_B)[2],		\
@@ -115,5 +117,10 @@
     (NBI_A)[1] = (NBI_B)[1] - (NBI_C)[1] ;		\
     (NBI_A)[2] = (NBI_B)[2] - (NBI_C)[2] ;		\
   } while (0)
+
+
+gdouble nbi_function_gfunc_laplace_G(gdouble x, gdouble y, gdouble z) ;
+gdouble nbi_function_gfunc_laplace_dG(gdouble x, gdouble y, gdouble z,
+				      gdouble nx, gdouble ny, gdouble nz) ;
 
 #endif /*NBI_PRIVATE_H_INCLUDED*/

@@ -125,9 +125,12 @@ static void print_help_text(FILE *output)
   fprintf(output,
 	  "Options:\n\n"
 	  "  -h print this message and exit\n"
+#ifdef HAVE_AGG
+	  "  -a # AGG input file\n"
+#endif /*HAVE_AGG*/
 	  "  -d # append a real argument for geometry specification\n"
 	  "  -g # select a geometry\n"
-	  "  -G list available geometries\n"
+	  "  -G list available built-in geometries\n"
 	  "  -i # append an integer argument for geometry specification\n"
 	  "  -o # output file\n"
 	  "  -q # number of quadrature points per surface patch\n"
@@ -139,28 +142,49 @@ gint main(gint argc, gchar **argv)
 
 {
   geometry_function gfunc ;
-  gchar ch, *opfile ;
+  gchar ch, *opfile, *aggfile ;
   gdouble argd[16] ;
   gint argi[16], nq, argci, argcd ;
   nbi_surface_t *s ;
-  FILE *output ;
+  FILE *output, *input ;
   
   opfile = NULL ;
   progname = g_strdup(g_path_get_basename(argv[0])) ;
 
-  gfunc = NULL ;
-
+  gfunc = NULL ; aggfile = NULL ;
+  s = NULL ;
+  nq = 7 ;
+  
   argd[0] = 1.0 ; argd[1] = 1.0 ; argd[2] = 1.0 ;
   argi[0] = 1 ;
 
   argci = argcd = 0 ;
   
-  while ( (ch = getopt(argc, argv, "hd:Gg:i:o:q:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "ha:d:Gg:i:o:q:")) != EOF ) {
     switch (ch ) {
     default: g_assert_not_reached() ; break ;
+    case 'a':
+#ifdef HAVE_AGG
+      if ( gfunc != NULL ) {
+	fprintf(stderr, "%s: use -a or -g but not both\n", progname) ;
+	return 1 ;
+      }
+      aggfile = g_strdup(optarg) ;
+#else /*HAVE_AGG*/
+      fprintf(stderr,
+	      "AGG geometry support not implemented: install AGG and "
+	      "recompile\n") ;
+      exit(1) ;
+#endif /*HAVE_AGG*/
+      break ;
     case 'h': print_help_text(stderr) ; return 0 ; break ;
     case 'd': argd[argcd] = atof(optarg) ; argcd ++ ; break ;
-    case 'g': gfunc = parse_geometry(optarg) ; break ;
+    case 'g':
+      if ( aggfile != NULL ) {
+	fprintf(stderr, "%s: use -a or -g but not both\n", progname) ;
+	return 1 ;
+      }
+      gfunc = parse_geometry(optarg) ; break ;
     case 'G':
       list_geometries(stderr) ;
       return 0 ;
@@ -171,19 +195,40 @@ gint main(gint argc, gchar **argv)
     }
   }
 
-  if ( gfunc == NULL ) {
-    fprintf(stderr, "%s: no geometry specified\n", progname) ;
+  if ( aggfile == NULL && gfunc == NULL ) {
+    fprintf(stderr, "%s: no geometry specified\n",
+	    progname) ;
 
-    return 0 ;
+    return 1 ;
   }
 
-  s = gfunc(argd, argi, nq) ;
+#ifdef HAVE_AGG
+  if ( aggfile != NULL ) {
+    gint fid ;
+    input = fopen(aggfile, "r") ;
+    if ( input == NULL ) {
+      fprintf(stderr, "%s: cannot open file %s\n", progname, aggfile) ;
+      return 1 ;
+    }
+    fid = fileno(input) ;
+    s = nbi_agg_mesh(fid, nq) ;
+    fclose(input) ;
+    close(fid) ;
+  }
+#endif /*HAVE_AGG*/
 
-  fprintf(stderr,
-	  "  patches: %d\n"
-	  "  nodes:   %d\n",
-	  nbi_surface_patch_number(s), nbi_surface_node_number(s)) ;
-	  
+  
+  if ( gfunc != NULL ) {
+    s = gfunc(argd, argi, nq) ;
+  }
+
+  if ( s != NULL ) {
+    fprintf(stderr,
+	    "  patches: %d\n"
+	    "  nodes:   %d\n",
+	    nbi_surface_patch_number(s), nbi_surface_node_number(s)) ;
+  }
+  
   if ( opfile == NULL ) {
     output = stdout ;
   } else {

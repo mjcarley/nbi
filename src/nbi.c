@@ -257,9 +257,9 @@ static gboolean patch_boxes_encroach(NBI_REAL *c, NBI_REAL r,
 }
 
 gint NBI_FUNCTION_NAME(nbi_surface_patch_neighbours)(nbi_surface_t *s,
-						    gint p, NBI_REAL r,
-						    gint *nbrs, gint *nnbrs,
-						    gint nnmax)
+						     gint p, NBI_REAL r,
+						     gint *nbrs, gint *nnbrs,
+						     gint nnmax)
 
 {
   gint i, n0, n1 ;
@@ -587,6 +587,7 @@ gint NBI_FUNCTION_NAME(nbi_matrix_fmm_init)(nbi_matrix_t *m,
 					    gint depth,
 					    NBI_REAL dtree,
 					    gboolean shift_bw,
+					    gboolean precompute_local,
 					    NBI_REAL *work)
 
 {
@@ -642,7 +643,10 @@ gint NBI_FUNCTION_NAME(nbi_matrix_fmm_init)(nbi_matrix_t *m,
       wbfmm_tree_laplace_coefficient_init(m->tree, i,
 					  order_r[i*rstr], order_s[i*sstr]) ;
     }
-    
+
+    m->targets = NULL ;
+    if ( !precompute_local ) return 0 ;
+
     m->targets = wbfmm_target_list_new(m->tree, nbi_surface_node_number(s)) ;
     wbfmm_target_list_coefficients_init(m->targets, field) ;
     wbfmm_target_list_add_points(m->targets,
@@ -651,6 +655,7 @@ gint NBI_FUNCTION_NAME(nbi_matrix_fmm_init)(nbi_matrix_t *m,
 				 nbi_surface_node_number(s)) ;
   
     wbfmm_laplace_target_list_local_coefficients(m->targets, source, work) ;
+
     return 0 ;
     break ;
   }

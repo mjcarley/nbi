@@ -23,6 +23,7 @@
 #define NBI_SURFACE_PATCH_DATA_LENGTH     4
 
 #define NBI_EXPRESSION_VARIABLE_NUMBER 6
+#define NBI_EXPRESSION_FUNCTION_NUMBER 2
 
 #define NBI_HEADER_LENGTH  80
 #define NBI_HEADER_ID       0
@@ -137,6 +138,10 @@ struct _nbi_boundary_condition_t {
   nbi_expression_t *e[4] ;
 } ;
   
+typedef gint (*nbi_mesh_export_func_t)(FILE *,
+				       gdouble *, gint, gint,
+				       gint *, gint, gint,
+				       gdouble *) ;
 
 nbi_surface_t *nbi_surface_alloc(gint nnmax, gint npmax) ;
 gint nbi_surface_write(nbi_surface_t *s, FILE *f) ;
@@ -199,6 +204,7 @@ gint nbi_matrix_fmm_init(nbi_matrix_t *m,
 			 gint depth,
 			 gdouble dtree,
 			 gboolean shift_bw,
+			 gboolean precompute_local,
 			 gdouble *work) ;
 gint nbi_matrix_multiply(nbi_matrix_t *A,
 			 gdouble *x, gint xstr, gdouble al,
@@ -234,5 +240,19 @@ gint nbi_gmres_real(nbi_matrix_t *A,
 gdouble *nbi_data_read(FILE *f, gint *nd, gint *ne) ;
 gint nbi_data_write(FILE *f, gdouble *dat, gint dstr, gint ne, gint nd) ;
 gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *bc) ;
+
+nbi_surface_t *nbi_agg_mesh(gint fid, gint nq) ;
+
+gint nbi_mesh_triangulate(nbi_surface_t *s,
+			  gint dmax, gint order, gdouble tol,
+			  gdouble *K, gint Nk,
+			  gdouble *x, gint xstr, gint npmax,
+			  gint *tri, gint tstr, gint ntmax,
+			  gdouble *f, gint fstr,
+			  gdouble *fi, gint fistr,
+			  gint *np, gint *nt) ;
+gint nbi_mesh_export_gmsh(FILE *f, gdouble *x, gint xstr, gint np,
+			  gint *tri, gint tstr, gint nt,
+			  gdouble *data, gint dstr) ;
 
 #endif /*NBI_H_INCLUDED*/

@@ -1,34 +1,41 @@
-Autotools Template
-==================
+NBI is a library and codes for the Nystrom Boundary Integral method.
 
-Overview
---------
+It contains the tinyexpr parser and evaluation library written by
+Lewis Van Winkle and released under the zlib licence. It is maintained
+here:
 
-This is a skeleton project for a source tree based on the [GNU Build System](http://www.gnu.org/software/automake/manual/html_node/GNU-Build-System.html). The steps below walk through the process of running autotools so that the project can build built using the standard way:
+https://github.com/codeplea/tinyexpr
 
-    ./configure && make && make install
+* Prerequisites
 
-Prerequisites
--------------
+You will need to have installed the following libraries:
 
-You will need to install the following GNU tools:
+https://github.com/mjcarley/blaswrap
+https://github.com/mjcarley/sqt
+https://github.com/mjcarley/wbfmm
 
-    autoconf
-    automake
+* Installation
 
+If you have downloaded the source from github or equivalent, you will
+need the autotools suite and you generate the configure script with
 
-Step-by-Step
-------------
+. autogen.sh
 
-Clone this repository:
+To configure and install the code,
 
-    git clone https://github.com/gizero/autotools-skeleton.git
+  ./configure [OPTIONS]
+  make
+  make install
 
-Generate the configure script:
+For information on ptions to control configuration,
 
-    autoreconf -ivf
+  ./configure --help
 
-Configure and build the project:
+There appears to be an optimization bug in gcc version 11 (at least),
+which seriously affects the performance of the code, so it is
+recommended to switch off optimization of NBI (most of the calculation
+is done using other libraries, so this does not affect computation
+times too badly), using
 
-    ./configure
-    make
+  CFLAGS="-O0 -g" ./configure ...
+

@@ -19,7 +19,10 @@ libnbi_la_SOURCES = \
 	laplace.c \
 	solvers.c \
 	tinyexpr.c \
-	expressions.c
+	expressions.c \
+	agg.c \
+	export.c \
+	functions.c
 
 include_HEADERS = \
 	nbi.h \

@@ -70,13 +70,42 @@ static gint make_sources(nbi_surface_t *s,
 /*   return G ; */
 /* } */
 
+static void print_help_text(FILE *f, gint depth,
+			    gint order_inc, gint order_fmm,
+			    gint nthreads, gdouble tol)
+
+{
+  fprintf(f, 
+	  "Usage:\n\n"
+	  "  %s <options>\n\n",
+	  progname) ;
+
+  fprintf(f,
+	  "Options:\n\n"
+	  "  -h print this message and exit\n"
+	  "  -b # boundary condition file\n"
+	  "  -D # FMM tree depth (%d)\n"
+	  "  -d # FMM tree increment in expansion order between levels (%d)\n"
+	  "  -f use FMM\n"
+	  "  -G evaluate Green's identity\n"
+	  "  -g # geometry file name\n"
+	  "  -L evaluate single and double layer potentials\n"
+	  "  -m # matrix file name\n"
+	  "  -o # FMM order (%d)\n"
+	  "  -p precompute local interactions in FMM\n"
+	  "  -T # number of threads (%d)\n"
+	  "  -t # GMRES solution tolerance (%lg)\n",
+	  depth, order_inc, order_fmm, nthreads, tol) ;
+  return ;
+}
+
 gint main(gint argc, gchar **argv)
 
 {
   nbi_surface_t *s ;
   nbi_matrix_t *matrix ;
   nbi_boundary_condition_t *bc ;
-  gdouble *f, *xp, *src, t, emax, fmax, G, dtree, pwt, nwt ;
+  gdouble *f, *xp, *src, t, emax, fmax, e2, f2, G, dtree, pwt, nwt ;
   FILE *output, *input ;
   gchar ch, *gfile, *mfile, *bfile ;
   gdouble *work, tol ;
@@ -84,7 +113,7 @@ gint main(gint argc, gchar **argv)
   gint gmres_max_iter, gmres_restart ;
   gint nthreads, nproc ;
   guint depth, order[48] = {0}, order_s, order_r, order_max ;
-  gboolean fmm, shift_bw, greens_id, layer_potentials ;
+  gboolean fmm, shift_bw, greens_id, layer_potentials, precompute_local ;
 
   nthreads = 1 ;
 
@@ -100,19 +129,25 @@ gint main(gint argc, gchar **argv)
   
   dtree = 1e-2 ; fmm = FALSE ; nqfmm = 1 ; shift_bw = TRUE ;
   greens_id = FALSE ; layer_potentials = FALSE ;
+  precompute_local = FALSE ;
   
   pwt = 2.0 ; nwt = 2.0 ;
+  /* pwt = 1.0 ; nwt = 1.0 ; */
   progname = g_strdup(g_path_get_basename(argv[0])) ;
 
   order_fmm = 12 ; order_inc = 2 ; depth = 4 ;
 
   solver_work_size = 0 ;
-  gmres_max_iter = 128 ; gmres_restart = 40 ; tol = 1e-9 ;
+  gmres_max_iter = 128 ; gmres_restart = 10 ; tol = 1e-9 ;
     
   fstr = 3 ;
-  while ( (ch = getopt(argc, argv, "b:D:d:fGg:Lm:o:T:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "hb:D:d:fGg:Lm:o:pr:T:t:")) != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
+    case 'h':
+      print_help_text(stderr, depth, order_inc, order_fmm, nthreads, tol) ;
+      return 0 ;
+      break ;
     case 'b': bfile = g_strdup(optarg) ; break ;
     case 'D': depth = atoi(optarg) ; break ;
     case 'd': order_inc = atoi(optarg) ; break ;
@@ -122,7 +157,10 @@ gint main(gint argc, gchar **argv)
     case 'L': layer_potentials = TRUE ; break ;
     case 'm': mfile = g_strdup(optarg) ; break ;
     case 'o': order_fmm = atoi(optarg) ; break ;
+    case 'p': precompute_local = TRUE ; break ;
+    case 'r': gmres_restart = atoi(optarg) ; break ;
     case 'T': nthreads = atoi(optarg) ; break ;
+    case 't': tol = atof(optarg) ; break ;
     }
   }
 
@@ -211,9 +249,13 @@ gint main(gint argc, gchar **argv)
       order_max = MAX(order_max, order[2*i+1]) ;
     }
     fmm_work_size = wbfmm_element_number_rotation(2*(order_max+2)) ;
-    fmm_work_size = MAX(fmm_work_size, (order_max+1)*(order_max+1)*nqfmm*16) ;
-
+    fmm_work_size = MAX((guint)fmm_work_size,
+			(order_max+1)*(order_max+1)*nqfmm*16) ;
+    
     fmm_work_size += solver_work_size ;
+
+    fprintf(stderr, "%s: allocating %d elements to FMM work space\n",
+	    progname, fmm_work_size) ;
     
     work = (gdouble *)g_malloc0(fmm_work_size*sizeof(gdouble)) ;
     wbfmm_laplace_coaxial_translate_init(order_max+1) ;    
@@ -224,7 +266,10 @@ gint main(gint argc, gchar **argv)
 
     nbi_matrix_fmm_init(matrix, NBI_PROBLEM_LAPLACE,
 			NULL, &(order[0]), 2, &(order[1]), 2,
-			depth, dtree, shift_bw, work) ;    
+			depth, dtree, shift_bw, precompute_local,
+			work) ;    
+    fprintf(stderr, "%s: FMM matrix initialized; t=%lg\n",
+	    progname, t = g_timer_elapsed(timer, NULL)) ;
   } else {
     fmm_work_size = 16384 ;
     fmm_work_size += solver_work_size ;
@@ -244,18 +289,21 @@ gint main(gint argc, gchar **argv)
 	    progname,
 	    g_timer_elapsed(timer, NULL), g_timer_elapsed(timer, NULL) - t) ;
     
-    emax = 0.0 ; fmax = 0.0 ;
+    emax = fmax = e2 = f2 = 0.0 ;
     for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
       xp = (NBI_REAL *)nbi_surface_node(s,i) ;
       /* G = greens_function_laplace(xp, xs) ; */
       G = src[2*i+0] ;
       fmax = MAX(fmax, G) ;
       emax = MAX(emax, fabs(G - f[i*fstr])) ;
+      e2 += (G - f[i*fstr])*(G - f[i*fstr]) ;
+      f2 += G*G ;
       fprintf(output, "%lg %lg %lg %lg %lg\n",
 	      xp[0], xp[1], xp[2], f[i*fstr], fabs(G - f[i*fstr])) ;
     }
     
-    fprintf(stderr, "L_inf norm: %lg\n", emax/fmax) ;
+    fprintf(stderr, "L_inf norm: %lg; L_2 norm: %lg\n",
+	    emax/fmax, sqrt(e2/f2)) ;
 
     return 0 ;
   }
@@ -276,18 +324,21 @@ gint main(gint argc, gchar **argv)
 	    progname,
 	    g_timer_elapsed(timer, NULL), g_timer_elapsed(timer, NULL) - t) ;
     
-    emax = 0.0 ; fmax = 0.0 ;
+    emax = fmax = e2 = f2 = 0.0 ;
     for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
       xp = (NBI_REAL *)nbi_surface_node(s,i) ;
       /* G = greens_function_laplace(xp, xs) ; */
       G = src[2*i+0] ;
       fmax = MAX(fmax, G) ;
       emax = MAX(emax, fabs(G - f[i*fstr])) ;
+      e2 += (G - f[i*fstr])*(G - f[i*fstr]) ;
+      f2 += G*G ;
       fprintf(output, "%lg %lg %lg %lg %lg\n",
 	      xp[0], xp[1], xp[2], f[i*fstr], fabs(G - f[i*fstr])) ;
     }
     
-    fprintf(stderr, "L_inf norm: %lg\n", emax/fmax) ;
+    fprintf(stderr, "L_inf norm: %lg; L_2 norm: %lg\n",
+	    emax/fmax, sqrt(e2/f2)) ;
 
     return 0 ;
   }
@@ -319,15 +370,17 @@ gint main(gint argc, gchar **argv)
 	  g_timer_elapsed(timer, NULL),
 	  g_timer_elapsed(timer, NULL) - t) ;
 
-  emax = fmax = 0.0 ;
+  emax = fmax = e2 = f2 = 0.0 ;
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
     emax = MAX(emax,fabs(p[i]-src[2*i])) ;
     fmax = MAX(fmax, fabs(src[2*i])) ;
-    /* fprintf(stdout, "%1.16e %1.16e\n", p[i], src[2*i+1]) ; */
+    e2 += (p[i]-src[2*i])*(p[i]-src[2*i]) ;
+    f2 += src[2*i]*src[2*i] ;
   }
 
-  fprintf(stderr, "%s: emax = %lg; fmax = %lg; L_inf norm = %lg\n",
-	  progname, emax, fmax, emax/fmax) ;
+  fprintf(stderr, "%s: emax = %lg; fmax = %lg;\n", progname, emax, fmax) ;
+  fprintf(stderr, "%s: L_inf norm = %lg; L_2 norm = %lg\n",
+	  progname, emax/fmax, sqrt(e2/f2)) ;
 
   nbi_data_write(stdout, p, 1, 1, nbi_surface_node_number(s)) ;
   

@@ -1,0 +1,105 @@
+# test file for parametrically specified generic fuselage
+#
+# syntax:
+#
+# global block contains parameter declarations
+#
+# distribution block(s) contain(s) description of geometry as
+# parameterized patches
+#
+
+global {
+# syntax: <identifier> = <constant>
+  len = 4.0
+# syntax: <identifier> = "<expression>" (quotes required)
+  D = "1.0"
+  hu = 1.0 
+  tlen = 1.0
+  nlen = 1.5
+  n1 = 0.5
+  n2 = 0.5
+}
+
+# syntax: distribution("name", tmin, tmax, nt, sg, sm, ss)
+#
+#   name: name of surface, in quotes
+#   tmin: minimum of parameter t on surface patch
+#   tmax: maximum of parameter t on surface patch
+#     nt: number of steps in t between tmin and tmax
+#     sg: spacing in t in generating geometry
+#     sm: spacing in t in generating mesh
+#     ss: spacing in parameter s in generating cross-section shape
+
+
+body("nose")
+
+{
+
+  grid(16384, 32768)
+
+  {
+    invert()
+    ##hemispherical(2)
+    hemispherical(3)
+
+  }
+
+  distribution ("nose", 0.0, 1, 16, "cosine")
+  {
+    transform("shrink", "0.5", 0, "sqrt(1-s^2)")
+    transform("shift", -0.5, 0, 0)
+    transform("scale", "D") 
+    transform("shift", 0, 0, "-s*nlen")
+    shape("ellipse", -1.0, "hu","n1", "n2")
+    ##  "n1 + (0.5-n1)*s", "n2 + (0.5-n2)*s")  
+  }
+}
+
+body("fuselage")
+
+{
+
+grid(16384, 32768)
+
+{
+##  tube(20, 24)
+  tube(80, 64)
+}
+
+distribution ("cabin", 0.0, 1.0, 8, "cosine")
+
+{
+# syntax: transform("transform", parameters ...)
+  transform("shift", -0.5, 0, "len*s")
+  transform("scale", "D")
+
+# syntax: shape("curve", parameters ...)
+#  curve: "ellipse"  (closed smooth curve)
+#  curve: "aerofoil" (aerofoil type shape)
+  shape("ellipse", -1, "hu", "n1", "n2")
+}
+}
+
+body("tail")
+
+{
+
+grid(16384, 32768)
+
+{
+##  hemispherical(2)
+  hemispherical(3)
+}
+
+distribution ("tail", 0.0, 1.0, 8, "cosine")
+{
+  transform("shrink", 0.5, "0.5^n1*0.5^n2*hu", "1-s")
+  ##"(1.0-s)")
+  #"0.5^n1*0.5^n2", "(1.0-s)")
+  transform("shift", -0.5, 0, "len+s*tlen")
+  transform("scale", "D") 
+  shape("ellipse", -1.0, "hu", "n1", "n2") ;
+}
+
+}
+

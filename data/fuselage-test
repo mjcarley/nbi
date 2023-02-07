@@ -1,0 +1,27 @@
+#!/bin/bash
+
+nqa=25
+nqp=25
+nqu=54
+tol=1e-9
+eta=1.25
+depth=8
+order=8
+nthreads=3
+
+bin=../tools
+
+gfile=fuselage-${nqp}.dat
+mfile=matrix-fuselage-${nqp}-${nqu}-${order}-${depth}.dat
+
+opts="-e ${tol} -a ${nqa} -u ${nqu} \
+      -n ${eta} -d ${depth} -N ${order} \
+      -m ${mfile} -g ${gfile}"
+echo -- ${opts}
+
+${bin}/nbi-surface -q ${nqp} -a fuselage.agg -o ${gfile}
+
+${bin}/nbi-assemble-laplace ${opts} -T ${nthreads}
+
+${bin}/nbi-solve-laplace -T ${nthreads} -f -m ${mfile} -g ${gfile} \
+      -D 5 -o 10 -d 2 -b fsource.bc -t 1e-9 > fuselage.dat

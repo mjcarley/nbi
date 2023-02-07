@@ -1,0 +1,27 @@
+#!/bin/bash
+
+nqa=25
+nqp=25
+nqu=54
+tol=1e-6
+eta=1.25
+depth=3
+order=8
+nthreads=3
+
+bin=../tools
+
+gfile=sphere-${nqp}.dat
+mfile=matrix-sphere-${nqp}-${nqu}-${order}-${depth}.dat
+
+opts="-e ${tol} -a ${nqa} -u ${nqu} \
+      -n ${eta} -d ${depth} -N ${order} \
+      -m ${mfile} -g ${gfile}"
+echo -- ${opts}
+
+##${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
+##echo
+##${bin}/nbi-assemble-laplace ${opts} -T ${nthreads}
+##echo
+${bin}/nbi-solve-laplace -f -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
+      -T ${nthreads} -b psource.bc > sphere-field.dat

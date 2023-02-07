@@ -45,11 +45,20 @@ nbi_matrix_t *nbi_surface_assemble_matrix(nbi_surface_t *s, gdouble eta,
 					  gint nnmax, gint nthreads) ;
 
 static gint upsample_patch(gdouble *xs, gint sstr, gint ns,
-			   gint nu, gdouble *xu, gint ustr)
+			   gint nu, gdouble *xu, gint ustr, gdouble *work)
 
+/*
+ * workspace minimum size: 6*ns+2
+ */
+  
 {
-  gdouble *K, *qu, ci[453*3], s, t, w, al, bt, work[453*3] ;
+  gdouble *K, *qu, s, t, w, al, bt, *ci ;
   gint Nk, order, i, i3 = 3 ;
+
+  ci = &(work[3*ns+1]) ;
+  /*check that workspaces have been sized correctly*/
+  ci[3*ns] = G_MAXDOUBLE ;
+  work[3*ns] = G_MAXDOUBLE ;
   
   nbi_element_interp_matrix(ns, &K, &Nk) ;
   sqt_quadrature_select(nu, &qu, &order) ;
@@ -66,6 +75,10 @@ static gint upsample_patch(gdouble *xs, gint sstr, gint ns,
 		       NULL, work) ;
     xu[i*ustr+6] *= w ;
   }
+
+  /*check final elements are untouched*/
+  g_assert(ci[3*ns] == G_MAXDOUBLE) ;
+  g_assert(work[3*ns] == G_MAXDOUBLE) ;
   
   return nu ;
 }
@@ -78,7 +91,7 @@ static gint correct_matrix(gdouble *xp, gint pstr, gint np,
 
 {
   gint lda = 2*np, i, j, one = 1 ;
-  gdouble R, *xf, *xup, r[3], al ;
+  gdouble R2, *xf, *xup, r[3], al ;
 
   for ( i = 0 ; i < nnbrs ; i ++ ) {
     /*field point for correction*/
@@ -86,11 +99,12 @@ static gint correct_matrix(gdouble *xp, gint pstr, gint np,
     for ( j = 0 ; j < nu ; j ++ ) {
       xup = &(xu[j*ustr]) ;
       nbi_vector_diff(r, xf, xup) ; 
-      R = nbi_vector_length(r) ;
-      if ( R > NBI_LOCAL_CUTOFF_RADIUS ) {
-	al = -0.25*M_1_PI/R*xup[6] ;
+      R2 = nbi_vector_length2(r) ;
+      if ( R2 > NBI_LOCAL_CUTOFF_RADIUS*NBI_LOCAL_CUTOFF_RADIUS ) {
+	al = -0.25*M_1_PI/sqrt(R2)*xup[6] ;
 	blaswrap_daxpy(np, al, &(Ku[j*np]), one, &(Ast[i*lda+0*np]), one) ;
-	al *= nbi_vector_scalar(r,&(xup[3]))/R/R ;
+	/* al *= nbi_vector_scalar(r,&(xup[3]))/R/R ; */
+	al *= nbi_vector_scalar(r,&(xup[3]))/R2 ;
 	blaswrap_daxpy(np, al, &(Ku[j*np]), one, &(Ast[i*lda+1*np]), one) ;
       }
     }
@@ -106,7 +120,7 @@ static gint local_correction_matrices(nbi_matrix_t *m,
 				      gdouble *q, gint nq,
 				      gdouble tol, gint dmax,
 				      gint N,
-				      gint pt,
+				      gint pt, 
 				      gdouble *work, gint wsize)
 
 {
@@ -175,6 +189,7 @@ static gpointer local_correction_thread(gpointer tdata)
   dmax  = idata[4] ;
   N     = idata[5] ;
   wsize = idata[6] ;
+  
   st = dpdata[0] ;
   K0 = dpdata[1] ;
   q  = dpdata[2] ;
@@ -194,14 +209,14 @@ static gpointer local_correction_thread(gpointer tdata)
   
   for ( pt = pt0 ; pt < pt1 ; pt ++ ) {
     local_correction_matrices(m, st, nst, K0, NK0, nqu, q, nq, tol, dmax, N,
-			      pt, work, wsize) ;
+			      pt, work, wsize)  ;
   }
 
   return NULL ;
 }
 
 nbi_matrix_t *nbi_surface_assemble_matrix(nbi_surface_t *s, gdouble eta,
-					  gint nq, gint dmax, gdouble tol,
+					  gint nqa, gint dmax, gdouble tol,
 					  gint N, gint nu,
 					  gint nnmax, gint nthreads)
 
@@ -209,7 +224,7 @@ nbi_matrix_t *nbi_surface_assemble_matrix(nbi_surface_t *s, gdouble eta,
   nbi_matrix_t *m ;
   gint xstr, nst, wstr, wsize, usize, ksize, NK0, nntot, pt ;
   gint ip, order, nnbrs, i, asize, lda ;
-  gdouble *st, *K0, r, *q, *work, *xu ;
+  gdouble *st, *K0, r, *qa, *work, *xu ;
   
   m = nbi_matrix_new(s) ;
   m->problem = NBI_PROBLEM_LAPLACE ;
@@ -220,7 +235,7 @@ nbi_matrix_t *nbi_surface_assemble_matrix(nbi_surface_t *s, gdouble eta,
 
   xstr = NBI_SURFACE_NODE_LENGTH ;
 
-  sqt_quadrature_select(nq, &q, &order) ;
+  sqt_quadrature_select(nqa, &qa, &order) ;
 
   nst = nbi_surface_patch_node_number(s,0) ;
   sqt_quadrature_select(nst, &st, &order) ;
@@ -232,7 +247,7 @@ nbi_matrix_t *nbi_surface_assemble_matrix(nbi_surface_t *s, gdouble eta,
   ksize = nst*nst ;
   work = (gdouble *)g_malloc((wsize+ksize)*sizeof(gdouble)) ;
   K0  = &(work[wsize]) ;
-
+  
   m->xu = g_malloc(usize*sizeof(gdouble)) ;
   m->ustr = NBI_SURFACE_NODE_LENGTH ;
   
@@ -248,6 +263,9 @@ nbi_matrix_t *nbi_surface_assemble_matrix(nbi_surface_t *s, gdouble eta,
   nntot = 0 ; m->idxu[0] = 0 ;
 
   nbi_surface_set_patch_data(s) ;
+
+  fprintf(stderr, "%s: generating upsampled sources; t=%lg\n",
+	  __FUNCTION__, g_timer_elapsed(timer, NULL)) ;  
 
   xu = (NBI_REAL *)(m->xu) ;
   for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
@@ -273,7 +291,7 @@ nbi_matrix_t *nbi_surface_assemble_matrix(nbi_surface_t *s, gdouble eta,
     /*upsample into xu*/
     m->idxu[pt+1] = m->idxu[pt] +
       upsample_patch((NBI_REAL *)nbi_surface_node(s,ip), xstr, nst,
-		     nu, &(xu[m->idxu[pt]*xstr]), xstr) ;
+		     nu, &(xu[m->idxu[pt]*xstr]), xstr, work) ;
   }
 
   lda = 2*nst ;
@@ -281,10 +299,12 @@ nbi_matrix_t *nbi_surface_assemble_matrix(nbi_surface_t *s, gdouble eta,
   
   m->Ast = g_malloc(asize*sizeof(gdouble)) ;
 
+  fprintf(stderr, "%s: generating local corrections; t=%lg\n",
+	  __FUNCTION__, g_timer_elapsed(timer, NULL)) ;  
 #ifdef _OPENMP
   if ( nthreads == 0 ) {
     for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
-      local_correction_matrices(m, st, nst, K0, NK0, nu, q, nq, tol, dmax, N,
+      local_correction_matrices(m, st, nst, K0, NK0, nu, qa, nqa, tol, dmax, N,
 				pt, work, wsize) ;
     }
   } else {
@@ -304,14 +324,14 @@ nbi_matrix_t *nbi_surface_assemble_matrix(nbi_surface_t *s, gdouble eta,
     idata[0] = nst ;
     idata[1] = NK0 ;
     idata[2] = nu ;
-    idata[3] = nq ;
+    idata[3] = nqa ;
     idata[4] = dmax ;
     idata[5] = N ;
     idata[6] = wstr ;
 
     dpdata[0] = st ;
     dpdata[1] = K0 ;
-    dpdata[2] = q ;
+    dpdata[2] = qa ;
     ddata[0] = tol ;
     
     for ( i = 0 ; i < nthreads ; i ++ ) {
@@ -333,12 +353,38 @@ nbi_matrix_t *nbi_surface_assemble_matrix(nbi_surface_t *s, gdouble eta,
   }
 #else /*_OPENMP*/
   for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
-    local_correction_matrices(m, st, nst, K0, NK0, nu, q, nq,
+    local_correction_matrices(m, st, nst, K0, NK0, nu, qa, nqa,
 			      tol, dmax, N, pt, work, wsize) ;
   }
 #endif /*_OPENMP*/
 
   return m ;
+}
+
+static void print_help_text(FILE *f, gint nqa, gint dmax, gdouble tol,
+			    gint N, gdouble eta, gint nthreads, gint nqu)
+
+
+{
+  fprintf(f, 
+	  "Usage:\n\n"
+	  "  %s <options>\n\n",
+	  progname) ;
+
+  fprintf(f,
+	  "Options:\n\n"
+	  "  -h print this message and exit\n"
+	  "  -a # number of nodes in adaptive quadrature rule (%d)\n"
+	  "  -d # maximum depth of adaptive quadrature (%d)\n"
+	  "  -e # tolerance for adaptive quadrature (%lg)\n"
+	  "  -g # input geometry file\n"
+	  "  -m # output matrix file\n"
+	  "  -N # order of singular quadrature (%d)\n"
+	  "  -n # separation parameter for selection of quadratures (%lg)\n"
+	  "  -T # number of threads (%d)\n"
+	  "  -u # number of nodes in upsample quadrature rule (%d)\n",
+	  nqa, dmax, tol, N, eta, nthreads, nqu) ;
+  return ;
 }
 
 gint main(gint argc, gchar **argv)
@@ -347,7 +393,7 @@ gint main(gint argc, gchar **argv)
   nbi_surface_t *s ;
   nbi_matrix_t *m ;
   gint nqa, dmax, N, nnmax, nqu ;
-  gdouble r, eta, tol, t ;
+  gdouble eta, tol, t ;
   FILE *output, *input ;
   gchar ch, *mfile, *gfile ;
   gint nthreads, nproc ;
@@ -362,25 +408,28 @@ gint main(gint argc, gchar **argv)
 #endif /*_OPENMP*/
 
   output = stdout ; input = stdin ;
-  
-  r = 1.0 ; nqu = 54 ;
+
+  nqu = 54 ;
   eta = 1.25 ; dmax = 8 ; tol = 1e-12 ; N = 8 ; nqa = 54 ;
-  nnmax = 2048 ; 
+  nnmax = 8192 ; 
   gfile = NULL ; mfile = NULL ;
   
   progname = g_strdup(g_path_get_basename(argv[0])) ;
 
-  while ( (ch = getopt(argc, argv, "a:d:e:g:m:N:n:r:T:u:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "ha:d:e:g:m:N:n:T:u:")) != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
-    case 'a': nqa  = atoi(optarg) ; break ;      
+    case 'h':
+      print_help_text(stderr, nqa, dmax, tol, N, eta, nthreads, nqu) ;
+      return 0 ;
+      break ;
+    case 'a': nqa  = atoi(optarg) ; break ;
     case 'd': dmax = atoi(optarg) ; break ;
-    case 'e': tol  = atof(optarg) ; break ;      
+    case 'e': tol  = atof(optarg) ; break ;
     case 'g': gfile = g_strdup(optarg) ; break ;
     case 'm': mfile = g_strdup(optarg) ; break ;
     case 'N': N    = atoi(optarg) ; break ;
     case 'n': eta  = atof(optarg) ; break ;      
-    case 'r': r    = atof(optarg) ; break ;
     case 'T': nthreads = atoi(optarg) ; break ;
     case 'u': nqu  = atoi(optarg) ; break ;      
     }
@@ -392,8 +441,8 @@ gint main(gint argc, gchar **argv)
   
   timer = g_timer_new() ;
   
-  fprintf(stderr, "%s: initializing geometry r=%lg; t=%lg\n",
-	  progname, r, g_timer_elapsed(timer, NULL)) ;
+  fprintf(stderr, "%s: reading geometry; t=%lg\n",
+	  progname, g_timer_elapsed(timer, NULL)) ;
   if ( gfile != NULL ) {
     input = fopen(gfile, "r") ;
     if ( input == NULL ) {

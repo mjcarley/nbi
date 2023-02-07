@@ -17,15 +17,15 @@
 #ico=2
 
 ## error  0.0003
-#nqa=7
-#nqp=25
-#nqu=85
-#tol=1e-6
-#radius=1.5
-#eta=2.0
-#depth=7
-#order=8
-#ico=2
+nqa=7
+nqp=25
+nqu=85
+tol=1e-6
+radius=1.5
+eta=2.0
+depth=7
+order=8
+ico=2
 
 ## error 0.0003
 #nqa=25
@@ -39,26 +39,26 @@
 #ico=2
 
 ## error 5.8e-6
-nqa=7
-nqp=54
-nqu=126
-tol=1e-6
-radius=1.5
-eta=2.0
-depth=7
-order=12
-ico=2
+#nqa=7
+#nqp=54
+#nqu=126
+#tol=1e-6
+#radius=1.5
+#eta=2.0
+#depth=7
+#order=12
+#ico=2
 
 ## error 1.6e-5
-nqa=7
-nqp=54
-nqu=85
-tol=1e-9
-radius=1.75
-eta=1.5
-depth=8
-order=16
-ico=3
+#nqa=7
+#nqp=54
+#nqu=85
+#tol=1e-9
+#radius=1.75
+#eta=1.5
+#depth=8
+#order=16
+#ico=3
 
 bin=../tools
 
@@ -76,8 +76,8 @@ echo -- ${opts}
 
 ##${bin}/nbi-solve-laplace -m ${mfile} -g ${gfile} -G > field.dat
 ##${bin}/nbi-solve-laplace -m ${mfile} -g ${gfile} -L
-#${bin}/nbi-solve-laplace -f -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 \
-#      -G -T 4 -b psource.bc > fieldfmm.dat
+##${bin}/nbi-solve-laplace -f -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 \
+##      -G -T 4 -b psource.bc > fieldfmm.dat
 #${bin}/nbi-solve-laplace -f -m ${mfile} -g ${gfile} -D 5 -o 10 \
 #      -d 2 -L -T 4 -b psource.bc > /dev/null
 

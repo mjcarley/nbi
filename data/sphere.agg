@@ -1,0 +1,51 @@
+# test file for parametrically specified generic aircraft
+#
+# syntax:
+#
+# global block contains parameter declarations
+#
+# distribution block(s) contain(s) description of geometry as
+# parameterized patches
+#
+
+global {
+# syntax: <identifier> = "<expression>" (quotes required)
+  D = 1.0
+  n1 = 0.5
+  n2 = 0.5
+}
+
+body("sphere")
+
+{
+
+grid(16384, 32768)
+
+## argument list:
+##   maximum number of points in grid
+##   maximum number of triangles in grid
+##   (an error is reported if the grid generator tries to add more points
+##    or triangles than allocated: there is no danger in allocating more
+##    than you need)
+
+{
+  spherical(3)
+}
+
+distribution("sphere", 0, 1, 24, "cosine")
+
+## argument list:
+##   distribution label (for readability)
+##   tmin, tmax: parameter range
+##   number of sections to be generated for interpolation of shape
+##   section spacing for geometry
+
+{
+  transform("shrink", 0.5, 0.0, "sqrt(s*(1-s))")
+  transform("scale", "2*D")
+  transform("shift", "-D", 0.0, "D*s")
+
+  shape("ellipse", -1, 1, n1, n2) 
+}
+
+}
