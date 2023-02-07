@@ -12,6 +12,8 @@
 
 ## don't include intermediate data files
 *.dat
+*.msh
+*.mat
 
 ## scratch directory
 scratch
