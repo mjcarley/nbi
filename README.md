@@ -27,7 +27,7 @@ To configure and install the code,
   make
   make install
 
-For information on ptions to control configuration,
+For information on options to control configuration,
 
   ./configure --help
 
