@@ -155,6 +155,8 @@ gint nbi_header_init(gchar *header,
 		     gchar *type,
 		     gchar *format) ;
 gint nbi_header_insert_string(gchar *header, gint i, gint len, gchar *str) ;
+gchar *nbi_problem_type_string(nbi_problem_t p) ;
+nbi_problem_t nbi_problem_from_string(gchar *p) ;
 
 gint nbi_surface_patch_centroid(gdouble *x, gint xstr,
 				gdouble *w, gint wstr,
@@ -254,5 +256,22 @@ gint nbi_mesh_triangulate(nbi_surface_t *s,
 gint nbi_mesh_export_gmsh(FILE *f, gdouble *x, gint xstr, gint np,
 			  gint *tri, gint tstr, gint nt,
 			  gdouble *data, gint dstr) ;
+
+gchar *nbi_function_help(gchar *f) ;
+gint nbi_functions_list(FILE *f, gboolean help) ;
+
+nbi_matrix_t *nbi_surface_assemble_matrix_helmholtz(nbi_surface_t *s,
+						    gdouble k,
+						    gdouble eta,
+						    gint nqa, gint dmax,
+						    gdouble tol,
+						    gint N, gint nu,
+						    gint nnmax, gint nthreads) ;
+nbi_matrix_t *nbi_surface_assemble_matrix_laplace(nbi_surface_t *s,
+						  gdouble eta,
+						  gint nqa, gint dmax,
+						  gdouble tol,
+						  gint N, gint nu,
+						  gint nnmax, gint nthreads) ;
 
 #endif /*NBI_H_INCLUDED*/

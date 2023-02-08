@@ -89,7 +89,8 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = nbi-solve-laplace$(EXEEXT) \
-	nbi-assemble-laplace$(EXEEXT) nbi-surface$(EXEEXT) \
+	nbi-assemble-laplace$(EXEEXT) nbi-solve-helmholtz$(EXEEXT) \
+	nbi-assemble-helmholtz$(EXEEXT) nbi-surface$(EXEEXT) \
 	nbi-process$(EXEEXT)
 subdir = tools
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -108,22 +109,35 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-nbi_assemble_laplace_SOURCES = nbi-assemble-laplace.c
-nbi_assemble_laplace_OBJECTS = nbi-assemble-laplace.$(OBJEXT)
-nbi_assemble_laplace_DEPENDENCIES =  \
+nbi_assemble_helmholtz_SOURCES = nbi-assemble-helmholtz.c
+nbi_assemble_helmholtz_OBJECTS = nbi-assemble-helmholtz.$(OBJEXT)
+nbi_assemble_helmholtz_LDADD = $(LDADD)
+nbi_assemble_helmholtz_DEPENDENCIES =  \
 	$(top_builddir)/src/.libs/libnbi.a
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+nbi_assemble_laplace_SOURCES = nbi-assemble-laplace.c
+nbi_assemble_laplace_OBJECTS = nbi-assemble-laplace.$(OBJEXT)
+nbi_assemble_laplace_LDADD = $(LDADD)
+nbi_assemble_laplace_DEPENDENCIES =  \
+	$(top_builddir)/src/.libs/libnbi.a
 nbi_process_SOURCES = nbi-process.c
 nbi_process_OBJECTS = nbi-process.$(OBJEXT)
+nbi_process_LDADD = $(LDADD)
 nbi_process_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
+nbi_solve_helmholtz_SOURCES = nbi-solve-helmholtz.c
+nbi_solve_helmholtz_OBJECTS = nbi-solve-helmholtz.$(OBJEXT)
+nbi_solve_helmholtz_LDADD = $(LDADD)
+nbi_solve_helmholtz_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
 nbi_solve_laplace_SOURCES = nbi-solve-laplace.c
 nbi_solve_laplace_OBJECTS = nbi-solve-laplace.$(OBJEXT)
+nbi_solve_laplace_LDADD = $(LDADD)
 nbi_solve_laplace_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
 nbi_surface_SOURCES = nbi-surface.c
 nbi_surface_OBJECTS = nbi-surface.$(OBJEXT)
+nbi_surface_LDADD = $(LDADD)
 nbi_surface_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -140,9 +154,10 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/nbi-assemble-laplace.Po \
-	./$(DEPDIR)/nbi-process.Po ./$(DEPDIR)/nbi-solve-laplace.Po \
-	./$(DEPDIR)/nbi-surface.Po
+am__depfiles_remade = ./$(DEPDIR)/nbi-assemble-helmholtz.Po \
+	./$(DEPDIR)/nbi-assemble-laplace.Po ./$(DEPDIR)/nbi-process.Po \
+	./$(DEPDIR)/nbi-solve-helmholtz.Po \
+	./$(DEPDIR)/nbi-solve-laplace.Po ./$(DEPDIR)/nbi-surface.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -162,10 +177,12 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = nbi-assemble-laplace.c nbi-process.c nbi-solve-laplace.c \
+SOURCES = nbi-assemble-helmholtz.c nbi-assemble-laplace.c \
+	nbi-process.c nbi-solve-helmholtz.c nbi-solve-laplace.c \
 	nbi-surface.c
-DIST_SOURCES = nbi-assemble-laplace.c nbi-process.c \
-	nbi-solve-laplace.c nbi-surface.c
+DIST_SOURCES = nbi-assemble-helmholtz.c nbi-assemble-laplace.c \
+	nbi-process.c nbi-solve-helmholtz.c nbi-solve-laplace.c \
+	nbi-surface.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -340,18 +357,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir)
 DEPS = $(top_builddir)/src/libnbi.la
-nbi_solve_laplace_LDADD = \
-	$(top_builddir)/src/.libs/libnbi.a 
-
-nbi_assemble_laplace_LDADD = \
-	$(top_builddir)/src/.libs/libnbi.a 
-
-nbi_surface_LDADD = \
-	$(top_builddir)/src/.libs/libnbi.a 
-
-nbi_process_LDADD = \
-	$(top_builddir)/src/.libs/libnbi.a 
-
+LDADD = $(top_builddir)/src/.libs/libnbi.a
 all: all-am
 
 .SUFFIXES:
@@ -435,6 +441,10 @@ clean-binPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
+nbi-assemble-helmholtz$(EXEEXT): $(nbi_assemble_helmholtz_OBJECTS) $(nbi_assemble_helmholtz_DEPENDENCIES) $(EXTRA_nbi_assemble_helmholtz_DEPENDENCIES) 
+	@rm -f nbi-assemble-helmholtz$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(nbi_assemble_helmholtz_OBJECTS) $(nbi_assemble_helmholtz_LDADD) $(LIBS)
+
 nbi-assemble-laplace$(EXEEXT): $(nbi_assemble_laplace_OBJECTS) $(nbi_assemble_laplace_DEPENDENCIES) $(EXTRA_nbi_assemble_laplace_DEPENDENCIES) 
 	@rm -f nbi-assemble-laplace$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(nbi_assemble_laplace_OBJECTS) $(nbi_assemble_laplace_LDADD) $(LIBS)
@@ -442,6 +452,10 @@ nbi-assemble-laplace$(EXEEXT): $(nbi_assemble_laplace_OBJECTS) $(nbi_assemble_la
 nbi-process$(EXEEXT): $(nbi_process_OBJECTS) $(nbi_process_DEPENDENCIES) $(EXTRA_nbi_process_DEPENDENCIES) 
 	@rm -f nbi-process$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(nbi_process_OBJECTS) $(nbi_process_LDADD) $(LIBS)
+
+nbi-solve-helmholtz$(EXEEXT): $(nbi_solve_helmholtz_OBJECTS) $(nbi_solve_helmholtz_DEPENDENCIES) $(EXTRA_nbi_solve_helmholtz_DEPENDENCIES) 
+	@rm -f nbi-solve-helmholtz$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(nbi_solve_helmholtz_OBJECTS) $(nbi_solve_helmholtz_LDADD) $(LIBS)
 
 nbi-solve-laplace$(EXEEXT): $(nbi_solve_laplace_OBJECTS) $(nbi_solve_laplace_DEPENDENCIES) $(EXTRA_nbi_solve_laplace_DEPENDENCIES) 
 	@rm -f nbi-solve-laplace$(EXEEXT)
@@ -457,8 +471,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbi-assemble-helmholtz.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbi-assemble-laplace.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbi-process.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbi-solve-helmholtz.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbi-solve-laplace.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbi-surface.Po@am__quote@ # am--include-marker
 
@@ -625,8 +641,10 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/nbi-assemble-laplace.Po
+		-rm -f ./$(DEPDIR)/nbi-assemble-helmholtz.Po
+	-rm -f ./$(DEPDIR)/nbi-assemble-laplace.Po
 	-rm -f ./$(DEPDIR)/nbi-process.Po
+	-rm -f ./$(DEPDIR)/nbi-solve-helmholtz.Po
 	-rm -f ./$(DEPDIR)/nbi-solve-laplace.Po
 	-rm -f ./$(DEPDIR)/nbi-surface.Po
 	-rm -f Makefile
@@ -674,8 +692,10 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/nbi-assemble-laplace.Po
+		-rm -f ./$(DEPDIR)/nbi-assemble-helmholtz.Po
+	-rm -f ./$(DEPDIR)/nbi-assemble-laplace.Po
 	-rm -f ./$(DEPDIR)/nbi-process.Po
+	-rm -f ./$(DEPDIR)/nbi-solve-helmholtz.Po
 	-rm -f ./$(DEPDIR)/nbi-solve-laplace.Po
 	-rm -f ./$(DEPDIR)/nbi-surface.Po
 	-rm -f Makefile

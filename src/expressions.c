@@ -45,6 +45,16 @@ const te_variable functions[NBI_EXPRESSION_FUNCTION_NUMBER] = {
   {"laplace_dG", nbi_function_gfunc_laplace_dG, TE_FUNCTION6}
 } ;
 
+const gchar *function_help[] = {
+  "laplace_G(x, y, z)",
+  " = 1/4 PI R; R^2 = x^2 + y^2 + z^2;\n"
+  "  Green's function for Laplace equation",
+  "laplace_dG(x, y, z, nx, ny, nz)",
+  " = -(nx*dG/dx + ny*dG/dy + nz*dG/dz)\n"
+  "  normal derivative of Green's function for Laplace equation",
+  NULL, NULL
+} ;
+
 nbi_expression_t *nbi_expression_new(gchar *expression)
 
 {
@@ -142,5 +152,40 @@ gint nbi_boundary_condition_add(nbi_boundary_condition_t *b, gchar *e)
     break ;
   }
   
+  return 0 ;
+}
+
+gchar *nbi_function_help(gchar *f)
+
+{
+  gint i ;
+
+  for ( i = 0 ; function_help[2*i+0] != NULL ; i ++ ) {
+    if ( strncmp(function_help[2*i+0], f, strlen(f)) == 0 )
+      return function_help[2*i+1] ;
+  }
+  
+  return NULL ;
+}
+
+gint nbi_functions_list(FILE *f, gboolean help)
+
+{
+
+  gint i ;
+
+  if ( help ) {
+    for ( i = 0 ; function_help[2*i+0] != NULL ; i ++ ) {
+      fprintf(f, "%s", function_help[2*i+0]) ;
+      fprintf(f, "%s\n\n", function_help[2*i+1]) ;
+    }
+
+    return 0 ;
+  }
+
+  for ( i = 0 ; function_help[2*i+0] != NULL ; i ++ ) {
+    fprintf(f, "%s\n\n", function_help[2*i+0]) ;
+  }
+
   return 0 ;
 }

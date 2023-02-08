@@ -487,6 +487,29 @@ gint NBI_FUNCTION_NAME(nbi_matrix_read)(FILE *input, nbi_matrix_t *m)
   return 0 ;
 }
 
+gchar *nbi_problem_type_string(nbi_problem_t p)
+
+{
+  switch ( p ) {
+  default: return NULL ; break ;
+  case NBI_PROBLEM_UNDEFINED: return "UNDEFINED" ; break ;
+  case NBI_PROBLEM_LAPLACE  : return "LAPLACE" ; break ;
+  case NBI_PROBLEM_HELMHOLTZ: return "HELMHOLTZ" ; break ;
+  }
+  
+  return NULL ;
+}
+
+nbi_problem_t nbi_problem_from_string(gchar *p)
+
+{
+  if ( strcmp(p, "UNDEFINED") == 0 ) return NBI_PROBLEM_UNDEFINED ;
+  if ( strcmp(p, "LAPLACE") == 0   ) return NBI_PROBLEM_LAPLACE ;
+  if ( strcmp(p, "HELMHOLTZ") == 0 ) return NBI_PROBLEM_HELMHOLTZ ;
+  
+  return NBI_PROBLEM_UNDEFINED ;
+}
+
 gint NBI_FUNCTION_NAME(nbi_matrix_write)(FILE *f, nbi_matrix_t *m)
 
 {
@@ -502,8 +525,9 @@ gint NBI_FUNCTION_NAME(nbi_matrix_write)(FILE *f, nbi_matrix_t *m)
   nntot = m->idxp[nbi_surface_patch_number(m->s)] ;
   
   nbi_header_init(header, "NBI", "1.0", "MAT", "A") ;
-  sprintf(buf, "%d %d %d",
-	  nbi_surface_patch_number(m->s), xstr, nst) ;
+  sprintf(buf, "%d %d %d %s",
+	  nbi_surface_patch_number(m->s), xstr, nst,
+	  nbi_problem_type_string(m->problem)) ;
 
   nbi_header_insert_string(header, NBI_HEADER_DATA, 40, buf) ;
 

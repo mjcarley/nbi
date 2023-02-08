@@ -39,10 +39,6 @@
 GTimer *timer ;
 gchar *progname ;
 
-nbi_matrix_t *nbi_surface_assemble_matrix(nbi_surface_t *s, gdouble eta,
-					  gint nq, gint dmax, gdouble tol,
-					  gint N, gint nu,
-					  gint nnmax, gint nthreads) ;
 
 static gint upsample_patch(gdouble *xs, gint sstr, gint ns,
 			   gint nu, gdouble *xu, gint ustr, gdouble *work)
@@ -215,151 +211,6 @@ static gpointer local_correction_thread(gpointer tdata)
   return NULL ;
 }
 
-nbi_matrix_t *nbi_surface_assemble_matrix(nbi_surface_t *s, gdouble eta,
-					  gint nqa, gint dmax, gdouble tol,
-					  gint N, gint nu,
-					  gint nnmax, gint nthreads)
-
-{
-  nbi_matrix_t *m ;
-  gint xstr, nst, wstr, wsize, usize, ksize, NK0, nntot, pt ;
-  gint ip, order, nnbrs, i, asize, lda ;
-  gdouble *st, *K0, r, *qa, *work, *xu ;
-  
-  m = nbi_matrix_new(s) ;
-  m->problem = NBI_PROBLEM_LAPLACE ;
-
-  m->idx  = (gint *)g_malloc0(nbi_surface_patch_number(s)*nnmax*sizeof(gint)) ;
-  m->idxp = (gint *)g_malloc0((nbi_surface_patch_number(s)+1)*sizeof(gint)) ;
-  m->idxu = (gint *)g_malloc0((nbi_surface_patch_number(s)+1)*sizeof(gint)) ;
-
-  xstr = NBI_SURFACE_NODE_LENGTH ;
-
-  sqt_quadrature_select(nqa, &qa, &order) ;
-
-  nst = nbi_surface_patch_node_number(s,0) ;
-  sqt_quadrature_select(nst, &st, &order) ;
-
-  /*size workspace for adaptive quadrature*/
-  wstr = 4*dmax*2*nst*nnmax + 12*nst + 3*nst ;    
-  wsize = MAX(1,nthreads)*wstr ;
-  usize = nu*nbi_surface_patch_number(s)*NBI_SURFACE_NODE_LENGTH ;
-  ksize = nst*nst ;
-  work = (gdouble *)g_malloc((wsize+ksize)*sizeof(gdouble)) ;
-  K0  = &(work[wsize]) ;
-  
-  m->xu = g_malloc(usize*sizeof(gdouble)) ;
-  m->ustr = NBI_SURFACE_NODE_LENGTH ;
-  
-  NK0 = sqt_koornwinder_interp_matrix(&(st[0]), 3, &(st[1]), 3, &(st[2]), 3,
-				      nst, K0) ;
-			   
-  fprintf(stderr, "%s: starting local corrections; t=%lg\n",
-	  __FUNCTION__, g_timer_elapsed(timer, NULL)) ;
-
-  /*find neighbours and set up sparse matrix skeleton*/
-  memset(m->idx, 0, nbi_surface_patch_number(s)*nnmax*sizeof(gint)) ;
-
-  nntot = 0 ; m->idxu[0] = 0 ;
-
-  nbi_surface_set_patch_data(s) ;
-
-  fprintf(stderr, "%s: generating upsampled sources; t=%lg\n",
-	  __FUNCTION__, g_timer_elapsed(timer, NULL)) ;  
-
-  xu = (NBI_REAL *)(m->xu) ;
-  for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
-    /*loop on patches treated as sources*/
-    g_assert(nbi_surface_patch_node_number(s, pt) == nst) ;
-    ip = nbi_surface_patch_node(s, pt) ;
-    xstr = NBI_SURFACE_NODE_LENGTH ;
-    r = *((NBI_REAL *)nbi_surface_patch_sphere_radius(s, pt)) ;
-    
-    /*find the neighbours*/
-    nnbrs = 0 ;
-    nbi_surface_patch_neighbours(s, pt, eta*r, 
-				 &(m->idx[nntot]), &nnbrs, nnmax-nst) ;
-    if ( nnbrs >= nnmax - nst )
-      g_error("%s: too many neighbours (%d) for limit (%d)",
-	      __FUNCTION__, nnmax-nst, nnbrs) ;
-    for ( i = 0 ; i < nbi_surface_patch_node_number(s, pt) ; i ++ )
-      m->idx[nntot+nnbrs+i] = ip + i ;
-    nnbrs += nbi_surface_patch_node_number(s, pt) ;
-    nntot += nnbrs ;
-    m->idxp[pt+1] = nntot ;
-
-    /*upsample into xu*/
-    m->idxu[pt+1] = m->idxu[pt] +
-      upsample_patch((NBI_REAL *)nbi_surface_node(s,ip), xstr, nst,
-		     nu, &(xu[m->idxu[pt]*xstr]), xstr, work) ;
-  }
-
-  lda = 2*nst ;
-  asize = nntot*lda ;
-  
-  m->Ast = g_malloc(asize*sizeof(gdouble)) ;
-
-  fprintf(stderr, "%s: generating local corrections; t=%lg\n",
-	  __FUNCTION__, g_timer_elapsed(timer, NULL)) ;  
-#ifdef _OPENMP
-  if ( nthreads == 0 ) {
-    for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
-      local_correction_matrices(m, st, nst, K0, NK0, nu, qa, nqa, tol, dmax, N,
-				pt, work, wsize) ;
-    }
-  } else {
-    GThread *threads[NBI_THREAD_NUMBER_MAX] ;
-    gpointer data[NBI_THREAD_DATA_SIZE],
-      main_data[NBI_THREAD_NUMBER_MAX*NBI_THREAD_MAIN_DATA_SIZE] ;
-    gint idata[NBI_THREAD_DATA_INT_SIZE] ;
-    gdouble
-      ddata[NBI_THREAD_DATA_REAL_SIZE],
-      *dpdata[NBI_THREAD_DATA_REAL_PTR_SIZE] ;
-
-    data[NBI_THREAD_DATA_MATRIX] = m ;
-    data[NBI_THREAD_DATA_INT] = idata ;
-    data[NBI_THREAD_DATA_REAL] = ddata ;
-    data[NBI_THREAD_DATA_REAL_POINTER] = dpdata ;
-
-    idata[0] = nst ;
-    idata[1] = NK0 ;
-    idata[2] = nu ;
-    idata[3] = nqa ;
-    idata[4] = dmax ;
-    idata[5] = N ;
-    idata[6] = wstr ;
-
-    dpdata[0] = st ;
-    dpdata[1] = K0 ;
-    dpdata[2] = qa ;
-    ddata[0] = tol ;
-    
-    for ( i = 0 ; i < nthreads ; i ++ ) {
-      main_data[NBI_THREAD_MAIN_DATA_SIZE*i+NBI_THREAD_MAIN_DATA_THREAD] =
-	GINT_TO_POINTER(i) ;
-      main_data[NBI_THREAD_MAIN_DATA_SIZE*i+NBI_THREAD_MAIN_DATA_DATA] =
-	data ;
-      main_data[NBI_THREAD_MAIN_DATA_SIZE*i+NBI_THREAD_MAIN_DATA_WORK] =
-	&(work[i*wstr]) ;
-      main_data[NBI_THREAD_MAIN_DATA_SIZE*i+NBI_THREAD_MAIN_DATA_NTHREAD] =
-	GINT_TO_POINTER(nthreads) ;
-      
-      threads[i] = g_thread_new(NULL, local_correction_thread,
-				&(main_data[NBI_THREAD_MAIN_DATA_SIZE*i])) ;
-    }
-    /*make sure all threads complete before we move on*/
-    for ( i = 0 ; i < nthreads ; i ++ ) g_thread_join(threads[i]) ;
-    /* fprintf(stderr, "threads joined\n") ; */
-  }
-#else /*_OPENMP*/
-  for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
-    local_correction_matrices(m, st, nst, K0, NK0, nu, qa, nqa,
-			      tol, dmax, N, pt, work, wsize) ;
-  }
-#endif /*_OPENMP*/
-
-  return m ;
-}
 
 static void print_help_text(FILE *f, gint nqa, gint dmax, gdouble tol,
 			    gint N, gdouble eta, gint nthreads, gint nqu)
@@ -459,8 +310,8 @@ gint main(gint argc, gchar **argv)
   fprintf(stderr, "%s: starting matrix assembly; t=%lg\n",
 	  progname, t = g_timer_elapsed(timer, NULL)) ;
 
-  m = nbi_surface_assemble_matrix(s, eta, nqa, dmax, tol, N, nqu, nnmax,
-  				  nthreads) ;
+  m = nbi_surface_assemble_matrix_laplace(s, eta, nqa, dmax, tol, N, nqu, nnmax,
+					  nthreads) ;
   fprintf(stderr, "%s: matrix assembly complete; t=%lg\n",
 	  progname, t = g_timer_elapsed(timer, NULL)) ;
 

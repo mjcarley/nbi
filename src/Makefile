@@ -137,8 +137,9 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libnbi_la_LIBADD =
-am_libnbi_la_OBJECTS = nbi.lo geometries.lo laplace.lo solvers.lo \
-	tinyexpr.lo expressions.lo agg.lo export.lo functions.lo
+am_libnbi_la_OBJECTS = nbi.lo geometries.lo laplace.lo helmholtz.lo \
+	solvers.lo tinyexpr.lo expressions.lo agg.lo export.lo \
+	functions.lo assemble.lo
 libnbi_la_OBJECTS = $(am_libnbi_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -163,9 +164,10 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I. -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/agg.Plo ./$(DEPDIR)/export.Plo \
-	./$(DEPDIR)/expressions.Plo ./$(DEPDIR)/functions.Plo \
-	./$(DEPDIR)/geometries.Plo ./$(DEPDIR)/laplace.Plo \
+am__depfiles_remade = ./$(DEPDIR)/agg.Plo ./$(DEPDIR)/assemble.Plo \
+	./$(DEPDIR)/export.Plo ./$(DEPDIR)/expressions.Plo \
+	./$(DEPDIR)/functions.Plo ./$(DEPDIR)/geometries.Plo \
+	./$(DEPDIR)/helmholtz.Plo ./$(DEPDIR)/laplace.Plo \
 	./$(DEPDIR)/nbi.Plo ./$(DEPDIR)/solvers.Plo \
 	./$(DEPDIR)/tinyexpr.Plo
 am__mv = mv -f
@@ -377,12 +379,14 @@ libnbi_la_SOURCES = \
 	geometries.c \
 	nbi-private.h \
 	laplace.c \
+	helmholtz.c \
 	solvers.c \
 	tinyexpr.c \
 	expressions.c \
 	agg.c \
 	export.c \
-	functions.c
+	functions.c \
+	assemble.c
 
 include_HEADERS = \
 	nbi.h \
@@ -506,10 +510,12 @@ distclean-compile:
 	-rm -f *.tab.c
 
 include ./$(DEPDIR)/agg.Plo # am--include-marker
+include ./$(DEPDIR)/assemble.Plo # am--include-marker
 include ./$(DEPDIR)/export.Plo # am--include-marker
 include ./$(DEPDIR)/expressions.Plo # am--include-marker
 include ./$(DEPDIR)/functions.Plo # am--include-marker
 include ./$(DEPDIR)/geometries.Plo # am--include-marker
+include ./$(DEPDIR)/helmholtz.Plo # am--include-marker
 include ./$(DEPDIR)/laplace.Plo # am--include-marker
 include ./$(DEPDIR)/nbi.Plo # am--include-marker
 include ./$(DEPDIR)/solvers.Plo # am--include-marker
@@ -705,10 +711,12 @@ clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
 
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/agg.Plo
+	-rm -f ./$(DEPDIR)/assemble.Plo
 	-rm -f ./$(DEPDIR)/export.Plo
 	-rm -f ./$(DEPDIR)/expressions.Plo
 	-rm -f ./$(DEPDIR)/functions.Plo
 	-rm -f ./$(DEPDIR)/geometries.Plo
+	-rm -f ./$(DEPDIR)/helmholtz.Plo
 	-rm -f ./$(DEPDIR)/laplace.Plo
 	-rm -f ./$(DEPDIR)/nbi.Plo
 	-rm -f ./$(DEPDIR)/solvers.Plo
@@ -759,10 +767,12 @@ installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/agg.Plo
+	-rm -f ./$(DEPDIR)/assemble.Plo
 	-rm -f ./$(DEPDIR)/export.Plo
 	-rm -f ./$(DEPDIR)/expressions.Plo
 	-rm -f ./$(DEPDIR)/functions.Plo
 	-rm -f ./$(DEPDIR)/geometries.Plo
+	-rm -f ./$(DEPDIR)/helmholtz.Plo
 	-rm -f ./$(DEPDIR)/laplace.Plo
 	-rm -f ./$(DEPDIR)/nbi.Plo
 	-rm -f ./$(DEPDIR)/solvers.Plo

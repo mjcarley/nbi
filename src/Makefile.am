@@ -17,12 +17,14 @@ libnbi_la_SOURCES = \
 	geometries.c \
 	nbi-private.h \
 	laplace.c \
+	helmholtz.c \
 	solvers.c \
 	tinyexpr.c \
 	expressions.c \
 	agg.c \
 	export.c \
-	functions.c
+	functions.c \
+	assemble.c
 
 include_HEADERS = \
 	nbi.h \

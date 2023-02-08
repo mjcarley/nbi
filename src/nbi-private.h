@@ -19,6 +19,8 @@
 
 #define NBI_LOCAL_CUTOFF_RADIUS 1e-6
 
+#define NBI_THREAD_NUMBER_MAX     8
+
 #ifdef NBI_SINGLE_PRECISION
 
 #define NBI_REAL gfloat
