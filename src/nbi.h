@@ -1,6 +1,6 @@
 /* This file is part of NBI, a library for Nystrom Boundary Integral solvers
  *
- * Copyright (C) 2021 Michael Carley
+ * Copyright (C) 2021, 2023 Michael Carley
  *
  * NBI is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #define NBI_SURFACE_PATCH_DATA_LENGTH     4
 
 #define NBI_EXPRESSION_VARIABLE_NUMBER 6
-#define NBI_EXPRESSION_FUNCTION_NUMBER 2
+#define NBI_EXPRESSION_FUNCTION_NUMBER 6
 
 #define NBI_HEADER_LENGTH  80
 #define NBI_HEADER_ID       0
@@ -96,17 +96,21 @@ struct _nbi_surface_t {
 
 typedef struct _nbi_matrix_t nbi_matrix_t ;
 
+#define NBI_PROBLEM_DATA_SIZE       8
+#define NBI_PROBLEM_DATA_WAVENUMBER 0
+
 struct _nbi_matrix_t {
   nbi_surface_t *s ;
   gsize fpsize ; /*< floating point data size */
   gdouble diag ; /*< in multiplications add diag*I */
+  gdouble pdata[NBI_PROBLEM_DATA_SIZE] ; /*< problem specific data */
   nbi_problem_t problem ;
   nbi_potential_t potential ;
   gint
   ustr,     /*< upsampled patch node stride */
     pstr,   /*< upsampled node potential stride */
     nstr,   /*< upsampled node normal derivative stride */
-    *idxu, /*< upsampled node indices */
+    *idxu,  /*< upsampled node indices */
     *idxp,
     *idx ;
   gchar
@@ -121,6 +125,8 @@ struct _nbi_matrix_t {
   wbfmm_shift_operators_t
   *shifts ;   /*< FMM shift operators if applicable */
 } ;
+
+#define nbi_matrix_wavenumber(_m) ((_m)->pdata[NBI_PROBLEM_DATA_WAVENUMBER])
 
 typedef struct _nbi_expression_t nbi_expression_t ;
 
@@ -214,6 +220,29 @@ gint nbi_matrix_multiply(nbi_matrix_t *A,
 			 gint nthreads,
 			 gdouble *work) ;
 
+gint nbi_calc_field_helmholtz(nbi_matrix_t *m,
+			      gdouble *p ,
+			      gint pstr,
+			      gdouble pwt,
+			      gdouble *pn,
+			      gint nstr,
+			      gdouble nwt,
+			      gdouble *x,
+			      gdouble *f,
+			      gint nthreads,
+			      gdouble *work) ;
+
+gint nbi_surface_greens_identity_helmholtz(nbi_matrix_t *m,
+					   gdouble *p ,
+					   gint pstr,
+					   gdouble pwt,
+					   gdouble *pn,
+					   gint nstr,
+					   gdouble nwt,
+					   gdouble *f,
+					   gint fstr,
+					   gint nthreads,
+					   gdouble *work) ;
 gint nbi_surface_greens_identity_laplace(nbi_matrix_t *m,
 					 gdouble *p , gint pstr, gdouble pwt,
 					 gdouble *pn, gint nstr, gdouble nwt,
@@ -260,18 +289,18 @@ gint nbi_mesh_export_gmsh(FILE *f, gdouble *x, gint xstr, gint np,
 gchar *nbi_function_help(gchar *f) ;
 gint nbi_functions_list(FILE *f, gboolean help) ;
 
-nbi_matrix_t *nbi_surface_assemble_matrix_helmholtz(nbi_surface_t *s,
-						    gdouble k,
-						    gdouble eta,
-						    gint nqa, gint dmax,
-						    gdouble tol,
-						    gint N, gint nu,
-						    gint nnmax, gint nthreads) ;
-nbi_matrix_t *nbi_surface_assemble_matrix_laplace(nbi_surface_t *s,
-						  gdouble eta,
-						  gint nqa, gint dmax,
-						  gdouble tol,
-						  gint N, gint nu,
-						  gint nnmax, gint nthreads) ;
+nbi_matrix_t *nbi_matrix_assemble_helmholtz(nbi_surface_t *s,
+					    gdouble k,
+					    gdouble eta,
+					    gint nqa, gint dmax,
+					    gdouble tol,
+					    gint N, gint nu,
+					    gint nnmax, gint nthreads) ;
+nbi_matrix_t *nbi_matrix_assemble_laplace(nbi_surface_t *s,
+					  gdouble eta,
+					  gint nqa, gint dmax,
+					  gdouble tol,
+					  gint N, gint nu,
+					  gint nnmax, gint nthreads) ;
 
 #endif /*NBI_H_INCLUDED*/

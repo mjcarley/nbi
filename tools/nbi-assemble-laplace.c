@@ -310,7 +310,7 @@ gint main(gint argc, gchar **argv)
   fprintf(stderr, "%s: starting matrix assembly; t=%lg\n",
 	  progname, t = g_timer_elapsed(timer, NULL)) ;
 
-  m = nbi_surface_assemble_matrix_laplace(s, eta, nqa, dmax, tol, N, nqu, nnmax,
+  m = nbi_matrix_assemble_laplace(s, eta, nqa, dmax, tol, N, nqu, nnmax,
 					  nthreads) ;
   fprintf(stderr, "%s: matrix assembly complete; t=%lg\n",
 	  progname, t = g_timer_elapsed(timer, NULL)) ;

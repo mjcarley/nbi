@@ -1,6 +1,6 @@
 /* This file is part of NBI, a library for Nystrom Boundary Integral solvers
  *
- * Copyright (C) 2021 Michael Carley
+ * Copyright (C) 2021, 2023 Michael Carley
  *
  * NBI is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -430,7 +430,8 @@ static gint read_upsampled_patches(FILE *f,
 
   switch ( m->problem ) {
   default: g_assert_not_reached() ; break ;
-  case NBI_PROBLEM_LAPLACE: m->pstr = m->nstr = 2 ; break ;
+  case NBI_PROBLEM_LAPLACE  : m->pstr = m->nstr = 2 ; break ;
+  case NBI_PROBLEM_HELMHOLTZ: m->pstr = m->nstr = 4 ; break ;
   }
   m->bc = g_malloc(m->idxu[np]*(m->pstr)*sizeof(NBI_REAL)) ;
   bc = (NBI_REAL *)(m->bc) ;
@@ -446,7 +447,7 @@ static gint read_correction_matrices(FILE *f,
 				     nbi_matrix_t *m)
 
 {
-  gint i, j ;
+  gint i, j, lda ;
   NBI_REAL *Ast ;
 
   m->idxp = (gint *)g_malloc0((np+1)*sizeof(gint)) ;
@@ -462,11 +463,19 @@ static gint read_correction_matrices(FILE *f,
     fscanf(f, "%d", &(m->idx[i])) ;
   }
 
-  Ast = (NBI_REAL *)g_malloc0(nst*2*(m->idxp[np])*sizeof(NBI_REAL)) ;
+  switch ( m->problem ) {
+  default:
+    g_error("%s: unrecognized problem %d", __FUNCTION__, m->problem) ;
+    break ;
+  case NBI_PROBLEM_LAPLACE:   lda = 2*nst ; break ;
+  case NBI_PROBLEM_HELMHOLTZ: lda = 4*nst ; break ;
+  }
+
+  Ast = (NBI_REAL *)g_malloc0(lda*(m->idxp[np])*sizeof(NBI_REAL)) ;
   m->Ast = (gchar *)Ast ;
-  for ( i = 0 ; i < 2*nst*(m->idxp[np]) ; i ++ ) {
+  for ( i = 0 ; i < lda*(m->idxp[np]) ; i ++ ) {
     fscanf(f, "%lg", &(Ast[i])) ;
-  }  
+  }
 
   return np ;
 }
@@ -517,11 +526,17 @@ gint NBI_FUNCTION_NAME(nbi_matrix_write)(FILE *f, nbi_matrix_t *m)
   NBI_REAL *Ast, *xu ;
   gint i, j, xstr, lda, nst, nntot ;
   
-  g_assert(m->problem == NBI_PROBLEM_LAPLACE) ;
-  
   nst = nbi_surface_patch_node_number(m->s,0) ;
   xstr = NBI_SURFACE_NODE_LENGTH ;
-  lda = 2*nst ;
+
+  switch ( m->problem ) {
+  default:
+    g_error("%s: unrecognized problem %d", __FUNCTION__, m->problem) ;
+    break ;
+  case NBI_PROBLEM_LAPLACE:   lda = 2*nst ; break ;
+  case NBI_PROBLEM_HELMHOLTZ: lda = 4*nst ; break ;
+  }
+  
   nntot = m->idxp[nbi_surface_patch_number(m->s)] ;
   
   nbi_header_init(header, "NBI", "1.0", "MAT", "A") ;
@@ -617,7 +632,7 @@ gint NBI_FUNCTION_NAME(nbi_matrix_fmm_init)(nbi_matrix_t *m,
 {
   gint fmmpstr, ustr, nsrc, i, nqfmm ;
   wbfmm_source_t source ;
-  NBI_REAL xtree[3], xtmax[3], *xu, D ;
+  NBI_REAL xtree[3], xtmax[3], *xu, D, k ;
   guint order_max, field ;
   nbi_surface_t *s = m->s ;
 
@@ -670,6 +685,40 @@ gint NBI_FUNCTION_NAME(nbi_matrix_fmm_init)(nbi_matrix_t *m,
 
     m->targets = NULL ;
     if ( !precompute_local ) return 0 ;
+
+    m->targets = wbfmm_target_list_new(m->tree, nbi_surface_node_number(s)) ;
+    wbfmm_target_list_coefficients_init(m->targets, field) ;
+    wbfmm_target_list_add_points(m->targets,
+				 (gpointer)nbi_surface_node(s,0),
+				 NBI_SURFACE_NODE_LENGTH*sizeof(gdouble),
+				 nbi_surface_node_number(s)) ;
+  
+    wbfmm_laplace_target_list_local_coefficients(m->targets, source, work) ;
+
+    return 0 ;
+  case NBI_PROBLEM_HELMHOLTZ:
+    wbfmm_tree_problem(m->tree) = WBFMM_PROBLEM_HELMHOLTZ ;
+    wbfmm_tree_source_size(m->tree) = nqfmm ;
+    k = nbi_matrix_wavenumber(m) ;
+    for ( i = 1 ; i <= depth ; i ++ ) {
+      wbfmm_tree_coefficient_init(m->tree, i,
+				  order_r[i*rstr], order_s[i*sstr]) ;
+    }
+    for ( i = 1 ; i <= depth ; i ++ ) {
+      wbfmm_shift_operators_coaxial_SR_init(m->shifts, D, i,
+					    order_s[i*sstr],
+					    k, work) ;
+    }
+    for ( i = 2 ; i <= depth ; i ++ ) {
+      wbfmm_shift_operators_coaxial_SS_init(m->shifts, D, i, 
+					    order_s[(i-1)*sstr+0], 
+					    k, work) ;
+    }
+
+    m->targets = NULL ;
+    if ( !precompute_local ) return 0 ;
+
+    g_assert_not_reached() ;
 
     m->targets = wbfmm_target_list_new(m->tree, nbi_surface_node_number(s)) ;
     wbfmm_target_list_coefficients_init(m->targets, field) ;

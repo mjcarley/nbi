@@ -1,0 +1,28 @@
+#!/bin/bash
+
+k=1.3
+nqa=25
+nqp=7
+nqu=25
+tol=1e-6
+eta=1.5
+depth=5
+order=8
+nthreads=0
+
+bin=../tools
+
+gfile=Geometries/sphere-${nqp}.dat
+mfile=Matrices/matrix-sphere-helmholtz-${nqp}-${nqu}-${order}-${depth}.dat
+
+opts="-e ${tol} -a ${nqa} -u ${nqu} \
+      -n ${eta} -d ${depth} -N ${order} \
+      -m ${mfile} -g ${gfile} -k ${k}"
+echo -- ${opts}
+
+##${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
+##echo
+##${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
+##echo
+${bin}/nbi-solve-helmholtz -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
+      -G -T ${nthreads} -k ${k} -b pcsource.bc -G > sphere-field.dat

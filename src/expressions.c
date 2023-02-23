@@ -42,7 +42,11 @@ const gchar *variables[] = {"x", "y", "z", "nx", "ny", "nz", NULL} ;
 
 const te_variable functions[NBI_EXPRESSION_FUNCTION_NUMBER] = {
   {"laplace_G" , nbi_function_gfunc_laplace_G , TE_FUNCTION3},
-  {"laplace_dG", nbi_function_gfunc_laplace_dG, TE_FUNCTION6}
+  {"laplace_dG", nbi_function_gfunc_laplace_dG, TE_FUNCTION6},
+  {"helmholtz_Gr" , nbi_function_gfunc_helmholtz_G_real , TE_FUNCTION4},
+  {"helmholtz_Gi" , nbi_function_gfunc_helmholtz_G_imag , TE_FUNCTION4},
+  {"helmholtz_dGr" , nbi_function_gfunc_helmholtz_dG_real, TE_FUNCTION7},
+  {"helmholtz_dGi" , nbi_function_gfunc_helmholtz_dG_imag, TE_FUNCTION7}
 } ;
 
 const gchar *function_help[] = {
@@ -50,8 +54,21 @@ const gchar *function_help[] = {
   " = 1/4 PI R; R^2 = x^2 + y^2 + z^2;\n"
   "  Green's function for Laplace equation",
   "laplace_dG(x, y, z, nx, ny, nz)",
-  " = -(nx*dG/dx + ny*dG/dy + nz*dG/dz)\n"
+  " = (nx*dG/dx + ny*dG/dy + nz*dG/dz)\n"
   "  normal derivative of Green's function for Laplace equation",
+  "helmholtz_Gr(k, x, y, z)",
+  " = cos(kR)/4 PI R;\n"
+  "  real part of Green's function for Helmholtz equation",
+  "helmholtz_Gi(k, x, y, z)",
+  " = sin(kR)/4 PI R;\n"
+  "  imaginary part of Green's function for Helmholtz equation",
+  "helmholtz_dGr(k, x, y, z, nx, ny, nx)",
+  " = (nx*dGr/dx + ny*dGr/dy + nz*dGr/dz);\n"
+  "  real part of normal derivative of Green's function for Helmholtz equation",
+  "helmholtz_dGi(k, x, y, z, nx, ny, nx)",
+  " = (nx*dGi/dx + ny*dGi/dy + nz*dGi/dz);\n"
+  "  imaginary part of normal derivative of Green's function for "
+  "Helmholtz equation",
   NULL, NULL
 } ;
 
@@ -147,6 +164,32 @@ gint nbi_boundary_condition_add(nbi_boundary_condition_t *b, gchar *e)
     }
     fprintf(stderr,
 	    "%s: only two boundary condition terms permitted for Laplace "
+	    "problem\n", __FUNCTION__) ;
+    exit(-1) ;
+    break ;
+  case NBI_PROBLEM_HELMHOLTZ:
+    if ( b->e[0] == NULL ) {
+      /*surface potential: real part*/
+      b->e[0] = nbi_expression_new(e) ;
+      return 0 ;
+    }
+    if ( b->e[1] == NULL ) {
+      /*surface potential: imaginary part*/
+      b->e[1] = nbi_expression_new(e) ;
+      return 0 ;
+    }
+    if ( b->e[2] == NULL ) {
+      /*surface potential derivative: real part*/
+      b->e[2] = nbi_expression_new(e) ;
+      return 0 ;
+    }
+    if ( b->e[3] == NULL ) {
+      /*surface potential derivative: imaginary part*/
+      b->e[3] = nbi_expression_new(e) ;
+      return 0 ;
+    }
+    fprintf(stderr,
+	    "%s: only four boundary condition terms permitted for Helmholtz "
 	    "problem\n", __FUNCTION__) ;
     exit(-1) ;
     break ;

@@ -124,5 +124,17 @@
 gdouble nbi_function_gfunc_laplace_G(gdouble x, gdouble y, gdouble z) ;
 gdouble nbi_function_gfunc_laplace_dG(gdouble x, gdouble y, gdouble z,
 				      gdouble nx, gdouble ny, gdouble nz) ;
+gdouble nbi_function_gfunc_helmholtz_G_real(gdouble k,
+					    gdouble x, gdouble y, gdouble z) ;
+gdouble nbi_function_gfunc_helmholtz_G_imag(gdouble k,
+					    gdouble x, gdouble y, gdouble z) ;
+gdouble nbi_function_gfunc_helmholtz_dG_real(gdouble k,
+					     gdouble x, gdouble y, gdouble z,
+					     gdouble nx, gdouble ny,
+					     gdouble nz) ;
+gdouble nbi_function_gfunc_helmholtz_dG_imag(gdouble k,
+					     gdouble x, gdouble y, gdouble z,
+					     gdouble nx, gdouble ny,
+					     gdouble nz) ;
 
 #endif /*NBI_PRIVATE_H_INCLUDED*/

@@ -82,6 +82,7 @@ static gint upsample_sources(nbi_surface_t *s,
   for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
     ns = nbi_surface_patch_node_number(s, pt) ;
     nu = idxu[pt+1] - idxu[pt] ;
+    /* fprintf(stderr, "%d %d %d\n", pt, idxu[pt+1], idxu[pt]) ; */
     K = NBI_FUNCTION_NAME(nbi_patch_upsample_matrix)(ns, nu) ;
 
     i = nbi_surface_patch_node(s, pt) ;
@@ -377,7 +378,7 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_laplace)(nbi_matrix_t *m,
   /* fprintf(stderr, "%s: point source summation complete\n", __FUNCTION__) ; */
 
   nnmax = nbi_matrix_neighbour_number_max(m) ;
-  
+
   /*local corrections*/
 #ifdef _OPENMP
   if ( nth > 0 ) {

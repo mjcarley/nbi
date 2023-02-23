@@ -1,6 +1,6 @@
 /* This file is part of NBI, a library for Nystrom Boundary Integral solvers
  *
- * Copyright (C) 2021 Michael Carley
+ * Copyright (C) 2023 Michael Carley
  *
  * NBI is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -47,28 +47,24 @@ static gint make_sources(nbi_surface_t *s,
 {
   gdouble *x, *n ;
   gint i ;
-  
+
+  g_assert(pstr >= 2) ;
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
     x = (NBI_REAL *)nbi_surface_node(s, i) ;
     n = (NBI_REAL *)nbi_surface_normal(s, i) ;
 
-    p [i*pstr] += nbi_expression_eval(bc->e[0], x, n) ;
-    pn[i*nstr] += nbi_expression_eval(bc->e[1], x, n) ;
+    p [i*pstr+0] += nbi_expression_eval(bc->e[0], x, n) ;
+    p [i*pstr+1] += nbi_expression_eval(bc->e[1], x, n) ;
+    pn[i*nstr+0] += nbi_expression_eval(bc->e[2], x, n) ;
+    pn[i*nstr+1] += nbi_expression_eval(bc->e[3], x, n) ;
+
+    /* fprintf(stdout, "%e %e %e %e %e %e %e %e %e %e\n", */
+    /* 	    x[0], x[1], x[2], n[0], n[1], n[2], */
+    /* 	    p[i*pstr+0], p[i*pstr+1], pn[i*nstr+0], pn[i*nstr+1]) ; */    
   }
-  
+  /* exit(1) ; */
   return 0 ;
 }
-
-/* static gdouble greens_function_laplace(gdouble *x, gdouble *y) */
-
-/* { */
-/*   gdouble G, R ; */
-
-/*   R = nbi_vector_distance(x, y) ; */
-/*   G = 0.25*M_1_PI/R ; */
-  
-/*   return G ; */
-/* } */
 
 static void print_help_text(FILE *f, gint depth,
 			    gint order_inc, gint order_fmm,
@@ -83,6 +79,7 @@ static void print_help_text(FILE *f, gint depth,
   fprintf(f,
 	  "Options:\n\n"
 	  "  -h print this message and exit\n"
+	  "  -B print list of built-in boundary condition functions and exit\n"
 	  "  -b # boundary condition file\n"
 	  "  -D # FMM tree depth (%d)\n"
 	  "  -d # FMM tree increment in expansion order between levels (%d)\n"
@@ -105,15 +102,17 @@ gint main(gint argc, gchar **argv)
   nbi_surface_t *s ;
   nbi_matrix_t *matrix ;
   nbi_boundary_condition_t *bc ;
-  gdouble *f, *xp, *src, t, emax, fmax, e2, f2, G, dtree, pwt, nwt ;
+  gdouble *f, *xp, *src, t, emax, fmax, e2, f2, *G, dtree, pwt, nwt ;
+  gdouble xfield[3] ;
   FILE *output, *input ;
   gchar ch, *gfile, *mfile, *bfile ;
-  gdouble *work, tol ;
+  gdouble *work, tol, k ;
   gint fmm_work_size, nqfmm, order_fmm, order_inc, i, fstr, solver_work_size ;
   gint gmres_max_iter, gmres_restart ;
   gint nthreads, nproc ;
   guint depth, order[48] = {0}, order_s, order_r, order_max ;
   gboolean fmm, shift_bw, greens_id, layer_potentials, precompute_local ;
+  gboolean calc_field ;
 
   nthreads = 1 ;
 
@@ -129,7 +128,10 @@ gint main(gint argc, gchar **argv)
   
   dtree = 1e-2 ; fmm = FALSE ; nqfmm = 1 ; shift_bw = TRUE ;
   greens_id = FALSE ; layer_potentials = FALSE ;
-  precompute_local = FALSE ;
+  precompute_local = FALSE ; calc_field = FALSE ;
+
+  k = 0.0 ;
+  xfield[0] = 3.0 ; xfield[1] = 7.0 ; xfield[2] = 1.0 ;
   
   pwt = 2.0 ; nwt = 2.0 ;
   /* pwt = 1.0 ; nwt = 1.0 ; */
@@ -141,7 +143,7 @@ gint main(gint argc, gchar **argv)
   gmres_max_iter = 128 ; gmres_restart = 10 ; tol = 1e-9 ;
     
   fstr = 3 ;
-  while ( (ch = getopt(argc, argv, "hBb:D:d:fGg:Lm:o:pr:T:t:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "hBb:D:d:FfGg:k:Lm:o:pr:T:t:")) != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
     case 'h':
@@ -157,8 +159,10 @@ gint main(gint argc, gchar **argv)
     case 'D': depth = atoi(optarg) ; break ;
     case 'd': order_inc = atoi(optarg) ; break ;
     case 'f': fmm = TRUE ; break ;
+    case 'F': calc_field = TRUE ; break ;
     case 'G': greens_id = TRUE ; break ;
     case 'g': gfile = g_strdup(optarg) ; break ;
+    case 'k': k = atof(optarg) ; break ;
     case 'L': layer_potentials = TRUE ; break ;
     case 'm': mfile = g_strdup(optarg) ; break ;
     case 'o': order_fmm = atoi(optarg) ; break ;
@@ -167,6 +171,12 @@ gint main(gint argc, gchar **argv)
     case 'T': nthreads = atoi(optarg) ; break ;
     case 't': tol = atof(optarg) ; break ;
     }
+  }
+
+  if ( k == 0.0 ) {
+    fprintf(stderr, "%s: set wavenumber for Helmholtz problem "
+	    "(use option -k)\n", progname) ;
+    return 1 ;
   }
 
   if ( gfile == NULL ) gfile = g_strdup("geometry.dat") ;
@@ -187,7 +197,8 @@ gint main(gint argc, gchar **argv)
   fclose(input) ;
 
   matrix = nbi_matrix_new(s) ;
-  matrix->problem = NBI_PROBLEM_LAPLACE ;
+  matrix->problem = NBI_PROBLEM_HELMHOLTZ ;
+  nbi_matrix_wavenumber(matrix) = k ;
   
   fprintf(stderr, "%s: reading matrix from %s\n", progname, mfile) ;
   if ( (input = fopen(mfile, "r")) == NULL ) {
@@ -210,7 +221,7 @@ gint main(gint argc, gchar **argv)
   /*boundary point sources*/
   fprintf(stderr, "%s: setting boundary conditions; t=%lg\n",
 	  progname, g_timer_elapsed(timer, NULL)) ;
-  src = (gdouble *)g_malloc0(nbi_surface_node_number(s)*2*sizeof(gdouble)) ;
+  src = (gdouble *)g_malloc0(nbi_surface_node_number(s)*4*sizeof(gdouble)) ;
 
   if ( bfile == NULL ) {
     fprintf(stderr, "%s: no boundary condition specified\n", progname) ;
@@ -225,14 +236,14 @@ gint main(gint argc, gchar **argv)
     return 1 ;
   }
 
-  bc = nbi_boundary_condition_new(NBI_PROBLEM_LAPLACE) ;
+  bc = nbi_boundary_condition_new(NBI_PROBLEM_HELMHOLTZ) ;
   nbi_boundary_condition_read(input, bc) ;
   
   fclose(input) ;
   
-  make_sources(s, &(src[0]), 2, &(src[1]), 2, bc) ;
+  make_sources(s, &(src[0]), 4, &(src[2]), 4, bc) ;
 
-  if ( !greens_id && !layer_potentials ) {
+  if ( !greens_id && !layer_potentials && !calc_field ) {
     /*solver settings for GMRES*/
     i = nbi_surface_node_number(s) ;
         
@@ -269,7 +280,7 @@ gint main(gint argc, gchar **argv)
 	    progname, t = g_timer_elapsed(timer, NULL)) ;
     wbfmm_shift_angle_table_init() ;
 
-    nbi_matrix_fmm_init(matrix, NBI_PROBLEM_LAPLACE,
+    nbi_matrix_fmm_init(matrix, NBI_PROBLEM_HELMHOLTZ,
 			NULL, &(order[0]), 2, &(order[1]), 2,
 			depth, dtree, shift_bw, precompute_local,
 			work) ;    
@@ -281,15 +292,33 @@ gint main(gint argc, gchar **argv)
     
     work = (gdouble *)g_malloc0(fmm_work_size*sizeof(gdouble)) ;    
   }
+
+  if ( calc_field ) {
+    fprintf(stderr, "%s: evaluating field; t=%lg\n",
+	    progname, t = g_timer_elapsed(timer, NULL)) ;
+
+    f = (gdouble *)g_malloc0(10*sizeof(gdouble)) ;
+    pwt = 1.0 ; nwt = 1.0 ;
+    /* nwt = -1.0 ; */
+    /* pwt = 0.0 ; */
+    nbi_calc_field_helmholtz(matrix,  &(src[0]), 4, pwt, &(src[2]), 4, nwt,
+			     xfield, f, nthreads, work) ;
+
+    fprintf(stdout, "%e %e %e %e %e\n",
+	    xfield[0], xfield[1], xfield[2], f[0], f[1]) ;
+    
+    return 0 ;
+  }
   
   if ( greens_id ) {
     fprintf(stderr, "%s: evaluating Green's identity; t=%lg\n",
 	    progname, t = g_timer_elapsed(timer, NULL)) ;
     f = (gdouble *)g_malloc0(nbi_surface_node_number(s)*fstr*sizeof(gdouble)) ;
-    nbi_surface_greens_identity_laplace(matrix,
-					&(src[0]), 2, pwt,
-					&(src[1]), 2, nwt,
-					f, fstr, nthreads, work) ;
+    /* pwt = 0.0 ; nwt = 1.0 ; */
+    nbi_surface_greens_identity_helmholtz(matrix,
+					  &(src[0]), 4, pwt,
+					  &(src[2]), 4, nwt,
+					  f, fstr, nthreads, work) ;
     fprintf(stderr, "%s: surface integration complete; t=%lg (%lg)\n",
 	    progname,
 	    g_timer_elapsed(timer, NULL), g_timer_elapsed(timer, NULL) - t) ;
@@ -298,13 +327,19 @@ gint main(gint argc, gchar **argv)
     for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
       xp = (NBI_REAL *)nbi_surface_node(s,i) ;
       /* G = greens_function_laplace(xp, xs) ; */
-      G = src[2*i+0] ;
-      fmax = MAX(fmax, G) ;
-      emax = MAX(emax, fabs(G - f[i*fstr])) ;
-      e2 += (G - f[i*fstr])*(G - f[i*fstr]) ;
-      f2 += G*G ;
-      fprintf(output, "%lg %lg %lg %lg %lg\n",
-	      xp[0], xp[1], xp[2], f[i*fstr], fabs(G - f[i*fstr])) ;
+      G = &(src[4*i+0]) ;
+      fmax = MAX(fmax, sqrt(G[0]*G[0]+G[1]*G[1])) ;
+      emax = MAX(emax,
+		 sqrt((G[0] - f[i*fstr+0])*(G[0] - f[i*fstr+0]) +
+		      (G[1] - f[i*fstr+1])*(G[1] - f[i*fstr+1]))) ;
+      e2 +=
+	(G[0] - f[i*fstr+0])*(G[0] - f[i*fstr+0]) +
+	(G[1] - f[i*fstr+1])*(G[1] - f[i*fstr+1]) ;
+      f2 += G[0]*G[0]+G[1]*G[1] ;
+      fprintf(output, "%lg %lg %lg %lg %lg %lg %lg\n",
+	      xp[0], xp[1], xp[2], f[i*fstr+0], f[i*fstr+1],
+	      fabs(G[0] - f[i*fstr+0]),
+	      fabs(G[1] - f[i*fstr+1])) ;
     }
     
     fprintf(stderr, "L_inf norm: %lg; L_2 norm: %lg\n",
@@ -313,6 +348,8 @@ gint main(gint argc, gchar **argv)
     return 0 ;
   }
 
+  g_assert_not_reached() ;
+  
   if ( layer_potentials ) {
     fprintf(stderr, "%s: evaluating double-layer potential; t=%lg\n",
     	    progname, t = g_timer_elapsed(timer, NULL)) ;
@@ -333,13 +370,13 @@ gint main(gint argc, gchar **argv)
     for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
       xp = (NBI_REAL *)nbi_surface_node(s,i) ;
       /* G = greens_function_laplace(xp, xs) ; */
-      G = src[2*i+0] ;
-      fmax = MAX(fmax, G) ;
-      emax = MAX(emax, fabs(G - f[i*fstr])) ;
-      e2 += (G - f[i*fstr])*(G - f[i*fstr]) ;
-      f2 += G*G ;
-      fprintf(output, "%lg %lg %lg %lg %lg\n",
-	      xp[0], xp[1], xp[2], f[i*fstr], fabs(G - f[i*fstr])) ;
+      /* G = src[2*i+0] ; */
+      /* fmax = MAX(fmax, G) ; */
+      /* emax = MAX(emax, fabs(G - f[i*fstr])) ; */
+      /* e2 += (G - f[i*fstr])*(G - f[i*fstr]) ; */
+      /* f2 += G*G ; */
+      /* fprintf(output, "%lg %lg %lg %lg %lg\n", */
+      /* 	      xp[0], xp[1], xp[2], f[i*fstr], fabs(G - f[i*fstr])) ; */
     }
     
     fprintf(stderr, "L_inf norm: %lg; L_2 norm: %lg\n",

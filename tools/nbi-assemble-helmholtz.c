@@ -116,8 +116,8 @@ gint main(gint argc, gchar **argv)
   }
 
   if ( k == 0.0 ) {
-    fprintf(stderr, "%s: wavenumber must be set for Helmholtz problem"
-	    " (use option -k)", progname) ;
+    fprintf(stderr, "%s: set wavenumber for Helmholtz problem "
+	    "(use option -k)\n", progname) ;
     return 1 ;
   }
   
@@ -145,12 +145,11 @@ gint main(gint argc, gchar **argv)
   fprintf(stderr, "%s: starting matrix assembly; t=%lg\n",
 	  progname, t = g_timer_elapsed(timer, NULL)) ;
 
-  m = nbi_surface_assemble_matrix_helmholtz(s, k, eta, nqa, dmax, tol,
-					    N, nqu, nnmax,
-					    nthreads) ;
+  m = nbi_matrix_assemble_helmholtz(s, k, eta, nqa, dmax, tol,
+				    N, nqu, nnmax,
+				    nthreads) ;
   fprintf(stderr, "%s: matrix assembly complete; t=%lg\n",
 	  progname, t = g_timer_elapsed(timer, NULL)) ;
-
   
   output = fopen(mfile, "w") ;
   nbi_matrix_write(output, m) ;

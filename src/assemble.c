@@ -74,17 +74,18 @@ static gint upsample_patch(gdouble *xs, gint sstr, gint ns,
   return nu ;
 }
 
-static gint correct_matrix_helmholtz(gdouble *xp, gint pstr, gint np,
+static void correct_matrix_helmholtz(gdouble k,
+				     gdouble *xp, gint pstr, gint np,
 				     gdouble *xu, gint ustr, gint nu,
 				     gdouble *x , gint xstr,
 				     gint *nbrs, gint nnbrs,
 				     gdouble *Ku, gdouble *Ast)
 
 {
-  gint lda = 2*np, i, j, one = 1 ;
-  gdouble R2, *xf, *xup, r[3], al ;
+  gint lda = 4*np, i, j, one = 1, two = 2 ;
+  gdouble R, R2, *xf, *xup, r[3], al, C, S, w, G[2], dG[2], rn ;
 
-  g_assert_not_reached() ; /*not a Helmholtz correction yet*/
+  /* g_assert_not_reached() ; /\*not a Helmholtz correction yet*\/ */
   for ( i = 0 ; i < nnbrs ; i ++ ) {
     /*field point for correction*/
     xf = &(x[nbrs[i]*xstr]) ;
@@ -92,20 +93,35 @@ static gint correct_matrix_helmholtz(gdouble *xp, gint pstr, gint np,
       xup = &(xu[j*ustr]) ;
       nbi_vector_diff(r, xf, xup) ; 
       R2 = nbi_vector_length2(r) ;
-      if ( R2 > NBI_LOCAL_CUTOFF_RADIUS*NBI_LOCAL_CUTOFF_RADIUS ) {
-	al = -0.25*M_1_PI/sqrt(R2)*xup[6] ;
-	blaswrap_daxpy(np, al, &(Ku[j*np]), one, &(Ast[i*lda+0*np]), one) ;
-	/* al *= nbi_vector_scalar(r,&(xup[3]))/R/R ; */
-	al *= nbi_vector_scalar(r,&(xup[3]))/R2 ;
-	blaswrap_daxpy(np, al, &(Ku[j*np]), one, &(Ast[i*lda+1*np]), one) ;
+      /* if ( R2 > NBI_LOCAL_CUTOFF_RADIUS*NBI_LOCAL_CUTOFF_RADIUS ) { */
+      /* 	R = sqrt(R2) ; */
+      R = sqrt(R2) ;
+      if ( R > NBI_LOCAL_CUTOFF_RADIUS ) {
+	C = cos(k*R) ; S = sin(k*R) ;
+	w = xup[6] ;
+	rn = -nbi_vector_scalar(r,&(xup[3])) ;
+	G[0] = 0.25*M_1_PI*C/R ;
+	G[1] = 0.25*M_1_PI*S/R ;
+	dG[0] = -0.25*M_1_PI*(C + k*R*S)*rn/R/R/R ;
+	dG[1] =  0.25*M_1_PI*(k*R*C - S)*rn/R/R/R ;
+	al = -G[0]*w ;
+	blaswrap_daxpy(np, al, &(Ku[j*np]), one, &(Ast[i*lda+0*2*np+0]), two) ;
+	al = -G[1]*w ;
+	blaswrap_daxpy(np, al, &(Ku[j*np]), one, &(Ast[i*lda+0*2*np+1]), two) ;
+	al = -dG[0]*w ;
+	blaswrap_daxpy(np, al, &(Ku[j*np]), one, &(Ast[i*lda+2*np+0]), two) ;
+	/* al = (k*R*C - S)*w ; */
+	al = -dG[1]*w ;
+	blaswrap_daxpy(np, al, &(Ku[j*np]), one, &(Ast[i*lda+2*np+1]), two) ;
       }
     }
   }
   
-  return 0 ;
+  return ;
 }
 
-static gint local_correction_matrices_helmholtz(nbi_matrix_t *m,
+static void local_correction_matrices_helmholtz(nbi_matrix_t *m,
+						gdouble k,
 						gdouble *st, gint nst,
 						gdouble *K0, gint NK0,
 						gint nqu,
@@ -120,7 +136,7 @@ static gint local_correction_matrices_helmholtz(nbi_matrix_t *m,
   gdouble *xs, *Ku, *Ast, *xu ;
   nbi_surface_t *s = m->s ;
 
-  g_assert_not_reached() ;
+  /* g_assert_not_reached() ; */
   
   Ast = (gdouble *)(m->Ast) ;
   xu  = (gdouble *)(m->xu) ;
@@ -128,7 +144,7 @@ static gint local_correction_matrices_helmholtz(nbi_matrix_t *m,
   idxp = m->idxp ;
   idxu = m->idxu ;
   
-  lda = 2*nst ;
+  lda = 4*nst ;
   nnbrs = idxp[pt+1] - idxp[pt] ;
   nbrs = &(idx[idxp[pt]]) ;
   ip = nbi_surface_patch_node(s, pt) ;
@@ -137,27 +153,27 @@ static gint local_correction_matrices_helmholtz(nbi_matrix_t *m,
   /* fprintf(stderr, "patch %d/%d; %d neighbours (%lg)\n", */
   /* 	  pt, nbi_surface_patch_number(s), nnbrs, */
   /* 	  g_timer_elapsed(timer, NULL)) ; */
-  g_assert(4*dmax*2*nst*(nnbrs-nst) + 12*nst + 3*nst +
+  g_assert(8*dmax*2*nst*(nnbrs-nst) + 12*nst + 3*nst +
 	   2*(nnbrs-nst) <= wsize) ;
-  sqt_laplace_source_indexed_kw_adaptive(xs, xstr, nst, q, nq, K0, NK0,
-					 tol, dmax,
-					 (gdouble *)nbi_surface_node(s,0),
-					 xstr,
-					 nbrs, nnbrs-nst,
-					 &(Ast[idxp[pt]*lda]), work) ;
-  sqt_laplace_source_target_kw_self(xs, xstr, nst,
-				    K0, NK0, N,
-				    &(st[0]), 3, &(st[1]), 3,
-				    &(Ast[idxp[pt]*lda + (nnbrs-nst)*lda]),
-				    work) ;
+  sqt_helmholtz_source_indexed_kw_adaptive(k, xs, xstr, nst, q, nq, K0, NK0,
+					   tol, dmax,
+					   (gdouble *)nbi_surface_node(s,0),
+					   xstr,
+					   nbrs, nnbrs-nst,
+					   &(Ast[idxp[pt]*lda]), work) ;
+  sqt_helmholtz_source_target_kw_self(k, xs, xstr, nst,
+				      K0, NK0, N,
+				      &(st[0]), 3, &(st[1]), 3,
+				      &(Ast[idxp[pt]*lda + (nnbrs-nst)*lda]),
+				      work) ;
   /*correct for the upsampled point sources*/
   Ku = nbi_patch_upsample_matrix(nst, nqu) ;
-  correct_matrix_helmholtz(xs, xstr, nst,
+  correct_matrix_helmholtz(k, xs, xstr, nst,
 			   &(xu[idxu[pt]*xstr]), xstr, nqu,
 			   (gdouble *)nbi_surface_node(s,0), xstr,
 			   nbrs, nnbrs, Ku, &(Ast[idxp[pt]*lda])) ;
 
-  return 0 ;
+  return ;
 }
 
 static gpointer local_correction_thread_helmholtz(gpointer tdata)
@@ -174,7 +190,7 @@ static gpointer local_correction_thread_helmholtz(gpointer tdata)
   NBI_REAL *ddata = data[NBI_THREAD_DATA_REAL] ;
   NBI_REAL **dpdata = data[NBI_THREAD_DATA_REAL_POINTER] ;
   gint NK0, nqu, nq, dmax, N, nst, wsize, np, pt0, pt1, pt ;
-  gdouble *st, *K0, *q, tol ;
+  gdouble *st, *K0, *q, tol, k ;
 
   nst   = idata[0] ;
   NK0   = idata[1] ;
@@ -188,6 +204,7 @@ static gpointer local_correction_thread_helmholtz(gpointer tdata)
   K0 = dpdata[1] ;
   q  = dpdata[2] ;
   tol = ddata[0] ;
+  k   = ddata[1] ;
   
   np = nbi_surface_patch_number(m->s) ;
 
@@ -202,20 +219,20 @@ static gpointer local_correction_thread_helmholtz(gpointer tdata)
   /* 	  th, nth, pt0, pt1, np) ; */
   
   for ( pt = pt0 ; pt < pt1 ; pt ++ ) {
-    local_correction_matrices_helmholtz(m, st, nst, K0, NK0, nqu, q, nq, tol,
+    local_correction_matrices_helmholtz(m, k, st, nst, K0, NK0, nqu, q, nq, tol,
 					dmax, N, pt, work, wsize)  ;
   }
 
   return NULL ;
 }
 
-nbi_matrix_t *nbi_surface_assemble_matrix_helmholtz(nbi_surface_t *s,
-						    gdouble k,
-						    gdouble eta,
-						    gint nqa, gint dmax,
-						    gdouble tol,
-						    gint N, gint nu,
-						    gint nnmax, gint nthreads)
+nbi_matrix_t *nbi_matrix_assemble_helmholtz(nbi_surface_t *s,
+					    gdouble k,
+					    gdouble eta,
+					    gint nqa, gint dmax,
+					    gdouble tol,
+					    gint N, gint nu,
+					    gint nnmax, gint nthreads)
 
 {
   nbi_matrix_t *m ;
@@ -230,6 +247,8 @@ nbi_matrix_t *nbi_surface_assemble_matrix_helmholtz(nbi_surface_t *s,
   m->idxp = (gint *)g_malloc0((nbi_surface_patch_number(s)+1)*sizeof(gint)) ;
   m->idxu = (gint *)g_malloc0((nbi_surface_patch_number(s)+1)*sizeof(gint)) ;
 
+  nbi_matrix_wavenumber(m) = k ;
+  
   xstr = NBI_SURFACE_NODE_LENGTH ;
 
   sqt_quadrature_select(nqa, &qa, &order) ;
@@ -291,7 +310,7 @@ nbi_matrix_t *nbi_surface_assemble_matrix_helmholtz(nbi_surface_t *s,
 		     nu, &(xu[m->idxu[pt]*xstr]), xstr, work) ;
   }
 
-  lda = 2*nst ;
+  lda = 4*nst ;
   asize = nntot*lda ;
   
   m->Ast = g_malloc(asize*sizeof(gdouble)) ;
@@ -301,7 +320,7 @@ nbi_matrix_t *nbi_surface_assemble_matrix_helmholtz(nbi_surface_t *s,
 #ifdef _OPENMP
   if ( nthreads == 0 ) {
     for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
-      local_correction_matrices_helmholtz(m, st, nst, K0, NK0, nu, qa, nqa,
+      local_correction_matrices_helmholtz(m, k, st, nst, K0, NK0, nu, qa, nqa,
 					  tol, dmax, N,	pt, work, wsize) ;
     }
   } else {
@@ -332,6 +351,7 @@ nbi_matrix_t *nbi_surface_assemble_matrix_helmholtz(nbi_surface_t *s,
     dpdata[1] = K0 ;
     dpdata[2] = qa ;
     ddata[0] = tol ;
+    ddata[1] = k ;
     
     for ( i = 0 ; i < nthreads ; i ++ ) {
       main_data[NBI_THREAD_MAIN_DATA_SIZE*i+NBI_THREAD_MAIN_DATA_THREAD] =
@@ -352,7 +372,7 @@ nbi_matrix_t *nbi_surface_assemble_matrix_helmholtz(nbi_surface_t *s,
   }
 #else /*_OPENMP*/
   for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
-    local_correction_matrices_helmholtz(m, st, nst, K0, NK0, nu, qa, nqa,
+    local_correction_matrices_helmholtz(m, k, st, nst, K0, NK0, nu, qa, nqa,
 					tol, dmax, N, pt, work, wsize) ;
   }
 #endif /*_OPENMP*/
@@ -389,7 +409,7 @@ static gint correct_matrix_laplace(gdouble *xp, gint pstr, gint np,
   return 0 ;
 }
 
-static gint local_correction_matrices_laplace(nbi_matrix_t *m,
+static void local_correction_matrices_laplace(nbi_matrix_t *m,
 					      gdouble *st, gint nst,
 					      gdouble *K0, gint NK0,
 					      gint nqu,
@@ -439,7 +459,7 @@ static gint local_correction_matrices_laplace(nbi_matrix_t *m,
 			 (gdouble *)nbi_surface_node(s,0), xstr,
 			 nbrs, nnbrs, Ku, &(Ast[idxp[pt]*lda])) ;
 
-  return 0 ;
+  return ;
 }
 
 static gpointer local_correction_thread_laplace(gpointer tdata)
@@ -491,12 +511,12 @@ static gpointer local_correction_thread_laplace(gpointer tdata)
   return NULL ;
 }
 
-nbi_matrix_t *nbi_surface_assemble_matrix_laplace(nbi_surface_t *s,
-						  gdouble eta,
-						  gint nqa, gint dmax,
-						  gdouble tol,
-						  gint N, gint nu,
-						  gint nnmax, gint nthreads)
+nbi_matrix_t *nbi_matrix_assemble_laplace(nbi_surface_t *s,
+					  gdouble eta,
+					  gint nqa, gint dmax,
+					  gdouble tol,
+					  gint N, gint nu,
+					  gint nnmax, gint nthreads)
 {
   nbi_matrix_t *m ;
   gint xstr, nst, wstr, wsize, usize, ksize, NK0, nntot, pt ;
