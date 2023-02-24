@@ -38,34 +38,6 @@
 GTimer *timer ;
 gchar *progname ;
 
-
-static gint make_sources(nbi_surface_t *s,
-			 gdouble *p , gint pstr,
-			 gdouble *pn, gint nstr,
-			 nbi_boundary_condition_t *bc) 
-
-{
-  gdouble *x, *n ;
-  gint i ;
-
-  g_assert(pstr >= 2) ;
-  for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
-    x = (NBI_REAL *)nbi_surface_node(s, i) ;
-    n = (NBI_REAL *)nbi_surface_normal(s, i) ;
-
-    p [i*pstr+0] += nbi_expression_eval(bc->e[0], x, n) ;
-    p [i*pstr+1] += nbi_expression_eval(bc->e[1], x, n) ;
-    pn[i*nstr+0] += nbi_expression_eval(bc->e[2], x, n) ;
-    pn[i*nstr+1] += nbi_expression_eval(bc->e[3], x, n) ;
-
-    /* fprintf(stdout, "%e %e %e %e %e %e %e %e %e %e\n", */
-    /* 	    x[0], x[1], x[2], n[0], n[1], n[2], */
-    /* 	    p[i*pstr+0], p[i*pstr+1], pn[i*nstr+0], pn[i*nstr+1]) ; */    
-  }
-  /* exit(1) ; */
-  return 0 ;
-}
-
 static void print_help_text(FILE *f, gint depth,
 			    gint order_inc, gint order_fmm,
 			    gint nthreads, gdouble tol)
@@ -241,7 +213,8 @@ gint main(gint argc, gchar **argv)
   
   fclose(input) ;
   
-  make_sources(s, &(src[0]), 4, &(src[2]), 4, bc) ;
+  /* make_sources(s, &(src[0]), 4, &(src[2]), 4, bc) ; */
+  nbi_boundary_condition_set(s, &(src[0]), 4, &(src[2]), 4, bc) ;
 
   if ( !greens_id && !layer_potentials && !calc_field ) {
     /*solver settings for GMRES*/
@@ -274,7 +247,7 @@ gint main(gint argc, gchar **argv)
 	    progname, fmm_work_size) ;
     
     work = (gdouble *)g_malloc0(fmm_work_size*sizeof(gdouble)) ;
-    wbfmm_laplace_coaxial_translate_init(order_max+1) ;    
+    /* wbfmm_laplace_coaxial_translate_init(order_max+1) ;     */
 
     fprintf(stderr, "%s: building tree; t=%lg\n",
 	    progname, t = g_timer_elapsed(timer, NULL)) ;
@@ -299,8 +272,6 @@ gint main(gint argc, gchar **argv)
 
     f = (gdouble *)g_malloc0(10*sizeof(gdouble)) ;
     pwt = 1.0 ; nwt = 1.0 ;
-    /* nwt = -1.0 ; */
-    /* pwt = 0.0 ; */
     nbi_calc_field_helmholtz(matrix,  &(src[0]), 4, pwt, &(src[2]), 4, nwt,
 			     xfield, f, nthreads, work) ;
 
@@ -314,7 +285,6 @@ gint main(gint argc, gchar **argv)
     fprintf(stderr, "%s: evaluating Green's identity; t=%lg\n",
 	    progname, t = g_timer_elapsed(timer, NULL)) ;
     f = (gdouble *)g_malloc0(nbi_surface_node_number(s)*fstr*sizeof(gdouble)) ;
-    /* pwt = 0.0 ; nwt = 1.0 ; */
     nbi_surface_greens_identity_helmholtz(matrix,
 					  &(src[0]), 4, pwt,
 					  &(src[2]), 4, nwt,
@@ -326,7 +296,6 @@ gint main(gint argc, gchar **argv)
     emax = fmax = e2 = f2 = 0.0 ;
     for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
       xp = (NBI_REAL *)nbi_surface_node(s,i) ;
-      /* G = greens_function_laplace(xp, xs) ; */
       G = &(src[4*i+0]) ;
       fmax = MAX(fmax, sqrt(G[0]*G[0]+G[1]*G[1])) ;
       emax = MAX(emax,

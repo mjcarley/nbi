@@ -143,7 +143,9 @@ struct _nbi_boundary_condition_t {
   nbi_problem_t problem ;
   nbi_expression_t *e[4] ;
 } ;
-  
+
+#define nbi_boundary_condition_problem(_b) ((_b)->problem) 
+
 typedef gint (*nbi_mesh_export_func_t)(FILE *,
 				       gdouble *, gint, gint,
 				       gint *, gint, gint,
@@ -203,6 +205,11 @@ gint nbi_matrix_write(FILE *f, nbi_matrix_t *m) ;
 gint nbi_matrix_upsample_laplace(nbi_matrix_t *m,
 				 gdouble *p, gint pstr, gdouble pwt, 
 				 gdouble *pn, gint nstr, gdouble nwt) ;
+gint nbi_matrix_upsample_helmholtz(nbi_matrix_t *m,
+				   gdouble *p, gint pstr,
+				   gdouble pwt,
+				   gdouble *pn, gint nstr,
+				   gdouble nwt) ;
 
 gint nbi_matrix_fmm_init(nbi_matrix_t *m,
 			 nbi_problem_t problem,
@@ -219,6 +226,13 @@ gint nbi_matrix_multiply(nbi_matrix_t *A,
 			 gdouble *y, gint ystr, gdouble bt,
 			 gint nthreads,
 			 gdouble *work) ;
+gint nbi_matrix_multiply_helmholtz(nbi_matrix_t *A,
+				   gdouble *x, gint xstr,
+				   gdouble al,
+				   gdouble *y, gint ystr,
+				   gdouble bt,
+				   gint nthreads,
+				   gdouble *work) ;
 
 gint nbi_calc_field_helmholtz(nbi_matrix_t *m,
 			      gdouble *p ,
@@ -259,6 +273,10 @@ nbi_expression_t *nbi_expression_new(gchar *expression) ;
 gdouble nbi_expression_eval(nbi_expression_t *e, gdouble *x, gdouble *n) ;
 nbi_boundary_condition_t *nbi_boundary_condition_new(nbi_problem_t problem) ;
 gint nbi_boundary_condition_add(nbi_boundary_condition_t *b, gchar *e) ;
+gint nbi_boundary_condition_set(nbi_surface_t *s,
+				gdouble *p , gint pstr,
+				gdouble *pn, gint nstr,
+				nbi_boundary_condition_t *b) ;
 
 gint nbi_gmres_real(nbi_matrix_t *A, 
 		    gdouble *x, gint xstr,
@@ -286,7 +304,7 @@ gint nbi_mesh_export_gmsh(FILE *f, gdouble *x, gint xstr, gint np,
 			  gint *tri, gint tstr, gint nt,
 			  gdouble *data, gint dstr) ;
 
-gchar *nbi_function_help(gchar *f) ;
+const gchar *nbi_function_help(gchar *f) ;
 gint nbi_functions_list(FILE *f, gboolean help) ;
 
 nbi_matrix_t *nbi_matrix_assemble_helmholtz(nbi_surface_t *s,

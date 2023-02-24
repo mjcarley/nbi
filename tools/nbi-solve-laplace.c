@@ -39,37 +39,6 @@ GTimer *timer ;
 gchar *progname ;
 
 
-static gint make_sources(nbi_surface_t *s,
-			 gdouble *p , gint pstr,
-			 gdouble *pn, gint nstr,
-			 nbi_boundary_condition_t *bc) 
-
-{
-  gdouble *x, *n ;
-  gint i ;
-  
-  for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
-    x = (NBI_REAL *)nbi_surface_node(s, i) ;
-    n = (NBI_REAL *)nbi_surface_normal(s, i) ;
-
-    p [i*pstr] += nbi_expression_eval(bc->e[0], x, n) ;
-    pn[i*nstr] += nbi_expression_eval(bc->e[1], x, n) ;
-  }
-  
-  return 0 ;
-}
-
-/* static gdouble greens_function_laplace(gdouble *x, gdouble *y) */
-
-/* { */
-/*   gdouble G, R ; */
-
-/*   R = nbi_vector_distance(x, y) ; */
-/*   G = 0.25*M_1_PI/R ; */
-  
-/*   return G ; */
-/* } */
-
 static void print_help_text(FILE *f, gint depth,
 			    gint order_inc, gint order_fmm,
 			    gint nthreads, gdouble tol)
@@ -230,8 +199,8 @@ gint main(gint argc, gchar **argv)
   
   fclose(input) ;
   
-  make_sources(s, &(src[0]), 2, &(src[1]), 2, bc) ;
-
+  nbi_boundary_condition_set(s, &(src[0]), 2, &(src[1]), 2, bc) ;
+  
   if ( !greens_id && !layer_potentials ) {
     /*solver settings for GMRES*/
     i = nbi_surface_node_number(s) ;

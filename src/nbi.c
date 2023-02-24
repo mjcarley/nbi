@@ -407,7 +407,7 @@ nbi_matrix_t *NBI_FUNCTION_NAME(nbi_matrix_new)(nbi_surface_t *s)
   return m ;
 }
 
-static gint read_upsampled_patches(FILE *f,
+static void read_upsampled_patches(FILE *f,
 				   gint np, gint ustr,
 				   nbi_matrix_t *m)
 
@@ -439,7 +439,7 @@ static gint read_upsampled_patches(FILE *f,
   m->p  = (gchar *)(&(bc[0])) ;
   m->pn = (gchar *)(&(bc[(m->pstr)/2])) ;
   
-  return 0 ;
+  return ;
 }
 
 static gint read_correction_matrices(FILE *f,
@@ -790,5 +790,92 @@ gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *bc)
     }
   }
   
+  return 0 ;
+}
+
+static gint boundary_condition_laplace(nbi_surface_t *s,
+				       NBI_REAL *p , gint pstr,
+				       NBI_REAL *pn, gint nstr,
+				       nbi_boundary_condition_t *b)
+
+{
+  gdouble *x, *n ;
+  gint i ;
+
+  if ( pstr < 1 ) {
+    g_error("%s: stride (pstr == %d)for Laplace problem must be at least 1",
+	    __FUNCTION__, pstr) ;
+  }
+  if ( nstr < 1 ) {
+    g_error("%s: stride (nstr == %d)for Laplace problem must be at least 1",
+	    __FUNCTION__, nstr) ;
+  }
+
+  for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+    x = (NBI_REAL *)nbi_surface_node(s, i) ;
+    n = (NBI_REAL *)nbi_surface_normal(s, i) ;
+
+    p [i*pstr] += nbi_expression_eval(b->e[0], x, n) ;
+    pn[i*nstr] += nbi_expression_eval(b->e[1], x, n) ;
+  }
+  
+  return 0 ;
+}
+
+static gint boundary_condition_helmholtz(nbi_surface_t *s,
+					 NBI_REAL *p , gint pstr,
+					 NBI_REAL *pn, gint nstr,
+					 nbi_boundary_condition_t *b)
+
+{
+  gdouble *x, *n ;
+  gint i ;
+
+  if ( pstr < 2 ) {
+    g_error("%s: stride (pstr == %d)for Helmholtz problem must be at least 2",
+	    __FUNCTION__, pstr) ;
+  }
+  if ( nstr < 2 ) {
+    g_error("%s: stride (nstr == %d)for Helmholtz problem must be at least 2",
+	    __FUNCTION__, nstr) ;
+  }
+
+  for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+    x = (NBI_REAL *)nbi_surface_node(s, i) ;
+    n = (NBI_REAL *)nbi_surface_normal(s, i) ;
+
+    p [i*pstr+0] += nbi_expression_eval(b->e[0], x, n) ;
+    p [i*pstr+1] += nbi_expression_eval(b->e[1], x, n) ;
+    pn[i*nstr+0] += nbi_expression_eval(b->e[2], x, n) ;
+    pn[i*nstr+1] += nbi_expression_eval(b->e[3], x, n) ;
+  }
+  /* for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) { */
+  /*   x = (NBI_REAL *)nbi_surface_node(s, i) ; */
+  /*   n = (NBI_REAL *)nbi_surface_normal(s, i) ; */
+
+  /*   p [i*pstr] += nbi_expression_eval(b->e[0], x, n) ; */
+  /*   pn[i*nstr] += nbi_expression_eval(b->e[1], x, n) ; */
+  /* } */
+  
+  return 0 ;
+}
+
+gint NBI_FUNCTION_NAME(nbi_boundary_condition_set)(nbi_surface_t *s,
+						   NBI_REAL *p , gint pstr,
+						   NBI_REAL *pn, gint nstr,
+						   nbi_boundary_condition_t *b)
+
+{
+  if ( nbi_boundary_condition_problem(b) == NBI_PROBLEM_LAPLACE ) {
+    return boundary_condition_laplace(s, p, pstr, pn, nstr, b) ;
+  }
+
+  if ( nbi_boundary_condition_problem(b) == NBI_PROBLEM_HELMHOLTZ ) {
+    return boundary_condition_helmholtz(s, p, pstr, pn, nstr, b) ;
+  }
+
+  g_error("%s: unrecognized problem (%d) for boundary condition",
+	  __FUNCTION__, nbi_boundary_condition_problem(b)) ;
+
   return 0 ;
 }

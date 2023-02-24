@@ -56,8 +56,6 @@ static void point_source_field_helmholtz(NBI_REAL k,
 {
   gint i ;  
   NBI_REAL R, r[3], C, S, rn, G[2], dG[2] ;
-
-  /* g_assert_not_reached() ; */
   
   for ( i = 0 ; i < ns ; i ++ ) {
     nbi_vector_diff(r, x, &(xs[i*xstr])) ;
@@ -70,10 +68,6 @@ static void point_source_field_helmholtz(NBI_REAL k,
       G[1] = 0.25*M_1_PI*S/R ;
       dG[0] = -0.25*M_1_PI*(C + k*R*S)*rn/R/R/R ;
       dG[1] =  0.25*M_1_PI*(k*R*C - S)*rn/R/R/R ;
-      /* f[0] += wt*(pwt*(dG[0]*p [i*pstr + 0] - dG[1]*p [i*pstr + 1]) - */
-      /* 		  nwt*( G[0]*pn[i*nstr + 0] -  G[1]*pn[i*nstr + 1])) ; */
-      /* f[1] += wt*(pwt*(dG[1]*p [i*pstr + 0] + dG[0]*p [i*pstr + 1]) - */
-      /* 		  nwt*( G[1]*pn[i*nstr + 0] +  G[0]*pn[i*nstr + 1])) ; */
       f[0] += wt*(pwt*(dG[0]*p [i*pstr + 0] - dG[1]*p [i*pstr + 1]) -
 		  nwt*( G[0]*pn[i*nstr + 0] -  G[1]*pn[i*nstr + 1])) ;
       f[1] += wt*(pwt*(dG[1]*p [i*pstr + 0] + dG[0]*p [i*pstr + 1]) -
@@ -94,14 +88,6 @@ static gint upsample_sources(nbi_surface_t *s,
   gint i, j, pt, ns, nu ;
   NBI_REAL *K, al, bt ;
 
-  /* g_assert_not_reached() ; */
-
-  /* fprintf(stderr, "pstr = %d\n", pstr) ; */
-  /* fprintf(stderr, "nstr = %d\n", nstr) ; */
-  /* fprintf(stderr, "wstr = %d\n", wstr) ; */
-  /* fprintf(stderr, "pustr = %d\n", pustr) ; */
-  /* fprintf(stderr, "nustr = %d\n", nustr) ; */
-  
   al = 1.0 ; bt = 0.0 ;
   for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
     ns = nbi_surface_patch_node_number(s, pt) ;
@@ -185,55 +171,52 @@ gint NBI_FUNCTION_NAME(nbi_matrix_upsample_helmholtz)(nbi_matrix_t *m,
   return 0 ;
 }
 
-static void local_source_field(wbfmm_tree_t *t,
-			       guint level,
-			       guint64 b,
-			       NBI_REAL *x,
-			       NBI_REAL *f,
-			       NBI_REAL *src, gint sstr,
-			       NBI_REAL *normals, gint nstr,
-			       NBI_REAL *d, gint dstr)
+/* static void local_source_field(wbfmm_tree_t *t, */
+/* 			       guint level, */
+/* 			       guint64 b, */
+/* 			       NBI_REAL *x, */
+/* 			       NBI_REAL *f, */
+/* 			       NBI_REAL *src, gint sstr, */
+/* 			       NBI_REAL *normals, gint nstr, */
+/* 			       NBI_REAL *d, gint dstr) */
 
-{
-  NBI_REAL xb[3], wb, *C, *xs, r, rr[3], nr, g ;
-  wbfmm_box_t *boxes, box ;
-  guint64 neighbours[27] ;
-  gint nnbr, i, k, idx, nq ;
-  guint j ;
+/* { */
+/*   NBI_REAL *xs, r, rr[3], nr, g ; */
+/*   wbfmm_box_t *boxes, box ; */
+/*   guint64 neighbours[27] ; */
+/*   gint nnbr, i, k, idx, nq ; */
+/*   guint j ; */
   
-  g_assert_not_reached() ;
+/*   g_assert_not_reached() ; */
 
-  nnbr = wbfmm_box_neighbours(level, b, neighbours) ;
-  g_assert(nnbr >= 0 && nnbr < 28) ;
+/*   nnbr = wbfmm_box_neighbours(level, b, neighbours) ; */
+/*   g_assert(nnbr >= 0 && nnbr < 28) ; */
 
-  nq = wbfmm_tree_source_size(t) ;
+/*   nq = wbfmm_tree_source_size(t) ; */
 
-  boxes = t->boxes[level] ;
-  for ( i = 0 ; i < nnbr ; i ++ ) {
-    box = boxes[neighbours[i]] ;
-    for ( j = 0 ; j < box.n ; j ++ ) {
-      idx = t->ip[box.i+j] ;
-      xs = wbfmm_tree_point_index(t, idx) ;
-      nbi_vector_diff(rr, x, xs) ;
-      /* rr[0] = x[0] - xs[0] ;  */
-      /* rr[1] = x[1] - xs[1] ;  */
-      /* rr[2] = x[2] - xs[2] ; */
-      r = rr[0]*rr[0] + rr[1]*rr[1] + rr[2]*rr[2] ;
-      if ( r > WBFMM_LOCAL_CUTOFF_RADIUS*WBFMM_LOCAL_CUTOFF_RADIUS ) {
-	r = SQRT(r) ;
-	nr =
-	  rr[0]*normals[idx*nstr+0] + 
-	  rr[1]*normals[idx*nstr+1] + 
-	  rr[2]*normals[idx*nstr+2] ;
-	g = 0.25*M_1_PI/r ;
-	for ( k = 0 ; k < nq ; k ++ ) {
-	  f[k] += (d[idx*dstr+k]*nr/r/r + src[idx*sstr+k])*g ;
-	}
-      }
-    }
+/*   boxes = t->boxes[level] ; */
+/*   for ( i = 0 ; i < nnbr ; i ++ ) { */
+/*     box = boxes[neighbours[i]] ; */
+/*     for ( j = 0 ; j < box.n ; j ++ ) { */
+/*       idx = t->ip[box.i+j] ; */
+/*       xs = wbfmm_tree_point_index(t, idx) ; */
+/*       nbi_vector_diff(rr, x, xs) ; */
+/*       r = rr[0]*rr[0] + rr[1]*rr[1] + rr[2]*rr[2] ; */
+/*       if ( r > WBFMM_LOCAL_CUTOFF_RADIUS*WBFMM_LOCAL_CUTOFF_RADIUS ) { */
+/* 	r = SQRT(r) ; */
+/* 	nr = */
+/* 	  rr[0]*normals[idx*nstr+0] +  */
+/* 	  rr[1]*normals[idx*nstr+1] +  */
+/* 	  rr[2]*normals[idx*nstr+2] ; */
+/* 	g = 0.25*M_1_PI/r ; */
+/* 	for ( k = 0 ; k < nq ; k ++ ) { */
+/* 	  f[k] += (d[idx*dstr+k]*nr/r/r + src[idx*sstr+k])*g ; */
+/* 	} */
+/*       } */
+/*     } */
     
-  }   
-}
+/*   }    */
+/* } */
 
 static gint point_source_summation(nbi_matrix_t *m,
 				   NBI_REAL *f, gint fstr,
@@ -242,8 +225,6 @@ static gint point_source_summation(nbi_matrix_t *m,
   gint i, nu, np, ustr, *idxu, pustr, nustr ;
   nbi_surface_t *s ;
   NBI_REAL *xu, *pu, *pnu, k ;
-  
-  /* g_assert_not_reached() ; */
 
   k = nbi_matrix_wavenumber(m) ;
   ustr = m->ustr ;
@@ -267,6 +248,7 @@ static gint point_source_summation(nbi_matrix_t *m,
   } else {
     /*FMM summation*/
     gint level, depth ;
+    NBI_REAL tmp ;
     wbfmm_tree_t *tree ;
     wbfmm_target_list_t *targets ;
     wbfmm_shift_operators_t *shifts ;
@@ -277,19 +259,19 @@ static gint point_source_summation(nbi_matrix_t *m,
     for ( level = 2 ; level <= depth ; level ++ ) {
       wbfmm_tree_coefficients_zero(tree, level) ;
     }
-	g_assert_not_reached() ;
-	wbfmm_tree_leaf_expansions(tree, k,
-				   pnu, nustr,
-				   &(xu[3]), ustr,
-				   pu, pustr,
-				   TRUE, work) ;
+    /* g_assert_not_reached() ; */
+    wbfmm_tree_leaf_expansions(tree, k,
+			       pnu, nustr,
+			       &(xu[3]), ustr,
+			       pu, pustr,
+			       TRUE, work) ;
     /* fprintf(stderr, "%s: upward pass\n", __FUNCTION__) ; */
-	g_assert_not_reached() ;
+    /* g_assert_not_reached() ; */
     for ( level = depth ; level >= 3 ; level -- ) {
       wbfmm_upward_pass(tree, shifts, level, work) ;
     }  
     /* fprintf(stderr, "%s: downward pass\n", __FUNCTION__) ; */
-	g_assert_not_reached() ;
+    /* g_assert_not_reached() ; */
     for ( level = 2 ; level <= depth ; level ++ ) {      
       wbfmm_downward_pass(tree, shifts, level, work, nthreads) ;
     }
@@ -302,15 +284,20 @@ static gint point_source_summation(nbi_matrix_t *m,
 	/* fprintf(stderr, "%s: surface node %d\n", __FUNCTION__, i) ; */
 	box = wbfmm_point_box(tree, tree->depth,
 			      (NBI_REAL *)nbi_surface_node(s, i)) ;
-	g_assert_not_reached() ;
-	/* wbfmm_tree_box_local_field(tree, tree->depth, box, */
-	/* 			   k, */
-	/* 			   (NBI_REAL *)nbi_surface_node(s,i), */
-	/* 			   &(f[i*fstr]), */
-	/* 			   pnu, nustr, */
-	/* 			   &(xu[3]), ustr, */
-	/* 			   pu, pustr, */
-	/* 			   TRUE, WBFMM_FIELD_POTENTIAL, work) ; */
+	/* g_assert_not_reached() ; */
+	wbfmm_tree_box_local_field(tree, tree->depth, box,
+				   k,
+				   (NBI_REAL *)nbi_surface_node(s,i),
+				   &(f[i*fstr]), fstr,
+				   pnu, nustr,
+				   &(xu[3]), ustr,
+				   pu, pustr,
+				   TRUE, WBFMM_FIELD_SCALAR, work) ;
+	/*wbfmm calculates h_{0}(kR)/4\pi rather than the Green's
+	  function, so we need to multiply by -j k*/
+	tmp = f[i*fstr+0] ;
+	f[i*fstr+0] = k*f[i*fstr+1] ;
+	f[i*fstr+1] = -k*tmp ;
       }
     }
   }
@@ -321,16 +308,18 @@ static gint point_source_summation(nbi_matrix_t *m,
 static void local_matrix_correction(nbi_matrix_t *m,
 				    gdouble *p, gint pstr, gdouble pwt,
 				    gdouble *pn, gint nstr, gdouble nwt,
-				    gdouble sgn,
+				    /* gdouble sgn, */
 				    gint pt0, gint pt1,
 				    gdouble *f, gint fstr,
 				    gdouble *work)
 
 {
   gint nsts, ip, *nbrs, nnbrs, lda, i, one = 1, pt, *idx, *idxp, str ;
-  gdouble *Ast, al[2], bt[2], *A ;
+  gdouble *Ast, al[2], bt[2], *A, tmp ;
   nbi_surface_t *s = m->s ;
-  
+
+  /* g_assert_not_reached() ; */
+
   A = (NBI_REAL *)(m->Ast) ;
   idx = m->idx ; idxp = m->idxp ;
 
@@ -356,7 +345,7 @@ static void local_matrix_correction(nbi_matrix_t *m,
     str = pstr/2 ;
     blaswrap_zgemv(FALSE, nnbrs, nsts, al, &(Ast[2*nsts]), lda,
 		   &(p[ip*pstr]), str, bt, work, one) ;
-    al[0] = -nwt*sgn ; bt[0] = 1.0 ; str = nstr/2 ;
+    al[0] = -nwt ; bt[0] = 1.0 ; str = nstr/2 ;
     blaswrap_zgemv(FALSE, nnbrs, nsts, al, &(Ast[0*nsts]), lda,
 		   &(pn[ip*nstr]), str, bt, work, one) ;
 #endif /*NBI_SINGLE_PRECISION*/    
@@ -406,33 +395,34 @@ static gpointer local_correction_thread(gpointer tdata)
   
   pwt = ddata[NBI_THREAD_DATA_REAL_WT1 ] ;
   nwt = ddata[NBI_THREAD_DATA_REAL_WT2 ] ;
-  sgn = ddata[NBI_THREAD_DATA_REAL_SIGN] ;
-  
-  local_matrix_correction(m, p, pstr, pwt, pn, nstr, nwt, sgn,
+  /* sgn = ddata[NBI_THREAD_DATA_REAL_SIGN] ; */
+
+  local_matrix_correction(m, p, pstr, pwt, pn, nstr, nwt,
+			  /* sgn, */
 			  pt0, pt1, f, fstr, work) ;  
   
   return NULL ;
 }
 
 gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_helmholtz)(nbi_matrix_t *m,
-							    NBI_REAL *p ,
-							    gint pstr,
-							    NBI_REAL pwt,
-							    NBI_REAL *pn,
-							    gint nstr,
-							    NBI_REAL nwt,
-							    NBI_REAL *f,
-							    gint fstr,
-							    gint nthreads,
-							    NBI_REAL *work)
+							      NBI_REAL *p ,
+							      gint pstr,
+							      NBI_REAL pwt,
+							      NBI_REAL *pn,
+							      gint nstr,
+							      NBI_REAL nwt,
+							      NBI_REAL *f,
+							      gint fstr,
+							      gint nthreads,
+							      NBI_REAL *work)
 
 {
   gint i, nnmax, nth ;
   NBI_REAL sgn ;
 
-  sgn = 1.0 ;
-  if ( m->tree != NULL ) { sgn = -1.0 ; }
-  nwt *= sgn ;
+  /* sgn = 1.0 ; */
+  /* if ( m->tree != NULL ) { sgn = -1.0 ; } */
+  /* nwt *= sgn ; */
 
   /*f is complex*/
   g_assert(fstr >= 2) ;
@@ -442,6 +432,7 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_helmholtz)(nbi_matrix_t *m,
   NBI_FUNCTION_NAME(nbi_matrix_upsample_helmholtz)(m,
 						   p , pstr, pwt,
 						   pn, nstr, nwt) ;
+
   /**/
   /* upsample_source_write(stdout, m->s, m->idxu, */
   /* 			(NBI_REAL *)(m->xu), m->ustr, */
@@ -454,10 +445,10 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_helmholtz)(nbi_matrix_t *m,
   point_source_summation(m, f, fstr, work, nth) ;
   /* fprintf(stderr, "%s: point source summation complete\n", __FUNCTION__) ; */
 
-  nnmax = nbi_matrix_neighbour_number_max(m) ;
-
   /* return 0 ; */
   
+  nnmax = nbi_matrix_neighbour_number_max(m) ;
+
   /*local corrections*/
 #ifdef _OPENMP
   if ( nth > 0 ) {
@@ -470,9 +461,9 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_helmholtz)(nbi_matrix_t *m,
     gpointer data[NBI_THREAD_DATA_SIZE],
       main_data[NBI_THREAD_NUMBER_MAX*NBI_THREAD_MAIN_DATA_SIZE] ;
 
-    dpdata[NBI_THREAD_DATA_REAL_PTR_P ] = p  ;
-    dpdata[NBI_THREAD_DATA_REAL_PTR_PN] = pn ;
-    dpdata[NBI_THREAD_DATA_REAL_PTR_F ] = f  ;
+    dpdata[NBI_THREAD_DATA_REAL_PTR_P ]      = p  ;
+    dpdata[NBI_THREAD_DATA_REAL_PTR_PN]      = pn ;
+    dpdata[NBI_THREAD_DATA_REAL_PTR_F ]      = f  ;
 
     idata[NBI_THREAD_DATA_INT_PSTR]   = pstr ;
     idata[NBI_THREAD_DATA_INT_NSTR]   = nstr ;
@@ -480,7 +471,7 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_helmholtz)(nbi_matrix_t *m,
   
     ddata[NBI_THREAD_DATA_REAL_WT1 ] = pwt ;
     ddata[NBI_THREAD_DATA_REAL_WT2 ] = nwt ;
-    ddata[NBI_THREAD_DATA_REAL_SIGN] = sgn ;
+    /* ddata[NBI_THREAD_DATA_REAL_SIGN] = sgn ; */
 
     data[NBI_THREAD_DATA_MATRIX] = m ;
     data[NBI_THREAD_DATA_INT] = idata ;
@@ -504,14 +495,17 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_helmholtz)(nbi_matrix_t *m,
     /*make sure all threads complete before we move on*/
     for ( i = 0 ; i < nth ; i ++ ) g_thread_join(threads[i]) ;
   } else {
-    local_matrix_correction(m, p, pstr, pwt, pn, nstr, nwt, sgn,
+    local_matrix_correction(m, p, pstr, pwt, pn, nstr, nwt,
+			    /* sgn, */
 			    0, nbi_surface_patch_number(m->s), f, fstr,
-			    work) ;  
+			    work) ;
   }
   
 #else /*_OPENMP*/
-  local_matrix_correction(m, p, pstr, pwt, pn, nstr, nwt, sgn,
-			  0, nbi_surface_patch_number(m->s), f, fstr, work) ;  
+  local_matrix_correction(m, p, pstr, pwt, pn, nstr, nwt,
+			  /* sgn, */
+			  0, nbi_surface_patch_number(m->s),
+			  f, fstr, work) ;
 #endif /*_OPENMP*/
   
   return 0 ;
@@ -773,7 +767,7 @@ static gint matrix_multiply_single(nbi_matrix_t *m,
   /* fprintf(stderr, "%s: point source summation complete\n", __FUNCTION__) ; */
   /* point_source_summation(m, f, fstr, work, nth) ; */
 
-  /*local corrections*/
+  /*local corrections: remove sgn?*/
   al = -nwt*sgn ; bt = 0.0 ;
 
 #ifdef _OPENMP
@@ -834,12 +828,12 @@ static gint matrix_multiply_double(nbi_matrix_t *m,
 }
 
 gint NBI_FUNCTION_NAME(nbi_matrix_multiply_helmholtz)(nbi_matrix_t *A,
-						    NBI_REAL *x, gint xstr,
-						    NBI_REAL al,
-						    NBI_REAL *y, gint ystr,
-						    NBI_REAL bt,
-						    gint nthreads,
-						    NBI_REAL *work)
+						      NBI_REAL *x, gint xstr,
+						      NBI_REAL al,
+						      NBI_REAL *y, gint ystr,
+						      NBI_REAL bt,
+						      gint nthreads,
+						      NBI_REAL *work)
 
 /*
   y := al*A*x + bt*y
@@ -894,7 +888,7 @@ gint NBI_FUNCTION_NAME(nbi_calc_field_helmholtz)(nbi_matrix_t *m,
 						 NBI_REAL *work)
   
 {
-  gint i, nu, np, ustr, *idxu, pustr, nustr ;
+  gint nu, ustr, *idxu, pustr, nustr ;
   nbi_surface_t *s ;
   NBI_REAL *xu, *pu, *pnu, k ;
   

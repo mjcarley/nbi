@@ -35,7 +35,7 @@
 #include "nbi-private.h"
 
 
-static gint upsample_patch(gdouble *xs, gint sstr, gint ns,
+static int upsample_patch(gdouble *xs, gint sstr, gint ns,
 			   gint nu, gdouble *xu, gint ustr, gdouble *work)
 
 /*
@@ -380,7 +380,7 @@ nbi_matrix_t *nbi_matrix_assemble_helmholtz(nbi_surface_t *s,
   return m ;
 }
 
-static gint correct_matrix_laplace(gdouble *xp, gint pstr, gint np,
+static void correct_matrix_laplace(gdouble *xp, gint pstr, gint np,
 				   gdouble *xu, gint ustr, gint nu,
 				   gdouble *x , gint xstr,
 				   gint *nbrs, gint nnbrs,
@@ -406,7 +406,7 @@ static gint correct_matrix_laplace(gdouble *xp, gint pstr, gint np,
     }
   }
   
-  return 0 ;
+  return ;
 }
 
 static void local_correction_matrices_laplace(nbi_matrix_t *m,

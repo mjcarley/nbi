@@ -198,7 +198,7 @@ gint nbi_boundary_condition_add(nbi_boundary_condition_t *b, gchar *e)
   return 0 ;
 }
 
-gchar *nbi_function_help(gchar *f)
+const gchar *nbi_function_help(gchar *f)
 
 {
   gint i ;

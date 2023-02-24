@@ -47,7 +47,7 @@
 #define wbfmm_tree_point_index(_t,_i)			\
   ((NBI_REAL *)(&((_t)->points[(_i)*((_t)->pstr)])))
 
-static gint point_source_field_laplace(NBI_REAL *xs, gint xstr, gint ns,
+static void point_source_field_laplace(NBI_REAL *xs, gint xstr, gint ns,
 				       NBI_REAL *p , gint pstr, NBI_REAL pwt,
 				       NBI_REAL *pn, gint nstr, NBI_REAL nwt,
 				       NBI_REAL *x, NBI_REAL wt, NBI_REAL *f)
@@ -65,10 +65,10 @@ static gint point_source_field_laplace(NBI_REAL *xs, gint xstr, gint ns,
     }
   }
   
-  return 0 ;
+  return ;
 }
 
-static gint upsample_sources(nbi_surface_t *s,
+static void upsample_sources(nbi_surface_t *s,
 			     NBI_REAL *p, gint pstr, NBI_REAL *pn, gint nstr,
 			     NBI_REAL *wt, gint wstr, gint *idxu,
 			     NBI_REAL *pu, gint pustr, NBI_REAL pwt,
@@ -107,7 +107,7 @@ static gint upsample_sources(nbi_surface_t *s,
     pu [i*pustr] *= pwt*wt[i*wstr] ;
   }
   
-  return 0 ;
+  return ;
 }
 
 gint NBI_FUNCTION_NAME(nbi_matrix_upsample_laplace)(nbi_matrix_t *m,
@@ -129,54 +129,54 @@ gint NBI_FUNCTION_NAME(nbi_matrix_upsample_laplace)(nbi_matrix_t *m,
   return 0 ;
 }
 
-static void local_source_field(wbfmm_tree_t *t,
-			       guint level,
-			       guint64 b,
-			       NBI_REAL *x,
-			       NBI_REAL *f,
-			       NBI_REAL *src, gint sstr,
-			       NBI_REAL *normals, gint nstr,
-			       NBI_REAL *d, gint dstr)
+/* static void local_source_field(wbfmm_tree_t *t, */
+/* 			       guint level, */
+/* 			       guint64 b, */
+/* 			       NBI_REAL *x, */
+/* 			       NBI_REAL *f, */
+/* 			       NBI_REAL *src, gint sstr, */
+/* 			       NBI_REAL *normals, gint nstr, */
+/* 			       NBI_REAL *d, gint dstr) */
 
-{
-  NBI_REAL xb[3], wb, *C, *xs, r, rr[3], nr, g ;
-  wbfmm_box_t *boxes, box ;
-  guint64 neighbours[27] ;
-  gint nnbr, i, k, idx, nq ;
-  guint j ;
+/* { */
+/*   NBI_REAL xb[3], wb, *C, *xs, r, rr[3], nr, g ; */
+/*   wbfmm_box_t *boxes, box ; */
+/*   guint64 neighbours[27] ; */
+/*   gint nnbr, i, k, idx, nq ; */
+/*   guint j ; */
   
-  nnbr = wbfmm_box_neighbours(level, b, neighbours) ;
-  g_assert(nnbr >= 0 && nnbr < 28) ;
+/*   nnbr = wbfmm_box_neighbours(level, b, neighbours) ; */
+/*   g_assert(nnbr >= 0 && nnbr < 28) ; */
 
-  nq = wbfmm_tree_source_size(t) ;
+/*   nq = wbfmm_tree_source_size(t) ; */
 
-  boxes = t->boxes[level] ;
-  for ( i = 0 ; i < nnbr ; i ++ ) {
-    box = boxes[neighbours[i]] ;
-    for ( j = 0 ; j < box.n ; j ++ ) {
-      idx = t->ip[box.i+j] ;
-      xs = wbfmm_tree_point_index(t, idx) ;
-      rr[0] = x[0] - xs[0] ; 
-      rr[1] = x[1] - xs[1] ; 
-      rr[2] = x[2] - xs[2] ;
-      r = rr[0]*rr[0] + rr[1]*rr[1] + rr[2]*rr[2] ;
-      if ( r > WBFMM_LOCAL_CUTOFF_RADIUS*WBFMM_LOCAL_CUTOFF_RADIUS ) {
-	r = SQRT(r) ;
-	nr =
-	  rr[0]*normals[idx*nstr+0] + 
-	  rr[1]*normals[idx*nstr+1] + 
-	  rr[2]*normals[idx*nstr+2] ;
-	g = 0.25*M_1_PI/r ;
-	for ( k = 0 ; k < nq ; k ++ ) {
-	  f[k] += (d[idx*dstr+k]*nr/r/r + src[idx*sstr+k])*g ;
-	}
-      }
-    }
+/*   boxes = t->boxes[level] ; */
+/*   for ( i = 0 ; i < nnbr ; i ++ ) { */
+/*     box = boxes[neighbours[i]] ; */
+/*     for ( j = 0 ; j < box.n ; j ++ ) { */
+/*       idx = t->ip[box.i+j] ; */
+/*       xs = wbfmm_tree_point_index(t, idx) ; */
+/*       rr[0] = x[0] - xs[0] ;  */
+/*       rr[1] = x[1] - xs[1] ;  */
+/*       rr[2] = x[2] - xs[2] ; */
+/*       r = rr[0]*rr[0] + rr[1]*rr[1] + rr[2]*rr[2] ; */
+/*       if ( r > WBFMM_LOCAL_CUTOFF_RADIUS*WBFMM_LOCAL_CUTOFF_RADIUS ) { */
+/* 	r = SQRT(r) ; */
+/* 	nr = */
+/* 	  rr[0]*normals[idx*nstr+0] +  */
+/* 	  rr[1]*normals[idx*nstr+1] +  */
+/* 	  rr[2]*normals[idx*nstr+2] ; */
+/* 	g = 0.25*M_1_PI/r ; */
+/* 	for ( k = 0 ; k < nq ; k ++ ) { */
+/* 	  f[k] += (d[idx*dstr+k]*nr/r/r + src[idx*sstr+k])*g ; */
+/* 	} */
+/*       } */
+/*     } */
     
-  }   
-}
+/*   }    */
+/* } */
 
-static gint point_source_summation(nbi_matrix_t *m,
+static void point_source_summation(nbi_matrix_t *m,
 				   NBI_REAL *f, gint fstr,
 				   NBI_REAL *work, gint nthreads)
 {
@@ -253,10 +253,10 @@ static gint point_source_summation(nbi_matrix_t *m,
     }
   }
 
-  return 0 ;
+  return ;
 }
 
-static gint local_matrix_correction(nbi_matrix_t *m,
+static void local_matrix_correction(nbi_matrix_t *m,
 				    gdouble *p, gint pstr, gdouble pwt,
 				    gdouble *pn, gint nstr, gdouble nwt,
 				    gdouble sgn,
@@ -302,7 +302,7 @@ static gint local_matrix_correction(nbi_matrix_t *m,
     }
   }
 
-  return 0 ;
+  return ;
 }
 
 static gpointer local_correction_thread(gpointer tdata)
@@ -437,7 +437,7 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_laplace)(nbi_matrix_t *m,
   return 0 ;
 }
 
-static gint upsample_sources_single(nbi_surface_t *s,
+static void upsample_sources_single(nbi_surface_t *s,
 				    NBI_REAL *x, gint xstr,
 				    NBI_REAL *wt, gint wstr, gint *idxu,
 				    NBI_REAL *pu, gint pustr, NBI_REAL pwt,
@@ -471,10 +471,10 @@ static gint upsample_sources_single(nbi_surface_t *s,
     pnu[i*nustr] *= nwt*wt[i*wstr] ;
   }
   
-  return 0 ;
+  return ;
 }
 
-static gint upsample_sources_double(nbi_surface_t *s,
+static void upsample_sources_double(nbi_surface_t *s,
 				    NBI_REAL *x, gint xstr,
 				    NBI_REAL *wt, gint wstr, gint *idxu,
 				    NBI_REAL *pu, gint pustr, NBI_REAL pwt,
@@ -508,10 +508,10 @@ static gint upsample_sources_double(nbi_surface_t *s,
     pu [i*pustr] *= pwt*wt[i*wstr] ;
   }
   
-  return 0 ;
+  return ;
 }
 
-static gint local_matrix_multiply(nbi_matrix_t *m, NBI_REAL *p, gint pstr,
+static void local_matrix_multiply(nbi_matrix_t *m, NBI_REAL *p, gint pstr,
 				  gint off, NBI_REAL al, NBI_REAL bt,
 				  NBI_REAL *work,
 				  NBI_REAL *f, gint fstr,
@@ -549,7 +549,7 @@ static gint local_matrix_multiply(nbi_matrix_t *m, NBI_REAL *p, gint pstr,
     }
   }
 
-  return 0 ;
+  return ;
 }
 
 #ifdef _OPENMP
@@ -593,7 +593,7 @@ static gpointer matrix_multiply_thread(gpointer tdata)
   return NULL ;
 }
 
-static gint local_matrix_multiply_thread(nbi_matrix_t *m,
+static void local_matrix_multiply_thread(nbi_matrix_t *m,
 					 NBI_REAL *p, gint pstr,
 					 gint off, NBI_REAL al, NBI_REAL bt,
 					 NBI_REAL *work,
@@ -643,11 +643,11 @@ static gint local_matrix_multiply_thread(nbi_matrix_t *m,
 
   for ( i = 0 ; i < nth ; i ++ ) g_thread_join(threads[i]) ;
   
-  return 0 ;
+  return ;
 }
 #endif /*_OPENMP*/
 
-static gint matrix_multiply_single(nbi_matrix_t *m,
+static void matrix_multiply_single(nbi_matrix_t *m,
 				   NBI_REAL *pn, gint nstr, NBI_REAL nwt,
 				   NBI_REAL *f, gint fstr,
 				   gint nthreads,
@@ -692,10 +692,10 @@ static gint matrix_multiply_single(nbi_matrix_t *m,
 			0, nbi_surface_patch_number(s), nthreads) ;
 #endif /*_OPENMP*/
   
-  return 0 ;
+  return ;
 }
 
-static gint matrix_multiply_double(nbi_matrix_t *m,
+static void matrix_multiply_double(nbi_matrix_t *m,
 				   NBI_REAL *p, gint pstr, NBI_REAL pwt,
 				   NBI_REAL *f, gint fstr,
 				   gint nthreads,
@@ -736,7 +736,7 @@ static gint matrix_multiply_double(nbi_matrix_t *m,
 			0, nbi_surface_patch_number(s), nthreads) ;
 #endif /*_OPENMP*/
   
-  return 0 ;
+  return ;
 }
 
 gint NBI_FUNCTION_NAME(nbi_matrix_multiply_laplace)(nbi_matrix_t *A,
