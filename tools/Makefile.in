@@ -132,9 +132,9 @@ nbi_solve_helmholtz_OBJECTS = nbi-solve-helmholtz.$(OBJEXT)
 nbi_solve_helmholtz_LDADD = $(LDADD)
 nbi_solve_helmholtz_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
 nbi_solve_laplace_SOURCES = nbi-solve-laplace.c
-nbi_solve_laplace_OBJECTS = nbi-solve-laplace.$(OBJEXT)
-nbi_solve_laplace_LDADD = $(LDADD)
-nbi_solve_laplace_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
+nbi_solve_laplace_OBJECTS =  \
+	nbi_solve_laplace-nbi-solve-laplace.$(OBJEXT)
+@PETSC_TRUE@nbi_solve_laplace_DEPENDENCIES = $(LDADD)
 nbi_surface_SOURCES = nbi-surface.c
 nbi_surface_OBJECTS = nbi-surface.$(OBJEXT)
 nbi_surface_LDADD = $(LDADD)
@@ -156,8 +156,8 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/nbi-assemble-helmholtz.Po \
 	./$(DEPDIR)/nbi-assemble-laplace.Po ./$(DEPDIR)/nbi-process.Po \
-	./$(DEPDIR)/nbi-solve-helmholtz.Po \
-	./$(DEPDIR)/nbi-solve-laplace.Po ./$(DEPDIR)/nbi-surface.Po
+	./$(DEPDIR)/nbi-solve-helmholtz.Po ./$(DEPDIR)/nbi-surface.Po \
+	./$(DEPDIR)/nbi_solve_laplace-nbi-solve-laplace.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -358,6 +358,10 @@ top_srcdir = @top_srcdir@
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir)
 DEPS = $(top_builddir)/src/libnbi.la
 LDADD = $(top_builddir)/src/.libs/libnbi.a
+@PETSC_TRUE@nbi_solve_laplace_CPPFLAGS = \
+@PETSC_TRUE@	${PETSC_CC_INCLUDES} ${PETSC_FLAGS} $(AM_CPPFLAGS)
+
+@PETSC_TRUE@nbi_solve_laplace_LDADD = $(PETSC_LIB) $(LDADD)
 all: all-am
 
 .SUFFIXES:
@@ -475,8 +479,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbi-assemble-laplace.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbi-process.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbi-solve-helmholtz.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbi-solve-laplace.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbi-surface.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbi_solve_laplace-nbi-solve-laplace.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -507,6 +511,20 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+nbi_solve_laplace-nbi-solve-laplace.o: nbi-solve-laplace.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nbi_solve_laplace_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT nbi_solve_laplace-nbi-solve-laplace.o -MD -MP -MF $(DEPDIR)/nbi_solve_laplace-nbi-solve-laplace.Tpo -c -o nbi_solve_laplace-nbi-solve-laplace.o `test -f 'nbi-solve-laplace.c' || echo '$(srcdir)/'`nbi-solve-laplace.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/nbi_solve_laplace-nbi-solve-laplace.Tpo $(DEPDIR)/nbi_solve_laplace-nbi-solve-laplace.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='nbi-solve-laplace.c' object='nbi_solve_laplace-nbi-solve-laplace.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nbi_solve_laplace_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o nbi_solve_laplace-nbi-solve-laplace.o `test -f 'nbi-solve-laplace.c' || echo '$(srcdir)/'`nbi-solve-laplace.c
+
+nbi_solve_laplace-nbi-solve-laplace.obj: nbi-solve-laplace.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nbi_solve_laplace_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT nbi_solve_laplace-nbi-solve-laplace.obj -MD -MP -MF $(DEPDIR)/nbi_solve_laplace-nbi-solve-laplace.Tpo -c -o nbi_solve_laplace-nbi-solve-laplace.obj `if test -f 'nbi-solve-laplace.c'; then $(CYGPATH_W) 'nbi-solve-laplace.c'; else $(CYGPATH_W) '$(srcdir)/nbi-solve-laplace.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/nbi_solve_laplace-nbi-solve-laplace.Tpo $(DEPDIR)/nbi_solve_laplace-nbi-solve-laplace.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='nbi-solve-laplace.c' object='nbi_solve_laplace-nbi-solve-laplace.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nbi_solve_laplace_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o nbi_solve_laplace-nbi-solve-laplace.obj `if test -f 'nbi-solve-laplace.c'; then $(CYGPATH_W) 'nbi-solve-laplace.c'; else $(CYGPATH_W) '$(srcdir)/nbi-solve-laplace.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -645,8 +663,8 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/nbi-assemble-laplace.Po
 	-rm -f ./$(DEPDIR)/nbi-process.Po
 	-rm -f ./$(DEPDIR)/nbi-solve-helmholtz.Po
-	-rm -f ./$(DEPDIR)/nbi-solve-laplace.Po
 	-rm -f ./$(DEPDIR)/nbi-surface.Po
+	-rm -f ./$(DEPDIR)/nbi_solve_laplace-nbi-solve-laplace.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -696,8 +714,8 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/nbi-assemble-laplace.Po
 	-rm -f ./$(DEPDIR)/nbi-process.Po
 	-rm -f ./$(DEPDIR)/nbi-solve-helmholtz.Po
-	-rm -f ./$(DEPDIR)/nbi-solve-laplace.Po
 	-rm -f ./$(DEPDIR)/nbi-surface.Po
+	-rm -f ./$(DEPDIR)/nbi_solve_laplace-nbi-solve-laplace.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -734,6 +752,8 @@ uninstall-am: uninstall-binPROGRAMS
 
 .PRECIOUS: Makefile
 
+
+@PETSC_TRUE@include ${PETSC_DIR}/lib/petsc/conf/variables
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

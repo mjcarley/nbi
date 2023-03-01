@@ -285,6 +285,13 @@ gint nbi_gmres_real(nbi_matrix_t *A,
 		    gdouble tol, gdouble *error,
 		    gint nthreads,
 		    gdouble *work) ;
+gint nbi_gmres_complex(nbi_matrix_t *A, 
+		       gdouble *x, gint xstr,
+		       gdouble *b, gint bstr,
+		       gint m, gint max_it,
+		       gdouble tol, gdouble *error,
+		       gint nthreads,
+		       gdouble *work) ;
 
 gdouble *nbi_data_read(FILE *f, gint *nd, gint *ne) ;
 gint nbi_data_write(FILE *f, gdouble *dat, gint dstr, gint ne, gint nd) ;

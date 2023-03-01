@@ -633,6 +633,8 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+PETSC_FALSE
+PETSC_TRUE
 lapack_libs
 blas_libs
 LAPACK_LIBS
@@ -13223,6 +13225,29 @@ else
   exit
 fi
 
+if test "${PETSC_DIR+set}" = set; then
+
+$as_echo "#define HAVE_PETSC 1" >>confdefs.h
+
+   PETSC=yes
+   echo \#################################################################
+   echo \#
+   echo \# Environment variable PETSC_DIR set: PETSc solvers will be used.
+   echo \#
+   echo \#################################################################
+else
+   PETSC=no
+   echo \#################################################################
+   echo \#
+   echo \# Environment variable PETSC_DIR not set: PETSc solvers will not
+   echo \# be used.
+   echo \#
+   echo \# If PETSc is installed on your system, check that PETSC_DIR
+   echo \# is set correctly and run configure again.
+   echo \#
+   echo \#################################################################
+fi
+
 
 
 
@@ -19433,6 +19458,15 @@ LDFLAGS="$LDFLAGS $glib_libs $wbfmm_libs $sqt_libs $agg_libs"
 
 LIBS="$glib_libs $LAPACK_LIBS $BLAS_LIBS $LIBS $FLIBS"
 
+ if test x$PETSC = xyes; then
+  PETSC_TRUE=
+  PETSC_FALSE='#'
+else
+  PETSC_TRUE='#'
+  PETSC_FALSE=
+fi
+
+
 ac_config_files="$ac_config_files Makefile src/Makefile src/nbi-config tools/Makefile"
 
 
@@ -19574,6 +19608,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${PETSC_TRUE}" && test -z "${PETSC_FALSE}"; then
+  as_fn_error $? "conditional \"PETSC\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 

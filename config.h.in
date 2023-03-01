@@ -50,6 +50,9 @@
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
 
+/* PETSC solvers available */
+#undef HAVE_PETSC
+
 /* singular quadrature library available */
 #undef HAVE_SQT
 

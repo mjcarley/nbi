@@ -24,4 +24,4 @@ echo -- ${opts}
 ##${bin}/nbi-assemble-laplace ${opts} -T ${nthreads}
 ##echo
 ${bin}/nbi-solve-laplace -f -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
-      -G -T ${nthreads} -b psource.bc > sphere-field.dat
+      -L -T ${nthreads} -b psource.bc > sphere-field.dat

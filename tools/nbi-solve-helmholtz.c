@@ -40,6 +40,7 @@ gchar *progname ;
 
 static void print_help_text(FILE *f, gint depth,
 			    gint order_inc, gint order_fmm,
+			    gint gmres_restart,
 			    gint nthreads, gdouble tol)
 
 {
@@ -62,9 +63,10 @@ static void print_help_text(FILE *f, gint depth,
 	  "  -m # matrix file name\n"
 	  "  -o # FMM order (%d)\n"
 	  "  -p precompute local interactions in FMM\n"
+	  "  -r # GMRES restart interval (%d)\n"
 	  "  -T # number of threads (%d)\n"
 	  "  -t # GMRES solution tolerance (%lg)\n",
-	  depth, order_inc, order_fmm, nthreads, tol) ;
+	  depth, order_inc, order_fmm, gmres_restart, nthreads, tol) ;
   return ;
 }
 
@@ -106,24 +108,25 @@ gint main(gint argc, gchar **argv)
   xfield[0] = 3.0 ; xfield[1] = 7.0 ; xfield[2] = 1.0 ;
   
   pwt = 2.0 ; nwt = 2.0 ;
-  /* pwt = 1.0 ; nwt = 1.0 ; */
   progname = g_strdup(g_path_get_basename(argv[0])) ;
 
   order_fmm = 12 ; order_inc = 2 ; depth = 4 ;
 
   solver_work_size = 0 ;
-  gmres_max_iter = 128 ; gmres_restart = 10 ; tol = 1e-9 ;
+  gmres_max_iter = 1 ; gmres_restart = 10 ; tol = 1e-9 ;
     
-  fstr = 3 ;
+  fstr = 4 ;
   while ( (ch = getopt(argc, argv, "hBb:D:d:FfGg:k:Lm:o:pr:T:t:")) != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
     case 'h':
-      print_help_text(stderr, depth, order_inc, order_fmm, nthreads, tol) ;
+      print_help_text(stderr, depth, order_inc, order_fmm, gmres_restart,
+		      nthreads, tol) ;
       return 0 ;
       break ;
     case 'B':
-      fprintf(stderr, "%s: built-in boundary value functions\n\n", progname) ;
+      fprintf(stderr, "%s: built-in boundary condition functions\n\n",
+	      progname) ;
       nbi_functions_list(stderr, TRUE) ;
       return 0 ;
       break ;
@@ -213,7 +216,6 @@ gint main(gint argc, gchar **argv)
   
   fclose(input) ;
   
-  /* make_sources(s, &(src[0]), 4, &(src[2]), 4, bc) ; */
   nbi_boundary_condition_set(s, &(src[0]), 4, &(src[2]), 4, bc) ;
 
   if ( !greens_id && !layer_potentials && !calc_field ) {
@@ -285,6 +287,7 @@ gint main(gint argc, gchar **argv)
     fprintf(stderr, "%s: evaluating Green's identity; t=%lg\n",
 	    progname, t = g_timer_elapsed(timer, NULL)) ;
     f = (gdouble *)g_malloc0(nbi_surface_node_number(s)*fstr*sizeof(gdouble)) ;
+    nwt = 0.0 ;
     nbi_surface_greens_identity_helmholtz(matrix,
 					  &(src[0]), 4, pwt,
 					  &(src[2]), 4, nwt,
@@ -316,20 +319,19 @@ gint main(gint argc, gchar **argv)
 
     return 0 ;
   }
-
-  g_assert_not_reached() ;
   
   if ( layer_potentials ) {
     fprintf(stderr, "%s: evaluating double-layer potential; t=%lg\n",
     	    progname, t = g_timer_elapsed(timer, NULL)) ;
     matrix->potential = NBI_POTENTIAL_DOUBLE ;
-    f = (gdouble *)g_malloc0(nbi_surface_node_number(s)*fstr*sizeof(gdouble)) ;
-    nbi_matrix_multiply(matrix, &(src[0]), 2, 1.0, f, fstr, 0.0, nthreads,
+    f = (gdouble *)g_malloc0(nbi_surface_node_number(s)*fstr*
+			     sizeof(gdouble)) ;
+    nbi_matrix_multiply(matrix, &(src[0]), 4, 1.0, f, fstr, 0.0, nthreads,
 			work) ;
     fprintf(stderr, "%s: evaluating single-layer potential; t=%lg\n",
-    	    progname, t = g_timer_elapsed(timer, NULL)) ;
+	    progname, t = g_timer_elapsed(timer, NULL)) ;
     matrix->potential = NBI_POTENTIAL_SINGLE ;
-    nbi_matrix_multiply(matrix, &(src[1]), 2, -2.0, f, fstr, 2.0, nthreads,
+    nbi_matrix_multiply(matrix, &(src[2]), 4, -2.0, f, fstr, 2.0, nthreads,
 			work) ;
     fprintf(stderr, "%s: surface integration complete; t=%lg (%lg)\n",
 	    progname,
@@ -338,14 +340,19 @@ gint main(gint argc, gchar **argv)
     emax = fmax = e2 = f2 = 0.0 ;
     for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
       xp = (NBI_REAL *)nbi_surface_node(s,i) ;
-      /* G = greens_function_laplace(xp, xs) ; */
-      /* G = src[2*i+0] ; */
-      /* fmax = MAX(fmax, G) ; */
-      /* emax = MAX(emax, fabs(G - f[i*fstr])) ; */
-      /* e2 += (G - f[i*fstr])*(G - f[i*fstr]) ; */
-      /* f2 += G*G ; */
-      /* fprintf(output, "%lg %lg %lg %lg %lg\n", */
-      /* 	      xp[0], xp[1], xp[2], f[i*fstr], fabs(G - f[i*fstr])) ; */
+      G = &(src[4*i+0]) ;
+      fmax = MAX(fmax, sqrt(G[0]*G[0]+G[1]*G[1])) ;
+      emax = MAX(emax,
+		 sqrt((G[0] - f[i*fstr+0])*(G[0] - f[i*fstr+0]) +
+		      (G[1] - f[i*fstr+1])*(G[1] - f[i*fstr+1]))) ;
+      e2 +=
+	(G[0] - f[i*fstr+0])*(G[0] - f[i*fstr+0]) +
+	(G[1] - f[i*fstr+1])*(G[1] - f[i*fstr+1]) ;
+      f2 += G[0]*G[0]+G[1]*G[1] ;
+      fprintf(output, "%lg %lg %lg %lg %lg %lg %lg\n",
+	      xp[0], xp[1], xp[2], f[i*fstr+0], f[i*fstr+1],
+	      fabs(G[0] - f[i*fstr+0]),
+	      fabs(G[1] - f[i*fstr+1])) ;
     }
     
     fprintf(stderr, "L_inf norm: %lg; L_2 norm: %lg\n",
@@ -354,27 +361,63 @@ gint main(gint argc, gchar **argv)
     return 0 ;
   }
 
+  /* g_assert_not_reached() ; */
+  
   /*if we get to here, we're doing a solve*/
   gdouble *rhs, *p, error = 0.0 ;
 
-  rhs = (gdouble *)g_malloc0(nbi_surface_node_number(s)*sizeof(gdouble)) ;
-  p   = (gdouble *)g_malloc0(nbi_surface_node_number(s)*sizeof(gdouble)) ;
+  rhs = (gdouble *)g_malloc0(2*nbi_surface_node_number(s)*sizeof(gdouble)) ;
+  p   = (gdouble *)g_malloc0(2*nbi_surface_node_number(s)*sizeof(gdouble)) ;
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) p[i] = 1.0 ;
   
   /*form right hand side*/
-  matrix->diag = 0.0 ;
-  matrix->potential = NBI_POTENTIAL_SINGLE ;
-  fprintf(stderr, "%s: forming right hand side, t=%lg\n", progname,
-	  t=g_timer_elapsed(timer, NULL)) ;
+  /* matrix->diag = 0.0 ; */
+  /* matrix->potential = NBI_POTENTIAL_SINGLE ; */
+  /* fprintf(stderr, "%s: forming right hand side, t=%lg\n", progname, */
+  /* 	  t=g_timer_elapsed(timer, NULL)) ; */
 
-  nbi_matrix_multiply(matrix, &(src[1]), 2, 1.0, rhs, 1, 0.0, nthreads, work) ;
+  /* nbi_matrix_multiply(matrix, &(src[2]), 4, 1.0, rhs, 2, 0.0, nthreads, work) ; */
+
+  /* /\* for ( i = 0 ; i < 10 ; i ++ ) { *\/ */
+  /* /\*   fprintf(stdout, "%lg %lg\n", rhs[2*i+0], rhs[2*i+1]) ; *\/ */
+  /* /\* } *\/ */
   
-  matrix->diag = -0.5 ;
-  matrix->potential = NBI_POTENTIAL_DOUBLE ;
-  fprintf(stderr, "%s: starting solver\n", progname) ;
+  /* matrix->diag = -0.5 ; */
+  /* matrix->potential = NBI_POTENTIAL_DOUBLE ; */
+  /* fprintf(stderr, "%s: starting solver\n", progname) ; */
+  /* nbi_matrix_multiply(matrix, &(src[0]), 4, 1.0, rhs, 2, 0.0, nthreads, work) ; */
 
-  i = nbi_gmres_real(matrix, p, 1, rhs, 1, gmres_restart, gmres_max_iter, tol,
-		     &error, nthreads, work) ;
+  /* for ( i = 0 ; i < 10 ; i ++ ) { */
+  /*   fprintf(stdout, "%lg %lg\n", rhs[2*i+0], rhs[2*i+1]) ; */
+  /* } */
+
+  /* return 0 ; */
+
+  {
+    gdouble A[64], b[16], xx[16] ;
+
+    A[2*0+0] = 1.0 ; A[2*0+1] = 0.0 ; 
+    A[2*1+0] = 0.0 ; A[2*1+1] = 0.0 ; 
+    A[2*2+0] = 1.0 ; A[2*2+1] = 0.0 ; 
+    A[2*3+0] = 1.0 ; A[2*3+1] = 0.0 ; 
+
+    b[2*0+0] = 1.0 ; b[2*0+1] = 0.0 ; 
+    b[2*1+0] = 1.0 ; b[2*1+1] = 0.0 ; 
+
+    xx[2*0+0] = 1.001 ; xx[2*0+1] = 0.0 ; 
+    xx[2*1+0] = 0.0 ; xx[2*1+1] = 0.0 ; 
+    
+    i = nbi_gmres_complex(A, xx, 2, b, 2, 2, 10, 1e-12, &error, nthreads, work) ;
+
+    for ( i = 0 ; i < 2 ; i ++ ) {
+      fprintf(stdout, "%lg %lg\n", xx[2*i+0], xx[2*i+1]) ;
+    }
+    
+    return 0 ;
+  }
+  
+  i = nbi_gmres_complex(matrix, p, 2, rhs, 2, gmres_restart,
+			gmres_max_iter, tol, &error, nthreads, work) ;
 
   fprintf(stderr, "%s: %d iterations; error = %lg, t=%lg (%lg)\n",
 	  progname, i, error,
@@ -383,10 +426,19 @@ gint main(gint argc, gchar **argv)
 
   emax = fmax = e2 = f2 = 0.0 ;
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
-    emax = MAX(emax,fabs(p[i]-src[2*i])) ;
-    fmax = MAX(fmax, fabs(src[2*i])) ;
-    e2 += (p[i]-src[2*i])*(p[i]-src[2*i]) ;
-    f2 += src[2*i]*src[2*i] ;
+      G = &(src[4*i+0]) ;
+      fmax = MAX(fmax, sqrt(G[0]*G[0]+G[1]*G[1])) ;
+      emax = MAX(emax,
+		 sqrt((G[0] - f[i*fstr+0])*(G[0] - f[i*fstr+0]) +
+		      (G[1] - f[i*fstr+1])*(G[1] - f[i*fstr+1]))) ;
+      e2 +=
+	(G[0] - f[i*fstr+0])*(G[0] - f[i*fstr+0]) +
+	(G[1] - f[i*fstr+1])*(G[1] - f[i*fstr+1]) ;
+      f2 += G[0]*G[0]+G[1]*G[1] ;
+    /* emax = MAX(emax,fabs(p[2*i+]-src[2*i])) ; */
+    /* fmax = MAX(fmax, fabs(src[2*i])) ; */
+    /* e2 += (p[i]-src[2*i])*(p[i]-src[2*i]) ; */
+    /* f2 += src[2*i]*src[2*i] ; */
   }
 
   fprintf(stderr, "%s: emax = %lg; fmax = %lg;\n", progname, emax, fmax) ;

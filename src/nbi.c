@@ -700,6 +700,7 @@ gint NBI_FUNCTION_NAME(nbi_matrix_fmm_init)(nbi_matrix_t *m,
     wbfmm_tree_problem(m->tree) = WBFMM_PROBLEM_HELMHOLTZ ;
     wbfmm_tree_source_size(m->tree) = nqfmm ;
     k = nbi_matrix_wavenumber(m) ;
+    g_assert(k != 0.0) ;
     for ( i = 1 ; i <= depth ; i ++ ) {
       wbfmm_tree_coefficient_init(m->tree, i,
 				  order_r[i*rstr], order_s[i*sstr]) ;
@@ -755,6 +756,13 @@ gint NBI_FUNCTION_NAME(nbi_matrix_multiply)(nbi_matrix_t *A,
 						   y, ystr, bt,
 						   nthreads,
 						   work) ;
+    break ;
+  case NBI_PROBLEM_HELMHOLTZ:
+    NBI_FUNCTION_NAME(nbi_matrix_multiply_helmholtz)(A,
+						     x, xstr, al,
+						     y, ystr, bt,
+						     nthreads,
+						     work) ;
     break ;
   }  
 

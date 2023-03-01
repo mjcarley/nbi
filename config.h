@@ -51,6 +51,9 @@
 /* Define to 1 if you have the <memory.h> header file. */
 #define HAVE_MEMORY_H 1
 
+/* PETSC solvers available */
+#define HAVE_PETSC 1
+
 /* singular quadrature library available */
 #define HAVE_SQT 1
 

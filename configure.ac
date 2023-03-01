@@ -128,6 +128,27 @@ else
   exit
 fi
 
+if test "${PETSC_DIR+set}" = set; then
+   AC_DEFINE(HAVE_PETSC, 1, [PETSC solvers available])
+   PETSC=yes
+   echo \#################################################################
+   echo \#
+   echo \# Environment variable PETSC_DIR set: PETSc solvers will be used.
+   echo \#
+   echo \#################################################################   
+else
+   PETSC=no
+   echo \#################################################################
+   echo \#
+   echo \# Environment variable PETSC_DIR not set: PETSc solvers will not
+   echo \# be used.
+   echo \#
+   echo \# If PETSc is installed on your system, check that PETSC_DIR
+   echo \# is set correctly and run configure again.
+   echo \#
+   echo \#################################################################   
+fi 				    
+
 AM_PATH_GLIB_2_0(2.4.0, has_glib2=yes, has_glib2=no, gthread gmodule)
 if test x$has_glib2 = xyes; then
   glib_cflags=`$PKG_CONFIG glib-2.0 --cflags`
@@ -248,6 +269,8 @@ AC_SUBST(LDFLAGS)
 #AC_SUBST(DX_RULES)
 
 LIBS="$glib_libs $LAPACK_LIBS $BLAS_LIBS $LIBS $FLIBS"
+
+AM_CONDITIONAL(PETSC, test x$PETSC = xyes)
 
 AC_CONFIG_FILES([
 Makefile

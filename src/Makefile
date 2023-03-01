@@ -135,11 +135,11 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(includedir)"
-LTLIBRARIES = $(lib_LTLIBRARIES)
-libnbi_la_LIBADD =
+LTLIBRARIES = $(lib_LTLIBRARIES) $(noinst_LTLIBRARIES)
+libnbi_la_DEPENDENCIES = libsolvers.la
 am_libnbi_la_OBJECTS = nbi.lo geometries.lo laplace.lo helmholtz.lo \
-	solvers.lo tinyexpr.lo expressions.lo agg.lo export.lo \
-	functions.lo assemble.lo
+	tinyexpr.lo expressions.lo agg.lo export.lo functions.lo \
+	assemble.lo
 libnbi_la_OBJECTS = $(am_libnbi_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -148,6 +148,9 @@ am__v_lt_1 =
 libnbi_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libnbi_la_LDFLAGS) $(LDFLAGS) -o $@
+libsolvers_la_LIBADD =
+am_libsolvers_la_OBJECTS = libsolvers_la-solvers.lo
+libsolvers_la_OBJECTS = $(am_libsolvers_la_OBJECTS)
 SCRIPTS = $(bin_SCRIPTS)
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
@@ -168,7 +171,7 @@ am__depfiles_remade = ./$(DEPDIR)/agg.Plo ./$(DEPDIR)/assemble.Plo \
 	./$(DEPDIR)/export.Plo ./$(DEPDIR)/expressions.Plo \
 	./$(DEPDIR)/functions.Plo ./$(DEPDIR)/geometries.Plo \
 	./$(DEPDIR)/helmholtz.Plo ./$(DEPDIR)/laplace.Plo \
-	./$(DEPDIR)/nbi.Plo ./$(DEPDIR)/solvers.Plo \
+	./$(DEPDIR)/libsolvers_la-solvers.Plo ./$(DEPDIR)/nbi.Plo \
 	./$(DEPDIR)/tinyexpr.Plo
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
@@ -189,8 +192,8 @@ AM_V_CCLD = $(am__v_CCLD_$(V))
 am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libnbi_la_SOURCES)
-DIST_SOURCES = $(libnbi_la_SOURCES)
+SOURCES = $(libnbi_la_SOURCES) $(libsolvers_la_SOURCES)
+DIST_SOURCES = $(libnbi_la_SOURCES) $(libsolvers_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -301,7 +304,7 @@ PACKAGE_VERSION = 0.1
 PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 PKG_CONFIG_LIBDIR = 
-PKG_CONFIG_PATH = /home/michael/Codes/lib/pkgconfig:/home/michael/Codes/lib/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/share/pkgconfig:/usr/lib64/pkgconfig:/usr/share/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/share/pkgconfig
+PKG_CONFIG_PATH = /home/michael/Codes/lib/pkgconfig:/home/michael/Codes/lib/pkgconfig:/home/michael/Codes/lib/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/share/pkgconfig:/usr/lib64/pkgconfig:/usr/share/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/share/pkgconfig
 RANLIB = ranlib
 SED = /usr/bin/sed
 SET_MAKE = 
@@ -377,20 +380,23 @@ libnbi_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)\
 libnbi_la_SOURCES = \
 	nbi.c \
 	geometries.c \
-	nbi-private.h \
 	laplace.c \
 	helmholtz.c \
-	solvers.c \
 	tinyexpr.c \
 	expressions.c \
 	agg.c \
 	export.c \
 	functions.c \
-	assemble.c
-
-include_HEADERS = \
-	nbi.h \
+	assemble.c \
+	nbi-private.h \
 	tinyexpr.h
+
+libnbi_la_LIBADD = libsolvers.la
+noinst_LTLIBRARIES = libsolvers.la
+libsolvers_la_SOURCES = solvers.c
+libsolvers_la_CPPFLAGS = ${PETSC_CC_INCLUDES} ${PETSC_FLAGS} $(AM_CPPFLAGS)
+include_HEADERS = \
+	nbi.h
 
 CLEANFILES = $(BUILT_SOURCES)
 all: $(BUILT_SOURCES)
@@ -465,8 +471,22 @@ clean-libLTLIBRARIES:
 	  rm -f $${locs}; \
 	}
 
+clean-noinstLTLIBRARIES:
+	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
+	@list='$(noinst_LTLIBRARIES)'; \
+	locs=`for p in $$list; do echo $$p; done | \
+	      sed 's|^[^/]*$$|.|; s|/[^/]*$$||; s|$$|/so_locations|' | \
+	      sort -u`; \
+	test -z "$$locs" || { \
+	  echo rm -f $${locs}; \
+	  rm -f $${locs}; \
+	}
+
 libnbi.la: $(libnbi_la_OBJECTS) $(libnbi_la_DEPENDENCIES) $(EXTRA_libnbi_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libnbi_la_LINK) -rpath $(libdir) $(libnbi_la_OBJECTS) $(libnbi_la_LIBADD) $(LIBS)
+
+libsolvers.la: $(libsolvers_la_OBJECTS) $(libsolvers_la_DEPENDENCIES) $(EXTRA_libsolvers_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(LINK)  $(libsolvers_la_OBJECTS) $(libsolvers_la_LIBADD) $(LIBS)
 install-binSCRIPTS: $(bin_SCRIPTS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_SCRIPTS)'; test -n "$(bindir)" || list=; \
@@ -517,8 +537,8 @@ include ./$(DEPDIR)/functions.Plo # am--include-marker
 include ./$(DEPDIR)/geometries.Plo # am--include-marker
 include ./$(DEPDIR)/helmholtz.Plo # am--include-marker
 include ./$(DEPDIR)/laplace.Plo # am--include-marker
+include ./$(DEPDIR)/libsolvers_la-solvers.Plo # am--include-marker
 include ./$(DEPDIR)/nbi.Plo # am--include-marker
-include ./$(DEPDIR)/solvers.Plo # am--include-marker
 include ./$(DEPDIR)/tinyexpr.Plo # am--include-marker
 
 $(am__depfiles_remade):
@@ -550,6 +570,13 @@ am--depfiles: $(am__depfiles_remade)
 #	$(AM_V_CC)source='$<' object='$@' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(LTCOMPILE) -c -o $@ $<
+
+libsolvers_la-solvers.lo: solvers.c
+	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsolvers_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libsolvers_la-solvers.lo -MD -MP -MF $(DEPDIR)/libsolvers_la-solvers.Tpo -c -o libsolvers_la-solvers.lo `test -f 'solvers.c' || echo '$(srcdir)/'`solvers.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/libsolvers_la-solvers.Tpo $(DEPDIR)/libsolvers_la-solvers.Plo
+#	$(AM_V_CC)source='solvers.c' object='libsolvers_la-solvers.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsolvers_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libsolvers_la-solvers.lo `test -f 'solvers.c' || echo '$(srcdir)/'`solvers.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -707,7 +734,7 @@ maintainer-clean-generic:
 clean: clean-am
 
 clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
-	mostlyclean-am
+	clean-noinstLTLIBRARIES mostlyclean-am
 
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/agg.Plo
@@ -718,8 +745,8 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/geometries.Plo
 	-rm -f ./$(DEPDIR)/helmholtz.Plo
 	-rm -f ./$(DEPDIR)/laplace.Plo
+	-rm -f ./$(DEPDIR)/libsolvers_la-solvers.Plo
 	-rm -f ./$(DEPDIR)/nbi.Plo
-	-rm -f ./$(DEPDIR)/solvers.Plo
 	-rm -f ./$(DEPDIR)/tinyexpr.Plo
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -774,8 +801,8 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/geometries.Plo
 	-rm -f ./$(DEPDIR)/helmholtz.Plo
 	-rm -f ./$(DEPDIR)/laplace.Plo
+	-rm -f ./$(DEPDIR)/libsolvers_la-solvers.Plo
 	-rm -f ./$(DEPDIR)/nbi.Plo
-	-rm -f ./$(DEPDIR)/solvers.Plo
 	-rm -f ./$(DEPDIR)/tinyexpr.Plo
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
@@ -799,12 +826,13 @@ uninstall-am: uninstall-binSCRIPTS uninstall-includeHEADERS \
 .MAKE: all check install install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--depfiles check check-am clean \
-	clean-generic clean-libLTLIBRARIES clean-libtool cscopelist-am \
-	ctags ctags-am distclean distclean-compile distclean-generic \
-	distclean-libtool distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-binSCRIPTS \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
+	clean-generic clean-libLTLIBRARIES clean-libtool \
+	clean-noinstLTLIBRARIES cscopelist-am ctags ctags-am distclean \
+	distclean-compile distclean-generic distclean-libtool \
+	distclean-tags distdir dvi dvi-am html html-am info info-am \
+	install install-am install-binSCRIPTS install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am \
 	install-includeHEADERS install-info install-info-am \
 	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
 	install-ps install-ps-am install-strip installcheck \
@@ -818,6 +846,7 @@ uninstall-am: uninstall-binSCRIPTS uninstall-includeHEADERS \
 
 
 nbi-config: nbi-config.in
+include ${PETSC_DIR}/lib/petsc/conf/variables
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

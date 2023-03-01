@@ -33,6 +33,10 @@
 #include <config.h>
 #endif /*HAVE_CONFIG_H*/
 
+#ifdef HAVE_PETSC
+#include <petscksp.h>
+#endif
+
 #include "nbi-private.h"
 
 GTimer *timer ;
@@ -118,7 +122,8 @@ gint main(gint argc, gchar **argv)
       return 0 ;
       break ;
     case 'B':
-      fprintf(stderr, "%s: built-in boundary value functions\n\n", progname) ;
+      fprintf(stderr, "%s: built-in boundary condition functions\n\n",
+	      progname) ;
       nbi_functions_list(stderr, TRUE) ;
       return 0 ;
       break ;

@@ -78,6 +78,8 @@
 #define NBI_THREAD_DATA_REAL_PTR_P          0
 #define NBI_THREAD_DATA_REAL_PTR_PN         1
 #define NBI_THREAD_DATA_REAL_PTR_F          2
+#define NBI_THREAD_DATA_REAL_PTR_WT1        3
+#define NBI_THREAD_DATA_REAL_PTR_WT2        4
 
 #define NBI_THREAD_MAIN_DATA_SIZE    5
 #define NBI_THREAD_MAIN_DATA_THREAD  0
@@ -120,6 +122,13 @@
     (NBI_A)[2] = (NBI_B)[2] - (NBI_C)[2] ;		\
   } while (0)
 
+
+#define nbi_scale_complex(_x,_s)				\
+  do {								\
+  NBI_REAL _tmp = ((_x)[0]) ;					\
+  ((_x)[0]) = ((_x)[0])*((_s)[0]) - ((_x)[1])*((_s)[1]) ;	\
+  ((_x)[1]) = ((_x)[1])*((_s)[0]) + (_tmp)*((_s)[1]) ;		\
+  } while (0)
 
 gdouble nbi_function_gfunc_laplace_G(gdouble x, gdouble y, gdouble z) ;
 gdouble nbi_function_gfunc_laplace_dG(gdouble x, gdouble y, gdouble z,

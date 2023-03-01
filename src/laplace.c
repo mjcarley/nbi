@@ -438,7 +438,7 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_laplace)(nbi_matrix_t *m,
 }
 
 static void upsample_sources_single(nbi_surface_t *s,
-				    NBI_REAL *x, gint xstr,
+				    NBI_REAL *pn, gint nstr,
 				    NBI_REAL *wt, gint wstr, gint *idxu,
 				    NBI_REAL *pu, gint pustr, NBI_REAL pwt,
 				    NBI_REAL *pnu, gint nustr, NBI_REAL nwt)
@@ -460,8 +460,10 @@ static void upsample_sources_single(nbi_surface_t *s,
     blaswrap_sgemv(FALSE, nu, ns, al, K, ns,
 		   &(pn[i*pstr]), nstr, bt, &(pnu[j*pustr]), nustr) ;
 #else  /*NBI_SINGLE_PRECISION*/
+    /* blaswrap_dgemv(FALSE, nu, ns, al, K, ns, */
+    /* 		   &(x[i*xstr]), xstr, bt, &(pnu[j*pustr]), nustr) ; */
     blaswrap_dgemv(FALSE, nu, ns, al, K, ns,
-		   &(x[i*xstr]), xstr, bt, &(pnu[j*pustr]), nustr) ;
+		   &(pn[i*nstr]), nstr, bt, &(pnu[j*pustr]), nustr) ;
 #endif /*NBI_SINGLE_PRECISION*/
   }
 
@@ -475,7 +477,7 @@ static void upsample_sources_single(nbi_surface_t *s,
 }
 
 static void upsample_sources_double(nbi_surface_t *s,
-				    NBI_REAL *x, gint xstr,
+				    NBI_REAL *p, gint pstr,
 				    NBI_REAL *wt, gint wstr, gint *idxu,
 				    NBI_REAL *pu, gint pustr, NBI_REAL pwt,
 				    NBI_REAL *pnu, gint nustr, NBI_REAL nwt)
@@ -497,8 +499,10 @@ static void upsample_sources_double(nbi_surface_t *s,
     blaswrap_sgemv(FALSE, nu, ns, al, K, ns,
     		   &(x[i*xstr]), xstr, bt, &(pu[j*pustr]), pustr) ;
 #else  /*NBI_SINGLE_PRECISION*/
+    /* blaswrap_dgemv(FALSE, nu, ns, al, K, ns, */
+    /* 		   &(x[i*xstr]), xstr, bt, &(pu[j*pustr]), pustr) ; */
     blaswrap_dgemv(FALSE, nu, ns, al, K, ns,
-    		   &(x[i*xstr]), xstr, bt, &(pu[j*pustr]), pustr) ;
+    		   &(p[i*pstr]), pstr, bt, &(pu[j*pustr]), pustr) ;
 #endif /*NBI_SINGLE_PRECISION*/
   }
 
