@@ -37,6 +37,11 @@
 
 #include <wbfmm.h>
 
+#define NBI_SOLVER_DATA_SIZE     8
+#define NBI_SOLVER_DATA_MATRIX   0
+#define NBI_SOLVER_DATA_WORK     1
+#define NBI_SOLVER_DATA_NTHREADS 2
+
 typedef enum
   {
    NBI_PROBLEM_UNDEFINED = 0,
@@ -102,8 +107,8 @@ typedef struct _nbi_matrix_t nbi_matrix_t ;
 struct _nbi_matrix_t {
   nbi_surface_t *s ;
   gsize fpsize ; /*< floating point data size */
-  gdouble diag ; /*< in multiplications add diag*I */
-  gdouble pdata[NBI_PROBLEM_DATA_SIZE] ; /*< problem specific data */
+  gdouble diag, /*< in multiplications add diag*I */
+    pdata[NBI_PROBLEM_DATA_SIZE] ; /*< problem specific data */
   nbi_problem_t problem ;
   nbi_potential_t potential ;
   gint
@@ -124,6 +129,7 @@ struct _nbi_matrix_t {
   *targets ;  /*< FMM target data if applicable */
   wbfmm_shift_operators_t
   *shifts ;   /*< FMM shift operators if applicable */
+  gdouble *test ; /*used for testing solvers (and only for that)*/
 } ;
 
 #define nbi_matrix_wavenumber(_m) ((_m)->pdata[NBI_PROBLEM_DATA_WAVENUMBER])

@@ -403,6 +403,8 @@ nbi_matrix_t *NBI_FUNCTION_NAME(nbi_matrix_new)(nbi_surface_t *s)
   m->tree    = NULL ;
   m->targets = NULL ;
   m->shifts  = NULL ;
+
+  m->test = NULL ;
   
   return m ;
 }

@@ -16,9 +16,11 @@ bin_PROGRAMS = \
 
 if PETSC
 include ${PETSC_DIR}/lib/petsc/conf/variables
-nbi_solve_laplace_CPPFLAGS = \
-	${PETSC_CC_INCLUDES} ${PETSC_FLAGS} $(AM_CPPFLAGS)
-nbi_solve_laplace_LDADD = $(PETSC_LIB) $(LDADD)
+AM_CPPFLAGS += ${PETSC_CC_INCLUDES} ${PETSC_FLAGS}
+LDADD += $(PETSC_LIB)
+##nbi_solve_laplace_CPPFLAGS = \
+##	${PETSC_CC_INCLUDES} ${PETSC_FLAGS} $(AM_CPPFLAGS)
+##nbi_solve_laplace_LDADD =  $(LDADD) $(PETSC_LIB)
 ##nbi_solve_helmholtz_CPPFLAGS = \
 ##	${PETSC_CC_INCLUDES} ${PETSC_FLAGS} $(AM_CPPFLAGS)
 endif

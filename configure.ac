@@ -146,6 +146,13 @@ else
    echo \# If PETSc is installed on your system, check that PETSC_DIR
    echo \# is set correctly and run configure again.
    echo \#
+   echo \# If PETSc is not installed, you will not be able to solve
+   echo \# problems, though there is still support for other features.
+   echo \#
+   echo \# You can install PETSc by downloading it from here:
+   echo \#
+   echo \# https://petsc.org/
+   echo \#
    echo \#################################################################   
 fi 				    
 
