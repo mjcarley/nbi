@@ -119,7 +119,7 @@ gint main(gint argc, gchar **argv)
   
   timer = g_timer_new() ;
   
-  fprintf(stderr, "%s: reading geometry; t=%lg\n",
+  fprintf(stderr, "%s: reading geometry [%lg]\n",
 	  progname, g_timer_elapsed(timer, NULL)) ;
   if ( gfile != NULL ) {
     input = fopen(gfile, "r") ;
@@ -134,12 +134,12 @@ gint main(gint argc, gchar **argv)
 
   if ( gfile != NULL ) fclose(input) ;
 
-  fprintf(stderr, "%s: starting matrix assembly; t=%lg\n",
+  fprintf(stderr, "%s: starting matrix assembly [%lg]\n",
 	  progname, t = g_timer_elapsed(timer, NULL)) ;
 
   m = nbi_matrix_assemble_laplace(s, eta, nqa, dmax, tol, N, nqu, nnmax,
 					  nthreads) ;
-  fprintf(stderr, "%s: matrix assembly complete; t=%lg\n",
+  fprintf(stderr, "%s: matrix assembly complete [%lg]\n",
 	  progname, t = g_timer_elapsed(timer, NULL)) ;
 
   

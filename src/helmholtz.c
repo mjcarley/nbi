@@ -803,6 +803,13 @@ gint NBI_FUNCTION_NAME(nbi_matrix_multiply_helmholtz)(nbi_matrix_t *A,
 
   g_assert(A->problem == NBI_PROBLEM_HELMHOLTZ) ;
 
+  if ( xstr < 2 )
+    g_error("%s: xstr (%d) too small for complex variables",
+	    __FUNCTION__, xstr) ;
+  if ( ystr < 2 )
+    g_error("%s: ystr (%d) too small for complex variables",
+	    __FUNCTION__, ystr) ;
+  
   diag = ((NBI_REAL)(A->diag))*al ;
   
 #ifdef NBI_SINGLE_PRECISION

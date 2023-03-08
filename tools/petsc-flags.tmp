@@ -1,0 +1,5 @@
+make[3]: Entering directory '/home/michael/Codes/Libraries/nbi/tools'
+PETSC_CC_INCLUDES="-I/home/michael/Codes/External/petsc/include -I/home/michael/Codes/External/petsc/linux-gnu-real/include"
+PETSC_FLAGS=""
+PETSC_LIB="-Wl,-rpath,/home/michael/Codes/External/petsc/linux-gnu-real/lib -L/home/michael/Codes/External/petsc/linux-gnu-real/lib -Wl,-rpath,/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -lpetsc -llapack -lblas -lpthread -lm -lX11 -lstdc++ -ldl -lgfortran -lm -lgfortran -lm -lgcc_s -lquadmath -lstdc++ -ldl"
+make[3]: Leaving directory '/home/michael/Codes/Libraries/nbi/tools'

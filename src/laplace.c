@@ -760,6 +760,11 @@ gint NBI_FUNCTION_NAME(nbi_matrix_multiply_laplace)(nbi_matrix_t *A,
   
   g_assert(A->problem == NBI_PROBLEM_LAPLACE) ;
 
+  if ( xstr < 1 )
+    g_error("%s: xstr (%d) too small", __FUNCTION__, xstr) ;
+  if ( ystr < 1 )
+    g_error("%s: ystr (%d) too small", __FUNCTION__, ystr) ;
+  
   diag = (NBI_REAL)(A->diag)*al ;
 
 #ifdef NBI_SINGLE_PRECISION

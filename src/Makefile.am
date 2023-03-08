@@ -23,22 +23,11 @@ libnbi_la_SOURCES = \
 	export.c \
 	functions.c \
 	assemble.c \
+	solvers.c \
 	nbi-private.h \
 	tinyexpr.h
 
-## only want PETSc flags to affect code which uses PETSc
-## (confined to solvers.c)
-libnbi_la_LIBADD = libsolvers.la
-noinst_LTLIBRARIES = libsolvers.la
-libsolvers_la_SOURCES = solvers.c
-if PETSC
-include ${PETSC_DIR}/lib/petsc/conf/variables
-libsolvers_la_CPPFLAGS = ${PETSC_CC_INCLUDES} ${PETSC_FLAGS} $(AM_CPPFLAGS)
-endif
-
 include_HEADERS = \
 	nbi.h
-
-##	tinyexpr.h
 
 CLEANFILES = $(BUILT_SOURCES)

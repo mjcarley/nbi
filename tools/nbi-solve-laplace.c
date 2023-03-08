@@ -39,20 +39,15 @@
 #include <petscksp.h>
 #include <petscoptions.h>
 
-PetscErrorCode nbi_petsc_MatMult(Mat mat, Vec x, Vec y) ;
-PetscErrorCode nbi_petsc_MatGetDiagonal(Mat mat, Vec v) ;
-PetscErrorCode nbi_petsc_MatSetValues(Mat mat, gint ni, gint *i,
-				      gint nj, gint *j, gdouble *value,
-				      guint insert) ;
+PetscErrorCode nbi_petsc_MatMult_real(Mat mat, Vec x, Vec y) ;
 
-PetscErrorCode my_monitor(KSP ksp, PetscInt i, PetscReal ee, void *)
+/* PetscErrorCode my_monitor(KSP ksp, PetscInt i, PetscReal ee, void *) */
 
-{
-  fprintf(stdout, "iter %d: err: %lg\n", i, ee) ;
+/* { */
+/*   fprintf(stdout, "iter %d: err: %lg\n", i, ee) ; */
   
-  return 0 ;
-}
-
+/*   return 0 ; */
+/* } */
 
 #endif
 
@@ -97,16 +92,28 @@ gint main(gint argc, gchar **argv)
   nbi_surface_t *s ;
   nbi_matrix_t *matrix ;
   nbi_boundary_condition_t *bc ;
-  gdouble *f, *xp, *src, t, emax, fmax, e2, f2, G, dtree, pwt, nwt ;
+  gdouble *f, *xp, *src, *p, *rhs, t, emax, fmax, e2, f2, G, dtree, pwt, nwt ;
+  gdouble error ;
   FILE *output, *input ;
-  gchar ch, *gfile, *mfile, *bfile ;
+  gchar ch, *gfile, *mfile, *bfile, *sfile, *kspfile ;
   gdouble *work, tol ;
   gint fmm_work_size, nqfmm, order_fmm, order_inc, i, fstr, solver_work_size ;
   gint gmres_max_iter, gmres_restart ;
   gint nthreads, nproc ;
   guint depth, order[48] = {0}, order_s, order_r, order_max ;
   gboolean fmm, shift_bw, greens_id, layer_potentials, precompute_local ;
-
+  gboolean petsc_solve ;
+#ifdef HAVE_PETSC
+  Vec         b, sol ; /*RHS, solution*/
+  Mat         A ;        /*linear system matrix*/
+  KSP         ksp ;      /*linear solver context*/
+  PC          pc ;       /*preconditioner context*/
+  PetscInt    n ;
+  PetscMPIInt size ;
+  gpointer petsc_ctx[NBI_SOLVER_DATA_SIZE] ;
+  gchar *help = "" ;
+#endif /*HAVE_PETSC*/
+  
   nthreads = 1 ;
 
 #ifdef _OPENMP
@@ -117,11 +124,12 @@ gint main(gint argc, gchar **argv)
 #endif /*_OPENMP*/
   
   output = stdout ;
-  mfile = NULL ; gfile = NULL ; bfile = NULL ;
+  mfile = NULL ; gfile = NULL ; bfile = NULL ; sfile = NULL ;
+  kspfile = NULL ;
   
   dtree = 1e-2 ; fmm = FALSE ; nqfmm = 1 ; shift_bw = TRUE ;
   greens_id = FALSE ; layer_potentials = FALSE ;
-  precompute_local = FALSE ;
+  precompute_local = FALSE ; petsc_solve = FALSE ;
   
   pwt = 2.0 ; nwt = 2.0 ;
   /* pwt = 1.0 ; nwt = 1.0 ; */
@@ -133,7 +141,7 @@ gint main(gint argc, gchar **argv)
   gmres_max_iter = 128 ; gmres_restart = 10 ; tol = 1e-9 ;
     
   fstr = 3 ;
-  while ( (ch = getopt(argc, argv, "hBb:D:d:fGg:Lm:o:pr:T:t:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "hBb:D:d:fGg:K:Lm:o:Ppr:s:T:t:")) != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
     case 'h':
@@ -152,11 +160,22 @@ gint main(gint argc, gchar **argv)
     case 'f': fmm = TRUE ; break ;
     case 'G': greens_id = TRUE ; break ;
     case 'g': gfile = g_strdup(optarg) ; break ;
+    case 'K': kspfile = g_strdup(optarg) ; break ;
     case 'L': layer_potentials = TRUE ; break ;
     case 'm': mfile = g_strdup(optarg) ; break ;
     case 'o': order_fmm = atoi(optarg) ; break ;
+    case 'P':
+#ifdef HAVE_PETSC
+      petsc_solve = TRUE ; break ;
+#else /*HAVE_PETSC*/
+      fprintf(stderr,
+	      "%s: PETSc solvers not supported, using built-in solver\n",
+	      progname) ;
+      break ;
+#endif /*HAVE_PETSC*/
     case 'p': precompute_local = TRUE ; break ;
     case 'r': gmres_restart = atoi(optarg) ; break ;
+    case 's': sfile = g_strdup(optarg) ; break ;
     case 'T': nthreads = atoi(optarg) ; break ;
     case 't': tol = atof(optarg) ; break ;
     }
@@ -196,12 +215,12 @@ gint main(gint argc, gchar **argv)
   timer = g_timer_new() ;
 
   fprintf(stderr,
-	  "%s: geometry initialized, %d nodes, %d patches; t=%lg\n",
+	  "%s: geometry initialized, %d nodes, %d patches [%lg]\n",
 	  progname, nbi_surface_node_number(s), nbi_surface_patch_number(s),
 	  g_timer_elapsed(timer, NULL)) ;
 
   /*boundary point sources*/
-  fprintf(stderr, "%s: setting boundary conditions; t=%lg\n",
+  fprintf(stderr, "%s: setting boundary conditions [%lg]\n",
 	  progname, g_timer_elapsed(timer, NULL)) ;
   src = (gdouble *)g_malloc0(nbi_surface_node_number(s)*2*sizeof(gdouble)) ;
 
@@ -227,11 +246,11 @@ gint main(gint argc, gchar **argv)
   
   if ( !greens_id && !layer_potentials ) {
     /*solver settings for GMRES*/
-    i = nbi_surface_node_number(s) ;
-        
-    solver_work_size = 2*i + 4*gmres_restart +
-      (gmres_restart+1)*(i+gmres_restart) + 2 ;
-    solver_work_size *= 2 ;
+    solver_work_size =
+      nbi_gmres_workspace_size_real(nbi_surface_node_number(s),
+				    gmres_restart) ;
+    fprintf(stderr, "%s: allocating %d elements to solver work space\n",
+	    progname, solver_work_size) ;
   }
   
   if ( fmm ) {
@@ -250,15 +269,14 @@ gint main(gint argc, gchar **argv)
     fmm_work_size = MAX((guint)fmm_work_size,
 			(order_max+1)*(order_max+1)*nqfmm*16) ;
     
-    fmm_work_size += solver_work_size ;
-
     fprintf(stderr, "%s: allocating %d elements to FMM work space\n",
 	    progname, fmm_work_size) ;
+    fmm_work_size += solver_work_size ;
     
     work = (gdouble *)g_malloc0(fmm_work_size*sizeof(gdouble)) ;
     wbfmm_laplace_coaxial_translate_init(order_max+1) ;    
 
-    fprintf(stderr, "%s: building tree; t=%lg\n",
+    fprintf(stderr, "%s: building tree [%lg]\n",
 	    progname, t = g_timer_elapsed(timer, NULL)) ;
     wbfmm_shift_angle_table_init() ;
 
@@ -266,7 +284,7 @@ gint main(gint argc, gchar **argv)
 			NULL, &(order[0]), 2, &(order[1]), 2,
 			depth, dtree, shift_bw, precompute_local,
 			work) ;    
-    fprintf(stderr, "%s: FMM matrix initialized; t=%lg\n",
+    fprintf(stderr, "%s: FMM matrix initialized [%lg]\n",
 	    progname, t = g_timer_elapsed(timer, NULL)) ;
   } else {
     fmm_work_size = 16384 ;
@@ -276,14 +294,14 @@ gint main(gint argc, gchar **argv)
   }
   
   if ( greens_id ) {
-    fprintf(stderr, "%s: evaluating Green's identity; t=%lg\n",
+    fprintf(stderr, "%s: evaluating Green's identity [%lg]\n",
 	    progname, t = g_timer_elapsed(timer, NULL)) ;
     f = (gdouble *)g_malloc0(nbi_surface_node_number(s)*fstr*sizeof(gdouble)) ;
     nbi_surface_greens_identity_laplace(matrix,
 					&(src[0]), 2, pwt,
 					&(src[1]), 2, nwt,
 					f, fstr, nthreads, work) ;
-    fprintf(stderr, "%s: surface integration complete; t=%lg (%lg)\n",
+    fprintf(stderr, "%s: surface integration complete [%lg] (%lg)\n",
 	    progname,
 	    g_timer_elapsed(timer, NULL), g_timer_elapsed(timer, NULL) - t) ;
     
@@ -307,18 +325,18 @@ gint main(gint argc, gchar **argv)
   }
 
   if ( layer_potentials ) {
-    fprintf(stderr, "%s: evaluating double-layer potential; t=%lg\n",
+    fprintf(stderr, "%s: evaluating double-layer potential [%lg]\n",
     	    progname, t = g_timer_elapsed(timer, NULL)) ;
     matrix->potential = NBI_POTENTIAL_DOUBLE ;
     f = (gdouble *)g_malloc0(nbi_surface_node_number(s)*fstr*sizeof(gdouble)) ;
     nbi_matrix_multiply(matrix, &(src[0]), 2, 1.0, f, fstr, 0.0, nthreads,
 			work) ;
-    fprintf(stderr, "%s: evaluating single-layer potential; t=%lg\n",
+    fprintf(stderr, "%s: evaluating single-layer potential [%lg]\n",
     	    progname, t = g_timer_elapsed(timer, NULL)) ;
     matrix->potential = NBI_POTENTIAL_SINGLE ;
     nbi_matrix_multiply(matrix, &(src[1]), 2, -2.0, f, fstr, 2.0, nthreads,
 			work) ;
-    fprintf(stderr, "%s: surface integration complete; t=%lg (%lg)\n",
+    fprintf(stderr, "%s: surface integration complete [%lg] (%lg)\n",
 	    progname,
 	    g_timer_elapsed(timer, NULL), g_timer_elapsed(timer, NULL) - t) ;
     
@@ -342,42 +360,28 @@ gint main(gint argc, gchar **argv)
   }
 
 #ifdef HAVE_PETSC
+  if ( petsc_solve ) {
   /*if we get to here, we're doing a solve: set up PETSc*/
-  Vec         x, b, u, rhs, sol ; /* approx solution, RHS, exact solution */
-  Mat         A ;       /* linear system matrix */
-  KSP         ksp ;     /* linear solver context */
-  PC          pc ;      /* preconditioner context */
-  PetscReal   norm ;    /* norm of solution error */
-  PetscInt    n = 10 ;
-  PetscMPIInt size ;
-  PetscScalar value[3] ;
-  gpointer petsc_ctx[NBI_SOLVER_DATA_SIZE] ;
-  gdouble *buf ;
-  gchar *help = "" ;
-  FILE *fid ;
+  /*check that we are linking to the real version of PETSc*/
+  g_assert(sizeof(PetscScalar) == sizeof(PetscReal)) ;
   
   PetscFunctionBeginUser;
   i = 0 ;
-  PetscCall(PetscInitialize(&i, &argv, "options", help));
+  if ( kspfile != NULL )
+    PetscCall(PetscInitialize(&i, &argv, kspfile, help));
+  else
+    PetscCall(PetscInitialize(&i, &argv, (gchar *)0, help));
+
   PetscCallMPI(MPI_Comm_size(PETSC_COMM_WORLD, &size));
   PetscCheck(size == 1, PETSC_COMM_WORLD, PETSC_ERR_WRONG_MPI_SIZE,
-	     "This is a uniprocessor example only!");
+	     "%s: single processor only", progname);
 
-  /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-         Compute the matrix and right-hand-side vector that define
-         the linear system, Ax = b.
-     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-  /*
-     Create vectors.  Note that we form 1 vector from scratch and
-     then duplicate as needed.
-  */
   n = nbi_surface_node_number(s) ;
-  PetscCall(VecCreate(PETSC_COMM_SELF, &rhs));
-  PetscCall(PetscObjectSetName((PetscObject)rhs, "rhs"));
-  PetscCall(VecSetSizes(rhs, PETSC_DECIDE, n));
-  PetscCall(VecSetFromOptions(rhs));
-  PetscCall(VecDuplicate(rhs, &sol));
+  PetscCall(VecCreate(PETSC_COMM_SELF, &b));
+  PetscCall(PetscObjectSetName((PetscObject)b, "rhs"));
+  PetscCall(VecSetSizes(b, PETSC_DECIDE, n));
+  PetscCall(VecSetFromOptions(b));
+  PetscCall(VecDuplicate(b, &sol));
   PetscCall(PetscObjectSetName((PetscObject)sol, "solution"));
 
   petsc_ctx[NBI_SOLVER_DATA_MATRIX]   =  matrix ;
@@ -385,10 +389,8 @@ gint main(gint argc, gchar **argv)
   petsc_ctx[NBI_SOLVER_DATA_NTHREADS] = &nthreads ;
   
   PetscCall(MatCreateShell(PETSC_COMM_SELF, n, n, n, n, &petsc_ctx, &A)) ;
-  PetscCall(MatShellSetOperation(A, MATOP_MULT, (void *)nbi_petsc_MatMult)) ;
-  PetscCall(MatShellSetOperation(A, MATOP_SET_VALUES,
-				 (void *)nbi_petsc_MatSetValues)) ;
-
+  PetscCall(MatShellSetOperation(A, MATOP_MULT,
+				 (void *)nbi_petsc_MatMult_real)) ;
   PetscCall(MatSetFromOptions(A));
   PetscCall(MatSetUp(A));
 
@@ -399,11 +401,11 @@ gint main(gint argc, gchar **argv)
   /*set right hand side*/
   matrix->diag = 0.0 ;
   matrix->potential = NBI_POTENTIAL_SINGLE ;
-  fprintf(stderr, "%s: forming right hand side, t=%lg\n", progname,
+  fprintf(stderr, "%s: forming right hand side [%lg]\n", progname,
 	  t=g_timer_elapsed(timer, NULL)) ;
-  PetscCall(VecGetArrayRead(rhs, &buf)) ;
+  PetscCall(VecGetArrayRead(b, (const PetscScalar **)(&p))) ;
 
-  nbi_matrix_multiply(matrix, &(src[1]), 2, 1.0, buf, 1, 0.0, nthreads, work) ;
+  nbi_matrix_multiply(matrix, &(src[1]), 2, 1.0, p, 1, 0.0, nthreads, work) ;
 
   matrix->diag = -0.5 ;
   matrix->potential = NBI_POTENTIAL_DOUBLE ;
@@ -416,64 +418,60 @@ gint main(gint argc, gchar **argv)
   PetscCall(KSPGetPC(ksp, &pc));
   PetscCall(PCSetType(pc, PCNONE)) ;
   PetscCall(KSPSetTolerances(ksp, tol, PETSC_DEFAULT, PETSC_DEFAULT,
-			     PETSC_DEFAULT));
+			     gmres_max_iter));
 
   PetscCall(KSPSetFromOptions(ksp));
-  PetscCall(KSPSolve(ksp, rhs, sol));
+  PetscCall(KSPSolve(ksp, b, sol));
 
-  PetscCall(VecGetArrayRead(sol, &buf)) ;
+  PetscCall(VecGetArrayRead(sol, (const PetscScalar **)(&p))) ;
 
   PetscCall(KSPGetIterationNumber(ksp, &i)) ;
-  fprintf(stderr, "%s: %d iterations; t=%lg (%lg)\n",
+  fprintf(stderr, "%s: %d iterations [%lg] (%lg)\n",
 	  progname, i,
 	  g_timer_elapsed(timer, NULL),
 	  g_timer_elapsed(timer, NULL) - t) ;
-  PetscCall(VecDestroy(&rhs));
-  PetscCall(VecDestroy(&sol));
-  PetscCall(MatDestroy(&A));
-  PetscCall(KSPDestroy(&ksp));
-
-  PetscCall(PetscFinalize());
-#else
-  gdouble *rhs, *p, error = 0.0 ;
-
-  fprintf(stderr,
-	  "%s: compiled without PETSc, using internal GMRES solver\n\n"
-	  "  If you want solver support, recompile NBI with PETSc\n"
-	  "  available from https://petsc.org/\n\n",
-	  progname) ;
+  }
+#endif /*HAVE_PETSC*/
   
-  rhs = (gdouble *)g_malloc0(nbi_surface_node_number(s)*sizeof(gdouble)) ;
-  p   = (gdouble *)g_malloc0(nbi_surface_node_number(s)*sizeof(gdouble)) ;
-  for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) p[i] = 1.0 ;
-  
-  /*form right hand side*/
-  matrix->diag = 0.0 ;
-  matrix->potential = NBI_POTENTIAL_SINGLE ;
-  fprintf(stderr, "%s: forming right hand side, t=%lg\n", progname,
-	  t=g_timer_elapsed(timer, NULL)) ;
+  /* fprintf(stderr, */
+  /* 	  "%s: compiled without PETSc, using internal GMRES solver\n\n" */
+  /* 	  "  If you want solver support, recompile NBI with PETSc\n" */
+  /* 	  "  available from https://petsc.org/\n\n", */
+  /* 	  progname) ; */
 
-  nbi_matrix_multiply(matrix, &(src[1]), 2, 1.0, rhs, 1, 0.0, nthreads, work) ;
-  
-  matrix->diag = -0.5 ;
-  matrix->potential = NBI_POTENTIAL_DOUBLE ;
-  fprintf(stderr, "%s: starting solver\n", progname) ;
-
-  i = nbi_gmres_real(matrix, p, 1, rhs, 1, gmres_restart, gmres_max_iter, tol,
-		     &error, nthreads, work) ;
-
-  fprintf(stderr, "%s: %d iterations; error = %lg, t=%lg (%lg)\n",
-	  progname, i, error,
-	  g_timer_elapsed(timer, NULL),
-	  g_timer_elapsed(timer, NULL) - t) ;
-  buf = p ;
-#endif
+  if ( !petsc_solve ) {
+    rhs = (gdouble *)g_malloc0(nbi_surface_node_number(s)*sizeof(gdouble)) ;
+    p   = (gdouble *)g_malloc0(nbi_surface_node_number(s)*sizeof(gdouble)) ;
+    for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) p[i] = 1.0 ;
+    
+    /*form right hand side*/
+    matrix->diag = 0.0 ;
+    matrix->potential = NBI_POTENTIAL_SINGLE ;
+    fprintf(stderr, "%s: forming right hand side [%lg]\n", progname,
+	    t=g_timer_elapsed(timer, NULL)) ;
+    
+    nbi_matrix_multiply(matrix, &(src[1]), 2, 1.0, rhs, 1, 0.0, nthreads,
+			work) ;
+    
+    matrix->diag = -0.5 ;
+    matrix->potential = NBI_POTENTIAL_DOUBLE ;
+    fprintf(stderr, "%s: starting built-in solver\n", progname) ;
+    
+    i = nbi_gmres_real(matrix, nbi_surface_node_number(matrix->s),
+		       p, 1, rhs, 1, gmres_restart, gmres_max_iter, tol,
+		       &error, nthreads, work) ;
+    
+    fprintf(stderr, "%s: %d iterations; error = %lg, [%lg] (%lg)\n",
+	    progname, i, error,
+	    g_timer_elapsed(timer, NULL),
+	    g_timer_elapsed(timer, NULL) - t) ;
+  }
   
   emax = fmax = e2 = f2 = 0.0 ;
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
-    emax = MAX(emax,fabs(buf[i]-src[2*i])) ;
+    emax = MAX(emax,fabs(p[i]-src[2*i])) ;
     fmax = MAX(fmax, fabs(src[2*i])) ;
-    e2 += (buf[i]-src[2*i])*(buf[i]-src[2*i]) ;
+    e2 += (p[i]-src[2*i])*(p[i]-src[2*i]) ;
     f2 += src[2*i]*src[2*i] ;
   }
 
@@ -481,7 +479,29 @@ gint main(gint argc, gchar **argv)
   fprintf(stderr, "%s: L_inf norm = %lg; L_2 norm = %lg\n",
 	  progname, emax/fmax, sqrt(e2/f2)) ;
 
-  nbi_data_write(stdout, buf, 1, 1, nbi_surface_node_number(s)) ;
+  if ( sfile != NULL ) {
+    output = fopen(sfile, "w")  ;
+    if ( output == NULL ) {
+      fprintf(stderr,
+	      "%s: cannot open output file %s; writing to stdout;\n",
+	      progname, sfile) ;
+      output = stdout ;
+    }
+  }
+  
+  nbi_data_write(output, p, 1, 1, nbi_surface_node_number(s)) ;
 
+  if ( output != stdout ) fclose(output) ;
+
+#ifdef HAVE_PETSC
+  if ( petsc_solve ) {
+    PetscCall(VecDestroy(&b)) ;
+    PetscCall(VecDestroy(&sol)) ;
+    PetscCall(MatDestroy(&A)) ;
+    PetscCall(KSPDestroy(&ksp)) ;
+    PetscCall(PetscFinalize()) ;
+  }
+#endif /*HAVE_PETSC*/
+  
   return 0 ;
 }

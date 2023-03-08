@@ -1,8 +1,9 @@
-nbi-solve-laplace.o: nbi-solve-laplace.c /usr/include/stdc-predef.h \
- /usr/include/stdio.h /usr/include/bits/libc-header-start.h \
- /usr/include/features.h /usr/include/sys/cdefs.h \
- /usr/include/bits/wordsize.h /usr/include/bits/long-double.h \
- /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
+nbi_solve_helmholtz-nbi-solve-helmholtz.o: nbi-solve-helmholtz.c \
+ /usr/include/stdc-predef.h /usr/include/stdio.h \
+ /usr/include/bits/libc-header-start.h /usr/include/features.h \
+ /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
+ /usr/include/bits/long-double.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-64.h \
  /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/stddef.h \
  /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/stdarg.h \
  /usr/include/bits/types.h /usr/include/bits/timesize.h \
@@ -135,8 +136,8 @@ nbi-solve-laplace.o: nbi-solve-laplace.c /usr/include/stdc-predef.h \
  /usr/include/bits/types/struct___jmp_buf_tag.h \
  /usr/include/glib-2.0/glib/glib-autocleanups.h ../src/nbi.h \
  /home/michael/Codes/include/wbfmm.h /home/michael/Codes/include/sqt.h \
- /home/michael/Codes/include/blaswrap.h ../config.h \
- /home/michael/Codes/include/petscksp.h \
+ /home/michael/Codes/include/blaswrap.h ../config.h /usr/include/fenv.h \
+ /usr/include/bits/fenv.h /home/michael/Codes/include/petscksp.h \
  /home/michael/Codes/include/petscpc.h \
  /home/michael/Codes/include/petscmat.h \
  /home/michael/Codes/include/petscvec.h \
@@ -381,6 +382,8 @@ nbi-solve-laplace.o: nbi-solve-laplace.c /usr/include/stdc-predef.h \
 /home/michael/Codes/include/sqt.h:
 /home/michael/Codes/include/blaswrap.h:
 ../config.h:
+/usr/include/fenv.h:
+/usr/include/bits/fenv.h:
 /home/michael/Codes/include/petscksp.h:
 /home/michael/Codes/include/petscpc.h:
 /home/michael/Codes/include/petscmat.h:

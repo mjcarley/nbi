@@ -1,4 +1,4 @@
-nbi-solve-laplace.o: nbi-solve-laplace.c /usr/include/stdc-predef.h \
+petsc-helmholtz.o: petsc-helmholtz.c /usr/include/stdc-predef.h \
  /usr/include/stdio.h /usr/include/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/bits/long-double.h \
@@ -172,7 +172,7 @@ nbi-solve-laplace.o: nbi-solve-laplace.c /usr/include/stdc-predef.h \
  /home/michael/Codes/include/petscdrawtypes.h \
  /home/michael/Codes/include/petscmatcoarsen.h \
  /home/michael/Codes/include/petscdmtypes.h \
- /home/michael/Codes/include/petscpctypes.h ../src/nbi-private.h
+ /home/michael/Codes/include/petscpctypes.h
 /usr/include/stdc-predef.h:
 /usr/include/stdio.h:
 /usr/include/bits/libc-header-start.h:
@@ -421,4 +421,3 @@ nbi-solve-laplace.o: nbi-solve-laplace.c /usr/include/stdc-predef.h \
 /home/michael/Codes/include/petscmatcoarsen.h:
 /home/michael/Codes/include/petscdmtypes.h:
 /home/michael/Codes/include/petscpctypes.h:
-../src/nbi-private.h:

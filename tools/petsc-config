@@ -1,0 +1,24 @@
+#!/bin/bash
+
+flag=$1
+#scalar=$2
+#arch=$3
+
+if ( test "$flag" = "include" ) ; then
+    callflag=PETSC_CC_INCLUDES
+fi
+
+if ( test "$flag" = "lib" ) ; then
+    callflag=PETSC_LIB
+fi
+
+if ( test "$flag" = "flag" ) ; then
+    callflag=PETSC_FLAGS
+fi
+
+make -f petsc-makefile 2>/dev/null > petsc-flags.tmp
+sed -e 's/\"//g' \
+    -e s/PETSC_CC_INCLUDES/PETSC_CC_INCLUDES/ \
+    -e s/PETSC_FLAGS/PETSC_FLAGS/ \
+    -e s/PETSC_LIB/PETSC_LIB/ \
+    petsc-flags.tmp | grep ${callflag} | sed s/${callflag}=// 

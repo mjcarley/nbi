@@ -14,6 +14,13 @@ https://github.com/mjcarley/blaswrap
 https://github.com/mjcarley/sqt
 https://github.com/mjcarley/wbfmm
 
+You should also install PETSc if you want to solve any scattering
+problems:
+
+https://petsc.org/
+
+and make sure the appropriate environment variables are set.
+
 * Installation
 
 If you have downloaded the source from github or equivalent, you will

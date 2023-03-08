@@ -1,13 +1,13 @@
 #!/bin/bash
 
 nqa=25
-nqp=25
-nqu=54
+nqp=7
+nqu=25
 tol=1e-6
-eta=1.25
+eta=1.5
 depth=3
 order=8
-nthreads=0
+nthreads=2
 
 bin=../tools
 
@@ -23,5 +23,6 @@ echo -- ${opts}
 ##echo
 ##${bin}/nbi-assemble-laplace ${opts} -T ${nthreads}
 ##echo
-${bin}/nbi-solve-laplace -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
-      -f -T ${nthreads} -b psource.bc > sphere-field.dat
+${bin}/nbi-solve-laplace -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t ${tol} \
+      -f -T ${nthreads}  -P -K ksp-options \
+      -b psource.bc -s sphere-field.dat

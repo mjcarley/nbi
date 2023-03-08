@@ -6,7 +6,7 @@ function f=datread(file)
   fscanf(fid, "%c", 40) ;
   dat = fscanf(fid, "%d", 2) ;
   ## number of data entries per node, number of nodes
-  ndat = 1 ; nnodes = dat(2) ;
+  ndat = dat(1) ; nnodes = dat(2) ;
 
   f = fscanf(fid, "%f", ndat*nnodes) ;
 

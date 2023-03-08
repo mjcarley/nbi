@@ -1,8 +1,9 @@
-nbi-solve-laplace.o: nbi-solve-laplace.c /usr/include/stdc-predef.h \
- /usr/include/stdio.h /usr/include/bits/libc-header-start.h \
- /usr/include/features.h /usr/include/sys/cdefs.h \
- /usr/include/bits/wordsize.h /usr/include/bits/long-double.h \
- /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
+nbi_solve_laplace-petsc-laplace.o: petsc-laplace.c \
+ /usr/include/stdc-predef.h /usr/include/stdio.h \
+ /usr/include/bits/libc-header-start.h /usr/include/features.h \
+ /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
+ /usr/include/bits/long-double.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-64.h \
  /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/stddef.h \
  /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/stdarg.h \
  /usr/include/bits/types.h /usr/include/bits/timesize.h \
@@ -172,7 +173,7 @@ nbi-solve-laplace.o: nbi-solve-laplace.c /usr/include/stdc-predef.h \
  /home/michael/Codes/include/petscdrawtypes.h \
  /home/michael/Codes/include/petscmatcoarsen.h \
  /home/michael/Codes/include/petscdmtypes.h \
- /home/michael/Codes/include/petscpctypes.h ../src/nbi-private.h
+ /home/michael/Codes/include/petscpctypes.h
 /usr/include/stdc-predef.h:
 /usr/include/stdio.h:
 /usr/include/bits/libc-header-start.h:
@@ -421,4 +422,3 @@ nbi-solve-laplace.o: nbi-solve-laplace.c /usr/include/stdc-predef.h \
 /home/michael/Codes/include/petscmatcoarsen.h:
 /home/michael/Codes/include/petscdmtypes.h:
 /home/michael/Codes/include/petscpctypes.h:
-../src/nbi-private.h:

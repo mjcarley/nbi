@@ -161,7 +161,7 @@ gint main(gint argc, gchar **argv)
   
   fprintf(stderr, "%d nodes, %d elements generated\n", ni, ne) ;
 
-  nbi_mesh_export_gmsh(output, xi, xistr, ni, tri, tstr, ne, fi, 1) ;
+  nbi_mesh_export_gmsh(output, xi, xistr, ni, tri, tstr, ne, fi, fistr) ;
 
   return 0 ;
 }

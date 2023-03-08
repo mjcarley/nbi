@@ -135,44 +135,7 @@ solvers.lo: solvers.c /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/bits/types/struct___jmp_buf_tag.h \
  /usr/include/glib-2.0/glib/glib-autocleanups.h \
  /home/michael/Codes/include/sqt.h /home/michael/Codes/include/blaswrap.h \
- nbi.h /home/michael/Codes/include/wbfmm.h ../config.h \
- /home/michael/Codes/External/petsc/include/petscksp.h \
- /home/michael/Codes/External/petsc/include/petscpc.h \
- /home/michael/Codes/External/petsc/include/petscmat.h \
- /home/michael/Codes/External/petsc/include/petscvec.h \
- /home/michael/Codes/External/petsc/include/petscsys.h \
- /home/michael/Codes/External/petsc/arch-linux-c-debug/include/petscconf.h \
- /home/michael/Codes/External/petsc/arch-linux-c-debug/include/petscconf_poison.h \
- /home/michael/Codes/External/petsc/arch-linux-c-debug/include/petscfix.h \
- /home/michael/Codes/External/petsc/include/petscmacros.h \
- /home/michael/Codes/External/petsc/include/petscversion.h \
- /home/michael/Codes/External/petsc/include/petscsystypes.h \
- /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/stdint.h \
- /usr/include/stdint.h /usr/include/bits/wchar.h \
- /usr/include/bits/stdint-uintn.h /usr/include/inttypes.h \
- /usr/include/complex.h /usr/include/bits/mathdef.h \
- /usr/include/bits/cmathcalls.h \
- /home/michael/Codes/External/petsc/include/petsc/mpiuni/mpi.h \
- /home/michael/Codes/External/petsc/include/petscmath.h \
- /home/michael/Codes/External/petsc/include/petscerror.h \
- /home/michael/Codes/External/petsc/include/petscviewertypes.h \
- /home/michael/Codes/External/petsc/include/petscoptions.h \
- /home/michael/Codes/External/petsc/include/petsclog.h \
- /home/michael/Codes/External/petsc/include/petsctime.h \
- /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/xmmintrin.h \
- /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/mmintrin.h \
- /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/mm_malloc.h \
- /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/emmintrin.h \
- /home/michael/Codes/External/petsc/include/petscsftypes.h \
- /home/michael/Codes/External/petsc/include/petscis.h \
- /home/michael/Codes/External/petsc/include/petscsectiontypes.h \
- /home/michael/Codes/External/petsc/include/petscistypes.h \
- /home/michael/Codes/External/petsc/include/petscdevicetypes.h \
- /home/michael/Codes/External/petsc/include/petscviewer.h \
- /home/michael/Codes/External/petsc/include/petscdrawtypes.h \
- /home/michael/Codes/External/petsc/include/petscmatcoarsen.h \
- /home/michael/Codes/External/petsc/include/petscdmtypes.h \
- /home/michael/Codes/External/petsc/include/petscpctypes.h nbi-private.h
+ nbi.h /home/michael/Codes/include/wbfmm.h ../config.h nbi-private.h
 /usr/include/stdc-predef.h:
 /usr/include/stdio.h:
 /usr/include/bits/libc-header-start.h:
@@ -381,44 +344,4 @@ solvers.lo: solvers.c /usr/include/stdc-predef.h /usr/include/stdio.h \
 nbi.h:
 /home/michael/Codes/include/wbfmm.h:
 ../config.h:
-/home/michael/Codes/External/petsc/include/petscksp.h:
-/home/michael/Codes/External/petsc/include/petscpc.h:
-/home/michael/Codes/External/petsc/include/petscmat.h:
-/home/michael/Codes/External/petsc/include/petscvec.h:
-/home/michael/Codes/External/petsc/include/petscsys.h:
-/home/michael/Codes/External/petsc/arch-linux-c-debug/include/petscconf.h:
-/home/michael/Codes/External/petsc/arch-linux-c-debug/include/petscconf_poison.h:
-/home/michael/Codes/External/petsc/arch-linux-c-debug/include/petscfix.h:
-/home/michael/Codes/External/petsc/include/petscmacros.h:
-/home/michael/Codes/External/petsc/include/petscversion.h:
-/home/michael/Codes/External/petsc/include/petscsystypes.h:
-/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/stdint.h:
-/usr/include/stdint.h:
-/usr/include/bits/wchar.h:
-/usr/include/bits/stdint-uintn.h:
-/usr/include/inttypes.h:
-/usr/include/complex.h:
-/usr/include/bits/mathdef.h:
-/usr/include/bits/cmathcalls.h:
-/home/michael/Codes/External/petsc/include/petsc/mpiuni/mpi.h:
-/home/michael/Codes/External/petsc/include/petscmath.h:
-/home/michael/Codes/External/petsc/include/petscerror.h:
-/home/michael/Codes/External/petsc/include/petscviewertypes.h:
-/home/michael/Codes/External/petsc/include/petscoptions.h:
-/home/michael/Codes/External/petsc/include/petsclog.h:
-/home/michael/Codes/External/petsc/include/petsctime.h:
-/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/xmmintrin.h:
-/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/mmintrin.h:
-/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/mm_malloc.h:
-/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/emmintrin.h:
-/home/michael/Codes/External/petsc/include/petscsftypes.h:
-/home/michael/Codes/External/petsc/include/petscis.h:
-/home/michael/Codes/External/petsc/include/petscsectiontypes.h:
-/home/michael/Codes/External/petsc/include/petscistypes.h:
-/home/michael/Codes/External/petsc/include/petscdevicetypes.h:
-/home/michael/Codes/External/petsc/include/petscviewer.h:
-/home/michael/Codes/External/petsc/include/petscdrawtypes.h:
-/home/michael/Codes/External/petsc/include/petscmatcoarsen.h:
-/home/michael/Codes/External/petsc/include/petscdmtypes.h:
-/home/michael/Codes/External/petsc/include/petscpctypes.h:
 nbi-private.h:

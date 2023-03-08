@@ -133,9 +133,10 @@ if test "${PETSC_DIR+set}" = set; then
    PETSC=yes
    echo \#################################################################
    echo \#
-   echo \# Environment variable PETSC_DIR set: PETSc solvers will be used.
+   echo \# Environment variable PETSC_DIR=${PETSC_DIR}
+   echo \#   PETSc solvers will be used.
    echo \#
-   echo \#################################################################   
+   echo \#################################################################
 else
    PETSC=no
    echo \#################################################################
@@ -153,7 +154,7 @@ else
    echo \#
    echo \# https://petsc.org/
    echo \#
-   echo \#################################################################   
+   echo \#################################################################
 fi 				    
 
 AM_PATH_GLIB_2_0(2.4.0, has_glib2=yes, has_glib2=no, gthread gmodule)
@@ -266,14 +267,16 @@ lapack_libs="$LAPACK_LIBS"
 ##DX_PS_FEATURE(OFF)
 #DX_INIT_DOXYGEN(nbi, doc/nbi.dxy)
 
-CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $glib_cflags $wbfmm_cflags $sqt_cflags $agg_cflags $blaswrap_cflags"
+CPPFLAGS="$glib_cflags $wbfmm_cflags $sqt_cflags $agg_cflags $blaswrap_cflags"
+CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS"
 LDFLAGS="$LDFLAGS $glib_libs $wbfmm_libs $sqt_libs $agg_libs"
 
 AC_SUBST(blas_libs)
 AC_SUBST(lapack_libs)
+AC_SUBST(petsc_real)
+AC_SUBST(CPPFLAGS)
 AC_SUBST(CFLAGS)
 AC_SUBST(LDFLAGS)
-#AC_SUBST(DX_RULES)
 
 LIBS="$glib_libs $LAPACK_LIBS $BLAS_LIBS $LIBS $FLIBS"
 
