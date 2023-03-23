@@ -287,9 +287,9 @@ static void local_matrix_correction(nbi_matrix_t *m,
 				    NBI_REAL *p, gint pstr, NBI_REAL pwt,
 				    NBI_REAL *pn, gint nstr, NBI_REAL nwt,
 				    gint pt0, gint pt1,
-				    NBI_REAL *f, gint fstr,
+				    /* NBI_REAL *f, gint fstr, */
 				    NBI_REAL *al, NBI_REAL *bt,
-				    NBI_REAL *work)
+				    NBI_REAL *buf, NBI_REAL *work)
 
 {
   gint nsts, ip, *nbrs, nnbrs, lda, i, one = 1, pt, *idx, *idxp, str ;
@@ -325,10 +325,9 @@ static void local_matrix_correction(nbi_matrix_t *m,
     blaswrap_zgemv(FALSE, nnbrs, nsts, Al, &(Ast[0*nsts]), lda,
 		   &(pn[ip*nstr]), str, Bt, work, one) ;
 #endif /*NBI_SINGLE_PRECISION*/    
-    
     for ( i = 0 ; i < nnbrs ; i ++ ) {
-      f[fstr*nbrs[i]+0] += work[2*i+0] ;
-      f[fstr*nbrs[i]+1] += work[2*i+1] ;
+      buf[2*nbrs[i]+0] += work[2*i+0] ;
+      buf[2*nbrs[i]+1] += work[2*i+1] ;
     }
   }
 
@@ -343,6 +342,7 @@ static gpointer local_correction_thread(gpointer tdata)
   gint nth = GPOINTER_TO_INT(mdata[NBI_THREAD_MAIN_DATA_NTHREAD]) ;
   gpointer *data = mdata[NBI_THREAD_MAIN_DATA_DATA] ;
   NBI_REAL *work = mdata[NBI_THREAD_MAIN_DATA_WORK] ;
+  NBI_REAL *buf = mdata[NBI_THREAD_MAIN_DATA_BUFFER] ;
   nbi_matrix_t *m = data[NBI_THREAD_DATA_MATRIX  ] ;
   gint *idata = data[NBI_THREAD_DATA_INT] ;
   NBI_REAL *ddata = data[NBI_THREAD_DATA_REAL] ;
@@ -374,7 +374,7 @@ static gpointer local_correction_thread(gpointer tdata)
   bt = dpdata[NBI_THREAD_DATA_REAL_PTR_WT2] ;
 
   local_matrix_correction(m, p, pstr, pwt, pn, nstr, nwt,
-			  pt0, pt1, f, fstr, al, bt, work) ;  
+			  pt0, pt1, /* f, fstr, */ al, bt, buf, work) ;  
   
   return NULL ;
 }
@@ -392,8 +392,8 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_helmholtz)(nbi_matrix_t *m,
 							      NBI_REAL *work)
 
 {
-  gint i, nnmax, nth ;
-  NBI_REAL al[] = {1, 0}, bt[] = {0, 0} ;
+  gint i, nnmax, nth, npts ;
+  NBI_REAL al[] = {1, 0}, bt[] = {0, 0}, *buffer ;
 
   /*f is complex*/
   g_assert(fstr >= 2) ;
@@ -408,6 +408,7 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_helmholtz)(nbi_matrix_t *m,
   point_source_summation(m, f, fstr, al, bt, work, nth) ;
   
   nnmax = nbi_matrix_neighbour_number_max(m) ;
+  npts = nbi_surface_node_number(m->s) ;
 
   /*local corrections*/
 #ifdef _OPENMP
@@ -419,6 +420,8 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_helmholtz)(nbi_matrix_t *m,
     GThread *threads[NBI_THREAD_NUMBER_MAX] ;
     gpointer data[NBI_THREAD_DATA_SIZE],
       main_data[NBI_THREAD_NUMBER_MAX*NBI_THREAD_MAIN_DATA_SIZE] ;
+
+    buffer = &(work[nth*2*nnmax]) ;
 
     dpdata[NBI_THREAD_DATA_REAL_PTR_P ] = p  ;
     dpdata[NBI_THREAD_DATA_REAL_PTR_PN] = pn ;
@@ -448,6 +451,9 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_helmholtz)(nbi_matrix_t *m,
       main_data[NBI_THREAD_MAIN_DATA_SIZE*i+NBI_THREAD_MAIN_DATA_NTHREAD] =
 	GINT_TO_POINTER(nth) ;
       
+      main_data[NBI_THREAD_MAIN_DATA_SIZE*i+NBI_THREAD_MAIN_DATA_BUFFER] =
+	&(buffer[i*2*npts]) ;
+
       threads[i] = g_thread_new(NULL, local_correction_thread,
 				&(main_data[NBI_THREAD_MAIN_DATA_SIZE*i])) ;
     }
@@ -455,15 +461,17 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_helmholtz)(nbi_matrix_t *m,
     /*make sure all threads complete before we move on*/
     for ( i = 0 ; i < nth ; i ++ ) g_thread_join(threads[i]) ;
   } else {
+    buffer = &(work[2*nnmax]) ;
     local_matrix_correction(m, p, pstr, pwt, pn, nstr, nwt,
-			    0, nbi_surface_patch_number(m->s), f, fstr,
-			    al, bt, work) ;
+			    0, nbi_surface_patch_number(m->s), /* f, fstr, */
+			    al, bt, buffer, work) ;
   }
   
 #else /*_OPENMP*/
+  buffer = &(work[2*nnmax]) ;
   local_matrix_correction(m, p, pstr, pwt, pn, nstr, nwt,
 			  0, nbi_surface_patch_number(m->s),
-			  f, fstr, al, bt, work) ;
+			  /* f, fstr,*/ al, bt, buffer, work) ;
 #endif /*_OPENMP*/
   
   return 0 ;
@@ -573,6 +581,8 @@ static void local_matrix_multiply(nbi_matrix_t *m, NBI_REAL *p, gint pstr,
   /*loop on patches treated as sources*/
   nsts = nbi_surface_patch_node_number(m->s, 0) ;
   lda = 2*nsts ;
+
+  /* gint mon = 97 ; */
   
   for ( pt = pt0 ; pt < pt1 ; pt ++ ) {
     ip = nbi_surface_patch_node(m->s, pt) ;
@@ -594,6 +604,10 @@ static void local_matrix_multiply(nbi_matrix_t *m, NBI_REAL *p, gint pstr,
     for ( i = 0 ; i < nnbrs ; i ++ ) {
       f[fstr*nbrs[i]+0] += work[2*i+0] ;
       f[fstr*nbrs[i]+1] += work[2*i+1] ;
+      /* if ( nbrs[i] == mon ) { */
+      /* 	fprintf(stderr, "%d: %lg %lg\n", */
+      /* 		pt0, f[fstr*nbrs[i]+0], f[fstr*nbrs[i]+1]) ; */
+      /* } */
     }
   }
 
@@ -620,9 +634,7 @@ static gpointer matrix_multiply_thread(gpointer tdata)
   pt0 = th*(np/nth) ;
   pt1 = (th+1)*(np/nth) ;
 
-  if ( th == nth - 1 ) {
-    if ( pt1 < np ) pt1 = np ;
-  }
+  if ( th == nth - 1 ) { pt1 = np ; }
 
   p = dpdata[NBI_THREAD_DATA_REAL_PTR_P] ;
   f = dpdata[NBI_THREAD_DATA_REAL_PTR_F] ;  
@@ -644,8 +656,9 @@ static void local_matrix_multiply_thread(nbi_matrix_t *m,
 					 NBI_REAL *f, gint fstr,
 					 gint nthreads)
 {
-  gint nth, i, nnmax, idata[NBI_THREAD_DATA_INT_SIZE] ;
+  gint nth, i, nnmax, idata[NBI_THREAD_DATA_INT_SIZE], npts, i2 = 2 ;
   NBI_REAL
+    *buffer, d1 = 1,
     ddata[NBI_THREAD_DATA_REAL_SIZE],
     *dpdata[NBI_THREAD_DATA_REAL_PTR_SIZE] ;
   GThread *threads[NBI_THREAD_NUMBER_MAX] ;
@@ -653,6 +666,7 @@ static void local_matrix_multiply_thread(nbi_matrix_t *m,
     main_data[NBI_THREAD_NUMBER_MAX*NBI_THREAD_MAIN_DATA_SIZE] ;
 
   nnmax = nbi_matrix_neighbour_number_max(m) ;
+  npts = nbi_surface_node_number(m->s) ;
   
   if ( nthreads < 0 ) nth = g_get_num_processors() ; else nth = nthreads ;
 
@@ -670,6 +684,7 @@ static void local_matrix_multiply_thread(nbi_matrix_t *m,
   data[NBI_THREAD_DATA_REAL] = ddata ;
   data[NBI_THREAD_DATA_REAL_POINTER] = dpdata ;
 
+  buffer = &(work[nth*2*nnmax]) ;
   for ( i = 0 ; i < nth ; i ++ ) {
     main_data[NBI_THREAD_MAIN_DATA_SIZE*i+NBI_THREAD_MAIN_DATA_THREAD] =
       GINT_TO_POINTER(i) ;
@@ -679,12 +694,23 @@ static void local_matrix_multiply_thread(nbi_matrix_t *m,
       &(work[i*2*nnmax]) ;
     main_data[NBI_THREAD_MAIN_DATA_SIZE*i+NBI_THREAD_MAIN_DATA_NTHREAD] =
       GINT_TO_POINTER(nth) ;
+    main_data[NBI_THREAD_MAIN_DATA_SIZE*i+NBI_THREAD_MAIN_DATA_BUFFER] =
+      &(buffer[i*2*npts]) ;
+  }
 
+  memset(buffer, 0, nth*2*npts*sizeof(NBI_REAL)) ;
+  
+  for ( i = 0 ; i < nth ; i ++ ) {
     threads[i] = g_thread_new(NULL, matrix_multiply_thread,
 			      &(main_data[NBI_THREAD_MAIN_DATA_SIZE*i])) ;    
   }
 
   for ( i = 0 ; i < nth ; i ++ ) g_thread_join(threads[i]) ;
+
+  for ( i = 0 ; i < nth ; i ++ ) {
+    blaswrap_daxpy(npts, d1, &(buffer[i*2*npts+0]), i2, &(f[0]), fstr) ;
+    blaswrap_daxpy(npts, d1, &(buffer[i*2*npts+1]), i2, &(f[1]), fstr) ;
+  }
   
   return ;
 }
@@ -764,7 +790,7 @@ static void matrix_multiply_double(nbi_matrix_t *m,
   /*point source approximation (FMM handled internally)*/
   bt[0] = 1 ; bt[1] = 0 ;
   point_source_summation(m, f, fstr, al, bt, work, nth) ;
-
+  
   /*local corrections*/
   nsts = nbi_surface_patch_node_number(s, 0) ;
   bt[0] = 0.0 ; bt[1] = 0.0 ;
@@ -825,6 +851,7 @@ gint NBI_FUNCTION_NAME(nbi_matrix_multiply_helmholtz)(nbi_matrix_t *A,
 #endif /*NBI_SINGLE_PRECISION*/
 
   Al[0] = al ; Al[1] = 0.0 ;
+  /* gint mon = 97 ; */
   switch ( A->potential ) {
   default:
   case NBI_POTENTIAL_UNDEFINED:
@@ -832,11 +859,15 @@ gint NBI_FUNCTION_NAME(nbi_matrix_multiply_helmholtz)(nbi_matrix_t *A,
   	    __FUNCTION__) ;
     break ;
   case NBI_POTENTIAL_SINGLE:
+    /* fprintf(stderr, "single: %lg ", y[mon]) ; */
     matrix_multiply_single(A, x, xstr, Al, y, ystr, nthreads, work) ;
+    /* fprintf(stderr, "%lg\n", y[mon]) ; */
     return 0 ;
     break ;
   case NBI_POTENTIAL_DOUBLE:
+    /* fprintf(stderr, "double: %lg ", y[mon]) ; */
     matrix_multiply_double(A, x, xstr, Al, y, ystr, nthreads, work) ;
+    /* fprintf(stderr, "%lg\n", y[mon]) ; */
     return 0 ;
     break ;
   }

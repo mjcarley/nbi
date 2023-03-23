@@ -1,0 +1,28 @@
+#!/bin/bash
+
+nqa=7
+nqp=25
+nqu=54
+tol=1e-6
+eta=1.25
+depth=5
+order=8
+nthreads=3
+k=1.9
+
+bin=../tools
+
+gfile=Geometries/fuselage-${nqp}.dat
+mfile=Matrices/matrix-fuselage-helmholtz-${nqp}-${nqu}-${order}-${depth}.dat
+
+opts="-e ${tol} -a ${nqa} -u ${nqu} \
+      -n ${eta} -d ${depth} -N ${order} \
+      -m ${mfile} -g ${gfile} -k ${k}"
+echo -- ${opts}
+
+##${bin}/nbi-surface -q ${nqp} -a fuselage.agg -o ${gfile}
+
+${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
+
+${bin}/nbi-solve-helmholtz -T ${nthreads} -f -m ${mfile} -g ${gfile} \
+      -D 5 -o 10 -d 2 -k ${k} -b fcsource.bc -t 1e-9 -s fuselage.dat

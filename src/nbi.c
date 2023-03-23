@@ -795,7 +795,7 @@ gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *bc)
   while ( nc != -1 ) {
     nc = getline(&line, &n, f) ;
     if ( nc > 0 ) {
-      fprintf(stderr, "%s\n", line) ;
+      fprintf(stderr, "%s", line) ;
       nbi_boundary_condition_add(bc, line) ;
     }
   }

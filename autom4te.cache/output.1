@@ -13234,7 +13234,7 @@ $as_echo "@%:@define HAVE_PETSC 1" >>confdefs.h
    echo \#################################################################
    echo \#
    echo \# Environment variable PETSC_DIR=${PETSC_DIR}
-   echo \#   PETSc solvers will be used.
+   echo \#   PETSc solvers will be available
    echo \#
    echo \#################################################################
 else
@@ -13242,13 +13242,13 @@ else
    echo \#################################################################
    echo \#
    echo \# Environment variable PETSC_DIR not set: PETSc solvers will not
-   echo \# be used.
+   echo \# be available
    echo \#
    echo \# If PETSc is installed on your system, check that PETSC_DIR
    echo \# is set correctly and run configure again.
    echo \#
-   echo \# If PETSc is not installed, you will not be able to solve
-   echo \# problems, though there is still support for other features.
+   echo \# If PETSc is not installed, you will not be limited to the built-in
+   echo \# GMRES solver
    echo \#
    echo \# You can install PETSc by downloading it from here:
    echo \#

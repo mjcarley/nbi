@@ -92,7 +92,7 @@ gint main(gint argc, gchar **argv)
   gdouble *work, tol, k, hyp, h1, h2, error ;
   gint fmm_work_size, nqfmm, order_fmm, order_inc, i, fstr, solver_work_size ;
   gint gmres_max_iter, gmres_restart ;
-  gint nthreads, nproc ;
+  gint nthreads, nproc, nnmax, matrix_work_size ;
   guint depth, order[48] = {0}, order_s, order_r, order_max ;
   gboolean fmm, shift_bw, greens_id, layer_potentials, precompute_local ;
   gboolean calc_field ;
@@ -135,7 +135,7 @@ gint main(gint argc, gchar **argv)
 
   order_fmm = 12 ; order_inc = 2 ; depth = 4 ;
 
-  solver_work_size = 0 ;
+  solver_work_size = matrix_work_size = 0 ;
   gmres_max_iter = 1 ; gmres_restart = 10 ; tol = 1e-9 ;
     
   fstr = 4 ;
@@ -221,6 +221,14 @@ gint main(gint argc, gchar **argv)
   
   fclose(input) ;
 
+  /*need the maximum number of neighbours to size the workspaces*/
+  nnmax = nbi_matrix_neighbour_number_max(matrix) ;
+  matrix_work_size = 2*nnmax ;
+  /*buffers to accumulate result during threaded matrix multiplication*/
+  matrix_work_size += 2*nbi_surface_node_number(s) ;
+  if ( nthreads > 1 ) matrix_work_size *= nthreads ;
+  if ( nthreads < 0 ) matrix_work_size *= nproc ;
+  
   timer = g_timer_new() ;
 
   fprintf(stderr,
@@ -277,7 +285,10 @@ gint main(gint argc, gchar **argv)
     fmm_work_size = MAX((guint)fmm_work_size,
 			(order_max+1)*(order_max+1)*nqfmm*16) ;
     
-    fmm_work_size += solver_work_size ;
+    if ( nthreads > 1 ) fmm_work_size *= nthreads ;
+    if ( nthreads < 0 ) fmm_work_size *= nproc ;
+
+    fmm_work_size += solver_work_size + matrix_work_size ;
 
     fprintf(stderr, "%s: allocating %d elements to FMM work space\n",
 	    progname, fmm_work_size) ;
@@ -296,7 +307,7 @@ gint main(gint argc, gchar **argv)
 	    progname, t = g_timer_elapsed(timer, NULL)) ;
   } else {
     fmm_work_size = 16384 ;
-    fmm_work_size += solver_work_size ;
+    fmm_work_size += solver_work_size + matrix_work_size ;
     
     work = (gdouble *)g_malloc0(fmm_work_size*sizeof(gdouble)) ;    
   }
@@ -320,7 +331,7 @@ gint main(gint argc, gchar **argv)
     fprintf(stderr, "%s: evaluating Green's identity [%lg]\n",
 	    progname, t = g_timer_elapsed(timer, NULL)) ;
     f = (gdouble *)g_malloc0(nbi_surface_node_number(s)*fstr*sizeof(gdouble)) ;
-    nwt = 0.0 ;
+    /* nwt = 1.0 ; */
     nbi_surface_greens_identity_helmholtz(matrix,
 					  &(src[0]), 4, pwt,
 					  &(src[2]), 4, nwt,
@@ -330,6 +341,16 @@ gint main(gint argc, gchar **argv)
 	    g_timer_elapsed(timer, NULL), g_timer_elapsed(timer, NULL) - t) ;
     
     emax = fmax = e2 = f2 = 0.0 ;
+    if ( sfile != NULL ) {
+      output = fopen(sfile, "w")  ;
+      if ( output == NULL ) {
+	fprintf(stderr,
+		"%s: cannot open output file %s; writing to stdout;\n",
+		progname, sfile) ;
+	output = stdout ;
+      }
+    }
+    
     for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
       xp = (NBI_REAL *)nbi_surface_node(s,i) ;
       G = &(src[4*i+0]) ;
@@ -347,6 +368,8 @@ gint main(gint argc, gchar **argv)
 	      fabs(G[1] - f[i*fstr+1])) ;
     }
     
+    if ( output != stdout ) fclose(output) ;
+  
     fprintf(stderr, "L_inf norm: %lg; L_2 norm: %lg\n",
 	    emax/fmax, sqrt(e2/f2)) ;
 
@@ -444,7 +467,7 @@ gint main(gint argc, gchar **argv)
     /*set right hand side*/
     matrix->diag = 0.0 ;
     matrix->potential = NBI_POTENTIAL_SINGLE ;
-    fprintf(stderr, "%s: forming right hand side, [%lg]\n", progname,
+    fprintf(stderr, "%s: forming right hand side [%lg]\n", progname,
 	    t=g_timer_elapsed(timer, NULL)) ;
     PetscCall(VecGetArrayRead(b, (const PetscScalar **)(&p))) ;
 
@@ -469,9 +492,6 @@ gint main(gint argc, gchar **argv)
 
     PetscCall(VecGetArrayRead(sol, (const PetscScalar **)(&p))) ;
 
-  /*   p = (gdouble *)g_malloc0(psize*sizeof(gdouble)) ; */
-  /* memcpy(p, buf, psize*sizeof(gdouble)) ; */
-  
     PetscCall(KSPGetIterationNumber(ksp, &i)) ;
     fprintf(stderr, "%s: %d iterations [%lg] (%lg)\n",
 	    progname, i,
@@ -490,10 +510,8 @@ gint main(gint argc, gchar **argv)
     fprintf(stderr, "%s: forming right hand side, [%lg]\n", progname,
 	    t=g_timer_elapsed(timer, NULL)) ;
     
-    /* fprintf(stderr, "%lg %lg %lg %lg\n", src[0], src[1], src[2], src[3]) ; */
     nbi_matrix_multiply(matrix, &(src[2]), 4, 1.0, rhs, 2, 0.0, nthreads,
 			work) ;
-    /* fprintf(stderr, "%lg %lg %lg %lg\n", src[0], src[1], src[2], src[3]) ; */
     
     matrix->diag = -0.5 ;
     matrix->potential = NBI_POTENTIAL_DOUBLE ;

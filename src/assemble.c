@@ -85,7 +85,6 @@ static void correct_matrix_helmholtz(gdouble k,
   gint lda = 4*np, i, j, one = 1, two = 2 ;
   gdouble R, R2, *xf, *xup, r[3], al, C, S, w, G[2], dG[2], rn ;
 
-  /* g_assert_not_reached() ; /\*not a Helmholtz correction yet*\/ */
   for ( i = 0 ; i < nnbrs ; i ++ ) {
     /*field point for correction*/
     xf = &(x[nbrs[i]*xstr]) ;
@@ -135,8 +134,6 @@ static void local_correction_matrices_helmholtz(nbi_matrix_t *m,
   gint *nbrs, ip, xstr, nnbrs, lda, *idxu, *idx, *idxp ;
   gdouble *xs, *Ku, *Ast, *xu ;
   nbi_surface_t *s = m->s ;
-
-  /* g_assert_not_reached() ; */
   
   Ast = (gdouble *)(m->Ast) ;
   xu  = (gdouble *)(m->xu) ;
@@ -324,8 +321,8 @@ nbi_matrix_t *nbi_matrix_assemble_helmholtz(nbi_surface_t *s,
 					  tol, dmax, N,	pt, work, wsize) ;
     }
   } else {
-    g_assert_not_reached() ; /*get the basic version working first before 
-			       threading*/
+    /* g_assert_not_reached() ; /\*get the basic version working first before  */
+    /* 			       threading*\/ */
     GThread *threads[NBI_THREAD_NUMBER_MAX] ;
     gpointer data[NBI_THREAD_DATA_SIZE],
       main_data[NBI_THREAD_NUMBER_MAX*NBI_THREAD_MAIN_DATA_SIZE] ;

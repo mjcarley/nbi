@@ -7,7 +7,7 @@ tol=1e-6
 eta=1.5
 depth=3
 order=8
-nthreads=2
+nthreads=3
 
 bin=../tools
 
@@ -19,10 +19,17 @@ opts="-e ${tol} -a ${nqa} -u ${nqu} \
       -m ${mfile} -g ${gfile}"
 echo -- ${opts}
 
-##${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
+#${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
 ##echo
 ##${bin}/nbi-assemble-laplace ${opts} -T ${nthreads}
 ##echo
-${bin}/nbi-solve-laplace -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t ${tol} \
-      -f -T ${nthreads}  -P -K ksp-options \
-      -b psource.bc -s sphere-field.dat
+
+opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t ${tol} \
+      -f -T ${nthreads} \
+      -b psource.bc -s sphere-field.dat"
+
+echo ${opts}
+
+${bin}/nbi-solve-laplace ${opts}
+
+## -P -K ksp-options \

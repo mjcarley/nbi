@@ -99,7 +99,7 @@ gint main(gint argc, gchar **argv)
   gdouble *work, tol ;
   gint fmm_work_size, nqfmm, order_fmm, order_inc, i, fstr, solver_work_size ;
   gint gmres_max_iter, gmres_restart ;
-  gint nthreads, nproc ;
+  gint nthreads, nproc, nnmax, matrix_work_size ;
   guint depth, order[48] = {0}, order_s, order_r, order_max ;
   gboolean fmm, shift_bw, greens_id, layer_potentials, precompute_local ;
   gboolean petsc_solve ;
@@ -212,6 +212,11 @@ gint main(gint argc, gchar **argv)
   
   fclose(input) ;
 
+  nnmax = nbi_matrix_neighbour_number_max(matrix) ;
+  matrix_work_size = nnmax ;
+  if ( nthreads > 1 ) matrix_work_size *= nthreads ;
+  if ( nthreads < 0 ) matrix_work_size *= nproc ;
+
   timer = g_timer_new() ;
 
   fprintf(stderr,
@@ -249,6 +254,7 @@ gint main(gint argc, gchar **argv)
     solver_work_size =
       nbi_gmres_workspace_size_real(nbi_surface_node_number(s),
 				    gmres_restart) ;
+    solver_work_size *= 2 ;
     fprintf(stderr, "%s: allocating %d elements to solver work space\n",
 	    progname, solver_work_size) ;
   }
@@ -269,9 +275,14 @@ gint main(gint argc, gchar **argv)
     fmm_work_size = MAX((guint)fmm_work_size,
 			(order_max+1)*(order_max+1)*nqfmm*16) ;
     
+    if ( nthreads > 1 ) fmm_work_size *= nthreads ;
+    if ( nthreads < 0 ) fmm_work_size *= nproc ;
+
     fprintf(stderr, "%s: allocating %d elements to FMM work space\n",
 	    progname, fmm_work_size) ;
-    fmm_work_size += solver_work_size ;
+    fmm_work_size *= 2 ;
+
+    fmm_work_size += solver_work_size  + matrix_work_size ;
     
     work = (gdouble *)g_malloc0(fmm_work_size*sizeof(gdouble)) ;
     wbfmm_laplace_coaxial_translate_init(order_max+1) ;    
@@ -288,7 +299,7 @@ gint main(gint argc, gchar **argv)
 	    progname, t = g_timer_elapsed(timer, NULL)) ;
   } else {
     fmm_work_size = 16384 ;
-    fmm_work_size += solver_work_size ;
+    fmm_work_size += solver_work_size  + matrix_work_size ;
     
     work = (gdouble *)g_malloc0(fmm_work_size*sizeof(gdouble)) ;    
   }
@@ -461,7 +472,7 @@ gint main(gint argc, gchar **argv)
 		       p, 1, rhs, 1, gmres_restart, gmres_max_iter, tol,
 		       &error, nthreads, work) ;
     
-    fprintf(stderr, "%s: %d iterations; error = %lg, [%lg] (%lg)\n",
+    fprintf(stderr, "%s: %d iterations; error = %lg [%lg] (%lg)\n",
 	    progname, i, error,
 	    g_timer_elapsed(timer, NULL),
 	    g_timer_elapsed(timer, NULL) - t) ;

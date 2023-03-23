@@ -29,7 +29,7 @@ grid(16384, 32768)
 ##    than you need)
 
 {
-  spherical(3)
+  spherical(2)
 }
 
 distribution("sphere", 0, 1, 24, "cosine")

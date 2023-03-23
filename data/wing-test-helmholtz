@@ -2,8 +2,8 @@
 
 k=1.3
 nqa=7
-nqp=25
-nqu=54
+nqp=54
+nqu=85
 tol=1e-6
 eta=1.5
 depth=5
@@ -22,10 +22,8 @@ echo -- ${opts}
 
 ##${bin}/nbi-surface -q ${nqp} -a wing.agg -o ${gfile}
 
-${bin}/nbi-assemble-helmholtz ${opts} -T 0
-
-#-T ${nthreads}
+${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
 
 ${bin}/nbi-solve-helmholtz -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
-      -f -T ${nthreads} -K ksp-options \
+      -f -T ${nthreads} -K ksp-options -P \
       -k ${k} -b wcsource.bc -s wing-field.dat 

@@ -1,6 +1,6 @@
 /* This file is part of NBI, a library for Nystrom Boundary Integral solvers
  *
- * Copyright (C) 2021 Michael Carley
+ * Copyright (C) 2021, 2023 Michael Carley
  *
  * NBI is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -203,15 +203,12 @@ gint NBI_FUNCTION_NAME(nbi_gmres_complex)(nbi_matrix_t *A,
   s = &(w[n]) ;
   y = &(s[m+1]) ;
   buf = &(y[m]) ;
-  /* mwork = &(y[m]) ; */
   mwork = &(buf[n]) ;
   
-  /* bnrm2 = blaswrap_dnrm2(n,b,bstr) ; */
   bnrm2 = blaswrap_dnrm2(n,b,one) ;
   if ( bnrm2 == 0.0 ) bnrm2 = 1.0 ;
 
   al = -1.0 ; bt = 1.0 ;
-  /* blaswrap_dcopy(n, b, bstr, r, one) ; */
   blaswrap_dcopy(n, b, one, r, one) ;
   
   *error = blaswrap_dnrm2(n, r, one)/bnrm2 ;
@@ -219,9 +216,7 @@ gint NBI_FUNCTION_NAME(nbi_gmres_complex)(nbi_matrix_t *A,
   for ( iter = 0 ; iter < max_it ; iter ++ ) {
     fprintf(stderr, "%s: iteration %d\n", __FUNCTION__, iter) ;
     al = -1.0 ; bt = 1.0 ;
-    /* blaswrap_dcopy(n, b, bstr, r, one) ; */
     blaswrap_dcopy(n, b, one, r, one) ;
-    /* nbi_matrix_multiply(A, x, xstr, al, r, one, bt, nthreads, mwork) ; */
     nbi_matrix_multiply(A, x, xstr, al, r, two, bt, nthreads, mwork) ;
 
     str = m+1 ;
@@ -236,11 +231,9 @@ gint NBI_FUNCTION_NAME(nbi_gmres_complex)(nbi_matrix_t *A,
 
     for ( i = 0 ; i < m ; i ++ ) {
       al = 1.0 ; bt = 0.0 ; str = m+1 ;
-      /* nbi_matrix_multiply(A, &(V[i]), str, al, w, one, bt, nthreads, mwork) ; */
       for ( j = 0 ; j < n ; j ++ ) {
 	buf[j] = V[i+str*j] ;
       }
-      /* nbi_matrix_multiply(A, &(V[i]), str, al, w, two, bt, nthreads, mwork) ; */
       nbi_matrix_multiply(A, buf, two, al, w, two, bt, nthreads, mwork) ;
       for ( k = 0 ; k <= i ; k ++ ) {
 	H[k*m+i] = blaswrap_ddot(n, w, one, &(V[k]), str) ;
@@ -269,7 +262,6 @@ gint NBI_FUNCTION_NAME(nbi_gmres_complex)(nbi_matrix_t *A,
       fprintf(stderr, "%s: substep %d; error: %lg\n",
 	      __FUNCTION__, i, *error) ;
       if ( *error <= tol ) {
-	/* gmres_update(x, xstr, i+1, H, n, m, s, V, y) ; */
 	gmres_update(x, one, i+1, H, n, m, s, V, y) ;
 	/* fprintf(stderr, "break i=%d/%d; iter=%d\n", i, m, iter) ; */
 	break ;
@@ -278,12 +270,9 @@ gint NBI_FUNCTION_NAME(nbi_gmres_complex)(nbi_matrix_t *A,
 
     if ( *error <= tol ) break ;
 
-    /* gmres_update(x, xstr, m, H, n, m, s, V, y) ; */
     gmres_update(x, one, m, H, n, m, s, V, y) ;
     al = -1.0 ; bt = 1.0 ;
-    /* blaswrap_dcopy(n, b, bstr, r, one) ; */
     blaswrap_dcopy(n, b, one, r, one) ;
-    /* nbi_matrix_multiply(A, x, xstr, al, r, one, bt, nthreads, mwork) ; */
     nbi_matrix_multiply(A, x, xstr, al, r, two, bt, nthreads, mwork) ;
 
     s[i+1] = blaswrap_dnrm2(n, r, one) ;

@@ -4,6 +4,8 @@ It contains the tinyexpr parser and evaluation library written by
 Lewis Van Winkle and released under the zlib licence. It is maintained
 here:
 
+* READ THE NOTE ON OPTIMIZATION BELOW
+
 https://github.com/codeplea/tinyexpr
 
 * Prerequisites
@@ -37,6 +39,8 @@ To configure and install the code,
 For information on options to control configuration,
 
   ./configure --help
+
+* Switch off optimization
 
 There appears to be an optimization bug in gcc version 11 (at least),
 which seriously affects the performance of the code, so it is
