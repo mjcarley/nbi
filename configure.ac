@@ -60,6 +60,23 @@ AC_PROG_AWK
 AC_ISC_POSIX
 AC_HEADER_STDC
 
+AC_CHECK_PROG(BLASWRAP, blaswrap-config, yes, no)
+if test x$BLASWRAP = xyes ; then
+   AC_DEFINE(HAVE_BLASWRAP, 1, [BLAS wrapper header available])
+   blaswrap_cflags=`blaswrap-config --cflags`
+   blaswrap_libs=`blaswrap-config --libs`
+else
+  echo \#################################################################
+  echo \#
+  echo \# BLAS wrapper library not installed or not properly installed.
+  echo \# You can get it from
+  echo \#
+  echo \# https://github.com/mjcarley/blaswrap
+  echo \#
+  echo \#################################################################
+  exit
+fi
+
 AC_CHECK_PROG(SQT, sqt-config, yes, no)
 if test x$SQT = xyes ; then
    AC_DEFINE(HAVE_SQT, 1, [singular quadrature library available])
@@ -106,23 +123,6 @@ else
   echo \# not properly installed. You can get it from
   echo \#
   echo \# https://github.com/mjcarley/wbfmm
-  echo \#
-  echo \#################################################################
-  exit
-fi
-
-AC_CHECK_PROG(BLASWRAP, blaswrap-config, yes, no)
-if test x$BLASWRAP = xyes ; then
-   AC_DEFINE(HAVE_BLASWRAP, 1, [BLAS wrapper header available])
-   blaswrap_cflags=`blaswrap-config --cflags`
-   blaswrap_libs=`blaswrap-config --libs`
-else
-  echo \#################################################################
-  echo \#
-  echo \# BLAS wrapper library not installed or not properly installed.
-  echo \# You can get it from
-  echo \#
-  echo \# https://github.com/mjcarley/blaswrap
   echo \#
   echo \#################################################################
   exit
@@ -249,11 +249,6 @@ AC_PROG_F77
 AC_F77_LIBRARY_LDFLAGS
 AC_F77_DUMMY_MAIN
 AC_F77_WRAPPERS
-ACX_BLAS
-ACX_LAPACK
-
-blas_libs="$BLAS_LIBS"
-lapack_libs="$LAPACK_LIBS"
 
 #DX_DOXYGEN_FEATURE(ON)
 ##DX_DOT_FEATURE(ON)
@@ -269,16 +264,14 @@ lapack_libs="$LAPACK_LIBS"
 
 CPPFLAGS="$glib_cflags $wbfmm_cflags $sqt_cflags $agg_cflags $blaswrap_cflags"
 CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS"
-LDFLAGS="$LDFLAGS $glib_libs $wbfmm_libs $sqt_libs $agg_libs"
+LDFLAGS="$LDFLAGS $blaswrap_libs $glib_libs $wbfmm_libs $sqt_libs $agg_libs"
 
-AC_SUBST(blas_libs)
-AC_SUBST(lapack_libs)
 AC_SUBST(petsc_real)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(CFLAGS)
 AC_SUBST(LDFLAGS)
 
-LIBS="$glib_libs $LAPACK_LIBS $BLAS_LIBS $LIBS $FLIBS"
+LIBS="$glib_libs $LIBS $FLIBS"
 
 AM_CONDITIONAL(PETSC, test x$PETSC = xyes)
 

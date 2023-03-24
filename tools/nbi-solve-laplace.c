@@ -214,6 +214,8 @@ gint main(gint argc, gchar **argv)
 
   nnmax = nbi_matrix_neighbour_number_max(matrix) ;
   matrix_work_size = nnmax ;
+  /*buffers to accumulate result during threaded matrix multiplication*/
+  matrix_work_size += nbi_surface_node_number(s) ;
   if ( nthreads > 1 ) matrix_work_size *= nthreads ;
   if ( nthreads < 0 ) matrix_work_size *= nproc ;
 
@@ -317,9 +319,17 @@ gint main(gint argc, gchar **argv)
 	    g_timer_elapsed(timer, NULL), g_timer_elapsed(timer, NULL) - t) ;
     
     emax = fmax = e2 = f2 = 0.0 ;
+    if ( sfile != NULL ) {
+      output = fopen(sfile, "w")  ;
+      if ( output == NULL ) {
+	fprintf(stderr,
+		"%s: cannot open output file %s; writing to stdout;\n",
+		progname, sfile) ;
+	output = stdout ;
+      }
+    }
     for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
       xp = (NBI_REAL *)nbi_surface_node(s,i) ;
-      /* G = greens_function_laplace(xp, xs) ; */
       G = src[2*i+0] ;
       fmax = MAX(fmax, G) ;
       emax = MAX(emax, fabs(G - f[i*fstr])) ;
@@ -329,6 +339,8 @@ gint main(gint argc, gchar **argv)
 	      xp[0], xp[1], xp[2], f[i*fstr], fabs(G - f[i*fstr])) ;
     }
     
+    if ( output != stdout ) fclose(output) ;
+
     fprintf(stderr, "L_inf norm: %lg; L_2 norm: %lg\n",
 	    emax/fmax, sqrt(e2/f2)) ;
 

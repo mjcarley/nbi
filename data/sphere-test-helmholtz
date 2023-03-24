@@ -8,7 +8,7 @@ tol=1e-6
 eta=1.5
 depth=5
 order=8
-nthreads=3
+nthreads=2
 
 bin=../tools
 

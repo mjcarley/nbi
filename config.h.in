@@ -17,17 +17,11 @@
 /* aerodynamic geometry library available */
 #undef HAVE_AGG
 
-/* Define if you have an ATLAS BLAS library. */
-#undef HAVE_ATLAS_BLAS
-
 /* Define if avx2 instructions are supported */
 #undef HAVE_AVX2_INSTRUCTIONS
 
 /* Define if avx instructions are supported */
 #undef HAVE_AVX_INSTRUCTIONS
-
-/* Define if you have a BLAS library. */
-#undef HAVE_BLAS
 
 /* BLAS wrapper header available */
 #undef HAVE_BLASWRAP
@@ -40,9 +34,6 @@
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
-
-/* Define if you have LAPACK library. */
-#undef HAVE_LAPACK
 
 /* Define to 1 if you have the `m' library (-lm). */
 #undef HAVE_LIBM
