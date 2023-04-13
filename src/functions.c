@@ -55,7 +55,7 @@ gdouble nbi_function_gfunc_laplace_G(gdouble x, gdouble y, gdouble z)
 }
 
 gdouble nbi_function_gfunc_laplace_dG(gdouble x, gdouble y, gdouble z,
-				     gdouble nx, gdouble ny, gdouble nz)
+				      gdouble nx, gdouble ny, gdouble nz)
 
 {
   gdouble dG, R ;
@@ -140,3 +140,4 @@ gdouble nbi_function_gfunc_helmholtz_dG_imag(gdouble k,
   
   return dG ;
 }
+

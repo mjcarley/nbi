@@ -564,8 +564,14 @@ gint main(gint argc, gchar **argv)
       output = stdout ;
     }
   }
-  
-  nbi_data_write(output, p, 2, 2, nbi_surface_node_number(s)) ;
+
+  /*write a full set of surface data as the solution*/
+  for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+    src[4*i+0] = p[2*i+0] ; 
+    src[4*i+1] = p[2*i+1] ; 
+  }
+
+  nbi_data_write(output, src, 4, 4, nbi_surface_node_number(s)) ;
 
   if ( output != stdout ) fclose(output) ;
   

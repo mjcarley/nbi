@@ -1,0 +1,58 @@
+# test file for generic nacelle with spinner
+
+global {
+# syntax: <identifier> = <constant>
+# spinner length
+  slen = 0.5
+# spinner base diameter
+  D = 0.4
+# nacelle body length
+  blen = 1.4
+}
+
+body("spinner")
+
+{
+  grid(10000, 10000)
+  {
+    ##linear(16, "halfcos", 65, "cosine")
+    hemispherical(2)
+  }
+
+  distribution("spinner", 0.0, 1, 16, "cosine")
+  {
+    transform("shrink", "0.5", 0, "sqrt(1-s)*(1.5-0.5*(1-s))")
+    transform("shift", -0.5, 0, 0)
+    transform("scale", "D")
+    transform("shift", 0, 0, "-s*slen")
+    shape("ellipse", -1, 1, 0.5, 0.5)
+  }
+}
+
+
+body("body")
+
+{
+  grid(10000, 10000)
+  {
+    ##linear(16, "halfsin", 65, "cosine")
+    tube(17, 65)
+  }
+  
+  distribution("body", 0.0, 1, 16, "cosine")
+  {
+    transform("shrink", "0.5", 0, "sqrt(1-s)")
+    transform("shift", -0.5, 0, 0)
+    transform("scale", "D")
+    transform("rotate", 0, 0, "-pi/2")
+    transform("shift", 0, 0, "s*blen")
+    shape("ellipse", -1, 1, 0.5, 0.5)
+    ##"-sqrt(1/4)/(0.5^(1/2+s*(0.1-1/2)))^2",
+    #    -1,
+    #" sqrt(1/4)/(0.5^(1/2+s*(0.1-1/2)))^2",
+    #0.5,
+    #"1/2+s*(0.1-1/2)")
+    #, 0.5)
+    #"1/2+s*(0.1-1/2)")
+  }
+}

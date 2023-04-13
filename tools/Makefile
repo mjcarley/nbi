@@ -90,8 +90,8 @@ build_triplet = x86_64-unknown-linux-gnu
 host_triplet = x86_64-unknown-linux-gnu
 bin_PROGRAMS = nbi-solve-laplace$(EXEEXT) \
 	nbi-assemble-laplace$(EXEEXT) nbi-solve-helmholtz$(EXEEXT) \
-	nbi-assemble-helmholtz$(EXEEXT) nbi-surface$(EXEEXT) \
-	nbi-process$(EXEEXT)
+	nbi-assemble-helmholtz$(EXEEXT) nbi-field-helmholtz$(EXEEXT) \
+	nbi-surface$(EXEEXT) nbi-process$(EXEEXT)
 subdir = tools
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -122,6 +122,10 @@ nbi_assemble_laplace_OBJECTS = nbi-assemble-laplace.$(OBJEXT)
 nbi_assemble_laplace_LDADD = $(LDADD)
 nbi_assemble_laplace_DEPENDENCIES =  \
 	$(top_builddir)/src/.libs/libnbi.a
+nbi_field_helmholtz_SOURCES = nbi-field-helmholtz.c
+nbi_field_helmholtz_OBJECTS = nbi-field-helmholtz.$(OBJEXT)
+nbi_field_helmholtz_LDADD = $(LDADD)
+nbi_field_helmholtz_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
 nbi_process_SOURCES = nbi-process.c
 nbi_process_OBJECTS = nbi-process.$(OBJEXT)
 nbi_process_LDADD = $(LDADD)
@@ -166,7 +170,8 @@ DEFAULT_INCLUDES = -I. -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/nbi-assemble-helmholtz.Po \
-	./$(DEPDIR)/nbi-assemble-laplace.Po ./$(DEPDIR)/nbi-process.Po \
+	./$(DEPDIR)/nbi-assemble-laplace.Po \
+	./$(DEPDIR)/nbi-field-helmholtz.Po ./$(DEPDIR)/nbi-process.Po \
 	./$(DEPDIR)/nbi-surface.Po \
 	./$(DEPDIR)/nbi_solve_helmholtz-nbi-solve-helmholtz.Po \
 	./$(DEPDIR)/nbi_solve_helmholtz-petsc-helmholtz.Po \
@@ -192,11 +197,13 @@ am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = nbi-assemble-helmholtz.c nbi-assemble-laplace.c \
-	nbi-process.c $(nbi_solve_helmholtz_SOURCES) \
-	$(nbi_solve_laplace_SOURCES) nbi-surface.c
+	nbi-field-helmholtz.c nbi-process.c \
+	$(nbi_solve_helmholtz_SOURCES) $(nbi_solve_laplace_SOURCES) \
+	nbi-surface.c
 DIST_SOURCES = nbi-assemble-helmholtz.c nbi-assemble-laplace.c \
-	nbi-process.c $(nbi_solve_helmholtz_SOURCES) \
-	$(nbi_solve_laplace_SOURCES) nbi-surface.c
+	nbi-field-helmholtz.c nbi-process.c \
+	$(nbi_solve_helmholtz_SOURCES) $(nbi_solve_laplace_SOURCES) \
+	nbi-surface.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -267,7 +274,7 @@ INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LD = /usr/bin/ld -m elf_x86_64
-LDFLAGS =  -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -lglib-2.0 -L/home/michael/Codes/lib -lwbfmm -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -L/home/michael/Codes/lib -lsqt -lglib-2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath -L/home/michael/Codes/lib -lagg -lglib-2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath
+LDFLAGS =  -lglib-2.0 -lblas -L/home/michael/Codes/lib -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -lglib-2.0 -L/home/michael/Codes/lib -lwbfmm -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -L/home/michael/Codes/lib -lsqt -lglib-2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath -L/home/michael/Codes/lib -lagg -lglib-2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath
 LIBOBJS = 
 LIBS = -lglib-2.0 -lm   -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
@@ -482,6 +489,10 @@ nbi-assemble-laplace$(EXEEXT): $(nbi_assemble_laplace_OBJECTS) $(nbi_assemble_la
 	@rm -f nbi-assemble-laplace$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(nbi_assemble_laplace_OBJECTS) $(nbi_assemble_laplace_LDADD) $(LIBS)
 
+nbi-field-helmholtz$(EXEEXT): $(nbi_field_helmholtz_OBJECTS) $(nbi_field_helmholtz_DEPENDENCIES) $(EXTRA_nbi_field_helmholtz_DEPENDENCIES) 
+	@rm -f nbi-field-helmholtz$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(nbi_field_helmholtz_OBJECTS) $(nbi_field_helmholtz_LDADD) $(LIBS)
+
 nbi-process$(EXEEXT): $(nbi_process_OBJECTS) $(nbi_process_DEPENDENCIES) $(EXTRA_nbi_process_DEPENDENCIES) 
 	@rm -f nbi-process$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(nbi_process_OBJECTS) $(nbi_process_LDADD) $(LIBS)
@@ -506,6 +517,7 @@ distclean-compile:
 
 include ./$(DEPDIR)/nbi-assemble-helmholtz.Po # am--include-marker
 include ./$(DEPDIR)/nbi-assemble-laplace.Po # am--include-marker
+include ./$(DEPDIR)/nbi-field-helmholtz.Po # am--include-marker
 include ./$(DEPDIR)/nbi-process.Po # am--include-marker
 include ./$(DEPDIR)/nbi-surface.Po # am--include-marker
 include ./$(DEPDIR)/nbi_solve_helmholtz-nbi-solve-helmholtz.Po # am--include-marker
@@ -734,6 +746,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/nbi-assemble-helmholtz.Po
 	-rm -f ./$(DEPDIR)/nbi-assemble-laplace.Po
+	-rm -f ./$(DEPDIR)/nbi-field-helmholtz.Po
 	-rm -f ./$(DEPDIR)/nbi-process.Po
 	-rm -f ./$(DEPDIR)/nbi-surface.Po
 	-rm -f ./$(DEPDIR)/nbi_solve_helmholtz-nbi-solve-helmholtz.Po
@@ -787,6 +800,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/nbi-assemble-helmholtz.Po
 	-rm -f ./$(DEPDIR)/nbi-assemble-laplace.Po
+	-rm -f ./$(DEPDIR)/nbi-field-helmholtz.Po
 	-rm -f ./$(DEPDIR)/nbi-process.Po
 	-rm -f ./$(DEPDIR)/nbi-surface.Po
 	-rm -f ./$(DEPDIR)/nbi_solve_helmholtz-nbi-solve-helmholtz.Po

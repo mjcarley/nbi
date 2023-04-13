@@ -94,9 +94,6 @@ nbi_expression_t *nbi_expression_new(gchar *expression)
 
   for ( i = 0 ; i <  NBI_EXPRESSION_FUNCTION_NUMBER ; i ++ ) {
     vars[NBI_EXPRESSION_VARIABLE_NUMBER+i] = functions[i] ;
-    /*   .name = g_strdup(functions[i].name) ; */
-    /* vars[i].address = &(e->x[i]) ; */
-    /* vars[i].type = TE_VARIABLE ; */
     vars[i].context = NULL ;
   }
   

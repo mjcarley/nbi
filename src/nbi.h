@@ -22,8 +22,9 @@
 #define NBI_SURFACE_PATCH_LENGTH  2
 #define NBI_SURFACE_PATCH_DATA_LENGTH     4
 
-#define NBI_EXPRESSION_VARIABLE_NUMBER 6
-#define NBI_EXPRESSION_FUNCTION_NUMBER 6
+#define NBI_EXPRESSION_VARIABLE_NUMBER      32
+#define NBI_EXPRESSION_VARIABLE_USER_DEFINED 6
+#define NBI_EXPRESSION_FUNCTION_NUMBER       6
 
 #define NBI_HEADER_LENGTH  80
 #define NBI_HEADER_ID       0
@@ -251,6 +252,10 @@ gint nbi_calc_field_helmholtz(nbi_matrix_t *m,
 			      gdouble *f,
 			      gint nthreads,
 			      gdouble *work) ;
+gint nbi_surface_field_helmholtz(nbi_surface_t *s, gdouble k,
+				 gdouble *ps, gint pstr,
+				 gdouble *al, gdouble *bt,
+				 gdouble *x, gdouble *p) ;
 
 gint nbi_surface_greens_identity_helmholtz(nbi_matrix_t *m,
 					   gdouble *p ,

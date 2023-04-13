@@ -1,4 +1,4 @@
-helmholtz_Gr(1.3, x-1.3, y-0.0, z-0.5)
-helmholtz_Gi(1.3, x-1.3, y-0.0, z-0.5)
-helmholtz_dGr(1.3, x-1.3, y-0.0, z-0.5, nx, ny, nz)
-helmholtz_dGi(1.3, x-1.3, y-0.0, z-0.5, nx, ny, nz)
+helmholtz_Gr(8.3, x-1.3, y-0.0, z-0.5)
+helmholtz_Gi(8.3, x-1.3, y-0.0, z-0.5)
+helmholtz_dGr(8.3, x-1.3, y-0.0, z-0.5, nx, ny, nz)
+helmholtz_dGi(8.3, x-1.3, y-0.0, z-0.5, nx, ny, nz)

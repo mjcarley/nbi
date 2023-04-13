@@ -84,6 +84,53 @@ static void point_source_field_helmholtz(NBI_REAL k,
   return ;
 }
 
+static void point_source_field_helmholtz_weighted(NBI_REAL k,
+					 NBI_REAL *xs, gint xstr, gint ns,
+					 NBI_REAL *p , gint pstr, NBI_REAL pwt,
+					 NBI_REAL *pn, gint nstr, NBI_REAL nwt,
+					 NBI_REAL *x, NBI_REAL wt, NBI_REAL *f,
+					 NBI_REAL *al, NBI_REAL *bt)
+
+/*
+ * f := bt*f + al*SUM(pwt*dG*\phi - nwt*G*d\phi)
+ *
+ * pwt: weighting for potential source (double layer potential)
+ * nwt: weighting for normal derivative source (single layer potential)
+ */
+  
+{
+  gint i ;  
+  NBI_REAL R, r[3], C, S, rn, G[2], dG[2], df[2], w ;
+
+  /*multiply by \beta*/
+  df[0] = bt[0]*f[0] - bt[1]*f[1] ;
+  f [1] = bt[1]*f[0] + bt[0]*f[1] ;
+  f [0] = df[0] ;
+   
+  for ( i = 0 ; i < ns ; i ++ ) {
+    nbi_vector_diff(r, x, &(xs[i*xstr])) ;
+    w = xs[i*xstr+6] ;
+    R = nbi_vector_length(r) ;
+    if ( R > NBI_LOCAL_CUTOFF_RADIUS ) {
+      C = cos(k*R) ; S = sin(k*R) ;
+      /*negative because r = x - x_{1} and rn is dR/dn_{1}*/
+      rn = -nbi_vector_scalar(r,&(xs[i*xstr+3])) ;
+      G[0] = 0.25*M_1_PI*C/R ;
+      G[1] = 0.25*M_1_PI*S/R ;
+      dG[0] = -0.25*M_1_PI*(C + k*R*S)*rn/R/R/R ;
+      dG[1] =  0.25*M_1_PI*(k*R*C - S)*rn/R/R/R ;
+      df[0] = w*wt*(pwt*(dG[0]*p [i*pstr + 0] - dG[1]*p [i*pstr + 1]) -
+		    nwt*( G[0]*pn[i*nstr + 0] -  G[1]*pn[i*nstr + 1])) ;
+      df[1] = w*wt*(pwt*(dG[1]*p [i*pstr + 0] + dG[0]*p [i*pstr + 1]) -
+		    nwt*( G[1]*pn[i*nstr + 0] +  G[0]*pn[i*nstr + 1])) ;
+      f[0] += al[0]*df[0] - al[1]*df[1] ;
+      f[1] += al[1]*df[0] + al[0]*df[1] ;
+    }
+  }
+  
+  return ;
+}
+
 static void upsample_sources(nbi_surface_t *s,
 			     NBI_REAL *p, gint pstr, NBI_REAL *pn, gint nstr,
 			     NBI_REAL *wt, gint wstr, gint *idxu,
@@ -936,3 +983,31 @@ gint NBI_FUNCTION_NAME(nbi_calc_field_helmholtz)(nbi_matrix_t *m,
   return 0 ;
 }
 
+gint NBI_FUNCTION_NAME(nbi_surface_field_helmholtz)(nbi_surface_t *s,
+						    NBI_REAL k,
+						    NBI_REAL *ps,
+						    gint pstr,
+						    NBI_REAL *al, NBI_REAL *bt,
+						    NBI_REAL *x,
+						    NBI_REAL *p)
+/*
+ * on output p := bt*p + al*(surface integral for Green's identity)
+ *
+ */
+
+{
+  NBI_REAL *y ;
+  gint str ;
+
+  g_assert(pstr >= 4) ;
+  
+  y = (NBI_REAL *)nbi_surface_node(s,0) ;
+  str = NBI_SURFACE_NODE_LENGTH ;
+
+  point_source_field_helmholtz_weighted(k, y, str, nbi_surface_node_number(s),
+					&(ps[0]), pstr, 1.0,
+					&(ps[2]), pstr, 1.0,
+					x, 1.0, p, al, bt) ;
+  
+  return 0 ;
+}

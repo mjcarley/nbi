@@ -10,6 +10,7 @@ bin_PROGRAMS = \
 	nbi-assemble-laplace \
 	nbi-solve-helmholtz \
 	nbi-assemble-helmholtz \
+	nbi-field-helmholtz \
 	nbi-surface \
 	nbi-process
 
