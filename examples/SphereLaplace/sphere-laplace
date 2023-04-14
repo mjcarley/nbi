@@ -9,7 +9,7 @@ depth=3
 order=8
 nthreads=4
 
-bin=../tools
+bin=../../tools
 
 gfile=Geometries/sphere-${nqp}.dat
 mfile=Matrices/matrix-sphere-${nqp}-${nqu}-${order}-${depth}.dat
@@ -19,10 +19,10 @@ opts="-e ${tol} -a ${nqa} -u ${nqu} \
       -m ${mfile} -g ${gfile}"
 echo -- ${opts}
 
-#${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
-##echo
-##${bin}/nbi-assemble-laplace ${opts} -T ${nthreads}
-##echo
+${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
+
+${bin}/nbi-assemble-laplace ${opts} -T ${nthreads}
+
 
 opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t ${tol} \
       -f -T ${nthreads} \

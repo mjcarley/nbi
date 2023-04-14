@@ -21,9 +21,8 @@ tinyexpr.lo: tinyexpr.c /usr/include/stdc-predef.h tinyexpr.h \
  /usr/include/bits/pthreadtypes.h /usr/include/bits/thread-shared-types.h \
  /usr/include/bits/pthreadtypes-arch.h /usr/include/bits/struct_mutex.h \
  /usr/include/bits/struct_rwlock.h /usr/include/alloca.h \
- /usr/include/bits/stdlib-bsearch.h /usr/include/bits/stdlib-float.h \
- /usr/include/math.h /usr/include/bits/math-vector.h \
- /usr/include/bits/libm-simd-decl-stubs.h \
+ /usr/include/bits/stdlib-float.h /usr/include/math.h \
+ /usr/include/bits/math-vector.h /usr/include/bits/libm-simd-decl-stubs.h \
  /usr/include/bits/flt-eval-method.h /usr/include/bits/fp-logb.h \
  /usr/include/bits/fp-fast.h \
  /usr/include/bits/mathcalls-helper-functions.h \
@@ -34,8 +33,7 @@ tinyexpr.lo: tinyexpr.c /usr/include/stdc-predef.h tinyexpr.h \
  /usr/include/bits/types/__fpos_t.h /usr/include/bits/types/__mbstate_t.h \
  /usr/include/bits/types/__fpos64_t.h /usr/include/bits/types/__FILE.h \
  /usr/include/bits/types/FILE.h /usr/include/bits/types/struct_FILE.h \
- /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
- /usr/include/ctype.h \
+ /usr/include/bits/stdio_lim.h /usr/include/ctype.h \
  /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include-fixed/limits.h \
  /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include-fixed/syslimits.h \
  /usr/include/limits.h /usr/include/bits/posix1_lim.h \
@@ -83,7 +81,6 @@ tinyexpr.h:
 /usr/include/bits/struct_mutex.h:
 /usr/include/bits/struct_rwlock.h:
 /usr/include/alloca.h:
-/usr/include/bits/stdlib-bsearch.h:
 /usr/include/bits/stdlib-float.h:
 /usr/include/math.h:
 /usr/include/bits/math-vector.h:
@@ -106,7 +103,6 @@ tinyexpr.h:
 /usr/include/bits/types/FILE.h:
 /usr/include/bits/types/struct_FILE.h:
 /usr/include/bits/stdio_lim.h:
-/usr/include/bits/stdio.h:
 /usr/include/ctype.h:
 /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include-fixed/limits.h:
 /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include-fixed/syslimits.h:

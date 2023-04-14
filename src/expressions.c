@@ -38,15 +38,35 @@
 
 #include "nbi-private.h"
 
-const gchar *variables[] = {"x", "y", "z", "nx", "ny", "nz", NULL} ;
+const gchar *variables[] = {"x", "y", "z", "nx", "ny", "nz", "rp", "ip",
+  "rdp", "idp", NULL} ;
 
-const te_variable functions[NBI_EXPRESSION_FUNCTION_NUMBER] = {
+const te_variable functions[] = {
   {"laplace_G" , nbi_function_gfunc_laplace_G , TE_FUNCTION3},
   {"laplace_dG", nbi_function_gfunc_laplace_dG, TE_FUNCTION6},
   {"helmholtz_Gr" , nbi_function_gfunc_helmholtz_G_real , TE_FUNCTION4},
   {"helmholtz_Gi" , nbi_function_gfunc_helmholtz_G_imag , TE_FUNCTION4},
   {"helmholtz_dGr" , nbi_function_gfunc_helmholtz_dG_real, TE_FUNCTION7},
-  {"helmholtz_dGi" , nbi_function_gfunc_helmholtz_dG_imag, TE_FUNCTION7}
+  {"helmholtz_dGi" , nbi_function_gfunc_helmholtz_dG_imag, TE_FUNCTION7},
+  {"helmholtz_ring_r", nbi_function_gfunc_helmholtz_ring_real, TE_FUNCTION6},
+  {"helmholtz_ring_i", nbi_function_gfunc_helmholtz_ring_imag, TE_FUNCTION6},
+  {"helmholtz_ring_x_r", nbi_function_gfunc_helmholtz_ring_real_x,
+   TE_FUNCTION6},
+  {"helmholtz_ring_x_i", nbi_function_gfunc_helmholtz_ring_imag_x,
+   TE_FUNCTION6},
+  {"helmholtz_ring_y_r", nbi_function_gfunc_helmholtz_ring_real_y,
+   TE_FUNCTION6},
+  {"helmholtz_ring_y_i", nbi_function_gfunc_helmholtz_ring_imag_y,
+   TE_FUNCTION6},
+  {"helmholtz_ring_z_r", nbi_function_gfunc_helmholtz_ring_real_z,
+   TE_FUNCTION6},
+  {"helmholtz_ring_z_i", nbi_function_gfunc_helmholtz_ring_imag_z,
+   TE_FUNCTION6},
+  {"sphere_scattered_r", nbi_function_sphere_scattered_r,
+   TE_FUNCTION5},
+  {"sphere_scattered_i", nbi_function_sphere_scattered_i,
+   TE_FUNCTION5},
+  {NULL , NULL, TE_FUNCTION0}
 } ;
 
 const gchar *function_help[] = {
@@ -69,131 +89,32 @@ const gchar *function_help[] = {
   " = (nx*dGi/dx + ny*dGi/dy + nz*dGi/dz);\n"
   "  imaginary part of normal derivative of Green's function for "
   "Helmholtz equation",
+  "helmholtz_ring_r(a, n, k, x, y, z)",
+  "\n  real part of field from ring source of radius a, azimuthal order n,"
+  "\n  and wavenumber k",
+  "helmholtz_ring_i(a, n, k, x, y, z)",
+  "\n  imaginary part of field from ring source of radius a, azimuthal "
+  "order n,\n  and wavenumber k",
+  "helmholtz_ring_x_r(a, n, k, x, y, z)",
+  "\n  real part of x derivative of field from ring source",
+  "helmholtz_ring_x_i(a, n, k, x, y, z)",
+  "\n  imaginary part of x derivative of field from ring source",
+  "helmholtz_ring_y_r(a, n, k, x, y, z)",
+  "\n  real part of y derivative of field from ring source",
+  "helmholtz_ring_y_i(a, n, k, x, y, z)",
+  "\n  imaginary part of y derivative of field from ring source",
+  "helmholtz_ring_z_r(a, n, k, x, y, z)",
+  "\n  real part of z derivative of field from ring source",
+  "helmholtz_ring_z_i(a, n, k, x, y, z)",
+  "\n  imaginary part of z derivative of field from ring source",
+  "sphere_scattered_r(a, k, x, y, z)",
+  "\n  real part of potential scattered from sphere of radius a by incident"
+  "\n  plane wave exp[j k z]",
+  "sphere_scattered_i(a, k, x, y, z)",
+  "\n  imaginary part of potential scattered from sphere of radius a by"
+  "\n  incident plane wave exp[j k z]",
   NULL, NULL
 } ;
-
-nbi_expression_t *nbi_expression_new(gchar *expression)
-
-{
-  gint i, err ;  
-  nbi_expression_t *e ;
-  te_variable *vars ;
-
-  e = (nbi_expression_t *)g_malloc0(sizeof(nbi_expression_t)) ;
-
-  e->vars = g_malloc((NBI_EXPRESSION_VARIABLE_NUMBER+
-		      NBI_EXPRESSION_FUNCTION_NUMBER)*sizeof(te_variable)) ;
-  vars = e->vars ;
-
-  for ( i = 0 ; i < NBI_EXPRESSION_VARIABLE_NUMBER ; i ++ ) {
-    vars[i].name = g_strdup(variables[i]) ;
-    vars[i].address = &(e->x[i]) ;
-    vars[i].type = TE_VARIABLE ;
-    vars[i].context = NULL ;
-  }
-
-  for ( i = 0 ; i <  NBI_EXPRESSION_FUNCTION_NUMBER ; i ++ ) {
-    vars[NBI_EXPRESSION_VARIABLE_NUMBER+i] = functions[i] ;
-    vars[i].context = NULL ;
-  }
-  
-  e->compiled = te_compile(expression, vars,
-			   NBI_EXPRESSION_VARIABLE_NUMBER + 
-			   NBI_EXPRESSION_FUNCTION_NUMBER,
-			   &err) ;
-
-  if ( err != 0 ) {
-    fprintf(stderr,
-	    "%s: cannot parse expression\n"
-	    "    %s\n"
-	    "error at character %d\n", __FUNCTION__, expression, err) ;
-    exit(-1) ;
-  }
-
-  e->expression = g_strdup(expression) ;
-  
-  return e ;
-}
-
-gdouble nbi_expression_eval(nbi_expression_t *e, gdouble *x, gdouble *n)
-
-{
-  gdouble f ;
-  /* te_variable *vars = e->vars ; */
-
-  e->x[0] = x[0] ; e->x[1] = x[1] ; e->x[2] = x[2] ; 
-  e->x[3] = n[0] ; e->x[4] = n[1] ; e->x[5] = n[2] ; 
-  
-  f = te_eval((te_expr *)(e->compiled)) ;
-  
-  return f ;
-}  
-
-nbi_boundary_condition_t *nbi_boundary_condition_new(nbi_problem_t problem)
-
-{
-  nbi_boundary_condition_t *b ;
-
-  b = (nbi_boundary_condition_t *)
-    g_malloc0(sizeof(nbi_boundary_condition_t)) ;
-
-  b->problem = problem ;
-  b->e[0] = b->e[1] = b->e[2] = b->e[3] = NULL ;
-  
-  return b ;
-}
-
-gint nbi_boundary_condition_add(nbi_boundary_condition_t *b, gchar *e)
-
-{
-  switch ( b->problem ) {
-  default: g_assert_not_reached() ; break ;
-  case NBI_PROBLEM_LAPLACE:
-    if ( b->e[0] == NULL ) {
-      /*surface potential*/
-      b->e[0] = nbi_expression_new(e) ;
-      return 0 ;
-    }
-    if ( b->e[1] == NULL ) {
-      /*surface potential derivative*/
-      b->e[1] = nbi_expression_new(e) ;
-      return 0 ;
-    }
-    fprintf(stderr,
-	    "%s: only two boundary condition terms permitted for Laplace "
-	    "problem\n", __FUNCTION__) ;
-    exit(-1) ;
-    break ;
-  case NBI_PROBLEM_HELMHOLTZ:
-    if ( b->e[0] == NULL ) {
-      /*surface potential: real part*/
-      b->e[0] = nbi_expression_new(e) ;
-      return 0 ;
-    }
-    if ( b->e[1] == NULL ) {
-      /*surface potential: imaginary part*/
-      b->e[1] = nbi_expression_new(e) ;
-      return 0 ;
-    }
-    if ( b->e[2] == NULL ) {
-      /*surface potential derivative: real part*/
-      b->e[2] = nbi_expression_new(e) ;
-      return 0 ;
-    }
-    if ( b->e[3] == NULL ) {
-      /*surface potential derivative: imaginary part*/
-      b->e[3] = nbi_expression_new(e) ;
-      return 0 ;
-    }
-    fprintf(stderr,
-	    "%s: only four boundary condition terms permitted for Helmholtz "
-	    "problem\n", __FUNCTION__) ;
-    exit(-1) ;
-    break ;
-  }
-  
-  return 0 ;
-}
 
 const gchar *nbi_function_help(gchar *f)
 
@@ -228,4 +149,225 @@ gint nbi_functions_list(FILE *f, gboolean help)
   }
 
   return 0 ;
+}
+
+
+nbi_boundary_condition_t *nbi_boundary_condition_new(nbi_problem_t problem)
+
+{
+  nbi_boundary_condition_t *b ;
+  te_variable *vars ;
+  gint i ;
+  
+  b = (nbi_boundary_condition_t *)g_malloc0(sizeof(nbi_boundary_condition_t)) ;
+
+  nbi_boundary_condition_problem(b) = problem ;
+  
+  b->vars = g_malloc0(NBI_BOUNDARY_CONDITION_VARIABLE_NUMBER*
+		      sizeof(te_variable)) ;
+  vars = (te_variable *)(b->vars) ;
+
+  /*initial variables*/
+  for ( b->nvars = 0 ; variables[b->nvars] != NULL ; b->nvars ++ ) {
+    vars[b->nvars].name = g_strdup(variables[b->nvars]) ;
+    vars[b->nvars].address = &(b->x[b->nvars]) ;
+    vars[b->nvars].type = TE_VARIABLE ;
+    vars[b->nvars].context = NULL ;
+    b->expr[b->nvars] = NULL ;
+  }
+
+  for ( i = 0 ; functions[i].name != NULL ; i ++ ) {
+    vars[b->nvars] = functions[i] ;
+    vars[b->nvars].context = NULL ;
+    b->nvars ++ ;
+  }  
+
+  /*check to make sure nothing has gone wrong in macros*/
+  g_assert(strcmp(vars[NBI_BOUNDARY_CONDITION_POINT].name, "x") == 0) ;
+  g_assert(strcmp(vars[NBI_BOUNDARY_CONDITION_NORMAL].name, "nx") == 0) ;
+  g_assert(strcmp(vars[NBI_BOUNDARY_CONDITION_P_REAL].name, "rp") == 0) ;
+  g_assert(strcmp(vars[NBI_BOUNDARY_CONDITION_P_IMAG].name, "ip") == 0) ;
+  g_assert(strcmp(vars[NBI_BOUNDARY_CONDITION_DP_REAL].name, "rdp") == 0) ;
+  g_assert(strcmp(vars[NBI_BOUNDARY_CONDITION_DP_IMAG].name, "idp") == 0) ;
+  
+  return b ;
+}
+
+static gint getlongline(FILE *f, gchar *buf, gint nbmax, gchar *cont)
+
+{
+  gchar *line ;
+  gint i ;
+  gint len ;
+  gsize n ;
+  ssize_t nc ;
+  
+  buf[0] = '\0' ;
+  n = 0 ;
+  nc = getline(&line, &n, f) ;
+  if ( nc == -1 ) {
+    return -1 ;    
+  }
+
+  /*check for comment or empty line*/
+  line = g_strchug(line) ;
+  if ( line[0] == '#' || strlen(line) == 0 ) {
+    return getlongline(f, buf, nbmax, cont) ;
+  }
+  
+  if ( n + strlen(buf) > nbmax )
+    g_error("%s: string buffer overrun (%lu>%d)",
+	    __FUNCTION__, n + strlen(buf), nbmax) ;
+
+  strcpy(buf, line) ;
+  len = strlen(buf) ;
+  
+  /*check for continuation character*/
+  for ( i = 0 ; i < strlen(cont) ; i ++ ) {
+    if ( buf[len-2] == cont[i] ) {
+      return getlongline(f, &(buf[len-2]), nbmax-len, cont) ;
+    }
+  }
+
+  return 0 ;
+}
+
+gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *b)
+
+{
+  gchar **tokens, buf[16384], *cont = "\\" ;
+  te_variable *vars ;
+  /* gsize n ; */
+  ssize_t nc ;
+  gint nt, i, err, nbmax = 16384 ;
+  
+  for ( i = 0 ; i < NBI_BOUNDARY_CONDITION_VARIABLE_NUMBER ; i ++ ) {
+    b->compiled[i] = NULL ;
+  }
+  nc = 0 ;
+  /* line = NULL ; n = 0 ; */
+  vars = b->vars ;
+  /* nc = getline(&line, &n, f) ; */
+  nc = getlongline(f, buf, nbmax, cont) ;
+  while ( nc != -1 ) {
+    /* line[nc-1] = '\0' ; */
+    /* tokens = g_strsplit(line, "=", 0) ; */
+    tokens = g_strsplit(buf, "=", 0) ;
+
+    for ( nt = 0 ; tokens[nt] != NULL ; nt ++ ) ;
+    g_assert(nt == 2) ;
+    for ( i = 0 ; i < nt ; i ++ ) {
+      tokens[i] = g_strchug(g_strchomp(tokens[i])) ;
+    }
+
+    i = nbi_boundary_condition_has_variable(b, tokens[0]) ;
+
+    if ( i != -1 ) {
+      b->expr[i] = g_strdup(tokens[1]) ;
+    } else {
+      g_assert(b->nvars < NBI_BOUNDARY_CONDITION_VARIABLE_NUMBER) ;
+      i = b->nvars ;
+      vars[i].name = g_strdup(tokens[0]) ;
+      vars[i].address = &(b->x[i]) ;
+      vars[i].type = TE_VARIABLE ;
+
+      b->expr[i] = g_strdup(tokens[1]) ;
+      
+      b->nvars ++ ;
+    }
+    /* nc = getline(&line, &n, f) ; */
+    nc = getlongline(f, buf, nbmax, cont) ;
+  }
+
+  /*compile expressions*/
+  for ( i = 6 ; i < b->nvars ; i ++ ) {
+    if ( vars[i].type == TE_VARIABLE && b->expr[i] != NULL ) 
+      b->compiled[i] = te_compile(b->expr[i], vars, b->nvars, &err) ;
+
+    if ( err != 0 ) {
+      fprintf(stderr,
+	      "%s: cannot parse expression\n"
+	      "    %s\n"
+	      "error at character %d\n", __FUNCTION__, b->expr[i], err) ;
+      exit(-1) ;
+    } 
+  }
+  
+  return 0 ;
+}
+
+gint nbi_boundary_condition_has_variable(nbi_boundary_condition_t *b,
+					 gchar *v)
+
+{
+  gint i ;
+  te_variable *vars = (te_variable *)(b->vars) ;
+  
+  for ( i = 0 ; i < b->nvars ; i ++ ) {
+    if ( strcmp(v, vars[i].name) == 0 ) return i ;
+  }
+  
+  return -1 ;
+}
+
+gint nbi_boundary_condition_write(FILE *f, nbi_boundary_condition_t *b)
+
+{
+  gint i ;
+  te_variable *vars = b->vars ;
+  
+  for ( i = 6 ; i < b->nvars ; i ++ ) {
+    if ( vars[i].type == TE_VARIABLE ) 
+      fprintf(f, "%s = %s\n", vars[i].name, b->expr[i]) ;
+  }
+  
+  return 0 ;
+}
+
+gint nbi_boundary_condition_eval(nbi_boundary_condition_t *b, gdouble *x,
+				 gdouble *n)
+
+{
+  te_variable *vars = b->vars ;
+  gint i ;
+  
+  b->x[NBI_BOUNDARY_CONDITION_POINT+0] = x[0] ;
+  b->x[NBI_BOUNDARY_CONDITION_POINT+1] = x[1] ;
+  b->x[NBI_BOUNDARY_CONDITION_POINT+2] = x[2] ;
+  
+  b->x[NBI_BOUNDARY_CONDITION_NORMAL+0] = n[0] ;
+  b->x[NBI_BOUNDARY_CONDITION_NORMAL+1] = n[1] ;
+  b->x[NBI_BOUNDARY_CONDITION_NORMAL+2] = n[2] ;
+
+  /*update the user-supplied variables*/
+  for ( i = NBI_BOUNDARY_CONDITION_P_REAL + 4 ; i < b->nvars ; i ++ ) {
+    if ( vars[i].type == TE_VARIABLE ) {
+      b->x[i] = te_eval((te_expr *)(b->compiled[i])) ;
+    }
+  }
+
+  /*now evaluate any expressions for the boundary conditions proper*/
+  for ( i = NBI_BOUNDARY_CONDITION_P_REAL ;
+	i < NBI_BOUNDARY_CONDITION_P_REAL + 4 ; i ++ ) {
+    if ( b->expr[i] != NULL ) {
+      b->x[i] = te_eval((te_expr *)(b->compiled[i])) ;
+    }
+  }
+
+  return 0 ;
+}
+
+gboolean nbi_boundary_condition_defined(nbi_boundary_condition_t *b,
+					gchar *v)
+
+{
+  te_variable *vars = b->vars ;
+  gint i ;
+
+  for ( i = 0 ; i < b->nvars ; i ++ ) {
+    if ( (strcmp(vars[i].name, v) == 0) &&
+	 b->expr[i] != NULL ) return TRUE ;
+  }
+  
+  return FALSE ;
 }

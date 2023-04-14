@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt]{article}
+\message{ !name(notes.tex)}\documentclass[a4paper,12pt]{article}
 
 \usepackage{times}
 \usepackage{amsmath}
@@ -12,6 +12,9 @@
 \bibliographystyle{unsrt}
 
 \begin{document}
+
+\message{ !name(notes.tex) !offset(-3) }
+
 
 (Notes on some details of implementation for reference during development)
 
@@ -41,15 +44,7 @@ for the single and double layer potentials and packed together.
     \verb+helmholtz_dGr+ & $\real (\partial G_{H}/\partial n)$ &
     evaluated for normal at field point\\
     \verb+helmholtz_dGi+ & $\imag (\partial G_{H}/\partial n)$ &
-    evaluated for normal at field point\\
-    \verb+helmholtz_ring_r+ & $\real(G_{n})$ & \\
-    \verb+helmholtz_ring_i+ & $\imag(G_{n})$ & \\
-    \verb+sphere_scattered_r+ & $\real(p_{s}(k, a, r,\theta))$ &
-    scattered potential from sphere\\
-    & & under plane wave excitation
-    \\
-    \verb+sphere_scattered_i+ & $\imag(p_{s}(k, a, r,\theta))$ &
-    \\
+    evaluated for normal at field point
   \end{tabular}
   \caption{Source terms for generation of boundary conditions; syntax
     for expressions is given by the help function of the solver}
@@ -59,42 +54,12 @@ for the single and double layer potentials and packed together.
 \begin{align}
   G_{L}(\mathbf{x}) &= \frac{1}{4\pi R},\\
   G_{H}(\mathbf{x}) &= \frac{\E{^{\J k R}}}{4\pi R},\\
-  R &= |\mathbf{x}|,\\
-  G_{n}(\mathbf{x})
-  &=
-  \int_{0}^{2\pi}\frac{\E^{\J(kR + n\theta_{1})}}{4\pi
-    R}\,\D\theta_{1},\\
-  R^{2}
-  &=
-  (x-a\cos\theta_{1})^{2} + (y-a\sin\theta_{1})^{2} + z^{2}.
+  R &= |
 \end{align}
 
-In Helmholtz problems, $k$ is wavenumber. For ring sources, $a$ is
-ring radius. 
-
-Scattering by sphere of radius $a$ due to incident plane wave $\exp[\J
-k z]$
-\begin{align}
-  p_{s}(r,\theta) &=
-  \sum_{m=0}^{M}
-  A_{m}
-  P_{m}(\cos\theta)h_{m}(kr)\,\\
-  A_{m}
-  &=
-  -(2m+1)\J^{m}
-  \frac{m j_{m-1}(ka) - (m+1)j_{m+1}(ka)}
-  {m h_{m-1}(ka) - (m+1)h_{m+1}(ka)},
-\end{align}
-with $j_{n}(\cdot)$ and $h_{n}(\cdot)$ the spherical Bessel and Hankel
-functions of the first kind, respectively. 
-
-For reference:
-\begin{align}
-  \frac{\partial G_{H}}{\partial R}
-  &=
-  \frac{\E^{\J k R}}{4\pi R^{2}}(\J k R - 1),\\
-  \frac{\partial R}{\partial x} &= \frac{x}{R}.
-\end{align}
+% \begin{align}
+%   G(\mathbf{x}) &= \frac{1}{4\pi R},\quad
+% \end{align}
 
 \bibliography{abbrev,scattering}
 
@@ -104,3 +69,5 @@ For reference:
 %%% mode: latex
 %%% TeX-master: t
 %%% End:
+
+\message{ !name(notes.tex) !offset(-73) }

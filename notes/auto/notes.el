@@ -8,6 +8,17 @@
     "article"
     "art12"
     "times"
-    "amsmath"))
+    "amsmath")
+   (TeX-add-symbols
+    "D"
+    "E"
+    "J"
+    "imag"
+    "real")
+   (LaTeX-add-labels
+    "tab:sources")
+   (LaTeX-add-bibliographies
+    "abbrev"
+    "scattering"))
  :latex)
 

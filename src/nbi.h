@@ -22,10 +22,6 @@
 #define NBI_SURFACE_PATCH_LENGTH  2
 #define NBI_SURFACE_PATCH_DATA_LENGTH     4
 
-#define NBI_EXPRESSION_VARIABLE_NUMBER      32
-#define NBI_EXPRESSION_VARIABLE_USER_DEFINED 6
-#define NBI_EXPRESSION_FUNCTION_NUMBER       6
-
 #define NBI_HEADER_LENGTH  80
 #define NBI_HEADER_ID       0
 #define NBI_HEADER_VERSION  4
@@ -135,23 +131,40 @@ struct _nbi_matrix_t {
 
 #define nbi_matrix_wavenumber(_m) ((_m)->pdata[NBI_PROBLEM_DATA_WAVENUMBER])
 
-typedef struct _nbi_expression_t nbi_expression_t ;
-
-struct _nbi_expression_t {
-  gchar *expression ; /*< text of the expression to be evaluated */
-  gdouble x[NBI_EXPRESSION_VARIABLE_NUMBER] ;
-  gpointer compiled ; /*< compiled version for evaluation by tinyexpr */
-  gpointer vars ;
-} ;
-
 typedef struct _nbi_boundary_condition_t nbi_boundary_condition_t ;
 
+#define NBI_BOUNDARY_CONDITION_VARIABLE_NUMBER 64
 struct _nbi_boundary_condition_t {
   nbi_problem_t problem ;
-  nbi_expression_t *e[4] ;
+  gint nvars ;
+  gdouble x[NBI_BOUNDARY_CONDITION_VARIABLE_NUMBER] ;
+  gpointer compiled[NBI_BOUNDARY_CONDITION_VARIABLE_NUMBER] ;
+  /*< compiled version for evaluation by tinyexpr */
+  gpointer vars ;
+  gchar *expr[NBI_BOUNDARY_CONDITION_VARIABLE_NUMBER] ;
 } ;
 
+#define NBI_BOUNDARY_CONDITION_POINT   0
+#define NBI_BOUNDARY_CONDITION_NORMAL  3
+#define NBI_BOUNDARY_CONDITION_P_REAL  6
+#define NBI_BOUNDARY_CONDITION_P_IMAG  7
+#define NBI_BOUNDARY_CONDITION_DP_REAL 8
+#define NBI_BOUNDARY_CONDITION_DP_IMAG 9
+
 #define nbi_boundary_condition_problem(_b) ((_b)->problem) 
+
+#define nbi_boundary_condition_p(_b)		\
+  ((_b)->x[NBI_BOUNDARY_CONDITION_P_REAL])
+#define nbi_boundary_condition_p_real(_b)	\
+  ((_b)->x[NBI_BOUNDARY_CONDITION_P_REAL])
+#define nbi_boundary_condition_p_imag(_b)	\
+  ((_b)->x[NBI_BOUNDARY_CONDITION_P_IMAG])
+#define nbi_boundary_condition_dp(_b)	\
+  ((_b)->x[NBI_BOUNDARY_CONDITION_DP_REAL])
+#define nbi_boundary_condition_dp_real(_b)	\
+  ((_b)->x[NBI_BOUNDARY_CONDITION_DP_REAL])
+#define nbi_boundary_condition_dp_imag(_b)	\
+  ((_b)->x[NBI_BOUNDARY_CONDITION_DP_IMAG])
 
 typedef gint (*nbi_mesh_export_func_t)(FILE *,
 				       gdouble *, gint, gint,
@@ -280,14 +293,19 @@ gint nbi_matrix_multiply_laplace(nbi_matrix_t *A,
 				 gint nthreads,
 				 gdouble *work) ;
 
-nbi_expression_t *nbi_expression_new(gchar *expression) ;
-gdouble nbi_expression_eval(nbi_expression_t *e, gdouble *x, gdouble *n) ;
 nbi_boundary_condition_t *nbi_boundary_condition_new(nbi_problem_t problem) ;
 gint nbi_boundary_condition_add(nbi_boundary_condition_t *b, gchar *e) ;
 gint nbi_boundary_condition_set(nbi_surface_t *s,
 				gdouble *p , gint pstr,
 				gdouble *pn, gint nstr,
 				nbi_boundary_condition_t *b) ;
+gint nbi_boundary_condition_has_variable(nbi_boundary_condition_t *b,
+					 gchar *v) ;
+gint nbi_boundary_condition_write(FILE *f, nbi_boundary_condition_t *b) ;
+gint nbi_boundary_condition_eval(nbi_boundary_condition_t *b, gdouble *x,
+				 gdouble *n) ;
+gboolean nbi_boundary_condition_defined(nbi_boundary_condition_t *b,
+					gchar *v) ;
 
 gint nbi_gmres_real(nbi_matrix_t *A, gint n,
 		    gdouble *x, gint xstr,

@@ -1,0 +1,8 @@
+k = 1.3
+x0 = 0.1
+y0 = -0.2
+z0=0.5
+rp = helmholtz_Gr(k, x-x0, y-y0, z-z0)
+ip = helmholtz_Gi(k, x-x0, y-y0, z-z0)
+rdp = helmholtz_dGr(k, x-x0, y-y0, z-z0, nx, ny, nz)
+idp = helmholtz_dGi(k, x-x0, y-y0, z-z0, nx, ny, nz)

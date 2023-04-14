@@ -10,7 +10,7 @@ depth=5
 order=8
 nthreads=2
 
-bin=../tools
+bin=../../tools
 
 gfile=Geometries/sphere-${nqp}.dat
 mfile=Matrices/matrix-sphere-helmholtz-${nqp}-${nqu}-${order}-${depth}.dat
@@ -20,10 +20,9 @@ opts="-e ${tol} -a ${nqa} -u ${nqu} \
       -m ${mfile} -g ${gfile} -k ${k}"
 echo -- ${opts}
 
-##${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
-##echo
-##${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
-##echo
+#${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
+
+#${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
 
 opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
       -f -T ${nthreads} -K ksp-options \
@@ -31,5 +30,5 @@ opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
 echo ${opts}
 
 ${bin}/nbi-solve-helmholtz -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
-      -f -T ${nthreads} -K ksp-options \
-      -k ${k} -b pcsource.bc -s sphere-field.dat
+      -f -T ${nthreads} -K ksp-options -P \
+      -k ${k} -b ring.bc -s sphere-field.dat

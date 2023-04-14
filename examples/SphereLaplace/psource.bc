@@ -1,0 +1,2 @@
+rp = laplace_G (x-0.1, y-0.0, z-0.25)
+rdp = laplace_dG(x-0.1, y-0.0, z-0.25, nx, ny, nz)

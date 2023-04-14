@@ -68,11 +68,19 @@ static void print_help_text(FILE *f, gint depth,
 	  "  -f use FMM\n"
 	  "  -G evaluate Green's identity\n"
 	  "  -g # geometry file name\n"
+#ifdef HAVE_PETSC
+	  "  -K # ksp options file name for PETSc solver\n"
+#endif /*HAVE_PETSC*/
+	  "  -k # wavenumber\n"
 	  "  -L evaluate single and double layer potentials\n"
 	  "  -m # matrix file name\n"
 	  "  -o # FMM order (%d)\n"
+#ifdef HAVE_PETSC
+	  "  -P use PETSc solver\n"
+#endif /*HAVE_PETSC*/
 	  "  -p precompute local interactions in FMM\n"
 	  "  -r # GMRES restart interval (%d)\n"
+	  "  -s # solution file name\n"
 	  "  -T # number of threads (%d)\n"
 	  "  -t # GMRES solution tolerance (%lg)\n",
 	  depth, order_inc, order_fmm, gmres_restart, nthreads, tol) ;
@@ -245,7 +253,7 @@ gint main(gint argc, gchar **argv)
     fprintf(stderr, "%s: no boundary condition specified\n", progname) ;
     exit(1) ;
   }
-
+  
   fprintf(stderr, "%s: reading boundary conditions from %s\n",
 	  progname, bfile) ;
   if ( (input = fopen(bfile, "r")) == NULL ) {
@@ -253,14 +261,16 @@ gint main(gint argc, gchar **argv)
 	    progname, bfile) ;
     return 1 ;
   }
-
+  
   bc = nbi_boundary_condition_new(NBI_PROBLEM_HELMHOLTZ) ;
+
   nbi_boundary_condition_read(input, bc) ;
   
   fclose(input) ;
 
+  /* nbi_boundary_condition_write(stderr, bc) ; */
+
   nbi_boundary_condition_set(s, &(src[0]), 4, &(src[2]), 4, bc) ;
-  /* fprintf(stderr, "%lg %lg %lg %lg\n", src[0], src[1], src[2], src[3]) ; */
 
   if ( !greens_id && !layer_potentials && !calc_field ) {
     /*solver settings for GMRES*/

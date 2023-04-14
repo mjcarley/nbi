@@ -784,24 +784,24 @@ gint nbi_matrix_neighbour_number_max(nbi_matrix_t *m)
   return nnmax ;
 }
 
-gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *bc)
+/* gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *bc) */
 
-{
-  gchar *line ;
-  gsize n ;
-  ssize_t nc ;
+/* { */
+/*   gchar *line ; */
+/*   gsize n ; */
+/*   ssize_t nc ; */
   
-  nc = 0 ; line = NULL ; n = 0 ;
-  while ( nc != -1 ) {
-    nc = getline(&line, &n, f) ;
-    if ( nc > 0 ) {
-      fprintf(stderr, "%s", line) ;
-      nbi_boundary_condition_add(bc, line) ;
-    }
-  }
+/*   /\* nc = 0 ; line = NULL ; n = 0 ; *\/ */
+/*   /\* while ( nc != -1 ) { *\/ */
+/*   /\*   nc = getline(&line, &n, f) ; *\/ */
+/*   /\*   if ( nc > 0 ) { *\/ */
+/*   /\*     fprintf(stderr, "%s", line) ; *\/ */
+/*   /\*     nbi_boundary_condition_add(bc, line) ; *\/ */
+/*   /\*   } *\/ */
+/*   /\* } *\/ */
   
-  return 0 ;
-}
+/*   return 0 ; */
+/* } */
 
 static gint boundary_condition_laplace(nbi_surface_t *s,
 				       NBI_REAL *p , gint pstr,
@@ -811,6 +811,7 @@ static gint boundary_condition_laplace(nbi_surface_t *s,
 {
   gdouble *x, *n ;
   gint i ;
+  gchar *terms[] = {"rp", "rdp", NULL} ;
 
   if ( pstr < 1 ) {
     g_error("%s: stride (pstr == %d)for Laplace problem must be at least 1",
@@ -821,12 +822,23 @@ static gint boundary_condition_laplace(nbi_surface_t *s,
 	    __FUNCTION__, nstr) ;
   }
 
+  /*check that required boundary condition terms are defined*/
+  for ( i = 0 ; terms[i] != NULL ; i ++ ) {
+    if ( !nbi_boundary_condition_defined(b, terms[i]) ) {
+      fprintf(stderr, "%s: boundary condition \"%s\" not defined\n",
+	      __FUNCTION__, terms[i]) ;
+      exit(1) ;
+    }
+  }
+
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
     x = (NBI_REAL *)nbi_surface_node(s, i) ;
     n = (NBI_REAL *)nbi_surface_normal(s, i) ;
 
-    p [i*pstr] += nbi_expression_eval(b->e[0], x, n) ;
-    pn[i*nstr] += nbi_expression_eval(b->e[1], x, n) ;
+    nbi_boundary_condition_eval(b, x, n) ;
+
+    p [i*pstr] += nbi_boundary_condition_p (b) ;
+    pn[i*nstr] += nbi_boundary_condition_dp(b) ;
   }
   
   return 0 ;
@@ -840,7 +852,8 @@ static gint boundary_condition_helmholtz(nbi_surface_t *s,
 {
   gdouble *x, *n ;
   gint i ;
-
+  gchar *terms[] = {"rp", "ip", "rdp", "idp", NULL} ;
+  
   if ( pstr < 2 ) {
     g_error("%s: stride (pstr == %d)for Helmholtz problem must be at least 2",
 	    __FUNCTION__, pstr) ;
@@ -850,22 +863,26 @@ static gint boundary_condition_helmholtz(nbi_surface_t *s,
 	    __FUNCTION__, nstr) ;
   }
 
+  /*check that required boundary condition terms are defined*/
+  for ( i = 0 ; terms[i] != NULL ; i ++ ) {
+    if ( !nbi_boundary_condition_defined(b, terms[i]) ) {
+      fprintf(stderr, "%s: boundary condition \"%s\" not defined\n",
+	      __FUNCTION__, terms[i]) ;
+      exit(1) ;
+    }
+  }
+
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
     x = (NBI_REAL *)nbi_surface_node(s, i) ;
     n = (NBI_REAL *)nbi_surface_normal(s, i) ;
 
-    p [i*pstr+0] += nbi_expression_eval(b->e[0], x, n) ;
-    p [i*pstr+1] += nbi_expression_eval(b->e[1], x, n) ;
-    pn[i*nstr+0] += nbi_expression_eval(b->e[2], x, n) ;
-    pn[i*nstr+1] += nbi_expression_eval(b->e[3], x, n) ;
-  }
-  /* for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) { */
-  /*   x = (NBI_REAL *)nbi_surface_node(s, i) ; */
-  /*   n = (NBI_REAL *)nbi_surface_normal(s, i) ; */
+    nbi_boundary_condition_eval(b, x, n) ;
 
-  /*   p [i*pstr] += nbi_expression_eval(b->e[0], x, n) ; */
-  /*   pn[i*nstr] += nbi_expression_eval(b->e[1], x, n) ; */
-  /* } */
+    p [i*pstr+0] += nbi_boundary_condition_p_real(b) ;
+    p [i*pstr+1] += nbi_boundary_condition_p_imag(b) ;
+    pn[i*nstr+0] += nbi_boundary_condition_dp_real(b) ;
+    pn[i*nstr+1] += nbi_boundary_condition_dp_imag(b) ;
+  }
   
   return 0 ;
 }

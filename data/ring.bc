@@ -1,0 +1,10 @@
+k = 1.3
+x0 = 0.1
+y0 = -0.0
+z0 = 0.5
+a = 0.25
+n = 3
+rp = helmholtz_ring_r(a, n, k, x-x0, y-y0, z-z0)
+ip = helmholtz_ring_i(a, n, k, x-x0, y-y0, z-z0)
+rdp = helmholtz_ring_x_r(a, n, k, x-x0, y-y0, z-z0)*nx + helmholtz_ring_y_r(a, n, k, x-x0, y-y0, z-z0)*ny + helmholtz_ring_z_r(a, n, k, x-x0, y-y0, z-z0)*nz
+idp = helmholtz_ring_x_i(a, n, k, x-x0, y-y0, z-z0)*nx + helmholtz_ring_y_i(a, n, k, x-x0, y-y0, z-z0)*ny + helmholtz_ring_z_i(a, n, k, x-x0, y-y0, z-z0)*nz

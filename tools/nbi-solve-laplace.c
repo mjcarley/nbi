@@ -59,6 +59,7 @@ gchar *progname ;
 
 static void print_help_text(FILE *f, gint depth,
 			    gint order_inc, gint order_fmm,
+			    gint gmres_restart,
 			    gint nthreads, gdouble tol)
 
 {
@@ -70,19 +71,28 @@ static void print_help_text(FILE *f, gint depth,
   fprintf(f,
 	  "Options:\n\n"
 	  "  -h print this message and exit\n"
+	  "  -B list built-in boundary condition functions and exit\n"
 	  "  -b # boundary condition file\n"
 	  "  -D # FMM tree depth (%d)\n"
 	  "  -d # FMM tree increment in expansion order between levels (%d)\n"
 	  "  -f use FMM\n"
 	  "  -G evaluate Green's identity\n"
 	  "  -g # geometry file name\n"
+#ifdef HAVE_PETSC
+	  "  -K # ksp options file name for PETSc solver\n"
+#endif /*HAVE_PETSC*/
 	  "  -L evaluate single and double layer potentials\n"
 	  "  -m # matrix file name\n"
 	  "  -o # FMM order (%d)\n"
+#ifdef HAVE_PETSC
+	  "  -P use PETSc solver\n"
+#endif /*HAVE_PETSC*/
 	  "  -p precompute local interactions in FMM\n"
+	  "  -r GMRES restart interval (%d)\n"
+	  "  -s # solution file name\n"
 	  "  -T # number of threads (%d)\n"
 	  "  -t # GMRES solution tolerance (%lg)\n",
-	  depth, order_inc, order_fmm, nthreads, tol) ;
+	  depth, order_inc, order_fmm, gmres_restart, nthreads, tol) ;
   return ;
 }
 
@@ -145,7 +155,8 @@ gint main(gint argc, gchar **argv)
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
     case 'h':
-      print_help_text(stderr, depth, order_inc, order_fmm, nthreads, tol) ;
+      print_help_text(stderr, depth, order_inc, order_fmm, gmres_restart,
+		      nthreads, tol) ;
       return 0 ;
       break ;
     case 'B':

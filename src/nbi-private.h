@@ -146,5 +146,41 @@ gdouble nbi_function_gfunc_helmholtz_dG_imag(gdouble k,
 					     gdouble x, gdouble y, gdouble z,
 					     gdouble nx, gdouble ny,
 					     gdouble nz) ;
+gdouble nbi_function_gfunc_helmholtz_ring_real(gdouble a, gdouble n, gdouble k,
+					       gdouble x, gdouble y,
+					       gdouble z) ;
+gdouble nbi_function_gfunc_helmholtz_ring_imag(gdouble a, gdouble n, gdouble k,
+					       gdouble x, gdouble y,
+					       gdouble z) ;
+gdouble nbi_function_gfunc_helmholtz_ring_real_x(gdouble a, gdouble n,
+						 gdouble k,
+						 gdouble x, gdouble y,
+						 gdouble z) ;
+gdouble nbi_function_gfunc_helmholtz_ring_imag_x(gdouble a, gdouble n,
+						 gdouble k,
+						 gdouble x, gdouble y,
+						 gdouble z) ;
+gdouble nbi_function_gfunc_helmholtz_ring_real_y(gdouble a, gdouble n,
+						 gdouble k,
+						 gdouble x, gdouble y,
+						 gdouble z) ;
+gdouble nbi_function_gfunc_helmholtz_ring_imag_y(gdouble a, gdouble n,
+						 gdouble k,
+						 gdouble x, gdouble y,
+						 gdouble z) ;
+gdouble nbi_function_gfunc_helmholtz_ring_real_z(gdouble a, gdouble n,
+						 gdouble k,
+						 gdouble x, gdouble y,
+						 gdouble z) ;
+gdouble nbi_function_gfunc_helmholtz_ring_imag_z(gdouble a, gdouble n,
+						 gdouble k,
+						 gdouble x, gdouble y,
+						 gdouble z) ;
+gdouble nbi_function_sphere_scattered_r(gdouble a, gdouble k,
+					gdouble x, gdouble y,
+					gdouble z) ;
+gdouble nbi_function_sphere_scattered_i(gdouble a, gdouble k,
+					gdouble x, gdouble y,
+					gdouble z) ;
 
 #endif /*NBI_PRIVATE_H_INCLUDED*/
