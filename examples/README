@@ -1,0 +1,46 @@
+* Examples for use of NBI in Laplace and Helmholtz problems
+
+Each directory has a self-contained example which is run by calling
+the executable script. The script will generate a geometry (in the
+subdirectory Geometries), assemble a matrix (stored in the subdirectory
+Matrices), solve for some specified boundary condition, and return an
+error estimate based on the known solution.
+
+The error estimate is computed as the difference between the potential
+specified in the boundary condition file, and that computed by the
+solver.
+
+SphereLaplace: solve for the Laplace potential on a sphere under
+	       excitation from an internal point source. To run the
+	       example in the directory,
+
+	       ./sphere-laplace
+
+SphereHelmholtz: solve for the Helmholtz (wave equation) potential on
+		 a sphere under excitation from a sinusoidally varying
+		 ring source (this can be used to simulate rotor and
+		 propeller noise). To run the example in the
+		 directory,
+
+		 ./sphere-helmholtz
+
+Scattering: solve for scattering of a plane wave by a sphere, with
+	    comparison to the analytical series solution. To run the
+	    example in the directory,
+
+	    ./sphere-scattering
+
+* Parameters
+
+The sample shell scripts contain a number of common command line
+options, which can be modified within the scripts.
+
+k:        acoustic wavenumber, for Helmholtz problems
+nqa:      number of quadrature points in rule used for adaptive integration
+nqp:      number of quadrature points on discretized patches
+nqu:      number of quadrature points on upsampled patches
+tol:      integration tolerance
+eta:      near/far field cutoff parameter
+depth:    maximum recursion depth for adaptive quadrature
+order:    order of singular integration
+nthreads: number of threads to use in threaded computations

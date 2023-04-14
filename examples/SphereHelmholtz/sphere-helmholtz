@@ -20,9 +20,9 @@ opts="-e ${tol} -a ${nqa} -u ${nqu} \
       -m ${mfile} -g ${gfile} -k ${k}"
 echo -- ${opts}
 
-#${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
+${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
 
-#${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
+${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
 
 opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
       -f -T ${nthreads} -K ksp-options \

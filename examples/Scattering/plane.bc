@@ -1,11 +1,13 @@
 # plane wave incident along the z axis
 k = 5.0
 a = 0.5
+# sphere centre
 z0 = 0.9
 # this is the solution for the surface potential on a sphere of radius a
 rp = sphere_scattered_r(a, k, x, y, z-z0)
 ip = sphere_scattered_i(a, k, x, y, z-z0)
 # this is the boundary condition which should generate the surface potential
-# above
+# above; note the inclusion of the sphere axial position to keep the phase
+# correct
 rdp =  k*sin(k*(z-z0))*nz
 idp = -k*cos(k*(z-z0))*nz
