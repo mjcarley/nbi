@@ -1,6 +1,6 @@
 #!/bin/bash
 
-k=5.0
+k=10.0
 nqa=25
 nqp=25
 nqu=54
@@ -12,7 +12,7 @@ nthreads=2
 
 bin=../../tools
 
-gfile=Geometries/sphere-${nqp}.dat
+gfile=Geometries/sphere-${nqp}.nbi
 mfile=Matrices/matrix-sphere-helmholtz-${nqp}-${nqu}-${order}-${depth}.dat
 
 opts="-e ${tol} -a ${nqa} -u ${nqu} \
@@ -31,4 +31,24 @@ echo ${opts}
 
 ${bin}/nbi-solve-helmholtz -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
       -f -T ${nthreads} \
-      -k ${k} -b plane.bc -s sphere-field.dat
+      -P -K ksp-options \
+      -k ${k} -b plane.bc -s solution.dat
+
+## generate radiated field on 33x33 grid in plane x=0
+${bin}/nbi-surface -g grid-yz -d -2 -d -2 -d 2 -d 4 -d 0 \
+      -i 33 -i 33 > grid.nbi
+## field radiated by surface solution (negative of ring source term)
+${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
+      -k ${k} -F grid.nbi -b plane.bc > grid.dat
+## generate gmsh files for visualization
+${bin}/nbi-process -d grid.dat -g grid.nbi -r 2 > grid.msh 2> log
+
+offp=`grep point: log | cut -d: -f2`
+offe=`grep element: log | cut -d: -f2`
+
+## sphere surface pressure
+${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
+      -S -k ${k} -b plane.bc > surface.dat
+${bin}/nbi-process -d surface.dat -g ${gfile} -r 2 \
+      -e ${offe} -p ${offp} > sphere.msh
+ 

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 nqa=25
-nqp=7
-nqu=25
+nqp=25
+nqu=54
 tol=1e-6
 eta=1.5
 depth=3
@@ -11,7 +11,7 @@ nthreads=4
 
 bin=../../tools
 
-gfile=Geometries/sphere-${nqp}.dat
+gfile=Geometries/sphere-${nqp}.nbi
 mfile=Matrices/matrix-sphere-${nqp}-${nqu}-${order}-${depth}.dat
 
 opts="-e ${tol} -a ${nqa} -u ${nqu} \
@@ -23,13 +23,24 @@ ${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
 
 ${bin}/nbi-assemble-laplace ${opts} -T ${nthreads}
 
-
 opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t ${tol} \
       -f -T ${nthreads} \
-      -b psource.bc -s sphere-field.dat"
+      -b psource.bc -s solution.dat"
 
 echo ${opts}
 
 ${bin}/nbi-solve-laplace ${opts}
 
-## -P -K ksp-options \
+## generate radiated field on 33x33 grid in plane z=2.5, -2 < x, y < 2
+${bin}/nbi-surface -g grid-xy -d -2 -d -2 -d 2 -d 2 -d 2.5 \
+      -i 33 -i 33 > grid.nbi
+## field radiated by surface solution (negative of ring source term)
+${bin}/nbi-field-laplace -g ${gfile} -d solution.dat \
+      -F grid.nbi > grid.dat
+## adding the incident term for an internal source should give zero field
+${bin}/nbi-field-laplace -g ${gfile} -d solution.dat \
+      -F grid.nbi -b psource.bc > error.dat
+## generate gmsh files for visualization
+${bin}/nbi-process -d grid.dat -g grid.nbi -r 2 > grid.msh
+## error surface
+${bin}/nbi-process -d error.dat -g grid.nbi -r 2 > error.msh

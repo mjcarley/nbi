@@ -1,2 +1,15 @@
+# for Laplace problems, you must set the the surface potential rp and
+# the surface potential gradient rdp
+
+# the potential gradient is used to set the boundary condition and compute
+# the surface potential
+#
+# an error estimate is made, assuming that the supplied potential is the
+# "correct" solution corresponding to the boundary condition
+
+# potential from point source
 rp = laplace_G (x-0.1, y-0.0, z-0.25)
-rdp = laplace_dG(x-0.1, y-0.0, z-0.25, nx, ny, nz)
+
+# negative of potential normal derivative from point source (boundary
+# condition for scattering problem)
+rdp = -laplace_dG(x-0.1, y-0.0, z-0.25, nx, ny, nz)

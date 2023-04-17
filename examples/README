@@ -8,7 +8,8 @@ error estimate based on the known solution.
 
 The error estimate is computed as the difference between the potential
 specified in the boundary condition file, and that computed by the
-solver.
+solver. Each example script also generates gmsh mesh files for
+visualization; these can be viewed using gmsh.
 
 SphereLaplace: solve for the Laplace potential on a sphere under
 	       excitation from an internal point source. To run the
@@ -29,6 +30,10 @@ Scattering: solve for scattering of a plane wave by a sphere, with
 	    example in the directory,
 
 	    ./sphere-scattering
+
+Rotor: solve the problem of scattering of noise from an azimuthally
+       varying circular source, which simulates a rotor interacting
+       with a simple nacelle
 
 * Parameters
 

@@ -211,7 +211,7 @@ gint NBI_FUNCTION_NAME(nbi_surface_patch_centroid)(NBI_REAL *x, gint xstr,
 }
 
 NBI_REAL NBI_FUNCTION_NAME(nbi_surface_patch_radius)(NBI_REAL *x, gint xstr,
-						    gint nx, NBI_REAL *c)
+						     gint nx, NBI_REAL *c)
 
 {
   NBI_REAL r, ri ;
@@ -227,10 +227,10 @@ NBI_REAL NBI_FUNCTION_NAME(nbi_surface_patch_radius)(NBI_REAL *x, gint xstr,
 }
 
 gint NBI_FUNCTION_NAME(nbi_patch_neighbours)(NBI_REAL *c, NBI_REAL r,
-					    NBI_REAL *x, gint xstr, gint nx,
-					    gint n0, gint n1,
-					    gint *nbrs, gint *nnbrs,
-					    gint nnmax)
+					     NBI_REAL *x, gint xstr, gint nx,
+					     gint n0, gint n1,
+					     gint *nbrs, gint *nnbrs,
+					     gint nnmax)
 
 {
   NBI_REAL r2 = r*r, rx2 ;
@@ -813,12 +813,12 @@ static gint boundary_condition_laplace(nbi_surface_t *s,
   gint i ;
   gchar *terms[] = {"rp", "rdp", NULL} ;
 
-  if ( pstr < 1 ) {
-    g_error("%s: stride (pstr == %d)for Laplace problem must be at least 1",
+  if ( pstr < 1 && p != NULL ) {
+    g_error("%s: stride for Laplace problem must be at least 1 (pstr == %d)",
 	    __FUNCTION__, pstr) ;
   }
-  if ( nstr < 1 ) {
-    g_error("%s: stride (nstr == %d)for Laplace problem must be at least 1",
+  if ( nstr < 1 && pn != NULL ) {
+    g_error("%s: stride for Laplace problem must be at least 1 (nstr == %d)",
 	    __FUNCTION__, nstr) ;
   }
 
@@ -829,6 +829,36 @@ static gint boundary_condition_laplace(nbi_surface_t *s,
 	      __FUNCTION__, terms[i]) ;
       exit(1) ;
     }
+  }
+
+  if ( p == NULL && pn == NULL ) return 0 ;
+  
+  if ( p == NULL && pn != NULL ) {
+    for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+      x = (NBI_REAL *)nbi_surface_node(s, i) ;
+      n = (NBI_REAL *)nbi_surface_normal(s, i) ;
+      
+      nbi_boundary_condition_eval(b, x, n) ;
+      
+      /* p [i*pstr] += nbi_boundary_condition_p (b) ; */
+      pn[i*nstr] += nbi_boundary_condition_dp(b) ;
+    }
+
+    return 0 ;
+  }
+
+  if ( p != NULL && pn == NULL ) {
+    for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+      x = (NBI_REAL *)nbi_surface_node(s, i) ;
+      n = (NBI_REAL *)nbi_surface_normal(s, i) ;
+      
+      nbi_boundary_condition_eval(b, x, n) ;
+      
+      p [i*pstr] += nbi_boundary_condition_p (b) ;
+      /* pn[i*nstr] += nbi_boundary_condition_dp(b) ; */
+    }
+
+    return 0 ;
   }
 
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
@@ -854,12 +884,12 @@ static gint boundary_condition_helmholtz(nbi_surface_t *s,
   gint i ;
   gchar *terms[] = {"rp", "ip", "rdp", "idp", NULL} ;
   
-  if ( pstr < 2 ) {
-    g_error("%s: stride (pstr == %d)for Helmholtz problem must be at least 2",
+  if ( pstr < 2 && p != NULL ) {
+    g_error("%s: stride for Helmholtz problem must be at least 2 (pstr == %d)",
 	    __FUNCTION__, pstr) ;
   }
-  if ( nstr < 2 ) {
-    g_error("%s: stride (nstr == %d)for Helmholtz problem must be at least 2",
+  if ( nstr < 2 && pn != NULL ) {
+    g_error("%s: stride for Helmholtz problem must be at least 2 (nstr == %d)",
 	    __FUNCTION__, nstr) ;
   }
 
@@ -870,6 +900,40 @@ static gint boundary_condition_helmholtz(nbi_surface_t *s,
 	      __FUNCTION__, terms[i]) ;
       exit(1) ;
     }
+  }
+
+  if ( p == NULL && pn == NULL ) return 0 ;
+  
+  if ( p == NULL && pn != NULL ) {
+    for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+      x = (NBI_REAL *)nbi_surface_node(s, i) ;
+      n = (NBI_REAL *)nbi_surface_normal(s, i) ;
+      
+      nbi_boundary_condition_eval(b, x, n) ;
+      
+      /* p [i*pstr+0] += nbi_boundary_condition_p_real(b) ; */
+      /* p [i*pstr+1] += nbi_boundary_condition_p_imag(b) ; */
+      pn[i*nstr+0] += nbi_boundary_condition_dp_real(b) ;
+      pn[i*nstr+1] += nbi_boundary_condition_dp_imag(b) ;
+    }
+
+    return 0 ;
+  }
+
+  if ( p != NULL && pn == NULL ) {
+    for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+      x = (NBI_REAL *)nbi_surface_node(s, i) ;
+      n = (NBI_REAL *)nbi_surface_normal(s, i) ;
+      
+      nbi_boundary_condition_eval(b, x, n) ;
+      
+      p [i*pstr+0] += nbi_boundary_condition_p_real(b) ;
+      p [i*pstr+1] += nbi_boundary_condition_p_imag(b) ;
+      /* pn[i*nstr+0] += nbi_boundary_condition_dp_real(b) ; */
+      /* pn[i*nstr+1] += nbi_boundary_condition_dp_imag(b) ; */
+    }
+
+    return 0 ;
   }
 
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {

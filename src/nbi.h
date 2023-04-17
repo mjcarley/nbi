@@ -71,7 +71,6 @@ struct _nbi_surface_t {
   fpsize ; /*< size of floating point data (single or double precision)*/
 } ;
 
-
 #define nbi_surface_node_number(_s)  ((_s)->nn)
 #define nbi_surface_node_number_max(_s)  ((_s)->nnmax)
 
@@ -203,6 +202,10 @@ gint nbi_geometry_sphere_ico(nbi_surface_t *s, gdouble r, gint nr, gint nq) ;
 gint nbi_geometry_ellipsoid_ico(nbi_surface_t *s,
 				gdouble a, gdouble b, gdouble c,
 				gint nr, gint nq) ;
+gint nbi_geometry_grid(nbi_surface_t *s,
+		       gdouble smin, gdouble smax, gint ns,
+		       gdouble tmin, gdouble tmax, gint nt,
+		       gint nq) ;
 
 gint nbi_patch_neighbours(gdouble *c, gdouble r,
 			  gdouble *x, gint xstr, gint nx,
@@ -269,6 +272,11 @@ gint nbi_surface_field_helmholtz(nbi_surface_t *s, gdouble k,
 				 gdouble *ps, gint pstr,
 				 gdouble *al, gdouble *bt,
 				 gdouble *x, gdouble *p) ;
+gint nbi_surface_field_laplace(nbi_surface_t *s,
+			       gdouble *ps,
+			       gint pstr,
+			       gdouble al, gdouble bt,
+			       gdouble *x, gdouble *p) ;
 
 gint nbi_surface_greens_identity_helmholtz(nbi_matrix_t *m,
 					   gdouble *p ,
@@ -338,8 +346,8 @@ gint nbi_mesh_triangulate(nbi_surface_t *s,
 			  gdouble *f, gint fstr,
 			  gdouble *fi, gint fistr,
 			  gint *np, gint *nt) ;
-gint nbi_mesh_export_gmsh(FILE *f, gdouble *x, gint xstr, gint np,
-			  gint *tri, gint tstr, gint nt,
+gint nbi_mesh_export_gmsh(FILE *f, gdouble *x, gint xstr, gint np, gint offp,
+			  gint *tri, gint tstr, gint nt, gint offt,
 			  gdouble *data, gint dstr) ;
 
 const gchar *nbi_function_help(gchar *f) ;

@@ -38,7 +38,8 @@
 GTimer *timer ;
 gchar *progname ;
 
-static void print_help_text(FILE *f, gint field, gint dmax)
+static void print_help_text(FILE *f, gint offt, gint field, gint offp,
+			    gint dmax)
 
 {
   fprintf(f, 
@@ -50,10 +51,12 @@ static void print_help_text(FILE *f, gint field, gint dmax)
 	  "Options:\n\n"
 	  "  -h print this message and exit\n"
 	  "  -d # input data file\n"
+	  "  -e # element index offset (%d)\n"
 	  "  -f # field element index (%d)\n"
 	  "  -g # geometry file\n"
+	  "  -p # point index offset (%d)\n"
 	  "  -r # recursion depth for triangle generation (%d)\n",
-	  field, dmax) ;
+	  offt, field, offp, dmax) ;
 	  
   return ;
 }
@@ -65,13 +68,16 @@ gint main(gint argc, gchar **argv)
   nbi_surface_t *s ;
   FILE *input, *output ;
   gint np, fstr, dmax, order, Nk, xistr, ni, fistr, npmax, ntmax ;
-  gint ntri, ne, nd, ppe, field, *tri, tstr ;
+  gint ntri, ne, nd, ppe, field, *tri, tstr, offp, offt ;
   NBI_REAL *K, *xi, *fi, tol, *f ;
 
   progname = g_strdup(g_path_get_basename(argv[0])) ;
 
   dmax = 2 ; xistr = 3 ; tol = 0.0 ;
   fi = NULL ; fistr = 0 ; fstr = 2 ;
+  offp = 0 ; offt = 0 ;
+
+  /* offp = 100000 ; */
 
   /*linear output elements, 3 nodes per element*/
   order = 1 ; ppe = 3 ;
@@ -81,17 +87,19 @@ gint main(gint argc, gchar **argv)
 
   field = 0 ;
 
-  while ( (ch = getopt(argc, argv, "hd:f:g:r:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "hd:e:f:g:p:r:")) != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
     case 'h':
-      print_help_text(stderr, field, dmax) ;
+      print_help_text(stderr, offt, field, offp, dmax) ;
       return 0 ;
       break ;
     case 'd': dfile = g_strdup(optarg) ; break ;
+    case 'e': offt = atoi(optarg) ; break ;
     case 'f': field = atoi(optarg) ; break ;
     case 'g': gfile = g_strdup(optarg) ; break ;
     case 'r': dmax = atoi(optarg) ; break ;
+    case 'p': offp = atoi(optarg) ; break ;
     }
   }
 
@@ -161,7 +169,12 @@ gint main(gint argc, gchar **argv)
   
   fprintf(stderr, "%d nodes, %d elements generated\n", ni, ne) ;
 
-  nbi_mesh_export_gmsh(output, xi, xistr, ni, tri, tstr, ne, fi, fistr) ;
+  fprintf(stderr, "final point: %d\n", offp+ni) ;
+  fprintf(stderr, "final element: %d\n", offt+ne) ;
+  
+  nbi_mesh_export_gmsh(output,
+		       xi, xistr, ni, offp,
+		       tri, tstr, ne, offt, fi, fistr) ;
 
   return 0 ;
 }

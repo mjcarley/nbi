@@ -1,11 +1,29 @@
 # plane wave incident along the z axis
-k = 5.0
+k = 10.0
+# sphere radius
 a = 0.5
-# sphere centre
+# sphere centre (this should be the same as in sphere.agg)
 z0 = 0.9
+
+# for Helmholtz problems, you must set the real and imaginary parts of
+# the surface potential (rp,ip) and of the surface potential gradient
+# (rdp, idp)
+#
+# the potential gradient is used to set the boundary condition and compute
+# the surface potential
+#
+# an error estimate is made, assuming that the supplied potential is the
+# "correct" solution corresponding to the boundary condition
+
 # this is the solution for the surface potential on a sphere of radius a
-rp = sphere_scattered_r(a, k, x, y, z-z0)
-ip = sphere_scattered_i(a, k, x, y, z-z0)
+# centred at (0,0,z0)
+#rp = sphere_scattered_r(a, k, x, y, z-z0)
+#ip = sphere_scattered_i(a, k, x, y, z-z0)
+
+# this is the incident field, which can be added to the radiated solution
+rp = cos(k*(z-z0))
+ip = sin(k*(z-z0))
+
 # this is the boundary condition which should generate the surface potential
 # above; note the inclusion of the sphere axial position to keep the phase
 # correct

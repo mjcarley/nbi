@@ -53,9 +53,7 @@ static void print_help_text(FILE *f, gint field)
 	  "  -F # field geometry file\n"
 	  "  -f # field element index (%d)\n"
 	  "  -g # geometry file\n"
-	  "  -k # wavenumber\n"
 	  "  -S use surface geometry and data, and do not compute field\n",
-	  /* "  -r # recursion depth for triangle generation (%d)\n", */
 	  field) ;
 	  
   return ;
@@ -70,20 +68,20 @@ gint main(gint argc, gchar **argv)
   gboolean surface_data ;
   FILE *input, *output ;
   gint xstr, i, field, nd, fstr ;
-  NBI_REAL *f, k, x[3], p[2], al[] = {1,0}, bt[] = {0,0} ;
+  NBI_REAL *f, x[3], p[2], al = 1.0, bt = 0.0 ;
   NBI_REAL *pf, *xg ;
 
   progname = g_strdup(g_path_get_basename(argv[0])) ;
 
-  fstr = 2 ;
+  fstr = 1 ;
 
   input = stdin ; output = stdout ;
   bfile = NULL ; dfile = NULL ; ffile = NULL ; gfile = NULL ;
   
-  field = 0 ; k = 0.0 ; bc = NULL ;
+  field = 0 ; bc = NULL ;
   surface_data = FALSE ;
   
-  while ( (ch = getopt(argc, argv, "hb:d:F:f:g:k:S")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "hb:d:F:f:g:S")) != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
     case 'h':
@@ -95,9 +93,7 @@ gint main(gint argc, gchar **argv)
     case 'F': ffile = g_strdup(optarg) ; break ;
     case 'f': field = atoi(optarg) ; break ;
     case 'g': gfile = g_strdup(optarg) ; break ;
-    case 'k': k = atof(optarg) ; break ;
     case 'S': surface_data = TRUE ; break ;
-    /* case 'r': dmax = atoi(optarg) ; break ; */
     }
   }
 
@@ -140,9 +136,9 @@ gint main(gint argc, gchar **argv)
   }
   fclose(input) ;    
 
-  if ( fstr < 4 ) {
+  if ( fstr < 2 ) {
     fprintf(stderr,
-	    "%s: not enough surface data per node (%d); at least four "
+	    "%s: not enough surface data per node (%d); at least two "
 	    "required\n", progname, fstr) ;
     exit(1) ;
   }
@@ -163,12 +159,12 @@ gint main(gint argc, gchar **argv)
       return 1 ;
     }
     
-    bc = nbi_boundary_condition_new(NBI_PROBLEM_HELMHOLTZ) ;
+    bc = nbi_boundary_condition_new(NBI_PROBLEM_LAPLACE) ;
     
     nbi_boundary_condition_read(input, bc) ;
 
     /*so that the field calculation increments the incident field*/
-    bt[0] = 1.0 ; bt[1] = 0.0 ;
+    bt = 1.0 ;
     
     fclose(input) ;
   }
@@ -182,7 +178,7 @@ gint main(gint argc, gchar **argv)
 	g_assert_not_reached() ; /*need to write a function to do this*/
       }
       
-      nbi_surface_field_helmholtz(s, k, &(f[field]), fstr, al, bt, x, p) ;
+      nbi_surface_field_laplace(s, &(f[field]), fstr, al, bt, x, p) ;
       
       fprintf(stdout, "%e %e %e %e %e\n", x[0], x[1], x[2], p[0], p[1]) ;
     }
@@ -205,29 +201,28 @@ gint main(gint argc, gchar **argv)
     sf = s ;
   }
 
-  pf = (NBI_REAL *)g_malloc0(nbi_surface_node_number(sf)*sizeof(NBI_REAL)*2) ;
+  pf = (NBI_REAL *)g_malloc0(nbi_surface_node_number(sf)*sizeof(NBI_REAL)) ;
   xg = (NBI_REAL *)nbi_surface_node(sf,0) ;
   xstr = NBI_SURFACE_NODE_LENGTH ;
 
   if ( bc != NULL ) {
-    nbi_boundary_condition_set(sf, &(pf[0]), 2, NULL, 0, bc) ;
+    nbi_boundary_condition_set(sf, &(pf[0]), 1, NULL, 0, bc) ;
   }
 
   if ( !surface_data ) {
     for ( i = 0 ; i < nbi_surface_node_number(sf) ; i ++ ) {
-      nbi_surface_field_helmholtz(s, k, &(f[field]), fstr, al, bt,
-				  &(xg[i*xstr]), &(pf[i*2])) ;    
+      nbi_surface_field_laplace(s, &(f[field]), fstr, al, bt,
+				&(xg[i*xstr]), &(pf[i])) ;    
     }
   } else {
     for ( i = 0 ; i < nbi_surface_node_number(sf) ; i ++ ) {
-      pf[2*i+0] += f[field+i*fstr+0] ;
-      pf[2*i+1] += f[field+i*fstr+1] ;
+      pf[i] += f[field+i*fstr+0] ;
     }    
   }
 
   output = stdout ;
 
-  nbi_data_write(output, pf, 2, 2, nbi_surface_node_number(sf)) ;
+  nbi_data_write(output, pf, 1, 1, nbi_surface_node_number(sf)) ;
   
   return 0 ;
 }

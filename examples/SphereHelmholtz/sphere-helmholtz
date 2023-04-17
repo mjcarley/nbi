@@ -12,7 +12,7 @@ nthreads=2
 
 bin=../../tools
 
-gfile=Geometries/sphere-${nqp}.dat
+gfile=Geometries/sphere-${nqp}.nbi
 mfile=Matrices/matrix-sphere-helmholtz-${nqp}-${nqu}-${order}-${depth}.dat
 
 opts="-e ${tol} -a ${nqa} -u ${nqu} \
@@ -26,9 +26,23 @@ ${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
 
 opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
       -f -T ${nthreads} -K ksp-options \
-      -k ${k} -b pcsource.bc -s sphere-field.dat "
+      -k ${k} -b pcsource.bc -s solution.dat "
 echo ${opts}
 
+## solve with internal ring source
 ${bin}/nbi-solve-helmholtz -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
       -f -T ${nthreads} -K ksp-options -P \
-      -k ${k} -b ring.bc -s sphere-field.dat
+      -k ${k} -b ring.bc -s solution.dat
+
+## generate radiated field on 33x33 grid in plane z=2.5, -2 < x, y < 2
+${bin}/nbi-surface -g grid-xy -d -2 -d -2 -d 2 -d 2 -d 2.5 \
+      -i 33 -i 33 > grid.nbi
+## field radiated by surface solution (negative of ring source term)
+${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
+      -k ${k} -F grid.nbi > grid.dat
+## adding the incident term for an internal source should give zero field
+${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
+      -k ${k} -F grid.nbi -b ring.bc > error.dat
+## generate gmsh files for visualization
+${bin}/nbi-process -d grid.dat -g grid.nbi -r 2 > grid.msh
+${bin}/nbi-process -d error.dat -g grid.nbi -r 2 > error.msh

@@ -41,6 +41,8 @@ gchar *progname ;
 typedef nbi_surface_t *(*geometry_function)(gdouble *, gint *, gint) ;
 nbi_surface_t *geometry_ellipsoid_ico(gdouble argd[], gint argi[], gint nq) ;
 nbi_surface_t *geometry_stellarator(gdouble argd[], gint argi[], gint nq) ;
+nbi_surface_t *geometry_grid_xy(gdouble argd[], gint argi[], gint nq) ;
+nbi_surface_t *geometry_grid_yz(gdouble argd[], gint argi[], gint nq) ;
 
 gpointer geometries[] = {"ellipsoid-ico",
 			 geometry_ellipsoid_ico,
@@ -50,6 +52,14 @@ gpointer geometries[] = {"ellipsoid-ico",
 			 geometry_stellarator,
 			 "",
 			 "",
+			 "grid-xy",
+			 geometry_grid_xy,
+			 "nu, nv",
+			 "xmin, ymin, xmax, ymax",
+			 "grid-yz",
+			 geometry_grid_yz,
+			 "nu, nv",
+			 "ymin, zmin, ymax, zmax",
 			 NULL} ;
 
 nbi_surface_t *geometry_ellipsoid_ico(gdouble argd[], gint argi[], gint nq)
@@ -84,6 +94,66 @@ nbi_surface_t *geometry_stellarator(gdouble argd[], gint argi[], gint nq)
 {
   nbi_surface_t *s = NULL ;
 
+  return s ;
+}
+
+nbi_surface_t *geometry_grid_xy(gdouble argd[], gint argi[], gint nq)
+
+{
+  nbi_surface_t *s = NULL ;
+  gint nu, nv, i, xstr ;
+  gdouble xmin, xmax, ymin, ymax, z, *x, u, v ;
+
+  nu = argi[0] ; nv = argi[1] ;
+  xmin = argd[0] ; ymin = argd[1] ; 
+  xmax = argd[2] ; ymax = argd[3] ; 
+  z = argd[4] ;
+  
+  s = nbi_surface_alloc(2*nu*nv*nq, 2*nu*nv) ;
+
+  nbi_geometry_grid(s, 0, 1, nu, 0, 1, nv, nq) ;
+
+  x = (NBI_REAL *)nbi_surface_node(s, 0) ;
+  xstr = NBI_SURFACE_NODE_LENGTH ;
+
+  for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+    u = x[i*xstr+0] ; v = x[i*xstr+1] ;
+    x[i*xstr+0] = xmin + (xmax - xmin)*u ;
+    x[i*xstr+1] = ymin + (ymax - ymin)*v ;
+    x[i*xstr+2] = z ;
+    x[i*xstr+3] = 0 ; x[i*xstr+4] = 0 ; x[i*xstr+5] = 1 ; 
+  }    
+  
+  return s ;
+}
+
+nbi_surface_t *geometry_grid_yz(gdouble argd[], gint argi[], gint nq)
+
+{
+  nbi_surface_t *s = NULL ;
+  gint nu, nv, i, xstr ;
+  gdouble ymin, ymax, zmin, zmax, xp, *x, u, v ;
+
+  nu = argi[0] ; nv = argi[1] ;
+  ymin = argd[0] ; zmin = argd[1] ; 
+  ymax = argd[2] ; zmax = argd[3] ; 
+  xp = argd[4] ;
+  
+  s = nbi_surface_alloc(2*nu*nv*nq, 2*nu*nv) ;
+
+  nbi_geometry_grid(s, 0, 1, nu, 0, 1, nv, nq) ;
+
+  x = (NBI_REAL *)nbi_surface_node(s, 0) ;
+  xstr = NBI_SURFACE_NODE_LENGTH ;
+
+  for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+    u = x[i*xstr+0] ; v = x[i*xstr+1] ;
+    x[i*xstr+0] = xp ;
+    x[i*xstr+1] = ymin + (ymax - ymin)*u ;
+    x[i*xstr+2] = zmin + (zmax - zmin)*v ;
+    x[i*xstr+3] = 0 ; x[i*xstr+4] = 0 ; x[i*xstr+5] = 1 ; 
+  }    
+  
   return s ;
 }
 
@@ -196,8 +266,7 @@ gint main(gint argc, gchar **argv)
   }
 
   if ( aggfile == NULL && gfunc == NULL ) {
-    fprintf(stderr, "%s: no geometry specified\n",
-	    progname) ;
+    fprintf(stderr, "%s: no geometry specified\n", progname) ;
 
     return 1 ;
   }
@@ -224,9 +293,10 @@ gint main(gint argc, gchar **argv)
 
   if ( s != NULL ) {
     fprintf(stderr,
-	    "  patches: %d\n"
-	    "  nodes:   %d\n",
-	    nbi_surface_patch_number(s), nbi_surface_node_number(s)) ;
+	    "%s: patches: %d\n"
+	    "%s: nodes:   %d\n",
+	    progname, nbi_surface_patch_number(s),
+	    progname, nbi_surface_node_number(s)) ;
   }
   
   if ( opfile == NULL ) {

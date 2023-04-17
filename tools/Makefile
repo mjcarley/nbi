@@ -88,10 +88,11 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = x86_64-unknown-linux-gnu
 host_triplet = x86_64-unknown-linux-gnu
-bin_PROGRAMS = nbi-solve-laplace$(EXEEXT) \
-	nbi-assemble-laplace$(EXEEXT) nbi-solve-helmholtz$(EXEEXT) \
-	nbi-assemble-helmholtz$(EXEEXT) nbi-field-helmholtz$(EXEEXT) \
-	nbi-surface$(EXEEXT) nbi-process$(EXEEXT)
+bin_PROGRAMS = nbi-assemble-laplace$(EXEEXT) \
+	nbi-solve-laplace$(EXEEXT) nbi-field-laplace$(EXEEXT) \
+	nbi-assemble-helmholtz$(EXEEXT) nbi-solve-helmholtz$(EXEEXT) \
+	nbi-field-helmholtz$(EXEEXT) nbi-surface$(EXEEXT) \
+	nbi-process$(EXEEXT)
 subdir = tools
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -126,6 +127,10 @@ nbi_field_helmholtz_SOURCES = nbi-field-helmholtz.c
 nbi_field_helmholtz_OBJECTS = nbi-field-helmholtz.$(OBJEXT)
 nbi_field_helmholtz_LDADD = $(LDADD)
 nbi_field_helmholtz_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
+nbi_field_laplace_SOURCES = nbi-field-laplace.c
+nbi_field_laplace_OBJECTS = nbi-field-laplace.$(OBJEXT)
+nbi_field_laplace_LDADD = $(LDADD)
+nbi_field_laplace_DEPENDENCIES = $(top_builddir)/src/.libs/libnbi.a
 nbi_process_SOURCES = nbi-process.c
 nbi_process_OBJECTS = nbi-process.$(OBJEXT)
 nbi_process_LDADD = $(LDADD)
@@ -171,7 +176,8 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/nbi-assemble-helmholtz.Po \
 	./$(DEPDIR)/nbi-assemble-laplace.Po \
-	./$(DEPDIR)/nbi-field-helmholtz.Po ./$(DEPDIR)/nbi-process.Po \
+	./$(DEPDIR)/nbi-field-helmholtz.Po \
+	./$(DEPDIR)/nbi-field-laplace.Po ./$(DEPDIR)/nbi-process.Po \
 	./$(DEPDIR)/nbi-surface.Po \
 	./$(DEPDIR)/nbi_solve_helmholtz-nbi-solve-helmholtz.Po \
 	./$(DEPDIR)/nbi_solve_helmholtz-petsc-helmholtz.Po \
@@ -197,11 +203,11 @@ am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = nbi-assemble-helmholtz.c nbi-assemble-laplace.c \
-	nbi-field-helmholtz.c nbi-process.c \
+	nbi-field-helmholtz.c nbi-field-laplace.c nbi-process.c \
 	$(nbi_solve_helmholtz_SOURCES) $(nbi_solve_laplace_SOURCES) \
 	nbi-surface.c
 DIST_SOURCES = nbi-assemble-helmholtz.c nbi-assemble-laplace.c \
-	nbi-field-helmholtz.c nbi-process.c \
+	nbi-field-helmholtz.c nbi-field-laplace.c nbi-process.c \
 	$(nbi_solve_helmholtz_SOURCES) $(nbi_solve_laplace_SOURCES) \
 	nbi-surface.c
 am__can_run_installinfo = \
@@ -242,7 +248,7 @@ AWK = gawk
 BLASWRAP = yes
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -O0 -DWBFMM_USE_AVX -g -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -fopenmp  -mavx -DWBFMM_USE_AVX -mfma -DWBFMM_USE_AVX
+CFLAGS = -O3 -DWBFMM_USE_AVX -g -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -fopenmp  -mavx -DWBFMM_USE_AVX -mfma -DWBFMM_USE_AVX
 CPP = gcc -E
 CPPFLAGS = -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -fopenmp -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include
 CYGPATH_W = echo
@@ -382,19 +388,29 @@ dist = \
 
 nbi_solve_laplace_SOURCES = nbi-solve-laplace.c petsc-laplace.c
 nbi_solve_helmholtz_SOURCES = nbi-solve-helmholtz.c petsc-helmholtz.c
+#nbi_solve_laplace_CPPFLAGS = \
+#	-I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir)
+
 nbi_solve_laplace_CPPFLAGS = \
 	-I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir) \
 	`./petsc-config include`
 
+#nbi_solve_laplace_DEPS = $(top_builddir)/src/libnbi.la
 nbi_solve_laplace_DEPS = $(top_builddir)/src/libnbi.la
+#nbi_solve_laplace_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a
 nbi_solve_laplace_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a \
 	`./petsc-config lib`
+
+#nbi_solve_helmholtz_CPPFLAGS = \
+#	-I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir)
 
 nbi_solve_helmholtz_CPPFLAGS = \
 	-I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir) \
 	`./petsc-config include`
 
+#nbi_solve_helmholtz_DEPS = $(top_builddir)/src/libnbi.la
 nbi_solve_helmholtz_DEPS = $(top_builddir)/src/libnbi.la
+#nbi_solve_helmholtz_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a
 nbi_solve_helmholtz_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a \
 	`./petsc-config lib`
 
@@ -493,6 +509,10 @@ nbi-field-helmholtz$(EXEEXT): $(nbi_field_helmholtz_OBJECTS) $(nbi_field_helmhol
 	@rm -f nbi-field-helmholtz$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(nbi_field_helmholtz_OBJECTS) $(nbi_field_helmholtz_LDADD) $(LIBS)
 
+nbi-field-laplace$(EXEEXT): $(nbi_field_laplace_OBJECTS) $(nbi_field_laplace_DEPENDENCIES) $(EXTRA_nbi_field_laplace_DEPENDENCIES) 
+	@rm -f nbi-field-laplace$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(nbi_field_laplace_OBJECTS) $(nbi_field_laplace_LDADD) $(LIBS)
+
 nbi-process$(EXEEXT): $(nbi_process_OBJECTS) $(nbi_process_DEPENDENCIES) $(EXTRA_nbi_process_DEPENDENCIES) 
 	@rm -f nbi-process$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(nbi_process_OBJECTS) $(nbi_process_LDADD) $(LIBS)
@@ -518,6 +538,7 @@ distclean-compile:
 include ./$(DEPDIR)/nbi-assemble-helmholtz.Po # am--include-marker
 include ./$(DEPDIR)/nbi-assemble-laplace.Po # am--include-marker
 include ./$(DEPDIR)/nbi-field-helmholtz.Po # am--include-marker
+include ./$(DEPDIR)/nbi-field-laplace.Po # am--include-marker
 include ./$(DEPDIR)/nbi-process.Po # am--include-marker
 include ./$(DEPDIR)/nbi-surface.Po # am--include-marker
 include ./$(DEPDIR)/nbi_solve_helmholtz-nbi-solve-helmholtz.Po # am--include-marker
@@ -747,6 +768,7 @@ distclean: distclean-am
 		-rm -f ./$(DEPDIR)/nbi-assemble-helmholtz.Po
 	-rm -f ./$(DEPDIR)/nbi-assemble-laplace.Po
 	-rm -f ./$(DEPDIR)/nbi-field-helmholtz.Po
+	-rm -f ./$(DEPDIR)/nbi-field-laplace.Po
 	-rm -f ./$(DEPDIR)/nbi-process.Po
 	-rm -f ./$(DEPDIR)/nbi-surface.Po
 	-rm -f ./$(DEPDIR)/nbi_solve_helmholtz-nbi-solve-helmholtz.Po
@@ -801,6 +823,7 @@ maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/nbi-assemble-helmholtz.Po
 	-rm -f ./$(DEPDIR)/nbi-assemble-laplace.Po
 	-rm -f ./$(DEPDIR)/nbi-field-helmholtz.Po
+	-rm -f ./$(DEPDIR)/nbi-field-laplace.Po
 	-rm -f ./$(DEPDIR)/nbi-process.Po
 	-rm -f ./$(DEPDIR)/nbi-surface.Po
 	-rm -f ./$(DEPDIR)/nbi_solve_helmholtz-nbi-solve-helmholtz.Po

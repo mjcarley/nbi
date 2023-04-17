@@ -1,6 +1,6 @@
 /* This file is part of NBI, a library for Nystrom Boundary Integral solvers
  *
- * Copyright (C) 2021 Michael Carley
+ * Copyright (C) 2021, 2023 Michael Carley
  *
  * NBI is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -33,6 +33,8 @@
 #include <config.h>
 #endif /*HAVE_CONFIG_H*/
 
+#include "nbi-private.h"
+
 /* #undef HAVE_PETSC */
 
 #ifdef HAVE_PETSC
@@ -51,11 +53,8 @@ PetscErrorCode nbi_petsc_MatMult_real(Mat mat, Vec x, Vec y) ;
 
 #endif
 
-#include "nbi-private.h"
-
 GTimer *timer ;
 gchar *progname ;
-
 
 static void print_help_text(FILE *f, gint depth,
 			    gint order_inc, gint order_fmm,

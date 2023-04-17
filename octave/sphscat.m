@@ -10,9 +10,10 @@ function p=sphscat(a,r,th,k)
   ## k:  wavenumber
   ##
   ## If the plane wave is taken to have the form exp(j*k*z), the boundary
-  ## is -j*k*exp(j*k*z)*cos(th), with z=a*cos(th) on the sphere surface.
+  ## conditionis -j*k*exp(j*k*z)*cos(th), with z=a*cos(th) on the sphere
+  ## surface. The total field is exp(j*k*z) + sphscat(a, r, th, k)
   
-  M = 8 ;
+  M = ceil(k*max(r)) + 12 ;
 
   p = 0 ;
   ka = k*a ;

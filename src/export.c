@@ -160,7 +160,9 @@ gint NBI_FUNCTION_NAME(nbi_mesh_triangulate)(nbi_surface_t *s,
 
 gint NBI_FUNCTION_NAME(nbi_mesh_export_gmsh)(FILE *f,
 					     NBI_REAL *x, gint xstr, gint np,
+					     gint offp,
 					     gint *tri, gint tstr, gint nt,
+					     gint offt,
 					     NBI_REAL *data, gint dstr)
 
 {
@@ -174,7 +176,7 @@ gint NBI_FUNCTION_NAME(nbi_mesh_export_gmsh)(FILE *f,
   fprintf(f, "1 %d 1 %d\n", np, np) ;
   fprintf(f, "2 1 0 %d\n", np) ;
   for ( i = 0 ; i < np ; i ++ )
-    fprintf(f, "%d\n", i+1) ;
+    fprintf(f, "%d\n", offp + i + 1) ;
   for ( i = 0 ; i < np ; i ++ ) {
     fprintf(f, "%lg %lg %lg\n", x[i*xstr+0], x[i*xstr+1], x[i*xstr+2]) ;
   }
@@ -184,9 +186,9 @@ gint NBI_FUNCTION_NAME(nbi_mesh_export_gmsh)(FILE *f,
   fprintf(f, "1 %d 1 %d\n", nt, nt) ;
   fprintf(f, "2 1 2 %d\n", nt) ;
   for ( i = 0 ; i < nt ; i ++ ) {
-    fprintf(f, "%d", i+1) ;
+    fprintf(f, "%d", offt + i + 1) ;
     for ( j = 0 ; j < 3 ; j ++ ) {
-      fprintf(f, " %d", tri[i*tstr + j]+1) ;
+      fprintf(f, " %d", offp + tri[i*tstr + j]+1) ;
     }
     fprintf(f, "\n") ;
   }
@@ -205,7 +207,7 @@ gint NBI_FUNCTION_NAME(nbi_mesh_export_gmsh)(FILE *f,
 	  "1\n"
 	  "%d\n", np) ;
   for ( i = 0 ; i < np ; i ++ )
-    fprintf(stdout, "%d %lg\n", i+1, data[i*dstr]) ;
+    fprintf(stdout, "%d %lg\n", offp+i+1, data[i*dstr]) ;
 
   fprintf(f, "$EndNodeData\n") ;
 

@@ -1,6 +1,6 @@
 /* This file is part of NBI, a library for Nystrom Boundary Integral solvers
  *
- * Copyright (C) 2021 Michael Carley
+ * Copyright (C) 2021, 2023 Michael Carley
  *
  * NBI is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -418,3 +418,77 @@ gint NBI_FUNCTION_NAME(nbi_geometry_ellipsoid_ico)(nbi_surface_t *s,
   return 0 ;
 }
 
+static void add_grid_patch(nbi_surface_t *s,
+			   NBI_REAL s0, NBI_REAL t0,
+			   NBI_REAL s1, NBI_REAL t1,
+			   NBI_REAL s2, NBI_REAL t2,
+			   NBI_REAL *q, gint nq)
+
+{
+  gint i, np, nn, xstr ;
+  NBI_REAL *x, *st ;
+  
+  np = nbi_surface_patch_number(s) ;
+  nn = nbi_surface_node_number(s) ;
+
+  nbi_surface_patch_node(s, np) = nn ;
+  nbi_surface_patch_node_number(s, np) = nq ;
+  g_assert(nn + nq <= nbi_surface_node_number_max(s)) ;
+
+  x = (NBI_REAL *)nbi_surface_node(s, nn) ;
+  xstr = NBI_SURFACE_NODE_LENGTH ;
+  
+  for ( i = 0 ; i < nq ; i ++ ) {
+    st = &(q[3*i]) ;
+    x[i*xstr+0] = s0*st[0] + s1*st[1] + s2*(1.0 - st[0] - st[1]) ;
+    x[i*xstr+1] = t0*st[0] + t1*st[1] + t2*(1.0 - st[0] - st[1]) ;
+    x[i*xstr+6] = st[2] ;
+  }
+  
+  nbi_surface_patch_number(s) ++ ;
+  nbi_surface_node_number(s) += nq ;
+
+  return ;
+}
+
+gint NBI_FUNCTION_NAME(nbi_geometry_grid)(nbi_surface_t *s,
+					  NBI_REAL smin, NBI_REAL smax,
+					  gint ns,
+					  NBI_REAL tmin, NBI_REAL tmax,
+					  gint nt,
+					  gint nq)
+
+{
+  NBI_REAL *st, s0, t0, s1, t1 ;
+  gint i, j, order ;
+  
+  sqt_quadrature_select(nq, &st, &order) ;
+
+  nbi_surface_node_number(s) = 0 ;
+  nbi_surface_patch_number(s) = 0 ;
+
+  for ( i = 0 ; i < ns-1 ; i ++ ) {
+    s0 = smin + (smax - smin)*(i+0)/(ns-1) ;
+    s1 = smin + (smax - smin)*(i+1)/(ns-1) ;
+    for ( j = 0 ; j < nt-1 ; j ++ ) {
+      t0 = tmin + (tmax - tmin)*(j+0)/(nt-1) ;
+      t1 = tmin + (tmax - tmin)*(j+1)/(nt-1) ;
+      g_assert(nbi_surface_patch_number(s)+1 <=
+	       nbi_surface_patch_number_max(s)) ;
+      g_assert(nbi_surface_node_number(s)+nq <=
+	       nbi_surface_node_number_max(s)) ;
+
+      add_grid_patch(s, s0, t0, s1, t0, s1, t1, st, nq) ;
+
+      g_assert(nbi_surface_patch_number(s)+1 <=
+	       nbi_surface_patch_number_max(s)) ;
+      g_assert(nbi_surface_node_number(s)+nq <=
+	       nbi_surface_node_number_max(s)) ;
+
+      add_grid_patch(s, s0, t0, s1, t1, s0, t1, st, nq) ;      
+    }
+  }
+  
+  return 0 ;
+}
+					 

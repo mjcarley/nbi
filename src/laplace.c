@@ -59,6 +59,35 @@ static void point_source_field_laplace(NBI_REAL *xs, gint xstr, gint ns,
   return ;
 }
 
+static void point_source_field_laplace_weighted(NBI_REAL *xs, gint xstr,
+						gint ns,
+						NBI_REAL *p , gint pstr,
+						NBI_REAL pwt,
+						NBI_REAL *pn, gint nstr,
+						NBI_REAL nwt,
+						NBI_REAL *x, NBI_REAL wt,
+						NBI_REAL *f,
+						NBI_REAL al, NBI_REAL bt)
+  
+{
+  gint i ;  
+  NBI_REAL R, r[3], w ;
+
+  *f *= bt ;
+  
+  for ( i = 0 ; i < ns ; i ++ ) {
+    nbi_vector_diff(r, x, &(xs[i*xstr])) ;
+    w = xs[i*xstr+6] ;
+    R = nbi_vector_length(r) ;
+    if ( R > NBI_LOCAL_CUTOFF_RADIUS ) {
+      *f += al*w*wt*(pwt*p[i*pstr]*nbi_vector_scalar(r,&(xs[i*xstr+3]))/R/R -
+		     nwt*pn[i*nstr])*0.25*M_1_PI/R ;
+    }
+  }
+  
+  return ;
+}
+
 static void upsample_sources(nbi_surface_t *s,
 			     NBI_REAL *p, gint pstr, NBI_REAL *pn, gint nstr,
 			     NBI_REAL *wt, gint wstr, gint *idxu,
@@ -849,6 +878,34 @@ gint NBI_FUNCTION_NAME(nbi_matrix_multiply_laplace)(nbi_matrix_t *A,
     return 0 ;
     break ;
   }
+  
+  return 0 ;
+}
+
+gint NBI_FUNCTION_NAME(nbi_surface_field_laplace)(nbi_surface_t *s,
+						  NBI_REAL *ps,
+						  gint pstr,
+						  NBI_REAL al, NBI_REAL bt,
+						  NBI_REAL *x,
+						  NBI_REAL *p)
+/*
+ * on output p := bt*p + al*(surface integral for Green's identity)
+ *
+ */
+
+{
+  NBI_REAL *y ;
+  gint str ;
+
+  g_assert(pstr >= 2) ;
+  
+  y = (NBI_REAL *)nbi_surface_node(s,0) ;
+  str = NBI_SURFACE_NODE_LENGTH ;
+
+  point_source_field_laplace_weighted(y, str, nbi_surface_node_number(s),
+				      &(ps[0]), pstr, 1.0,
+				      &(ps[1]), pstr, 1.0,
+				      x, 1.0, p, al, bt) ;
   
   return 0 ;
 }
