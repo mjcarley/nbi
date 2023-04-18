@@ -1,1 +1,18 @@
-NBI is a library and a collection of tools for solving the Laplace and Helmholtz problems using Nystrom Boundary Integral methods, with Fast Multipole Method acceleration. 
+NBI is a library and a collection of tools for solving the Laplace and Helmholtz problems using Nystrom Boundary Integral methods, with Fast Multipole Method acceleration.\doxysection{Getting started}\label{index_start}
+NBI has a number of tools for generating surfaces and solving the Laplace and Helmholtz problems on those surfaces, subject to user-\/defined boundary conditions. The examples subdirectory of the distribution contains a number of scripts showing how to run the codes and generate results. Details of command line options for the computation executables can be found using the `-\/h' for help option.
+
+The main steps in solving a problem are\+:
+
+
+\begin{DoxyEnumerate}
+\item generate a geometry using {\ttfamily nbi-\/surface} 
+\item generate a matrix for the problem using {\ttfamily nbi-\/assemble-\/laplace} or {\ttfamily nbi-\/assemble-\/helmholtz} 
+\item solve the problem with the prescribed boundary conditions using {\ttfamily nbi-\/solve-\/laplace} or {\ttfamily nbi-\/solve-\/helmholtz} 
+\item if required, compute the field outside the surface using {\ttfamily nbi-\/field-\/laplace} or {\ttfamily nbi-\/field-\/helmholtz} 
+\end{DoxyEnumerate}
+
+Results can be visualized using {\ttfamily nbi-\/process} to generate mesh files which can be viewed using {\ttfamily gmsh}, available from {\texttt{ https\+://www.\+gmsh.\+info/}}\doxysection{References}\label{index_references}
+
+\begin{DoxyEnumerate}
+\item Leslie Greengard, Michael O\textquotesingle{}Neil, Manas Rachh, Felipe Vico, Fast multipole methods for the evaluation of layer potentials with locally-\/corrected quadratures, Journal of Computational Physics, 2021, {\texttt{ https\+://doi.\+org/10.\+1016/j.\+jcpx.\+2021.\+100092}} 
+\end{DoxyEnumerate}

@@ -42,12 +42,28 @@ $(function() {
   <div class="headertitle"><div class="title">NBI: Nystrom Boundary Integral calculations </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p >NBI is a library and a collection of tools for solving the Laplace and Helmholtz problems using Nystrom Boundary Integral methods, with Fast Multipole Method acceleration. </p>
+<div class="textblock"><p >NBI is a library and a collection of tools for solving the Laplace and Helmholtz problems using Nystrom Boundary Integral methods, with Fast Multipole Method acceleration.</p>
+<h1><a class="anchor" id="start"></a>
+Getting started</h1>
+<p >NBI has a number of tools for generating surfaces and solving the Laplace and Helmholtz problems on those surfaces, subject to user-defined boundary conditions. The examples subdirectory of the distribution contains a number of scripts showing how to run the codes and generate results. Details of command line options for the computation executables can be found using the &lsquo;-h&rsquo; for help option.</p>
+<p >The main steps in solving a problem are:</p>
+<ol type="1">
+<li>generate a geometry using <code>nbi-surface</code> </li>
+<li>generate a matrix for the problem using <code>nbi-assemble-laplace</code> or <code>nbi-assemble-helmholtz</code> </li>
+<li>solve the problem with the prescribed boundary conditions using <code>nbi-solve-laplace</code> or <code>nbi-solve-helmholtz</code> </li>
+<li>if required, compute the field outside the surface using <code>nbi-field-laplace</code> or <code>nbi-field-helmholtz</code> </li>
+</ol>
+<p >Results can be visualized using <code>nbi-process</code> to generate mesh files which can be viewed using <code>gmsh</code>, available from <a href="https://www.gmsh.info/">https://www.gmsh.info/</a></p>
+<h1><a class="anchor" id="references"></a>
+References</h1>
+<ol type="1">
+<li>Leslie Greengard, Michael O'Neil, Manas Rachh, Felipe Vico, Fast multipole methods for the evaluation of layer potentials with locally-corrected quadratures, Journal of Computational Physics, 2021, <a href="https://doi.org/10.1016/j.jcpx.2021.100092">https://doi.org/10.1016/j.jcpx.2021.100092</a> </li>
+</ol>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Apr 18 2023 17:10:56 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
+Generated on Tue Apr 18 2023 18:22:46 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
 </small></address>
 </body>
 </html>

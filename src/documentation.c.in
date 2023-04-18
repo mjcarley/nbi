@@ -21,6 +21,7 @@ nbi_surface_t *nbi_surface_alloc_FLOAT(gint nnmax, gint npmax) ;
  *
  * @return 0 on success
  **/
+
 gint nbi_surface_write_FLOAT(nbi_surface_t *s, FILE *f) ;
 
 /**
@@ -32,6 +33,7 @@ gint nbi_surface_write_FLOAT(nbi_surface_t *s, FILE *f) ;
  *
  * @return pointer to newly allocated surface, read from file
  **/
+
 nbi_surface_t *nbi_surface_read_FLOAT(FILE *f) ;
 
 /**
@@ -48,10 +50,11 @@ nbi_surface_t *nbi_surface_read_FLOAT(FILE *f) ;
  *
  * @return 0 on success.
  **/
+
 gint nbi_surface_patch_centroid_FLOAT(NBI_REAL *x, gint xstr,
-						   NBI_REAL *w, gint wstr,
-						   gint nx,
-						   NBI_REAL *c) ;
+				      NBI_REAL *w, gint wstr,
+				      gint nx,
+				      NBI_REAL *c) ;
 
 /**
  * @ingroup surfaces
@@ -67,8 +70,9 @@ gint nbi_surface_patch_centroid_FLOAT(NBI_REAL *x, gint xstr,
  *
  * @return patch radius
  **/
+
 NBI_REAL nbi_surface_patch_radius_FLOAT(NBI_REAL *x, gint xstr,
-						     gint nx, NBI_REAL *c) ;
+					gint nx, NBI_REAL *c) ;
 
 /**
  * @ingroup surfaces
@@ -90,11 +94,12 @@ NBI_REAL nbi_surface_patch_radius_FLOAT(NBI_REAL *x, gint xstr,
  *
  * @return 0 on success.
  **/
+
 gint nbi_patch_neighbours_FLOAT(NBI_REAL *c, NBI_REAL r,
-					     NBI_REAL *x, gint xstr, gint nx,
-					     gint n0, gint n1,
-					     gint *nbrs, gint *nnbrs,
-					     gint nnmax) ;
+				NBI_REAL *x, gint xstr, gint nx,
+				gint n0, gint n1,
+				gint *nbrs, gint *nnbrs,
+				gint nnmax) ;
 
 /**
  * @ingroup surfaces
@@ -111,10 +116,11 @@ gint nbi_patch_neighbours_FLOAT(NBI_REAL *c, NBI_REAL r,
  *
  * @return 0 on success.
  **/
+
 gint nbi_surface_patch_neighbours_FLOAT(nbi_surface_t *s,
-						     gint p, NBI_REAL r,
-						     gint *nbrs, gint *nnbrs,
-						     gint nnmax) ;
+					gint p, NBI_REAL r,
+					gint *nbrs, gint *nnbrs,
+					gint nnmax) ;
 
 /**
  * @ingroup surfaces
@@ -127,8 +133,8 @@ gint nbi_surface_patch_neighbours_FLOAT(nbi_surface_t *s,
  *
  * @return 0 on success.
  **/
-gint nbi_element_interp_matrix_FLOAT(gint ns, NBI_REAL **K,
-						  gint *Nk) ;
+
+gint nbi_element_interp_matrix_FLOAT(gint ns, NBI_REAL **K, gint *Nk) ;
 
 /**
  * @ingroup surfaces
@@ -141,6 +147,7 @@ gint nbi_element_interp_matrix_FLOAT(gint ns, NBI_REAL **K,
  *
  * @return pointer to upsampling matrix.
  **/
+
 NBI_REAL *nbi_patch_upsample_matrix_FLOAT(gint ns, gint nu) ;
 
 /**
@@ -152,6 +159,7 @@ NBI_REAL *nbi_patch_upsample_matrix_FLOAT(gint ns, gint nu) ;
  *
  * @return 0 on success
  **/
+
 gint nbi_surface_set_patch_data_FLOAT(nbi_surface_t *s) ;
 
 /**
@@ -163,6 +171,7 @@ gint nbi_surface_set_patch_data_FLOAT(nbi_surface_t *s) ;
  *
  * @return pointer to new ::nbi_matrix_t corresponding to \a s.
  **/
+
 nbi_matrix_t *nbi_matrix_new_FLOAT(nbi_surface_t *s) ;
 
 /**
@@ -175,6 +184,7 @@ nbi_matrix_t *nbi_matrix_new_FLOAT(nbi_surface_t *s) ;
  *
  * @return 0 on success.
  **/
+
 gint nbi_matrix_read_FLOAT(FILE *f, nbi_matrix_t *m) ;
 
 /**
@@ -187,6 +197,7 @@ gint nbi_matrix_read_FLOAT(FILE *f, nbi_matrix_t *m) ;
  *
  * @return 0 on success.
  **/
+
 gint nbi_matrix_write_FLOAT(FILE *f, nbi_matrix_t *m) ;
 
 /**
@@ -209,8 +220,9 @@ gint nbi_matrix_write_FLOAT(FILE *f, nbi_matrix_t *m) ;
  *
  * @return 0 on success.
  **/
+
 gint nbi_data_write_FLOAT(FILE *f, NBI_REAL *dat,
-				       gint dstr, gint ne, gint nd) ;
+			  gint dstr, gint ne, gint nd) ;
 
 /**
  * @ingroup surfaces
@@ -224,6 +236,7 @@ gint nbi_data_write_FLOAT(FILE *f, NBI_REAL *dat,
  *
  * @return pointer to newly allocated block of data.
  **/
+
 NBI_REAL *nbi_data_read_FLOAT(FILE *f, gint *nd, gint *ne) ;
 
 /**
@@ -247,16 +260,17 @@ NBI_REAL *nbi_data_read_FLOAT(FILE *f, gint *nd, gint *ne) ;
  *
  * @return 0 on success.
  **/
+
 gint nbi_matrix_fmm_init_FLOAT(nbi_matrix_t *m,
-					    nbi_problem_t problem,
-					    wbfmm_shift_operators_t *shifts,
-					    guint *order_s, gint sstr,
-					    guint *order_r, gint rstr,
-					    gint depth,
-					    NBI_REAL dtree,
-					    gboolean shift_bw,
-					    gboolean precompute_local,
-					    NBI_REAL *work) ;
+			       nbi_problem_t problem,
+			       wbfmm_shift_operators_t *shifts,
+			       guint *order_s, gint sstr,
+			       guint *order_r, gint rstr,
+			       gint depth,
+			       NBI_REAL dtree,
+			       gboolean shift_bw,
+			       gboolean precompute_local,
+			       NBI_REAL *work) ;
 
 /**
  * @ingroup matrix
@@ -276,11 +290,12 @@ gint nbi_matrix_fmm_init_FLOAT(nbi_matrix_t *m,
  *
  * @return 0 on success.
  **/
+
 gint nbi_matrix_multiply_FLOAT(nbi_matrix_t *A,
-					    NBI_REAL *x, gint xstr, NBI_REAL al,
-					    NBI_REAL *y, gint ystr, NBI_REAL bt,
-					    gint nthreads,
-					    NBI_REAL *work) ;
+			       NBI_REAL *x, gint xstr, NBI_REAL al,
+			       NBI_REAL *y, gint ystr, NBI_REAL bt,
+			       gint nthreads,
+			       NBI_REAL *work) ;
 
 /**
  * @ingroup boundary
@@ -296,7 +311,8 @@ gint nbi_matrix_multiply_FLOAT(nbi_matrix_t *A,
  *
  * @return 0 on success.
  **/
+
 gint nbi_boundary_condition_set_FLOAT(nbi_surface_t *s,
-				 NBI_REAL *p , gint pstr,
-				 NBI_REAL *pn, gint nstr,
-				 nbi_boundary_condition_t *b) ;
+				      NBI_REAL *p , gint pstr,
+				      NBI_REAL *pn, gint nstr,
+				      nbi_boundary_condition_t *b) ;
