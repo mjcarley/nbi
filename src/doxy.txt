@@ -1,0 +1,29 @@
+/**
+ * @mainpage NBI: Nystrom Boundary Integral calculations
+ *
+ * NBI is a library and a collection of tools for solving the Laplace
+ * and Helmholtz problems using Nystrom Boundary Integral methods,
+ * with Fast Multipole Method acceleration.
+ */
+
+/**
+ * @defgroup surfaces Surfaces
+ *
+ * @brief Generating, discretizing and manipulating NBI surfaces
+ *
+ */
+
+/**
+ * @defgroup matrix Matrix operations
+ *
+ * @brief Matrix operations and iterative solvers
+ *
+ */
+
+/**
+ * @defgroup boundary Boundary conditions
+ *
+ * @brief Definition and evaluation of boundary conditions
+ *
+ */
+

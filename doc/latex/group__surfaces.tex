@@ -1,0 +1,338 @@
+\doxysection{Surfaces}
+\label{group__surfaces}\index{Surfaces@{Surfaces}}
+
+
+Generating, discretizing and manipulating NBI surfaces.  
+
+
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+nbi\+\_\+surface\+\_\+t $\ast$ \textbf{ nbi\+\_\+surface\+\_\+alloc} (gint nnmax, gint npmax)
+\begin{DoxyCompactList}\small\item\em allocate an \+::nbi\+\_\+surface\+\_\+t \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+surface\+\_\+write} (nbi\+\_\+surface\+\_\+t $\ast$s, FILE $\ast$f)
+\begin{DoxyCompactList}\small\item\em write an \+::nbi\+\_\+surface\+\_\+t to file \end{DoxyCompactList}\item 
+nbi\+\_\+surface\+\_\+t $\ast$ \textbf{ nbi\+\_\+surface\+\_\+read} (FILE $\ast$f)
+\begin{DoxyCompactList}\small\item\em allocate and read an \+::nbi\+\_\+surface\+\_\+t from file \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+surface\+\_\+patch\+\_\+centroid} (gdouble $\ast$x, gint xstr, gdouble $\ast$w, gint wstr, gint nx, gdouble $\ast$c)
+\begin{DoxyCompactList}\small\item\em estimate centroid of surface patch \end{DoxyCompactList}\item 
+gdouble \textbf{ nbi\+\_\+surface\+\_\+patch\+\_\+radius} (gdouble $\ast$x, gint xstr, gint nx, gdouble $\ast$c)
+\begin{DoxyCompactList}\small\item\em estimate radius of circumsphere of surface patch \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+patch\+\_\+neighbours} (gdouble $\ast$c, gdouble r, gdouble $\ast$x, gint xstr, gint nx, gint n0, gint n1, gint $\ast$nbrs, gint $\ast$nnbrs, gint nnmax)
+\begin{DoxyCompactList}\small\item\em identify neighbour nodes of surface patch \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+surface\+\_\+patch\+\_\+neighbours} (nbi\+\_\+surface\+\_\+t $\ast$s, gint p, gdouble r, gint $\ast$nbrs, gint $\ast$nnbrs, gint nnmax)
+\begin{DoxyCompactList}\small\item\em identify neighbours of a surface patch \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+element\+\_\+interp\+\_\+matrix} (gint ns, gdouble $\ast$$\ast$K, gint $\ast$Nk)
+\begin{DoxyCompactList}\small\item\em Koornwinder interpolation matrix for surface patch. \end{DoxyCompactList}\item 
+gdouble $\ast$ \textbf{ nbi\+\_\+patch\+\_\+upsample\+\_\+matrix} (gint ns, gint nu)
+\begin{DoxyCompactList}\small\item\em matrix for upsampling patch nodes to quadrature nodes \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+surface\+\_\+set\+\_\+patch\+\_\+data} (nbi\+\_\+surface\+\_\+t $\ast$s)
+\begin{DoxyCompactList}\small\item\em set basic data (centroid and radius) for each patch of a surface. \end{DoxyCompactList}\item 
+nbi\+\_\+matrix\+\_\+t $\ast$ \textbf{ nbi\+\_\+matrix\+\_\+new} (nbi\+\_\+surface\+\_\+t $\ast$s)
+\begin{DoxyCompactList}\small\item\em generate a new \+::nbi\+\_\+matrix\+\_\+t for use in solvers \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+matrix\+\_\+read} (FILE $\ast$f, nbi\+\_\+matrix\+\_\+t $\ast$m)
+\begin{DoxyCompactList}\small\item\em read an \+::nbi\+\_\+matrix\+\_\+t from file \end{DoxyCompactList}\item 
+gdouble $\ast$ \textbf{ nbi\+\_\+data\+\_\+read} (FILE $\ast$f, gint $\ast$nd, gint $\ast$ne)
+\begin{DoxyCompactList}\small\item\em read numerical data from a file written with \doxyref{nbi\+\_\+data\+\_\+write}{p.}{group__matrix_gab1239cde2a51add7d52d12545e4d3131} \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Generating, discretizing and manipulating NBI surfaces. 
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\label{group__surfaces_gab1fbfbeecac2b690ea705cf90ddcb368}} 
+\index{Surfaces@{Surfaces}!nbi\_data\_read@{nbi\_data\_read}}
+\index{nbi\_data\_read@{nbi\_data\_read}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_data\_read()}
+{\footnotesize\ttfamily gdouble $\ast$ nbi\+\_\+data\+\_\+read (\begin{DoxyParamCaption}\item[{FILE $\ast$}]{f,  }\item[{gint $\ast$}]{nd,  }\item[{gint $\ast$}]{ne }\end{DoxyParamCaption})}
+
+
+
+read numerical data from a file written with \doxyref{nbi\+\_\+data\+\_\+write}{p.}{group__matrix_gab1239cde2a51add7d52d12545e4d3131} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em f} & input file stream; \\
+\hline
+{\em nd} & on exit contains number of data entries; \\
+\hline
+{\em ne} & on exit contains number of components per entry.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to newly allocated block of data. 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_ga7b45ed83a49ee86f2524ac945ae182b2}} 
+\index{Surfaces@{Surfaces}!nbi\_element\_interp\_matrix@{nbi\_element\_interp\_matrix}}
+\index{nbi\_element\_interp\_matrix@{nbi\_element\_interp\_matrix}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_element\_interp\_matrix()}
+{\footnotesize\ttfamily gint nbi\+\_\+element\+\_\+interp\+\_\+matrix (\begin{DoxyParamCaption}\item[{gint}]{ns,  }\item[{gdouble $\ast$$\ast$}]{K,  }\item[{gint $\ast$}]{Nk }\end{DoxyParamCaption})}
+
+
+
+Koornwinder interpolation matrix for surface patch. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ns} & number of interpolation nodes on patch; \\
+\hline
+{\em K} & on exit, pointer to interpolation matrix for patch; \\
+\hline
+{\em Nk} & on exit, maximum order of Koornwinder polynomial in interpolation.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_gaf34d1a98b58c7fd0d1d897dbf35aacea}} 
+\index{Surfaces@{Surfaces}!nbi\_matrix\_new@{nbi\_matrix\_new}}
+\index{nbi\_matrix\_new@{nbi\_matrix\_new}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_matrix\_new()}
+{\footnotesize\ttfamily nbi\+\_\+matrix\+\_\+t $\ast$ nbi\+\_\+matrix\+\_\+new (\begin{DoxyParamCaption}\item[{nbi\+\_\+surface\+\_\+t $\ast$}]{s }\end{DoxyParamCaption})}
+
+
+
+generate a new \+::nbi\+\_\+matrix\+\_\+t for use in solvers 
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & an \+::nbi\+\_\+surface\+\_\+t\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to new \+::nbi\+\_\+matrix\+\_\+t corresponding to {\itshape s}. 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_ga4c1ebfdcf5d79feaed3c796f219169e1}} 
+\index{Surfaces@{Surfaces}!nbi\_matrix\_read@{nbi\_matrix\_read}}
+\index{nbi\_matrix\_read@{nbi\_matrix\_read}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_matrix\_read()}
+{\footnotesize\ttfamily gint nbi\+\_\+matrix\+\_\+read (\begin{DoxyParamCaption}\item[{FILE $\ast$}]{f,  }\item[{nbi\+\_\+matrix\+\_\+t $\ast$}]{m }\end{DoxyParamCaption})}
+
+
+
+read an \+::nbi\+\_\+matrix\+\_\+t from file 
+
+
+\begin{DoxyParams}{Parameters}
+{\em f} & input file stream; \\
+\hline
+{\em m} & pointer to an allocated \+::nbi\+\_\+matrix\+\_\+t.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_ga5e02aeb6ff57f50d45bcd73c14807ca9}} 
+\index{Surfaces@{Surfaces}!nbi\_patch\_neighbours@{nbi\_patch\_neighbours}}
+\index{nbi\_patch\_neighbours@{nbi\_patch\_neighbours}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_patch\_neighbours()}
+{\footnotesize\ttfamily gint nbi\+\_\+patch\+\_\+neighbours (\begin{DoxyParamCaption}\item[{gdouble $\ast$}]{c,  }\item[{gdouble}]{r,  }\item[{gdouble $\ast$}]{x,  }\item[{gint}]{xstr,  }\item[{gint}]{nx,  }\item[{gint}]{n0,  }\item[{gint}]{n1,  }\item[{gint $\ast$}]{nbrs,  }\item[{gint $\ast$}]{nnbrs,  }\item[{gint}]{nnmax }\end{DoxyParamCaption})}
+
+
+
+identify neighbour nodes of surface patch 
+
+
+\begin{DoxyParams}{Parameters}
+{\em c} & centroid; \\
+\hline
+{\em r} & radius of neighbourhood; \\
+\hline
+{\em x} & list of candidate neighbour nodes; \\
+\hline
+{\em xstr} & stride from first component of one node to first component of next; \\
+\hline
+{\em nx} & number of candidate neighbour nodes; \\
+\hline
+{\em n0} & first entry in {\itshape x} to check; \\
+\hline
+{\em n1} & last entry in {\itshape x} to check; \\
+\hline
+{\em nbrs} & on exit contains indices of nodes lying within distance {\itshape r} of {\itshape c}; \\
+\hline
+{\em nnbrs} & on exit contains number of nodes in {\itshape nbrs}; \\
+\hline
+{\em nnmax} & maximum number of neighbours to be inserted in {\itshape nbrs}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_ga769eecc91ebe23607b5d6771888033cc}} 
+\index{Surfaces@{Surfaces}!nbi\_patch\_upsample\_matrix@{nbi\_patch\_upsample\_matrix}}
+\index{nbi\_patch\_upsample\_matrix@{nbi\_patch\_upsample\_matrix}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_patch\_upsample\_matrix()}
+{\footnotesize\ttfamily gdouble $\ast$ nbi\+\_\+patch\+\_\+upsample\+\_\+matrix (\begin{DoxyParamCaption}\item[{gint}]{ns,  }\item[{gint}]{nu }\end{DoxyParamCaption})}
+
+
+
+matrix for upsampling patch nodes to quadrature nodes 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ns} & number of patch nodes (must match an available quadrature rule); \\
+\hline
+{\em nu} & number of upsampled nodes (must match an available quadrature rule).\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to upsampling matrix. 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_ga048335822ea13156e6e0b8873520839c}} 
+\index{Surfaces@{Surfaces}!nbi\_surface\_alloc@{nbi\_surface\_alloc}}
+\index{nbi\_surface\_alloc@{nbi\_surface\_alloc}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_surface\_alloc()}
+{\footnotesize\ttfamily nbi\+\_\+surface\+\_\+t $\ast$ nbi\+\_\+surface\+\_\+alloc (\begin{DoxyParamCaption}\item[{gint}]{nnmax,  }\item[{gint}]{npmax }\end{DoxyParamCaption})}
+
+
+
+allocate an \+::nbi\+\_\+surface\+\_\+t 
+
+
+\begin{DoxyParams}{Parameters}
+{\em nnmax} & maximum number of nodes in surface; \\
+\hline
+{\em npmax} & maximum number of patches in surface.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to newly allocated \+::nbi\+\_\+surface\+\_\+t 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_ga5a4b12620fa8aeb55d8bebbcad0846fa}} 
+\index{Surfaces@{Surfaces}!nbi\_surface\_patch\_centroid@{nbi\_surface\_patch\_centroid}}
+\index{nbi\_surface\_patch\_centroid@{nbi\_surface\_patch\_centroid}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_surface\_patch\_centroid()}
+{\footnotesize\ttfamily gint nbi\+\_\+surface\+\_\+patch\+\_\+centroid (\begin{DoxyParamCaption}\item[{gdouble $\ast$}]{x,  }\item[{gint}]{xstr,  }\item[{gdouble $\ast$}]{w,  }\item[{gint}]{wstr,  }\item[{gint}]{nx,  }\item[{gdouble $\ast$}]{c }\end{DoxyParamCaption})}
+
+
+
+estimate centroid of surface patch 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & coordinates of patch nodes; \\
+\hline
+{\em xstr} & stride from first component of one to first component of next; \\
+\hline
+{\em w} & patch quadrature weights; \\
+\hline
+{\em wstr} & quadrature weight stride; \\
+\hline
+{\em nx} & number of nodes; \\
+\hline
+{\em c} & on exit contains coordinates of centroid.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_ga8d4a8b0201718144afae6d098ad791e3}} 
+\index{Surfaces@{Surfaces}!nbi\_surface\_patch\_neighbours@{nbi\_surface\_patch\_neighbours}}
+\index{nbi\_surface\_patch\_neighbours@{nbi\_surface\_patch\_neighbours}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_surface\_patch\_neighbours()}
+{\footnotesize\ttfamily gint nbi\+\_\+surface\+\_\+patch\+\_\+neighbours (\begin{DoxyParamCaption}\item[{nbi\+\_\+surface\+\_\+t $\ast$}]{s,  }\item[{gint}]{p,  }\item[{gdouble}]{r,  }\item[{gint $\ast$}]{nbrs,  }\item[{gint $\ast$}]{nnbrs,  }\item[{gint}]{nnmax }\end{DoxyParamCaption})}
+
+
+
+identify neighbours of a surface patch 
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & an \+::nbi\+\_\+surface\+\_\+t; \\
+\hline
+{\em p} & index of patch whose neighbours are to be found; \\
+\hline
+{\em r} & radius of neighbourhood; \\
+\hline
+{\em nbrs} & on exit contains indices of nodes of {\itshape s} lying with distance {\itshape r} of centroid of patch {\itshape p} of {\itshape s}; \\
+\hline
+{\em nnbrs} & on exit contains number of entries in {\itshape nbrs}; \\
+\hline
+{\em nnmax} & limit on number of entries in {\itshape nbrs}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_gaf28e20127c1a4d932c6d9d98439d0c56}} 
+\index{Surfaces@{Surfaces}!nbi\_surface\_patch\_radius@{nbi\_surface\_patch\_radius}}
+\index{nbi\_surface\_patch\_radius@{nbi\_surface\_patch\_radius}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_surface\_patch\_radius()}
+{\footnotesize\ttfamily gdouble nbi\+\_\+surface\+\_\+patch\+\_\+radius (\begin{DoxyParamCaption}\item[{gdouble $\ast$}]{x,  }\item[{gint}]{xstr,  }\item[{gint}]{nx,  }\item[{gdouble $\ast$}]{c }\end{DoxyParamCaption})}
+
+
+
+estimate radius of circumsphere of surface patch 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & coordinates of patch nodes; \\
+\hline
+{\em xstr} & stride from first component of one node to first component of next; \\
+\hline
+{\em nx} & number of patch nodes; \\
+\hline
+{\em c} & centroid of patch (from nbi\+\_\+surface\+\_\+patch\+\_\+centroid)).\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+patch radius 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_ga1e35bb2cabf96f7e4063962f94816222}} 
+\index{Surfaces@{Surfaces}!nbi\_surface\_read@{nbi\_surface\_read}}
+\index{nbi\_surface\_read@{nbi\_surface\_read}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_surface\_read()}
+{\footnotesize\ttfamily nbi\+\_\+surface\+\_\+t $\ast$ nbi\+\_\+surface\+\_\+read (\begin{DoxyParamCaption}\item[{FILE $\ast$}]{f }\end{DoxyParamCaption})}
+
+
+
+allocate and read an \+::nbi\+\_\+surface\+\_\+t from file 
+
+
+\begin{DoxyParams}{Parameters}
+{\em f} & input file stream.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to newly allocated surface, read from file 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_ga12135d339936f354de509a6fcb4e19b2}} 
+\index{Surfaces@{Surfaces}!nbi\_surface\_set\_patch\_data@{nbi\_surface\_set\_patch\_data}}
+\index{nbi\_surface\_set\_patch\_data@{nbi\_surface\_set\_patch\_data}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_surface\_set\_patch\_data()}
+{\footnotesize\ttfamily gint nbi\+\_\+surface\+\_\+set\+\_\+patch\+\_\+data (\begin{DoxyParamCaption}\item[{nbi\+\_\+surface\+\_\+t $\ast$}]{s }\end{DoxyParamCaption})}
+
+
+
+set basic data (centroid and radius) for each patch of a surface. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & an \+::nbi\+\_\+surface\+\_\+t whose data are to be set.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_ga2e1a8a248496955944f7504696c957a6}} 
+\index{Surfaces@{Surfaces}!nbi\_surface\_write@{nbi\_surface\_write}}
+\index{nbi\_surface\_write@{nbi\_surface\_write}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_surface\_write()}
+{\footnotesize\ttfamily gint nbi\+\_\+surface\+\_\+write (\begin{DoxyParamCaption}\item[{nbi\+\_\+surface\+\_\+t $\ast$}]{s,  }\item[{FILE $\ast$}]{f }\end{DoxyParamCaption})}
+
+
+
+write an \+::nbi\+\_\+surface\+\_\+t to file 
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & surface to write to file \\
+\hline
+{\em f} & output file stream\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success 
+\end{DoxyReturn}

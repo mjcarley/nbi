@@ -1,0 +1,48 @@
+\doxysection{Boundary conditions}
+\label{group__boundary}\index{Boundary conditions@{Boundary conditions}}
+
+
+Definition and evaluation of boundary conditions.  
+
+
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+gint \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+set} (nbi\+\_\+surface\+\_\+t $\ast$s, gdouble $\ast$p, gint pstr, gdouble $\ast$pn, gint nstr, nbi\+\_\+boundary\+\_\+condition\+\_\+t $\ast$b)
+\begin{DoxyCompactList}\small\item\em compute boundary condition on surface \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Definition and evaluation of boundary conditions. 
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\label{group__boundary_gab9229a8b903044800ff41e971a19bacb}} 
+\index{Boundary conditions@{Boundary conditions}!nbi\_boundary\_condition\_set@{nbi\_boundary\_condition\_set}}
+\index{nbi\_boundary\_condition\_set@{nbi\_boundary\_condition\_set}!Boundary conditions@{Boundary conditions}}
+\doxysubsubsection{nbi\_boundary\_condition\_set()}
+{\footnotesize\ttfamily gint nbi\+\_\+boundary\+\_\+condition\+\_\+set (\begin{DoxyParamCaption}\item[{nbi\+\_\+surface\+\_\+t $\ast$}]{s,  }\item[{gdouble $\ast$}]{p,  }\item[{gint}]{pstr,  }\item[{gdouble $\ast$}]{pn,  }\item[{gint}]{nstr,  }\item[{nbi\+\_\+boundary\+\_\+condition\+\_\+t $\ast$}]{b }\end{DoxyParamCaption})}
+
+
+
+compute boundary condition on surface 
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & \+::nbi\+\_\+surface\+\_\+t on which to set boundary condition; \\
+\hline
+{\em p} & on exit contains \`{}`surface potential'\textquotesingle{} boundary condition; \\
+\hline
+{\em pstr} & stride in {\itshape p}; \\
+\hline
+{\em pn} & on exit contains \`{}`normal derivative'\textquotesingle{} boundary condition; \\
+\hline
+{\em nstr} & stride in {\itshape pn}; \\
+\hline
+{\em b} & boundary condition to apply.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}

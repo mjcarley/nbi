@@ -1,0 +1,152 @@
+\doxysection{Matrix operations}
+\label{group__matrix}\index{Matrix operations@{Matrix operations}}
+
+
+Matrix operations and iterative solvers.  
+
+
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+gint \textbf{ nbi\+\_\+matrix\+\_\+write} (FILE $\ast$f, nbi\+\_\+matrix\+\_\+t $\ast$m)
+\begin{DoxyCompactList}\small\item\em write an \+::nbi\+\_\+matrix\+\_\+t to file \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+data\+\_\+write} (FILE $\ast$f, gdouble $\ast$dat, gint dstr, gint ne, gint nd)
+\begin{DoxyCompactList}\small\item\em write numerical data to file. \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+matrix\+\_\+fmm\+\_\+init} (nbi\+\_\+matrix\+\_\+t $\ast$m, nbi\+\_\+problem\+\_\+t problem, wbfmm\+\_\+shift\+\_\+operators\+\_\+t $\ast$shifts, guint $\ast$order\+\_\+s, gint sstr, guint $\ast$order\+\_\+r, gint rstr, gint depth, gdouble dtree, gboolean shift\+\_\+bw, gboolean precompute\+\_\+local, gdouble $\ast$work)
+\begin{DoxyCompactList}\small\item\em initialize Fast Multipole Method matrix \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+matrix\+\_\+multiply} (nbi\+\_\+matrix\+\_\+t $\ast$A, gdouble $\ast$x, gint xstr, gdouble al, gdouble $\ast$y, gint ystr, gdouble bt, gint nthreads, gdouble $\ast$work)
+\begin{DoxyCompactList}\small\item\em perform matrix multiplication $y := \beta y + \alpha A x$ \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Matrix operations and iterative solvers. 
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\label{group__matrix_gab1239cde2a51add7d52d12545e4d3131}} 
+\index{Matrix operations@{Matrix operations}!nbi\_data\_write@{nbi\_data\_write}}
+\index{nbi\_data\_write@{nbi\_data\_write}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_data\_write()}
+{\footnotesize\ttfamily gint nbi\+\_\+data\+\_\+write (\begin{DoxyParamCaption}\item[{FILE $\ast$}]{f,  }\item[{gdouble $\ast$}]{dat,  }\item[{gint}]{dstr,  }\item[{gint}]{ne,  }\item[{gint}]{nd }\end{DoxyParamCaption})}
+
+
+
+write numerical data to file. 
+
+The function writes a header which can be interpreted by \doxyref{nbi\+\_\+data\+\_\+read}{p.}{group__surfaces_gab1fbfbeecac2b690ea705cf90ddcb368} and writes {\itshape nd} lines of data in the form\+:
+
+dat[i$\ast$dstr+0] dat[i$\ast$dstr+1] ... dat[i$\ast$dstr+ne-\/1]
+
+with $i=0,\ldots,nd-1$.
+
+
+\begin{DoxyParams}{Parameters}
+{\em f} & output file stream; \\
+\hline
+{\em dat} & data; \\
+\hline
+{\em dstr} & stride between first components of successive data entries; \\
+\hline
+{\em ne} & number of components per data entry; \\
+\hline
+{\em nd} & number of data entries.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__matrix_ga28ac5aeac36e380dbf6498aeea865a29}} 
+\index{Matrix operations@{Matrix operations}!nbi\_matrix\_fmm\_init@{nbi\_matrix\_fmm\_init}}
+\index{nbi\_matrix\_fmm\_init@{nbi\_matrix\_fmm\_init}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_matrix\_fmm\_init()}
+{\footnotesize\ttfamily gint nbi\+\_\+matrix\+\_\+fmm\+\_\+init (\begin{DoxyParamCaption}\item[{nbi\+\_\+matrix\+\_\+t $\ast$}]{m,  }\item[{nbi\+\_\+problem\+\_\+t}]{problem,  }\item[{wbfmm\+\_\+shift\+\_\+operators\+\_\+t $\ast$}]{shifts,  }\item[{guint $\ast$}]{order\+\_\+s,  }\item[{gint}]{sstr,  }\item[{guint $\ast$}]{order\+\_\+r,  }\item[{gint}]{rstr,  }\item[{gint}]{depth,  }\item[{gdouble}]{dtree,  }\item[{gboolean}]{shift\+\_\+bw,  }\item[{gboolean}]{precompute\+\_\+local,  }\item[{gdouble $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+initialize Fast Multipole Method matrix 
+
+
+\begin{DoxyParams}{Parameters}
+{\em m} & \+::nbi\+\_\+matrix\+\_\+t to be initialized; \\
+\hline
+{\em problem} & \+::nbi\+\_\+problem\+\_\+t (Laplace or Helmholtz); \\
+\hline
+{\em shifts} & WBFMM shift operators; \\
+\hline
+{\em order\+\_\+s} & order of singular expansion at leaf nodes; \\
+\hline
+{\em sstr} & increment in order of singular expansion at each level; \\
+\hline
+{\em order\+\_\+r} & order of regular expansion at leaf nodes; \\
+\hline
+{\em rstr} & increment in order of regular expansion at each level; \\
+\hline
+{\em depth} & depth of FMM tree; \\
+\hline
+{\em dtree} & increment in size of FMM box to contain all points; \\
+\hline
+{\em shift\+\_\+bw} & if TRUE (recommended) use backward shifting in FMM; \\
+\hline
+{\em precompute\+\_\+local} & if TRUE (not recommended) precompute local interactions in FMM; \\
+\hline
+{\em work} & workspace.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__matrix_gaf2ebf90fa9299de6bd7800f262713a67}} 
+\index{Matrix operations@{Matrix operations}!nbi\_matrix\_multiply@{nbi\_matrix\_multiply}}
+\index{nbi\_matrix\_multiply@{nbi\_matrix\_multiply}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_matrix\_multiply()}
+{\footnotesize\ttfamily gint nbi\+\_\+matrix\+\_\+multiply (\begin{DoxyParamCaption}\item[{nbi\+\_\+matrix\+\_\+t $\ast$}]{A,  }\item[{gdouble $\ast$}]{x,  }\item[{gint}]{xstr,  }\item[{gdouble}]{al,  }\item[{gdouble $\ast$}]{y,  }\item[{gint}]{ystr,  }\item[{gdouble}]{bt,  }\item[{gint}]{nthreads,  }\item[{gdouble $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+perform matrix multiplication $y := \beta y + \alpha A x$ 
+
+
+\begin{DoxyParams}{Parameters}
+{\em A} & \+::nbi\+\_\+matrix\+\_\+t \\
+\hline
+{\em x} & input vector; \\
+\hline
+{\em xstr} & stride in {\itshape x}; \\
+\hline
+{\em al} & weight $\alpha$; \\
+\hline
+{\em y} & output vector; \\
+\hline
+{\em ystr} & stride in {\itshape y}; \\
+\hline
+{\em bt} & weight $\beta$; \\
+\hline
+{\em nthreads} & number of threads to use (if available) in FMM and near-\/field corrections; \\
+\hline
+{\em work} & workspace.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__matrix_ga70137a3b9b19a1acbf895517f9adc5c3}} 
+\index{Matrix operations@{Matrix operations}!nbi\_matrix\_write@{nbi\_matrix\_write}}
+\index{nbi\_matrix\_write@{nbi\_matrix\_write}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_matrix\_write()}
+{\footnotesize\ttfamily gint nbi\+\_\+matrix\+\_\+write (\begin{DoxyParamCaption}\item[{FILE $\ast$}]{f,  }\item[{nbi\+\_\+matrix\+\_\+t $\ast$}]{m }\end{DoxyParamCaption})}
+
+
+
+write an \+::nbi\+\_\+matrix\+\_\+t to file 
+
+
+\begin{DoxyParams}{Parameters}
+{\em f} & output file stream; \\
+\hline
+{\em m} & an \+::nbi\+\_\+matrix\+\_\+t.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}

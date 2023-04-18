@@ -1,0 +1,4 @@
+\_form#0=91x13:$i=0,\ldots,nd-1$
+\_form#1=81x13:$y := \beta y + \alpha A x$
+\_form#2=8x6:$\alpha$
+\_form#3=9x13:$\beta$

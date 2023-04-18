@@ -279,11 +279,9 @@ AC_CONFIG_FILES([
 Makefile
 src/Makefile
 src/nbi-config
-tools/Makefile])
-
-#doc/Makefile])
-
-#doc/html/Makefile])
+tools/Makefile
+doc/Makefile
+doc/html/Makefile])
 
 AC_OUTPUT
 

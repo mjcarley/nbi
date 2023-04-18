@@ -138,7 +138,7 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 libnbi_la_LIBADD =
 am_libnbi_la_OBJECTS = nbi.lo geometries.lo laplace.lo helmholtz.lo \
 	tinyexpr.lo expressions.lo agg.lo export.lo functions.lo \
-	assemble.lo solvers.lo
+	assemble.lo solvers.lo files.lo
 libnbi_la_OBJECTS = $(am_libnbi_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -165,10 +165,10 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/agg.Plo ./$(DEPDIR)/assemble.Plo \
 	./$(DEPDIR)/export.Plo ./$(DEPDIR)/expressions.Plo \
-	./$(DEPDIR)/functions.Plo ./$(DEPDIR)/geometries.Plo \
-	./$(DEPDIR)/helmholtz.Plo ./$(DEPDIR)/laplace.Plo \
-	./$(DEPDIR)/nbi.Plo ./$(DEPDIR)/solvers.Plo \
-	./$(DEPDIR)/tinyexpr.Plo
+	./$(DEPDIR)/files.Plo ./$(DEPDIR)/functions.Plo \
+	./$(DEPDIR)/geometries.Plo ./$(DEPDIR)/helmholtz.Plo \
+	./$(DEPDIR)/laplace.Plo ./$(DEPDIR)/nbi.Plo \
+	./$(DEPDIR)/solvers.Plo ./$(DEPDIR)/tinyexpr.Plo
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -262,7 +262,7 @@ INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LD = /usr/bin/ld -m elf_x86_64
-LDFLAGS =  -lglib-2.0 -lblas -L/home/michael/Codes/lib -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -lglib-2.0 -L/home/michael/Codes/lib -lwbfmm -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -L/home/michael/Codes/lib -lsqt -lglib-2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath -L/home/michael/Codes/lib -lagg -lglib-2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath
+LDFLAGS =  -lglib-2.0 -lblas -L/home/michael/Codes/lib -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -lglib-2.0 -lwbfmm -lglib-2.0 -lblas -L/home/michael/Codes/lib -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -L/home/michael/Codes/lib -lsqt -lglib-2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath -L/home/michael/Codes/lib -lagg -lglib-2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath
 LIBOBJS = 
 LIBS = -lglib-2.0 -lm   -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
@@ -364,7 +364,8 @@ top_srcdir = ..
 AM_CPPFLAGS = -I$(top_srcdir) -I$(includedir) -DG_LOG_DOMAIN=\"NBI\"
 bin_SCRIPTS = nbi-config
 BUILT_SOURCES = \
-	nbi-config
+	nbi-config \
+	documentation.c
 
 lib_LTLIBRARIES = libnbi.la
 libnbi_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)\
@@ -383,7 +384,8 @@ libnbi_la_SOURCES = \
 	assemble.c \
 	solvers.c \
 	nbi-private.h \
-	tinyexpr.h
+	tinyexpr.h \
+	files.c
 
 include_HEADERS = \
 	nbi.h
@@ -509,6 +511,7 @@ include ./$(DEPDIR)/agg.Plo # am--include-marker
 include ./$(DEPDIR)/assemble.Plo # am--include-marker
 include ./$(DEPDIR)/export.Plo # am--include-marker
 include ./$(DEPDIR)/expressions.Plo # am--include-marker
+include ./$(DEPDIR)/files.Plo # am--include-marker
 include ./$(DEPDIR)/functions.Plo # am--include-marker
 include ./$(DEPDIR)/geometries.Plo # am--include-marker
 include ./$(DEPDIR)/helmholtz.Plo # am--include-marker
@@ -710,6 +713,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/assemble.Plo
 	-rm -f ./$(DEPDIR)/export.Plo
 	-rm -f ./$(DEPDIR)/expressions.Plo
+	-rm -f ./$(DEPDIR)/files.Plo
 	-rm -f ./$(DEPDIR)/functions.Plo
 	-rm -f ./$(DEPDIR)/geometries.Plo
 	-rm -f ./$(DEPDIR)/helmholtz.Plo
@@ -766,6 +770,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/assemble.Plo
 	-rm -f ./$(DEPDIR)/export.Plo
 	-rm -f ./$(DEPDIR)/expressions.Plo
+	-rm -f ./$(DEPDIR)/files.Plo
 	-rm -f ./$(DEPDIR)/functions.Plo
 	-rm -f ./$(DEPDIR)/geometries.Plo
 	-rm -f ./$(DEPDIR)/helmholtz.Plo
@@ -814,6 +819,16 @@ uninstall-am: uninstall-binSCRIPTS uninstall-includeHEADERS \
 
 
 nbi-config: nbi-config.in
+
+documentation.c: documentation.c.in
+	echo -n -e "/*\n * Autogenerated file, do not  edit\\n * " \
+	> documentation.c ; \
+	date >> documentation.c ; \
+	echo -e " * -------------------------------\\n */\\n\\n" \
+	>> documentation.c ; \
+	sed -e s/NBI_REAL/gdouble/g -e s/_FLOAT//g \
+	documentation.c.in \
+	| sed -e s/\)\(/\(/ >> documentation.c ;
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -58,71 +58,6 @@ nbi_surface_t *NBI_FUNCTION_NAME(nbi_surface_alloc)(gint nnmax, gint npmax)
   return s ;
 }
 
-gint nbi_header_insert_string(gchar *header, gint i, gint len, gchar *str)
-
-{
-  gint slen, j ;
-  
-  if ( (slen = strlen(str)) > len )
-    g_error("%s: string %s is too long (%d) for header (%d)", __FUNCTION__,
-	    str, slen, len) ;
-
-  if ( slen + i > NBI_HEADER_LENGTH )
-    g_error("%s: not enough space in header for string ""%s"" of length %d "
-	    "at position %d",  __FUNCTION__, str, slen, i) ;
-  
-  for ( j = 0 ; j < slen ; j ++ ) {
-    header[i+j] = str[j] ;
-  }
-  
-  return 0 ;
-}
-
-gint nbi_header_init(gchar *header,
-		     gchar *id,
-		     gchar *version,
-		     gchar *type,
-		     gchar *format)
-
-{
-  gint i ;
-
-  for ( i = 0 ; i < NBI_HEADER_LENGTH ; i ++ ) header[i] = ' ' ;
-  header[NBI_HEADER_LENGTH] = '\0' ;
-
-  nbi_header_insert_string(header, NBI_HEADER_ID,      3, id) ;
-  nbi_header_insert_string(header, NBI_HEADER_VERSION, 3, version) ;
-  nbi_header_insert_string(header, NBI_HEADER_TYPE,    3, type) ;
-  nbi_header_insert_string(header, NBI_HEADER_FORMAT,  1, format) ;
-
-  if ( format[0] != 'A' && format[0] != 'B' )
-    g_error("%s: data format must be `A' or `B' (ASCII or binary)",
-	    __FUNCTION__) ;
-
-  return 0 ;
-}
-
-gint nbi_header_read(FILE *f, gchar header[])
-
-{
-  gchar c ;
-  
-  fread(header, sizeof(gchar), NBI_HEADER_LENGTH, f) ;
-  fread(&c    , sizeof(gchar), 1,                 f) ;
-
-  return 0 ;
-}
-
-gint nbi_header_write(FILE *f, gchar header[])
-
-{
-  gchar c = '\n' ;
-
-  fwrite(header, sizeof(gchar), NBI_HEADER_LENGTH, f) ;
-  fwrite(&c    , sizeof(gchar), 1,                 f) ;
-
-  return 0 ;
-}
 
 gint NBI_FUNCTION_NAME(nbi_surface_write)(nbi_surface_t *s, FILE *f)
 
@@ -482,43 +417,20 @@ static gint read_correction_matrices(FILE *f,
   return np ;
 }
 
-gint NBI_FUNCTION_NAME(nbi_matrix_read)(FILE *input, nbi_matrix_t *m)
+gint NBI_FUNCTION_NAME(nbi_matrix_read)(FILE *f, nbi_matrix_t *m)
 
 {
   gchar header[NBI_HEADER_LENGTH] ;
   gint np, str, nst ;
   
-  nbi_header_read(input, header) ;
+  nbi_header_read(f, header) ;
 
   sscanf(&(header[NBI_HEADER_DATA]), "%d %d %d", &np, &str, &nst) ;
   
-  read_upsampled_patches(input, np, str, m) ;
-  read_correction_matrices(input, np, nst, m) ;
+  read_upsampled_patches(f, np, str, m) ;
+  read_correction_matrices(f, np, nst, m) ;
 
   return 0 ;
-}
-
-gchar *nbi_problem_type_string(nbi_problem_t p)
-
-{
-  switch ( p ) {
-  default: return NULL ; break ;
-  case NBI_PROBLEM_UNDEFINED: return "UNDEFINED" ; break ;
-  case NBI_PROBLEM_LAPLACE  : return "LAPLACE" ; break ;
-  case NBI_PROBLEM_HELMHOLTZ: return "HELMHOLTZ" ; break ;
-  }
-  
-  return NULL ;
-}
-
-nbi_problem_t nbi_problem_from_string(gchar *p)
-
-{
-  if ( strcmp(p, "UNDEFINED") == 0 ) return NBI_PROBLEM_UNDEFINED ;
-  if ( strcmp(p, "LAPLACE") == 0   ) return NBI_PROBLEM_LAPLACE ;
-  if ( strcmp(p, "HELMHOLTZ") == 0 ) return NBI_PROBLEM_HELMHOLTZ ;
-  
-  return NBI_PROBLEM_UNDEFINED ;
 }
 
 gint NBI_FUNCTION_NAME(nbi_matrix_write)(FILE *f, nbi_matrix_t *m)
@@ -783,25 +695,6 @@ gint nbi_matrix_neighbour_number_max(nbi_matrix_t *m)
   
   return nnmax ;
 }
-
-/* gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *bc) */
-
-/* { */
-/*   gchar *line ; */
-/*   gsize n ; */
-/*   ssize_t nc ; */
-  
-/*   /\* nc = 0 ; line = NULL ; n = 0 ; *\/ */
-/*   /\* while ( nc != -1 ) { *\/ */
-/*   /\*   nc = getline(&line, &n, f) ; *\/ */
-/*   /\*   if ( nc > 0 ) { *\/ */
-/*   /\*     fprintf(stderr, "%s", line) ; *\/ */
-/*   /\*     nbi_boundary_condition_add(bc, line) ; *\/ */
-/*   /\*   } *\/ */
-/*   /\* } *\/ */
-  
-/*   return 0 ; */
-/* } */
 
 static gint boundary_condition_laplace(nbi_surface_t *s,
 				       NBI_REAL *p , gint pstr,
