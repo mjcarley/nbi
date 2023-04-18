@@ -13,13 +13,15 @@ You will need to have installed the following libraries:
 https://github.com/mjcarley/blaswrap
 https://github.com/mjcarley/sqt
 https://github.com/mjcarley/wbfmm
+https://github.com/mjcarley/agg
 
-You should also install PETSc if you want to solve any scattering
-problems:
+You should also install PETSc if you want to use it in place of the
+basic built-in iterative solver:
 
 https://petsc.org/
 
-and make sure the appropriate environment variables are set.
+and make sure the environment variable PETSC_DIR is set and visible in
+the shell.
 
 * Installation
 
