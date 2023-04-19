@@ -346,7 +346,8 @@ gint nbi_mesh_triangulate(nbi_surface_t *s,
 			  gdouble *f, gint fstr,
 			  gdouble *fi, gint fistr,
 			  gint *np, gint *nt) ;
-gint nbi_mesh_export_gmsh(FILE *f, gdouble *x, gint xstr, gint np, gint offp,
+gint nbi_mesh_export_gmsh(FILE *f, gchar *view,
+			  gdouble *x, gint xstr, gint np, gint offp,
 			  gint *tri, gint tstr, gint nt, gint offt,
 			  gdouble *data, gint dstr) ;
 

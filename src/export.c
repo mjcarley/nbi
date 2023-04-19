@@ -158,7 +158,7 @@ gint NBI_FUNCTION_NAME(nbi_mesh_triangulate)(nbi_surface_t *s,
   return 0 ;
 }  
 
-gint NBI_FUNCTION_NAME(nbi_mesh_export_gmsh)(FILE *f,
+gint NBI_FUNCTION_NAME(nbi_mesh_export_gmsh)(FILE *f, gchar *view,
 					     NBI_REAL *x, gint xstr, gint np,
 					     gint offp,
 					     gint *tri, gint tstr, gint nt,
@@ -167,6 +167,13 @@ gint NBI_FUNCTION_NAME(nbi_mesh_export_gmsh)(FILE *f,
 
 {
   gint i, j ;
+  gchar *vn ;
+
+  if ( view == NULL ) {
+    vn = g_strdup("NBI view") ;
+  } else {
+    vn = view ;
+  }
   
   fprintf(f,
 	  "$MeshFormat\n"
@@ -199,13 +206,13 @@ gint NBI_FUNCTION_NAME(nbi_mesh_export_gmsh)(FILE *f,
   fprintf(f, "$NodeData\n") ;
   fprintf(f,
 	  "1\n"
-	  "\"NBI view\"\n"
+	  "\"%s\"\n"
 	  "1\n"
 	  "0.0\n"
 	  "3\n"
 	  "0\n"
 	  "1\n"
-	  "%d\n", np) ;
+	  "%d\n", vn, np) ;
   for ( i = 0 ; i < np ; i ++ )
     fprintf(stdout, "%d %lg\n", offp+i+1, data[i*dstr]) ;
 

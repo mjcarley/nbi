@@ -8,7 +8,7 @@
 # "correct" solution corresponding to the boundary condition
 
 # potential from point source
-rp = laplace_G (x-0.1, y-0.0, z-0.25)
+rp = laplace_G(x-0.1, y-0.0, z-0.25)
 
 # negative of potential normal derivative from point source (boundary
 # condition for scattering problem)

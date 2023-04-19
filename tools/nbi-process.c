@@ -55,7 +55,8 @@ static void print_help_text(FILE *f, gint offt, gint field, gint offp,
 	  "  -f # field element index (%d)\n"
 	  "  -g # geometry file\n"
 	  "  -p # point index offset (%d)\n"
-	  "  -r # recursion depth for triangle generation (%d)\n",
+	  "  -r # recursion depth for triangle generation (%d)\n"
+	  "  -v # name of view\n",
 	  offt, field, offp, dmax) ;
 	  
   return ;
@@ -64,7 +65,7 @@ static void print_help_text(FILE *f, gint offt, gint field, gint offp,
 gint main(gint argc, gchar **argv)
 
 {
-  gchar *gfile, *dfile, ch ;
+  gchar *gfile, *dfile, ch, *view ;
   nbi_surface_t *s ;
   FILE *input, *output ;
   gint np, fstr, dmax, order, Nk, xistr, ni, fistr, npmax, ntmax ;
@@ -84,10 +85,11 @@ gint main(gint argc, gchar **argv)
   
   input = stdin ; output = stdout ;
   gfile = NULL ; dfile = NULL ;
-
+  view = NULL ;
+  
   field = 0 ;
 
-  while ( (ch = getopt(argc, argv, "hd:e:f:g:p:r:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "hd:e:f:g:p:r:v:")) != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
     case 'h':
@@ -100,6 +102,7 @@ gint main(gint argc, gchar **argv)
     case 'g': gfile = g_strdup(optarg) ; break ;
     case 'r': dmax = atoi(optarg) ; break ;
     case 'p': offp = atoi(optarg) ; break ;
+    case 'v': view = g_strdup(optarg) ; break ;
     }
   }
 
@@ -172,7 +175,7 @@ gint main(gint argc, gchar **argv)
   fprintf(stderr, "final point: %d\n", offp+ni) ;
   fprintf(stderr, "final element: %d\n", offt+ne) ;
   
-  nbi_mesh_export_gmsh(output,
+  nbi_mesh_export_gmsh(output, view,
 		       xi, xistr, ni, offp,
 		       tri, tstr, ne, offt, fi, fistr) ;
 

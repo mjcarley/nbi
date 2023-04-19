@@ -1,7 +1,7 @@
 #!/bin/bash
 
 a=0.6
-Mt=0.5
+Mt=1.1
 n=4
 
 nqa=25
@@ -36,9 +36,9 @@ opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
 echo ${opts}
 
 ## solve with ring source modelling rotor
-${bin}/nbi-solve-helmholtz -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
-      -f -T ${nthreads} -K ksp-options -P \
-      -k ${k} -b ring.bc -s solution.dat
+#${bin}/nbi-solve-helmholtz -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
+#      -f -T ${nthreads} -K ksp-options -P \
+#      -k ${k} -b ring.bc -s solution.dat
 
 ## generate radiated field on 33x33 grid in plane z=-0.5, -2 < x, y < 2
 ${bin}/nbi-surface -g grid-xy -d -2 -d -2 -d 2 -d 2 -d -0.5 \
@@ -48,13 +48,25 @@ ${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
 ## generate gmsh file for visualization
 ${bin}/nbi-process -d grid.dat -g grid.nbi -r 2 > grid.msh 2> log
 
+## extract the indices of the last point and element
 offp=`grep point: log | cut -d: -f2`
 offe=`grep element: log | cut -d: -f2`
 
 ## nacelle surface pressure
 ${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
       -S -k ${k} -b ring.bc > surface.dat
+## start numbering this mesh from the last indices of the previous one
 ${bin}/nbi-process -d surface.dat -g ${gfile} -r 1 \
-      -e ${offe} -p ${offp} > nacelle.msh
+      -e ${offe} -p ${offp} > nacelle.msh 2> log
 
+## extract the indices of the last point and element
+offp=`grep point: log | cut -d: -f2`
+offe=`grep element: log | cut -d: -f2`
+
+## a tube wrapped round the nacelle to see the near field
+${bin}/nbi-surface -q 25 -a tube.agg > tube.nbi
+${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
+      -F tube.nbi -k ${k} -b ring.bc > tube.dat
+${bin}/nbi-process -d tube.dat -g tube.nbi -r 2 \
+      -e ${offe} -p ${offp} > tube.msh 2> log
 

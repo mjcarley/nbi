@@ -2,24 +2,16 @@
 # about the z axis, located at (x0,y0,z0), with wavenumber k and azimuthal
 # order n
 
+## rotor radius and tip speed, azimuthal mode, resulting wavenumber
 a = 0.6
-Mt = 0.5
+Mt = 1.1
 n = 4
-
 k = n*Mt/a
+
+## position of ring source
 x0 = 0.0
 y0 = 0.0
 z0 = 0.3
-
-# for Helmholtz problems, you must set the real and imaginary parts of
-# the surface potential (rp,ip) and of the surface potential gradient
-# (rdp, idp)
-#
-# the potential gradient is used to set the boundary condition and compute
-# the surface potential
-#
-# an error estimate is made, assuming that the supplied potential is the
-# "correct" solution corresponding to the boundary condition
 
 # incident potential
 rp = helmholtz_ring_r(a, n, k, x-x0, y-y0, z-z0)

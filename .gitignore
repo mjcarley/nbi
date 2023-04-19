@@ -18,6 +18,8 @@
 
 ## scratch directory
 scratch
+## directory for writing manual
+latex
 
 ## m4 cache
 autom4te.cache

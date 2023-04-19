@@ -1,0 +1,3 @@
+gmsh -setnumber Mesh.SurfaceEdges 0 \
+     -setnumber General.BackgroundGradient 0 \
+     $*
