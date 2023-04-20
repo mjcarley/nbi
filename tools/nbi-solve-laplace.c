@@ -62,10 +62,11 @@ static void print_help_text(FILE *f, gint depth,
 			    gint nthreads, gdouble tol)
 
 {
-  fprintf(f, 
+  fprintf(f,
+	  "%s: solve the Laplace boundary integral equation\n\n"
 	  "Usage:\n\n"
 	  "  %s <options>\n\n",
-	  progname) ;
+	  progname, progname) ;
 
   fprintf(f,
 	  "Options:\n\n"

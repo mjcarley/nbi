@@ -45,9 +45,10 @@ static void print_help_text(FILE *f, gint nqa, gint dmax, gdouble tol,
 
 {
   fprintf(f, 
+	  "%s: assemble Laplace boundary integral matrices\n\n"
 	  "Usage:\n\n"
 	  "  %s <options>\n\n",
-	  progname) ;
+	  progname, progname) ;
 
   fprintf(f,
 	  "Options:\n\n"

@@ -188,9 +188,10 @@ static void print_help_text(FILE *output)
 
 {
   fprintf(output,
+	  "%s: generate and discretize NBI surfaces\n\n"
 	  "Usage:\n\n"
-	  "  %s <options>\n\n",
-	  progname) ;
+	  "  %s <options> > <output>\n\n",
+	  progname, progname) ;
 
   fprintf(output,
 	  "Options:\n\n"
@@ -199,7 +200,7 @@ static void print_help_text(FILE *output)
 	  "  -a # AGG input file\n"
 #endif /*HAVE_AGG*/
 	  "  -d # append a real argument for geometry specification\n"
-	  "  -g # select a geometry\n"
+	  "  -g # select a built-in geometry\n"
 	  "  -G list available built-in geometries\n"
 	  "  -i # append an integer argument for geometry specification\n"
 	  "  -o # output file\n"

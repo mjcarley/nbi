@@ -42,9 +42,10 @@ static void print_help_text(FILE *f, gint field)
 
 {
   fprintf(f, 
+	  "%s: compute Helmholtz potential field around a surface\n\n"
 	  "Usage:\n\n"
 	  "  %s <options>\n\n",
-	  progname) ;
+	  progname, progname) ;
 
   fprintf(f,
 	  "Options:\n\n"

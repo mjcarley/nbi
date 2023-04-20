@@ -43,10 +43,18 @@ static void print_help_text(FILE *f, gint offt, gint field, gint offp,
 
 {
   fprintf(f, 
+	  "%s: process NBI surfaces and data sets\n\n"
 	  "Usage:\n\n"
-	  "  %s <options>\n\n",
-	  progname) ;
-
+	  "  %s <options> > <output>\n\n",
+	  progname, progname) ;
+  
+  fprintf(f,
+	  "Output is a mesh and data file which can be viewed with GMSH.\n"
+	  "On exit, total number of mesh points and elements is written to\n"
+	  "stderr, for use in the -p and -e options if further meshes are\n"
+	  "being generated, in order to avoid conflicts in GMSH indexing.\n\n"
+	  ) ;
+  
   fprintf(f,
 	  "Options:\n\n"
 	  "  -h print this message and exit\n"
@@ -56,7 +64,7 @@ static void print_help_text(FILE *f, gint offt, gint field, gint offp,
 	  "  -g # geometry file\n"
 	  "  -p # point index offset (%d)\n"
 	  "  -r # recursion depth for triangle generation (%d)\n"
-	  "  -v # name of view\n",
+	  "  -v # name of view in GMSH file\n",
 	  offt, field, offp, dmax) ;
 	  
   return ;

@@ -180,7 +180,7 @@ gint NBI_FUNCTION_NAME(nbi_mesh_export_gmsh)(FILE *f, gchar *view,
 	  "4.1 0 8\n"
 	  "$EndMeshFormat\n"
 	  "$Nodes\n") ;
-  fprintf(f, "1 %d 1 %d\n", np, np) ;
+  fprintf(f, "1 %d %d %d\n", np, offp+1, offp+np) ;
   fprintf(f, "2 1 0 %d\n", np) ;
   for ( i = 0 ; i < np ; i ++ )
     fprintf(f, "%d\n", offp + i + 1) ;
