@@ -64,9 +64,9 @@ offp=`grep point: log | cut -d: -f2`
 offe=`grep element: log | cut -d: -f2`
 
 ## a tube wrapped round the nacelle to see the near field
-${bin}/nbi-surface -q 25 -a tube.agg > tube.nbi
+${bin}/nbi-surface -q 54 -a tube.agg > tube.nbi
 ${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
       -F tube.nbi -k ${k} -b ring.bc > tube.dat
-${bin}/nbi-process -d tube.dat -g tube.nbi -r 2 \
+${bin}/nbi-process -d tube.dat -g tube.nbi -r 1 \
       -e ${offe} -p ${offp} > tube.msh 2> log
 

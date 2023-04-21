@@ -28,14 +28,15 @@ global {
 #     ss: spacing in parameter s in generating cross-section shape
 
 
-body("nose")
+body("tube")
 
 {
 
   grid(16384, 32768)
 
   {
-    tube(65, 33)
+    tube(65, 33, -1, 0.5)
+    ##linear(5, 0, 1, "linear", 17, -1, 1, "cosine")
   }
 
   distribution ("tube", 0.0, 1, 16, "cosine")
@@ -43,6 +44,6 @@ body("nose")
     transform("shift", -0.5, 0, 0)
     transform("scale", "2*D") 
     transform("shift", 0, 0, "s*len-0.5")
-    shape("ellipse", -1.0, 1,"n1", "n2")
+    shape("ellipse", -1.0, 1, "n1", "n2")
   }
 }
