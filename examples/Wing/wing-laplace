@@ -1,0 +1,41 @@
+#!/bin/bash
+
+nqa=7
+nqp=25
+nqu=54
+tol=1e-6
+eta=1.25
+depth=5
+order=8
+nthreads=4
+src=pscource.bc
+
+## path to executables
+bin=../../tools
+
+## store geometry and matrix data in subdirectories
+gfile=Geometries/wing-${nqp}.nbi
+mfile=Matrices/matrix-wing-${nqp}-${nqu}-${order}-${depth}.dat
+
+## generate the surface
+${bin}/nbi-surface -q ${nqp} -a wing.agg -o ${gfile}
+
+## generate an option list for nbi-assemble-laplace and display it
+opts="-e ${tol} -a ${nqa} -u ${nqu} -n ${eta} -d ${depth} -N ${order} \
+      -m ${mfile} -g ${gfile}"
+echo nbi-assemble-laplace ${opts}
+## assemble the problem matrices
+${bin}/nbi-assemble-laplace ${opts} -T ${nthreads}
+
+## solve the problem
+opts="-m ${mfile} -g ${gfile} -D 4 -o 10 -d 2 -t 1e-3 \
+      -r 50 -f -T ${nthreads} -b ${src} -s solution.dat"
+echo nbi-solve-laplace ${opts}
+${bin}/nbi-solve-laplace ${opts}
+
+## surface error plot
+${bin}/nbi-field-laplace -S -g ${gfile} -b ${src} \
+      -d solution.dat > error.dat
+${bin}/nbi-process -v "Error in solution" -d error.dat \
+      -g ${gfile} > error.msh
+  

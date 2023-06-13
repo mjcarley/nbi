@@ -50,6 +50,7 @@ static void print_help_text(FILE *f, gint field)
   fprintf(f,
 	  "Options:\n\n"
 	  "  -h print this message and exit\n"
+	  "  -b # add boundary condition from file\n"
 	  "  -d # input data file\n"
 	  "  -F # field geometry file\n"
 	  "  -f # field element index (%d)\n"

@@ -241,6 +241,9 @@ if test x$hasfma = xyes; then
    SIMD_FLAGS="$SIMD_FLAGS -mfma -DWBFMM_USE_AVX"
 fi
 
+AC_CHECK_HEADERS(gmshc.h) 
+AC_CHECK_LIB(gmsh, gmshInitialize)
+
 AC_CHECK_LIB(m, cos)
 AC_CONFIG_MACRO_DIR([m4])
 

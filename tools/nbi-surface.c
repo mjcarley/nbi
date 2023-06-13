@@ -1,6 +1,6 @@
 /* This file is part of NBI, a library for Nystrom Boundary Integral solvers
  *
- * Copyright (C) 2021 Michael Carley
+ * Copyright (C) 2021, 2023 Michael Carley
  *
  * NBI is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -35,6 +35,10 @@
 
 #include "nbi-private.h"
 
+#ifdef HAVE_GMSHC_H
+#include <gmshc.h>
+#endif /*HAVE_GMSHC_H*/
+
 GTimer *timer ;
 gchar *progname ;
 
@@ -43,6 +47,7 @@ nbi_surface_t *geometry_ellipsoid_ico(gdouble argd[], gint argi[], gint nq) ;
 nbi_surface_t *geometry_stellarator(gdouble argd[], gint argi[], gint nq) ;
 nbi_surface_t *geometry_grid_xy(gdouble argd[], gint argi[], gint nq) ;
 nbi_surface_t *geometry_grid_yz(gdouble argd[], gint argi[], gint nq) ;
+nbi_surface_t *geometry_grid_zx(gdouble argd[], gint argi[], gint nq) ;
 
 gpointer geometries[] = {"ellipsoid-ico",
 			 geometry_ellipsoid_ico,
@@ -60,6 +65,9 @@ gpointer geometries[] = {"ellipsoid-ico",
 			 geometry_grid_yz,
 			 "nu, nv",
 			 "ymin, zmin, ymax, zmax",
+			 geometry_grid_zx,
+			 "nu, nv",
+			 "zmin, xmin, zmax, xmax",
 			 NULL} ;
 
 nbi_surface_t *geometry_ellipsoid_ico(gdouble argd[], gint argi[], gint nq)
@@ -157,6 +165,36 @@ nbi_surface_t *geometry_grid_yz(gdouble argd[], gint argi[], gint nq)
   return s ;
 }
 
+nbi_surface_t *geometry_grid_zx(gdouble argd[], gint argi[], gint nq)
+
+{
+  nbi_surface_t *s = NULL ;
+  gint nu, nv, i, xstr ;
+  gdouble zmin, zmax, xmin, xmax, y, *x, u, v ;
+
+  nu = argi[0] ; nv = argi[1] ;
+  zmin = argd[0] ; xmin = argd[1] ; 
+  zmax = argd[2] ; xmax = argd[3] ; 
+  y = argd[4] ;
+  
+  s = nbi_surface_alloc(2*nu*nv*nq, 2*nu*nv) ;
+
+  nbi_geometry_grid(s, 0, 1, nu, 0, 1, nv, nq) ;
+
+  x = (NBI_REAL *)nbi_surface_node(s, 0) ;
+  xstr = NBI_SURFACE_NODE_LENGTH ;
+
+  for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+    u = x[i*xstr+0] ; v = x[i*xstr+1] ;
+    x[i*xstr+0] = xmin + (xmax - xmin)*u ;
+    x[i*xstr+1] = y ;
+    x[i*xstr+2] = zmin + (zmax - zmin)*v ;
+    x[i*xstr+3] = 0 ; x[i*xstr+4] = 0 ; x[i*xstr+5] = 1 ; 
+  }    
+  
+  return s ;
+}
+
 static geometry_function parse_geometry(gchar *str)
 
 {
@@ -200,13 +238,33 @@ static void print_help_text(FILE *output)
 	  "  -a # AGG input file\n"
 #endif /*HAVE_AGG*/
 	  "  -d # append a real argument for geometry specification\n"
+	  "  -f write list of geometry formats handled, and exit\n"
 	  "  -g # select a built-in geometry\n"
 	  "  -G list available built-in geometries\n"
 	  "  -i # append an integer argument for geometry specification\n"
+#ifdef HAVE_LIBGMSH
+	  "  -m # GMSH geometry file\n"
+#endif /*HAVE_LIBGMSH*/
 	  "  -o # output file\n"
 	  "  -q # number of quadrature points per surface patch\n"
 	  ) ;
   return ;
+}
+
+static void list_input_formats(FILE *f)
+
+{
+  fprintf(f, "geometry formats handled by %s\n\n", progname) ;
+
+  fprintf(f, "  internal geometry generation (-G, -g)\n") ;
+#ifdef HAVE_AGG
+  fprintf(f, "  agg geometry file (-a)\n") ;
+#endif /*HAVE_AGG*/
+#ifdef HAVE_LIBGMSH
+  fprintf(f, "  mesh based on GMSH geometry file (-m)\n") ;
+#endif /*HAVE_LIBGMSH*/
+  
+  return ; 
 }
 
 gint main(gint argc, gchar **argv)
@@ -214,6 +272,9 @@ gint main(gint argc, gchar **argv)
 {
   geometry_function gfunc ;
   gchar ch, *opfile, *aggfile ;
+#ifdef HAVE_LIBGMSH
+  gchar *gmshfile ;
+#endif /*HAVE_LIBGMSH*/
   gdouble argd[16] ;
   gint argi[16], nq, argci, argcd ;
   nbi_surface_t *s ;
@@ -223,6 +284,10 @@ gint main(gint argc, gchar **argv)
   progname = g_strdup(g_path_get_basename(argv[0])) ;
 
   gfunc = NULL ; aggfile = NULL ;
+#ifdef HAVE_LIBGMSH
+  gmshfile = NULL ;
+#endif /*HAVE_LIBGMSH*/
+
   s = NULL ;
   nq = 7 ;
   
@@ -231,7 +296,7 @@ gint main(gint argc, gchar **argv)
 
   argci = argcd = 0 ;
   
-  while ( (ch = getopt(argc, argv, "ha:d:Gg:i:o:q:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "ha:d:fGg:i:m:o:q:")) != EOF ) {
     switch (ch ) {
     default: g_assert_not_reached() ; break ;
     case 'a':
@@ -250,6 +315,7 @@ gint main(gint argc, gchar **argv)
       break ;
     case 'h': print_help_text(stderr) ; return 0 ; break ;
     case 'd': argd[argcd] = atof(optarg) ; argcd ++ ; break ;
+    case 'f': list_input_formats(stderr) ; return 0 ; break ;
     case 'g':
       if ( aggfile != NULL ) {
 	fprintf(stderr, "%s: use -a or -g but not both\n", progname) ;
@@ -261,12 +327,19 @@ gint main(gint argc, gchar **argv)
       return 0 ;
       break ;
     case 'i': argi[argci] = atoi(optarg) ; argci ++ ; break ;
+#ifdef HAVE_LIBGMSH
+    case 'm': gmshfile = g_strdup(optarg) ; break ;
+#endif /*HAVE_LIBGMSH*/
     case 'o': opfile = g_strdup(optarg) ; break ;
     case 'q': nq = atoi(optarg) ; break ;
     }
   }
 
-  if ( aggfile == NULL && gfunc == NULL ) {
+  if ( aggfile == NULL && gfunc == NULL
+#ifdef HAVE_LIBGMSH
+       && gmshfile == NULL
+#endif /*HAVE_LIBGMSH*/
+       ) {
     fprintf(stderr, "%s: no geometry specified\n", progname) ;
 
     return 1 ;
@@ -287,6 +360,17 @@ gint main(gint argc, gchar **argv)
   }
 #endif /*HAVE_AGG*/
 
+#ifdef HAVE_LIBGMSH
+  gint gmsh_err ;
+  if ( gmshfile != NULL ) {
+    gmshInitialize(argc, argv, 1, 0, &gmsh_err) ;
+    gmshOptionSetNumber("General.Verbosity", 0, &gmsh_err) ;
+
+    s = nbi_gmsh_mesh(gmshfile, nq) ;
+    
+    gmshFinalize(&gmsh_err) ;
+  }
+#endif /*HAVE_LIBGMSH*/
   
   if ( gfunc != NULL ) {
     s = gfunc(argd, argi, nq) ;

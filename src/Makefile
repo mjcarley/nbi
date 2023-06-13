@@ -138,7 +138,7 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 libnbi_la_LIBADD =
 am_libnbi_la_OBJECTS = nbi.lo geometries.lo laplace.lo helmholtz.lo \
 	tinyexpr.lo expressions.lo agg.lo export.lo functions.lo \
-	assemble.lo solvers.lo files.lo
+	assemble.lo solvers.lo files.lo gmsh.lo
 libnbi_la_OBJECTS = $(am_libnbi_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -166,9 +166,10 @@ am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/agg.Plo ./$(DEPDIR)/assemble.Plo \
 	./$(DEPDIR)/export.Plo ./$(DEPDIR)/expressions.Plo \
 	./$(DEPDIR)/files.Plo ./$(DEPDIR)/functions.Plo \
-	./$(DEPDIR)/geometries.Plo ./$(DEPDIR)/helmholtz.Plo \
-	./$(DEPDIR)/laplace.Plo ./$(DEPDIR)/nbi.Plo \
-	./$(DEPDIR)/solvers.Plo ./$(DEPDIR)/tinyexpr.Plo
+	./$(DEPDIR)/geometries.Plo ./$(DEPDIR)/gmsh.Plo \
+	./$(DEPDIR)/helmholtz.Plo ./$(DEPDIR)/laplace.Plo \
+	./$(DEPDIR)/nbi.Plo ./$(DEPDIR)/solvers.Plo \
+	./$(DEPDIR)/tinyexpr.Plo
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -230,7 +231,7 @@ AWK = gawk
 BLASWRAP = yes
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -O3 -DWBFMM_USE_AVX -g -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -fopenmp  -mavx -DWBFMM_USE_AVX -mfma -DWBFMM_USE_AVX
+CFLAGS = -g -O2 -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -fopenmp  -mavx -DWBFMM_USE_AVX -mfma -DWBFMM_USE_AVX
 CPP = gcc -E
 CPPFLAGS = -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -fopenmp -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include
 CYGPATH_W = echo
@@ -247,7 +248,7 @@ EXEEXT =
 F77 = g77
 FFLAGS = -g -O2
 FGREP = /usr/bin/grep -F
-FLIBS =  -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath
+FLIBS =  -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lgmsh -lquadmath
 GLIB_CFLAGS = -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include
 GLIB_COMPILE_RESOURCES = /usr/bin/glib-compile-resources
 GLIB_CONFIG = 
@@ -264,7 +265,7 @@ INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LD = /usr/bin/ld -m elf_x86_64
 LDFLAGS =  -lglib-2.0 -lblas -L/home/michael/Codes/lib -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -lglib-2.0 -lwbfmm -lglib-2.0 -lblas -L/home/michael/Codes/lib -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -L/home/michael/Codes/lib -lsqt -lglib-2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath -L/home/michael/Codes/lib -lagg -lglib-2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath
 LIBOBJS = 
-LIBS = -lglib-2.0 -lm   -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath
+LIBS = -lglib-2.0 -lm -lgmsh   -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lgmsh -lquadmath
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
@@ -385,7 +386,8 @@ libnbi_la_SOURCES = \
 	solvers.c \
 	nbi-private.h \
 	tinyexpr.h \
-	files.c
+	files.c \
+	gmsh.c
 
 include_HEADERS = \
 	nbi.h
@@ -514,6 +516,7 @@ include ./$(DEPDIR)/expressions.Plo # am--include-marker
 include ./$(DEPDIR)/files.Plo # am--include-marker
 include ./$(DEPDIR)/functions.Plo # am--include-marker
 include ./$(DEPDIR)/geometries.Plo # am--include-marker
+include ./$(DEPDIR)/gmsh.Plo # am--include-marker
 include ./$(DEPDIR)/helmholtz.Plo # am--include-marker
 include ./$(DEPDIR)/laplace.Plo # am--include-marker
 include ./$(DEPDIR)/nbi.Plo # am--include-marker
@@ -716,6 +719,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/files.Plo
 	-rm -f ./$(DEPDIR)/functions.Plo
 	-rm -f ./$(DEPDIR)/geometries.Plo
+	-rm -f ./$(DEPDIR)/gmsh.Plo
 	-rm -f ./$(DEPDIR)/helmholtz.Plo
 	-rm -f ./$(DEPDIR)/laplace.Plo
 	-rm -f ./$(DEPDIR)/nbi.Plo
@@ -773,6 +777,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/files.Plo
 	-rm -f ./$(DEPDIR)/functions.Plo
 	-rm -f ./$(DEPDIR)/geometries.Plo
+	-rm -f ./$(DEPDIR)/gmsh.Plo
 	-rm -f ./$(DEPDIR)/helmholtz.Plo
 	-rm -f ./$(DEPDIR)/laplace.Plo
 	-rm -f ./$(DEPDIR)/nbi.Plo

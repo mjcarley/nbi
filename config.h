@@ -33,8 +33,14 @@
 /* Define if fma instructions are supported */
 #define HAVE_FMA_INSTRUCTIONS 1
 
+/* Define to 1 if you have the <gmshc.h> header file. */
+#define HAVE_GMSHC_H 1
+
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
+
+/* Define to 1 if you have the `gmsh' library (-lgmsh). */
+#define HAVE_LIBGMSH 1
 
 /* Define to 1 if you have the `m' library (-lm). */
 #define HAVE_LIBM 1

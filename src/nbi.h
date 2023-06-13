@@ -64,8 +64,7 @@ struct _nbi_surface_t {
     np,       /*< number of patches */
     npmax,    /*< maximum number of patches */
     *ip ;     /*< index of first node and number of nodes on each patch*/
-  gchar
-  *pcr,       /*< patch data (centroids and radii)*/
+  gchar  *pcr,       /*< patch data (centroids and radii)*/
     *xc ;       /*< collocation nodes, normals, and quadrature weights*/
   gsize
   fpsize ; /*< size of floating point data (single or double precision)*/
@@ -337,6 +336,8 @@ gint nbi_data_write(FILE *f, gdouble *dat, gint dstr, gint ne, gint nd) ;
 gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *bc) ;
 
 nbi_surface_t *nbi_agg_mesh(gint fid, gint nq) ;
+
+nbi_surface_t *nbi_gmsh_mesh(gchar *file, gint nq) ;
 
 gint nbi_mesh_triangulate(nbi_surface_t *s,
 			  gint dmax, gint order, gdouble tol,

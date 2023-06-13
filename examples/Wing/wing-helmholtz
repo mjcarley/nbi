@@ -1,0 +1,43 @@
+#!/bin/bash
+
+nqa=25
+nqp=25
+nqu=54
+tol=1e-6
+eta=1.25
+depth=5
+order=8
+nthreads=4
+k=3.5
+src=pcsource.bc
+
+## path to executables
+bin=../../tools
+
+## store geometry and matrix data in subdirectories
+gfile=Geometries/wing-${nqp}.nbi
+mfile=Matrices/matrix-wing-${nqp}-${nqu}-${order}-${depth}-${k}.dat
+
+## generate the surface
+${bin}/nbi-surface -q ${nqp} -a wing.agg -o ${gfile}
+
+## generate an option list for nbi-assemble-helmholtz and display it
+opts="-e ${tol} -a ${nqa} -u ${nqu} -n ${eta} -d ${depth} -N ${order} \
+      -m ${mfile} -g ${gfile} -k ${k}"
+echo nbi-assemble-helmholtz ${opts}
+## assemble the problem matrices
+##${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
+
+## solve the problem
+opts="-m ${mfile} -g ${gfile} -D 4 -o 10 -d 2 -t 1e-3 -k ${k} \
+      -P -K ksp-options \
+      -r 50 -f -T ${nthreads} -b ${src} -s solution.dat"
+echo nbi-solve-helmholtz ${opts}
+${bin}/nbi-solve-helmholtz ${opts}
+
+## surface error plot
+${bin}/nbi-field-helmholtz -S -g ${gfile} -b ${src} \
+      -d solution.dat > error.dat
+${bin}/nbi-process -v "Error in solution" -d error.dat \
+      -g ${gfile} > error.msh
+  

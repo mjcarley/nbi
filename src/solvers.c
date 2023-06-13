@@ -136,7 +136,7 @@ gint NBI_FUNCTION_NAME(nbi_gmres_real)(nbi_matrix_t *A, gint n,
       H[i*m+i] = cs[i]*H[i*m+i] + sn[i]*H[(i+1)*m+i] ;
       H[(i+1)*m+i] = 0.0 ;
       *error = fabs(s[i+1])/bnrm2 ;
-      fprintf(stderr, "%s: substep %d; error: %e\n",
+      fprintf(stderr, "%s: substep %3d; error: %e\n",
 	      __FUNCTION__, i, *error) ;
       if ( *error <= tol ) {
 	gmres_update(x, xstr, i+1, H, n, m, s, V, y) ;

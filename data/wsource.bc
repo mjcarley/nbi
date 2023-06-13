@@ -1,2 +1,0 @@
-laplace_G(x-1.3, y-0.0, z-0.25)
-laplace_dG(x-1.3, y-0.0, z-0.25, nx, ny, nz)
