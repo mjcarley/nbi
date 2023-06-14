@@ -35,6 +35,12 @@ Rotor: solve the problem of scattering of noise from an azimuthally
        varying circular source, which simulates a rotor interacting
        with a simple nacelle
 
+Catseye: solve for a point source inside a cat's eye geometry,
+	 generated using a GMSH input file.  To run the example in the
+	 directory,
+
+	 ./catseye-laplace
+
 * Parameters
 
 The sample shell scripts contain a number of common command line

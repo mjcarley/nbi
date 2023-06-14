@@ -84,7 +84,7 @@ gint NBI_FUNCTION_NAME(nbi_geometry_sphere)(nbi_surface_t *s,
 
 {
   NBI_REAL th0, th1, ph0, ph1, *st ;
-  gint i, j, k, order ;
+  gint i, j, order ;
   
   sqt_quadrature_select(nq, &st, &order) ;
 
@@ -100,6 +100,9 @@ gint NBI_FUNCTION_NAME(nbi_geometry_sphere)(nbi_surface_t *s,
     }
   }
 
+  nbi_surface_set_weights(s) ;
+
+#if 0  
   {
     NBI_REAL K[453*453], ce[453*3], al, bt, *xi, xx[3], work[3*453], J ;
     gint Nk, i3 = 3, xstr ;
@@ -123,6 +126,7 @@ gint NBI_FUNCTION_NAME(nbi_geometry_sphere)(nbi_surface_t *s,
       }
     }
   }
+#endif
   
   return 0 ;
 }
@@ -414,6 +418,8 @@ gint NBI_FUNCTION_NAME(nbi_geometry_ellipsoid_ico)(nbi_surface_t *s,
     x[1] = b*St*Sp ;
     x[2] = c*   Cp ;
   }
+
+  nbi_surface_set_weights(s) ;
   
   return 0 ;
 }

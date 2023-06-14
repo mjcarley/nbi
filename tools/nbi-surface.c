@@ -53,22 +53,27 @@ gpointer geometries[] = {"ellipsoid-ico",
 			 geometry_ellipsoid_ico,
 			 "subdivision depth",
 			 "semi-axis x, semi-axis y, semi-axis z",
+
 			 "stellarator",
 			 geometry_stellarator,
 			 "",
 			 "",
+
 			 "grid-xy",
 			 geometry_grid_xy,
 			 "nu, nv",
 			 "xmin, ymin, xmax, ymax",
+
 			 "grid-yz",
 			 geometry_grid_yz,
 			 "nu, nv",
 			 "ymin, zmin, ymax, zmax",
+
+			 "grid-zx",
 			 geometry_grid_zx,
 			 "nu, nv",
 			 "zmin, xmin, zmax, xmax",
-			 NULL} ;
+			 NULL, NULL, NULL, NULL} ;
 
 nbi_surface_t *geometry_ellipsoid_ico(gdouble argd[], gint argi[], gint nq)
 
@@ -363,7 +368,9 @@ gint main(gint argc, gchar **argv)
 #ifdef HAVE_LIBGMSH
   gint gmsh_err ;
   if ( gmshfile != NULL ) {
-    gmshInitialize(argc, argv, 1, 0, &gmsh_err) ;
+    /* gmshInitialize(argc, argv, 1, 0, &gmsh_err) ; */
+    /*don't pass the nbi options to GMSH (who knows what might happen?)*/
+    gmshInitialize(0, NULL, 1, 0, &gmsh_err) ;
     gmshOptionSetNumber("General.Verbosity", 0, &gmsh_err) ;
 
     s = nbi_gmsh_mesh(gmshfile, nq) ;

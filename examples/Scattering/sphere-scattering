@@ -20,7 +20,8 @@ opts="-e ${tol} -a ${nqa} -u ${nqu} \
       -m ${mfile} -g ${gfile} -k ${k}"
 echo -- ${opts}
 
-${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
+#${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
+${bin}/nbi-surface -q ${nqp} -g ellipsoid-ico -i 3 -d 0.5 -d 0.5 -d 0.5 -o ${gfile}
 
 ${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
 
@@ -39,7 +40,7 @@ ${bin}/nbi-surface -g grid-yz -d -2 -d -2 -d 2 -d 4 -d 0 \
       -i 33 -i 33 > grid.nbi
 ## field radiated by surface solution (negative of ring source term)
 ${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
-      -k ${k} -F grid.nbi -b plane.bc > grid.dat
+      -k ${k} -F grid.nbi > grid.dat
 ## generate gmsh files for visualization
 ${bin}/nbi-process -d grid.dat -g grid.nbi -r 2 > grid.msh 2> log
 

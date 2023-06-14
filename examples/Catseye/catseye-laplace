@@ -15,19 +15,19 @@ bin=../../tools
 ## store geometry and matrix data in subdirectories
 gfile=Geometries/catseye-${nqp}.nbi
 mfile=Matrices/matrix-catseye-${nqp}-${nqu}-${order}-${depth}.dat
-## generate the spherical surface
-##${bin}/nbi-surface -q ${nqp} -a catseye.agg -o ${gfile}
-#${bin}/nbi-surface -q ${nqp} -m catseye.geo -o ${gfile}
+## generate the catseye surface
+${bin}/nbi-surface -q ${nqp} -m catseye.geo -o ${gfile}
 
 ## generate an option list for nbi-assemble-laplace and display it
 opts="-e ${tol} -a ${nqa} -u ${nqu} -n ${eta} -d ${depth} -N ${order} \
       -m ${mfile} -g ${gfile}"
 echo -- ${opts}
 ## assemble the problem matrices
-#${bin}/nbi-assemble-laplace ${opts} -T ${nthreads}
+${bin}/nbi-assemble-laplace ${opts} -T ${nthreads}
+
 ## generate an option list for nbi-solve-laplace and display it
 opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t ${tol} \
-      -f -T ${nthreads} -b psource.bc -s solution.dat"
+      -P -K ksp-options -f -T ${nthreads} -b psource.bc -s solution.dat"
 echo ${opts}
 ## solve the problem
 ${bin}/nbi-solve-laplace ${opts}

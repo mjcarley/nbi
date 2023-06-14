@@ -172,6 +172,7 @@ typedef gint (*nbi_mesh_export_func_t)(FILE *,
 nbi_surface_t *nbi_surface_alloc(gint nnmax, gint npmax) ;
 gint nbi_surface_write(nbi_surface_t *s, FILE *f) ;
 nbi_surface_t *nbi_surface_read(FILE *f) ;
+gint nbi_surface_set_weights(nbi_surface_t *s) ;
 
 gint nbi_header_read(FILE *f, gchar header[]) ;
 gint nbi_header_write(FILE *f, gchar header[]) ;

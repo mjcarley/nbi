@@ -85,11 +85,15 @@ static void point_source_field_helmholtz(NBI_REAL k,
 }
 
 static void point_source_field_helmholtz_weighted(NBI_REAL k,
-					 NBI_REAL *xs, gint xstr, gint ns,
-					 NBI_REAL *p , gint pstr, NBI_REAL pwt,
-					 NBI_REAL *pn, gint nstr, NBI_REAL nwt,
-					 NBI_REAL *x, NBI_REAL wt, NBI_REAL *f,
-					 NBI_REAL *al, NBI_REAL *bt)
+						  NBI_REAL *xs,
+						  gint xstr, gint ns,
+						  NBI_REAL *p ,
+						  gint pstr, NBI_REAL pwt,
+						  NBI_REAL *pn,
+						  gint nstr, NBI_REAL nwt,
+						  NBI_REAL *x,
+						  NBI_REAL wt, NBI_REAL *f,
+						  NBI_REAL *al, NBI_REAL *bt)
 
 /*
  * f := bt*f + al*SUM(pwt*dG*\phi - nwt*G*d\phi)
@@ -101,12 +105,12 @@ static void point_source_field_helmholtz_weighted(NBI_REAL k,
 {
   gint i ;  
   NBI_REAL R, r[3], C, S, rn, G[2], dG[2], df[2], w ;
-
+  
   /*multiply by \beta*/
   df[0] = bt[0]*f[0] - bt[1]*f[1] ;
   f [1] = bt[1]*f[0] + bt[0]*f[1] ;
   f [0] = df[0] ;
-   
+
   for ( i = 0 ; i < ns ; i ++ ) {
     nbi_vector_diff(r, x, &(xs[i*xstr])) ;
     w = xs[i*xstr+6] ;

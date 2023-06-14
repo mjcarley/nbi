@@ -863,3 +863,37 @@ gint NBI_FUNCTION_NAME(nbi_boundary_condition_set)(nbi_surface_t *s,
 
   return 0 ;
 }
+
+gint NBI_FUNCTION_NAME(nbi_surface_set_weights)(nbi_surface_t *s)
+
+{
+  NBI_REAL K[453*453], ce[453*3], al, bt, *xi, xx[3], work[3*453], J, *st ;
+  gint Nk, i3 = 3, xstr, i, j, k, order, nq ;
+
+  nq = nbi_surface_patch_node_number(s, 0) ;
+  NBI_FUNCTION_NAME(sqt_quadrature_select)(nq, &st, &order) ;
+  Nk = NBI_FUNCTION_NAME(sqt_koornwinder_interp_matrix)(&(st[0]), 3,
+							&(st[1]), 3,
+							&(st[2]), 3,
+							nq, K) ;
+  al = 1.0 ; bt = 0.0 ; xstr = NBI_SURFACE_NODE_LENGTH ;
+  for ( i = 0 ; i < nbi_surface_patch_number(s) ; i ++ ) {
+    /* NBI_FUNCTION_NAME(sqt_quadrature_select)(nq, &st, &order) ; */
+    /* sqt_quadrature_select(nq, &st, &order) ; */
+    g_assert(nbi_surface_patch_node_number(s, i) == nq) ;
+    j = nbi_surface_patch_node(s, i) ;
+    xi = (NBI_REAL *)nbi_surface_node(s, j) ;
+    blaswrap_dgemm(FALSE, FALSE, nq, i3, nq, al, K, nq, xi, xstr,
+		   bt, ce, i3) ;
+    for ( k = 0 ; k < nq ; k ++ ) {
+      NBI_FUNCTION_NAME(sqt_element_interp)(ce, nq, Nk,
+					    st[3*k+0], st[3*k+1], xx,
+					    (NBI_REAL *)
+					    nbi_surface_normal(s, j+k),
+					    &J, NULL, work) ;
+      *((NBI_REAL *)nbi_surface_node_weight(s, j+k)) = st[3*k+2]*J ;
+    }
+  }
+
+  return 0 ;
+}

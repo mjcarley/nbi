@@ -3,7 +3,7 @@ k = 10.0
 # sphere radius
 a = 0.5
 # sphere centre (this should be the same as in sphere.agg)
-z0 = 0.9
+z0 = 0.0
 
 # for Helmholtz problems, you must set the real and imaginary parts of
 # the surface potential (rp,ip) and of the surface potential gradient
