@@ -239,9 +239,6 @@ static void print_help_text(FILE *output)
   fprintf(output,
 	  "Options:\n\n"
 	  "  -h print this message and exit\n"
-#ifdef HAVE_AGG
-	  "  -a # AGG input file\n"
-#endif /*HAVE_AGG*/
 	  "  -d # append a real argument for geometry specification\n"
 	  "  -f write list of geometry formats handled, and exit\n"
 	  "  -g # select a built-in geometry\n"
@@ -262,9 +259,6 @@ static void list_input_formats(FILE *f)
   fprintf(f, "geometry formats handled by %s\n\n", progname) ;
 
   fprintf(f, "  internal geometry generation (-G, -g)\n") ;
-#ifdef HAVE_AGG
-  fprintf(f, "  agg geometry file (-a)\n") ;
-#endif /*HAVE_AGG*/
 #ifdef HAVE_LIBGMSH
   fprintf(f, "  mesh based on GMSH geometry file (-m)\n") ;
 #endif /*HAVE_LIBGMSH*/
@@ -276,19 +270,19 @@ gint main(gint argc, gchar **argv)
 
 {
   geometry_function gfunc ;
-  gchar ch, *opfile, *aggfile ;
+  gchar ch, *opfile ;
 #ifdef HAVE_LIBGMSH
   gchar *gmshfile ;
 #endif /*HAVE_LIBGMSH*/
   gdouble argd[16] ;
   gint argi[16], nq, argci, argcd ;
   nbi_surface_t *s ;
-  FILE *output, *input ;
+  FILE *output ;
   
   opfile = NULL ;
   progname = g_strdup(g_path_get_basename(argv[0])) ;
 
-  gfunc = NULL ; aggfile = NULL ;
+  gfunc = NULL ;
 #ifdef HAVE_LIBGMSH
   gmshfile = NULL ;
 #endif /*HAVE_LIBGMSH*/
@@ -301,29 +295,15 @@ gint main(gint argc, gchar **argv)
 
   argci = argcd = 0 ;
   
-  while ( (ch = getopt(argc, argv, "ha:d:fGg:i:m:o:q:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "hd:fGg:i:m:o:q:")) != EOF ) {
     switch (ch ) {
     default: g_assert_not_reached() ; break ;
-    case 'a':
-#ifdef HAVE_AGG
-      if ( gfunc != NULL ) {
-	fprintf(stderr, "%s: use -a or -g but not both\n", progname) ;
-	return 1 ;
-      }
-      aggfile = g_strdup(optarg) ;
-#else /*HAVE_AGG*/
-      fprintf(stderr,
-	      "AGG geometry support not implemented: install AGG and "
-	      "recompile\n") ;
-      exit(1) ;
-#endif /*HAVE_AGG*/
-      break ;
     case 'h': print_help_text(stderr) ; return 0 ; break ;
     case 'd': argd[argcd] = atof(optarg) ; argcd ++ ; break ;
     case 'f': list_input_formats(stderr) ; return 0 ; break ;
     case 'g':
-      if ( aggfile != NULL ) {
-	fprintf(stderr, "%s: use -a or -g but not both\n", progname) ;
+      if ( gmshfile != NULL ) {
+	fprintf(stderr, "%s: use -g or -m but not both\n", progname) ;
 	return 1 ;
       }
       gfunc = parse_geometry(optarg) ; break ;
@@ -333,14 +313,19 @@ gint main(gint argc, gchar **argv)
       break ;
     case 'i': argi[argci] = atoi(optarg) ; argci ++ ; break ;
 #ifdef HAVE_LIBGMSH
-    case 'm': gmshfile = g_strdup(optarg) ; break ;
+    case 'm':
+      if ( gfunc != NULL ) {
+	fprintf(stderr, "%s: use -g or -m but not both\n", progname) ;
+	return 1 ;
+      }
+      gmshfile = g_strdup(optarg) ; break ;
 #endif /*HAVE_LIBGMSH*/
     case 'o': opfile = g_strdup(optarg) ; break ;
     case 'q': nq = atoi(optarg) ; break ;
     }
   }
 
-  if ( aggfile == NULL && gfunc == NULL
+  if ( gfunc == NULL
 #ifdef HAVE_LIBGMSH
        && gmshfile == NULL
 #endif /*HAVE_LIBGMSH*/
@@ -349,21 +334,6 @@ gint main(gint argc, gchar **argv)
 
     return 1 ;
   }
-
-#ifdef HAVE_AGG
-  if ( aggfile != NULL ) {
-    gint fid ;
-    input = fopen(aggfile, "r") ;
-    if ( input == NULL ) {
-      fprintf(stderr, "%s: cannot open file %s\n", progname, aggfile) ;
-      return 1 ;
-    }
-    fid = fileno(input) ;
-    s = nbi_agg_mesh(fid, nq) ;
-    fclose(input) ;
-    close(fid) ;
-  }
-#endif /*HAVE_AGG*/
 
 #ifdef HAVE_LIBGMSH
   gint gmsh_err ;

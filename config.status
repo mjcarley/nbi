@@ -871,8 +871,8 @@ S["am__EXEEXT_FALSE"]=""
 S["am__EXEEXT_TRUE"]="#"
 S["LTLIBOBJS"]=""
 S["LIBOBJS"]=""
-S["PETSC_FALSE"]="#"
-S["PETSC_TRUE"]=""
+S["PETSC_FALSE"]=""
+S["PETSC_TRUE"]="#"
 S["petsc_real"]=""
 S["FLIBS"]=" -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64"\
 " -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lgmsh -lquadmath"
@@ -892,7 +892,6 @@ S["PKG_CONFIG_PATH"]="/home/michael/Codes/lib/pkgconfig:/home/michael/Codes/lib/
 "share/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/share/pkgconfig"
 S["PKG_CONFIG"]="/usr/bin/pkg-config"
 S["WBFMM"]="yes"
-S["AGG"]="yes"
 S["SQT"]="yes"
 S["BLASWRAP"]="yes"
 S["CPP"]="gcc -E"
@@ -930,15 +929,13 @@ S["OBJEXT"]="o"
 S["EXEEXT"]=""
 S["ac_ct_CC"]="gcc"
 S["CPPFLAGS"]="-I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -fopenmp -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/inc"\
-"lude -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include"
+"lude -I/home/michael/Codes/include"
 S["LDFLAGS"]=" -lglib-2.0 -lblas -L/home/michael/Codes/lib -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../"\
 "../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -lglib-2.0 -lwbfmm -l"\
 "glib-2.0 -lblas -L/home/michael/Codes/lib -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../"\
 "lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -L/home/michael/Codes/li"\
 "b -lsqt -lglib-2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -"\
-"L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath -L/home/michael/Codes/lib -lagg -lglib-2.0 -L/u"\
-"sr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/u"\
-"sr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath"
+"L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath"
 S["CFLAGS"]="-g -O2 -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -fopenmp  -mavx -DWBFMM_USE_AVX -"\
 "mfma -DWBFMM_USE_AVX"
 S["CC"]="gcc"
@@ -1095,9 +1092,7 @@ D["LT_OBJDIR"]=" \".libs/\""
 D["STDC_HEADERS"]=" 1"
 D["HAVE_BLASWRAP"]=" 1"
 D["HAVE_SQT"]=" 1"
-D["HAVE_AGG"]=" 1"
 D["HAVE_WBFMM"]=" 1"
-D["HAVE_PETSC"]=" 1"
 D["HAVE_AVX_INSTRUCTIONS"]=" 1"
 D["HAVE_AVX2_INSTRUCTIONS"]=" 1"
 D["HAVE_FMA_INSTRUCTIONS"]=" 1"

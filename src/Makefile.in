@@ -137,8 +137,8 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libnbi_la_LIBADD =
 am_libnbi_la_OBJECTS = nbi.lo geometries.lo laplace.lo helmholtz.lo \
-	tinyexpr.lo expressions.lo agg.lo export.lo functions.lo \
-	assemble.lo solvers.lo files.lo gmsh.lo
+	tinyexpr.lo expressions.lo export.lo functions.lo assemble.lo \
+	solvers.lo files.lo gmsh.lo
 libnbi_la_OBJECTS = $(am_libnbi_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -163,13 +163,12 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/agg.Plo ./$(DEPDIR)/assemble.Plo \
-	./$(DEPDIR)/export.Plo ./$(DEPDIR)/expressions.Plo \
-	./$(DEPDIR)/files.Plo ./$(DEPDIR)/functions.Plo \
-	./$(DEPDIR)/geometries.Plo ./$(DEPDIR)/gmsh.Plo \
-	./$(DEPDIR)/helmholtz.Plo ./$(DEPDIR)/laplace.Plo \
-	./$(DEPDIR)/nbi.Plo ./$(DEPDIR)/solvers.Plo \
-	./$(DEPDIR)/tinyexpr.Plo
+am__depfiles_remade = ./$(DEPDIR)/assemble.Plo ./$(DEPDIR)/export.Plo \
+	./$(DEPDIR)/expressions.Plo ./$(DEPDIR)/files.Plo \
+	./$(DEPDIR)/functions.Plo ./$(DEPDIR)/geometries.Plo \
+	./$(DEPDIR)/gmsh.Plo ./$(DEPDIR)/helmholtz.Plo \
+	./$(DEPDIR)/laplace.Plo ./$(DEPDIR)/nbi.Plo \
+	./$(DEPDIR)/solvers.Plo ./$(DEPDIR)/tinyexpr.Plo
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -220,7 +219,6 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/nbi-config.in \
 	$(top_srcdir)/depcomp
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
-AGG = @AGG@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
@@ -379,7 +377,6 @@ libnbi_la_SOURCES = \
 	helmholtz.c \
 	tinyexpr.c \
 	expressions.c \
-	agg.c \
 	export.c \
 	functions.c \
 	assemble.c \
@@ -509,7 +506,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/agg.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/assemble.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/export.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/expressions.Plo@am__quote@ # am--include-marker
@@ -712,8 +708,7 @@ clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
 	mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/agg.Plo
-	-rm -f ./$(DEPDIR)/assemble.Plo
+		-rm -f ./$(DEPDIR)/assemble.Plo
 	-rm -f ./$(DEPDIR)/export.Plo
 	-rm -f ./$(DEPDIR)/expressions.Plo
 	-rm -f ./$(DEPDIR)/files.Plo
@@ -770,8 +765,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/agg.Plo
-	-rm -f ./$(DEPDIR)/assemble.Plo
+		-rm -f ./$(DEPDIR)/assemble.Plo
 	-rm -f ./$(DEPDIR)/export.Plo
 	-rm -f ./$(DEPDIR)/expressions.Plo
 	-rm -f ./$(DEPDIR)/files.Plo

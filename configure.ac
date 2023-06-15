@@ -94,23 +94,6 @@ else
   exit
 fi
 
-AC_CHECK_PROG(AGG, agg-config, yes, no)
-if test x$AGG = xyes ; then
-   AC_DEFINE(HAVE_AGG, 1, [aerodynamic geometry library available])
-   agg_cflags=`agg-config --cflags`
-   agg_libs=`agg-config --libs`
-else
-  echo \#################################################################
-  echo \#
-  echo \# Aerodynamic Geometry Generator library not installed or
-  echo \# not properly installed. Some geometry features will be
-  echo \# unavailable. You can get the library from
-  echo \#
-  echo \# https://github.com/mjcarley/agg
-  echo \#
-  echo \#################################################################
-fi
-
 AC_CHECK_PROG(WBFMM, wbfmm-config, yes, no)
 if test x$WBFMM = xyes ; then
    AC_DEFINE(HAVE_WBFMM, 1, [wide band FMM library available])
@@ -265,9 +248,9 @@ AC_F77_WRAPPERS
 ##DX_PS_FEATURE(OFF)
 #DX_INIT_DOXYGEN(nbi, doc/nbi.dxy)
 
-CPPFLAGS="$glib_cflags $wbfmm_cflags $sqt_cflags $agg_cflags $blaswrap_cflags"
+CPPFLAGS="$glib_cflags $wbfmm_cflags $sqt_cflags $blaswrap_cflags"
 CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS"
-LDFLAGS="$LDFLAGS $blaswrap_libs $glib_libs $wbfmm_libs $sqt_libs $agg_libs"
+LDFLAGS="$LDFLAGS $blaswrap_libs $glib_libs $wbfmm_libs $sqt_libs"
 
 AC_SUBST(petsc_real)
 AC_SUBST(CPPFLAGS)

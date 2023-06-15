@@ -20,7 +20,6 @@ libnbi_la_SOURCES = \
 	helmholtz.c \
 	tinyexpr.c \
 	expressions.c \
-	agg.c \
 	export.c \
 	functions.c \
 	assemble.c \

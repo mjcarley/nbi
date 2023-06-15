@@ -101,32 +101,6 @@ gint NBI_FUNCTION_NAME(nbi_geometry_sphere)(nbi_surface_t *s,
   }
 
   nbi_surface_set_weights(s) ;
-
-#if 0  
-  {
-    NBI_REAL K[453*453], ce[453*3], al, bt, *xi, xx[3], work[3*453], J ;
-    gint Nk, i3 = 3, xstr ;
-
-    Nk = NBI_FUNCTION_NAME(sqt_koornwinder_interp_matrix)(&(st[0]), 3,
-							  &(st[1]), 3,
-							  &(st[2]), 3,
-							  nq, K) ;
-    al = 1.0 ; bt = 0.0 ; xstr = NBI_SURFACE_NODE_LENGTH ;
-    for ( i = 0 ; i < nbi_surface_patch_number(s) ; i ++ ) {
-      j = nbi_surface_patch_node(s, i) ;
-      xi = (NBI_REAL *)nbi_surface_node(s, j) ;
-      blaswrap_dgemm(FALSE, FALSE, nq, i3, nq, al, K, nq, xi, xstr,
-		     bt, ce, i3) ;
-      for ( k = 0 ; k < nq ; k ++ ) {
-	NBI_FUNCTION_NAME(sqt_element_interp)(ce, nq, Nk,
-					      st[3*k+0], st[3*k+1], xx,
-					      (NBI_REAL *)
-					      nbi_surface_normal(s, j+k),
-					      &J, NULL, work) ;
-      }
-    }
-  }
-#endif
   
   return 0 ;
 }
