@@ -1,17 +1,17 @@
 #!/bin/bash
 
-a=0.6
+a=0.7
 Mt=1.1
 n=4
 
-nqa=25
+nqa=54
 nqp=25
 nqu=54
 tol=1e-6
 eta=1.5
-depth=5
+depth=2
 order=8
-nthreads=2
+nthreads=4
 
 k=`echo ${n}*${Mt}/${a} | bc -l`
 echo wavenumber: ${k}
@@ -26,19 +26,19 @@ opts="-e ${tol} -a ${nqa} -u ${nqu} \
       -m ${mfile} -g ${gfile} -k ${k}"
 echo -- ${opts}
 
-#${bin}/nbi-surface -q ${nqp} -a nacelle.agg -o ${gfile}
+${bin}/nbi-surface -q ${nqp} -g ellipsoid-ico -i 3 -d 0.5 -d 0.5 -d 1 -o ${gfile}
 
-#${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
+${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
 
-opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
-      -f -T ${nthreads} -K ksp-options \
-      -k ${k} -b pcsource.bc -s solution.dat"
-echo ${opts}
+#opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
+#      -f -T ${nthreads} -K ksp-options \
+#      -k ${k} -b pcsource.bc -s solution.dat"
+#echo ${opts}
 
 ## solve with ring source modelling rotor
-#${bin}/nbi-solve-helmholtz -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
-#      -f -T ${nthreads} -K ksp-options -P \
-#      -k ${k} -b ring.bc -s solution.dat
+${bin}/nbi-solve-helmholtz -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
+      -f -T ${nthreads} -K ksp-options -P \
+      -k ${k} -b ring.bc -s solution.dat
 
 ## generate radiated field on 33x33 grid in plane z=-0.5, -2 < x, y < 2
 ${bin}/nbi-surface -g grid-xy -d -2 -d -2 -d 2 -d 2 -d -0.5 \
@@ -64,7 +64,7 @@ offp=`grep point: log | cut -d: -f2`
 offe=`grep element: log | cut -d: -f2`
 
 ## a tube wrapped round the nacelle to see the near field
-${bin}/nbi-surface -q 54 -a tube.agg > tube.nbi
+${bin}/nbi-surface -q 25 -m tube.geo > tube.nbi
 ${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
       -F tube.nbi -k ${k} -b ring.bc > tube.dat
 ${bin}/nbi-process -d tube.dat -g tube.nbi -r 1 \

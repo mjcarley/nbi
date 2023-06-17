@@ -10,18 +10,22 @@ depth=5
 order=8
 nthreads=2
 
+## path to executables
 bin=../../tools
 
+## store geometry and matrix data in subdirectories
 gfile=Geometries/sphere-${nqp}.nbi
 mfile=Matrices/matrix-sphere-helmholtz-${nqp}-${nqu}-${order}-${depth}.dat
+
+## generate the spherical surface using the internal geometry generator
+${bin}/nbi-surface -q ${nqp} -g ellipsoid-ico -i 2 -d 1 -d 1 -d 1 -o ${gfile}
 
 opts="-e ${tol} -a ${nqa} -u ${nqu} \
       -n ${eta} -d ${depth} -N ${order} \
       -m ${mfile} -g ${gfile} -k ${k}"
 echo -- ${opts}
 
-${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
-
+## assemble the problem matrices
 ${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
 
 opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \

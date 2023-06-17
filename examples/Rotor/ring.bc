@@ -3,7 +3,7 @@
 # order n
 
 ## rotor radius and tip speed, azimuthal mode, resulting wavenumber
-a = 0.6
+a = 0.7
 Mt = 1.1
 n = 4
 k = n*Mt/a

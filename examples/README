@@ -31,6 +31,10 @@ Scattering: solve for scattering of a plane wave by a sphere, with
 
 	    ./sphere-scattering
 
+	    The README file in the directory contains instructions on
+	    comparing the scattered field to an analytical calculation
+	    using Octave. 
+
 Rotor: solve the problem of scattering of noise from an azimuthally
        varying circular source, which simulates a rotor interacting
        with a simple nacelle

@@ -12,11 +12,10 @@ nthreads=4
 ## path to executables
 bin=../../tools
 
-## store geometry and matrix data in subdirectories
 gfile=Geometries/sphere-${nqp}.nbi
 mfile=Matrices/matrix-sphere-${nqp}-${nqu}-${order}-${depth}.dat
-## generate the spherical surface
-${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
+## generate the spherical surface using the internal geometry generator
+${bin}/nbi-surface -q ${nqp} -g ellipsoid-ico -i 2 -d 1 -d 1 -d 1 -o ${gfile}
 ## generate an option list for nbi-assemble-laplace and display it
 opts="-e ${tol} -a ${nqa} -u ${nqu} -n ${eta} -d ${depth} -N ${order} \
       -m ${mfile} -g ${gfile}"

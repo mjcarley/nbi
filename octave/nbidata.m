@@ -1,4 +1,4 @@
-function f=datread(file)
+function f=nbidata(file)
 
   fid = fopen(file, "r") ;
 

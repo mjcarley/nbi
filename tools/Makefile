@@ -247,7 +247,7 @@ AWK = gawk
 BLASWRAP = yes
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -g -O2 -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -fopenmp  -mavx -DWBFMM_USE_AVX -mfma -DWBFMM_USE_AVX
+CFLAGS = -g -O3 -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -fopenmp  -mavx -DWBFMM_USE_AVX -mfma -DWBFMM_USE_AVX
 CPP = gcc -E
 CPPFLAGS = -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -fopenmp -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include
 CYGPATH_W = echo
@@ -387,31 +387,31 @@ dist = \
 
 nbi_solve_laplace_SOURCES = nbi-solve-laplace.c petsc-laplace.c
 nbi_solve_helmholtz_SOURCES = nbi-solve-helmholtz.c petsc-helmholtz.c
-nbi_solve_laplace_CPPFLAGS = \
-	-I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir)
-
 #nbi_solve_laplace_CPPFLAGS = \
-#	-I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir) \
-#	`./petsc-config include`
+#	-I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir)
 
-nbi_solve_laplace_DEPS = $(top_builddir)/src/libnbi.la
+nbi_solve_laplace_CPPFLAGS = \
+	-I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir) \
+	`./petsc-config include`
+
 #nbi_solve_laplace_DEPS = $(top_builddir)/src/libnbi.la
-nbi_solve_laplace_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a
-#nbi_solve_laplace_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a \
-#	`./petsc-config lib`
-
-nbi_solve_helmholtz_CPPFLAGS = \
-	-I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir)
+nbi_solve_laplace_DEPS = $(top_builddir)/src/libnbi.la
+#nbi_solve_laplace_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a
+nbi_solve_laplace_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a \
+	`./petsc-config lib`
 
 #nbi_solve_helmholtz_CPPFLAGS = \
-#	-I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir) \
-#	`./petsc-config include`
+#	-I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir)
 
-nbi_solve_helmholtz_DEPS = $(top_builddir)/src/libnbi.la
+nbi_solve_helmholtz_CPPFLAGS = \
+	-I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir) \
+	`./petsc-config include`
+
 #nbi_solve_helmholtz_DEPS = $(top_builddir)/src/libnbi.la
-nbi_solve_helmholtz_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a
-#nbi_solve_helmholtz_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a \
-#	`./petsc-config lib`
+nbi_solve_helmholtz_DEPS = $(top_builddir)/src/libnbi.la
+#nbi_solve_helmholtz_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a
+nbi_solve_helmholtz_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a \
+	`./petsc-config lib`
 
 all: all-am
 

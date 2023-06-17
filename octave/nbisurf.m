@@ -1,4 +1,4 @@
-function [x,n,w]=surfread(file)
+function [x,n,w]=nbisurf(file)
 
   nbi_width = 7 ;
   

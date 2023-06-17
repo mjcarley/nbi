@@ -145,7 +145,7 @@ gint main(gint argc, gchar **argv)
   order_fmm = 12 ; order_inc = 2 ; depth = 4 ;
 
   solver_work_size = matrix_work_size = 0 ;
-  gmres_max_iter = 1 ; gmres_restart = 10 ; tol = 1e-9 ;
+  gmres_max_iter = 1 ; gmres_restart = 10 ; tol = 1e-3 ;
     
   fstr = 4 ;
   while ( (ch = getopt(argc, argv, "hBb:D:d:FfGg:K:k:Lm:o:Ppr:s:T:t:"))

@@ -34,7 +34,6 @@
 
 #include "nbi-private.h"
 
-
 static int upsample_patch(gdouble *xs, gint sstr, gint ns,
 			   gint nu, gdouble *xu, gint ustr, gdouble *work)
 
@@ -109,13 +108,12 @@ static void correct_matrix_helmholtz(gdouble k,
 	blaswrap_daxpy(np, al, &(Ku[j*np]), one, &(Ast[i*lda+0*2*np+1]), two) ;
 	al = -dG[0]*w ;
 	blaswrap_daxpy(np, al, &(Ku[j*np]), one, &(Ast[i*lda+2*np+0]), two) ;
-	/* al = (k*R*C - S)*w ; */
 	al = -dG[1]*w ;
 	blaswrap_daxpy(np, al, &(Ku[j*np]), one, &(Ast[i*lda+2*np+1]), two) ;
       }
     }
   }
-  
+
   return ;
 }
 
@@ -147,9 +145,8 @@ static void local_correction_matrices_helmholtz(nbi_matrix_t *m,
   ip = nbi_surface_patch_node(s, pt) ;
   xs = (NBI_REAL *)nbi_surface_node(s,ip) ;
   xstr = NBI_SURFACE_NODE_LENGTH ;
-  /* fprintf(stderr, "patch %d/%d; %d neighbours (%lg)\n", */
-  /* 	  pt, nbi_surface_patch_number(s), nnbrs, */
-  /* 	  g_timer_elapsed(timer, NULL)) ; */
+  /* fprintf(stderr, "patch %d/%d; %d neighbours\n", */
+  /* 	  pt, nbi_surface_patch_number(s), nnbrs) ; */
   g_assert(8*dmax*2*nst*(nnbrs-nst) + 12*nst + 3*nst +
 	   2*(nnbrs-nst) <= wsize) ;
   sqt_helmholtz_source_indexed_kw_adaptive(k, xs, xstr, nst, q, nq, K0, NK0,
@@ -165,6 +162,7 @@ static void local_correction_matrices_helmholtz(nbi_matrix_t *m,
 				      work) ;
   /*correct for the upsampled point sources*/
   Ku = nbi_patch_upsample_matrix(nst, nqu) ;
+  /* fprintf(stderr, "%d %d\n", nnbrs, nqu) ; */
   correct_matrix_helmholtz(k, xs, xstr, nst,
 			   &(xu[idxu[pt]*xstr]), xstr, nqu,
 			   (gdouble *)nbi_surface_node(s,0), xstr,
@@ -258,7 +256,7 @@ nbi_matrix_t *nbi_matrix_assemble_helmholtz(nbi_surface_t *s,
   wsize = MAX(1,nthreads)*wstr ;
   usize = nu*nbi_surface_patch_number(s)*NBI_SURFACE_NODE_LENGTH ;
   ksize = nst*nst ;
-  work = (gdouble *)g_malloc((wsize+ksize)*sizeof(gdouble)) ;
+  work = (gdouble *)g_malloc0((wsize+ksize)*sizeof(gdouble)) ;
   K0  = &(work[wsize]) ;
   
   m->xu = g_malloc(usize*sizeof(gdouble)) ;
@@ -267,9 +265,6 @@ nbi_matrix_t *nbi_matrix_assemble_helmholtz(nbi_surface_t *s,
   NK0 = sqt_koornwinder_interp_matrix(&(st[0]), 3, &(st[1]), 3, &(st[2]), 3,
 				      nst, K0) ;
 			   
-  /* fprintf(stderr, "%s: starting local corrections; t=%lg\n", */
-  /* 	  __FUNCTION__, g_timer_elapsed(timer, NULL)) ; */
-
   /*find neighbours and set up sparse matrix skeleton*/
   memset(m->idx, 0, nbi_surface_patch_number(s)*nnmax*sizeof(gint)) ;
 
@@ -321,8 +316,6 @@ nbi_matrix_t *nbi_matrix_assemble_helmholtz(nbi_surface_t *s,
 					  tol, dmax, N,	pt, work, wsize) ;
     }
   } else {
-    /* g_assert_not_reached() ; /\*get the basic version working first before  */
-    /* 			       threading*\/ */
     GThread *threads[NBI_THREAD_NUMBER_MAX] ;
     gpointer data[NBI_THREAD_DATA_SIZE],
       main_data[NBI_THREAD_NUMBER_MAX*NBI_THREAD_MAIN_DATA_SIZE] ;
