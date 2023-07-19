@@ -40,37 +40,111 @@
 
 #include <agg.h>
 
-static void add_agg_grid_patch(agg_body_t *b,
-			       agg_grid_t *g, gint t,
-			       agg_workspace_t *w,
-			       agg_parser_t *p,
-			       gdouble *st, gint nst,
-			       nbi_surface_t *s)
+static void shapefunc(gdouble s, gdouble t, gdouble L[])
+
+{
+  L[0] = 1.0 - s - t ;
+  L[1] =       s     ;
+  L[2] =           t ;
+    
+  return ;
+}
+
+static void element_interp(agg_mesh_t *m, gint surf, gint *nodes,
+			   gdouble *s, gint sstr, gdouble *t, gint tstr,
+			   gint nst, gdouble *x, gint xstr,
+			   agg_surface_workspace_t *w)
+
+{
+  gdouble L[3], si, ti, st[6], u, v, xe[9], *p, xc[3] ;
+  agg_surface_t *S ;
+  agg_patch_t *P ;
+  gint i, tag ;
+
+  S = agg_mesh_surface(m, surf) ;
+  P = agg_mesh_patch(m, surf) ;
+  tag = agg_mesh_point_tag(m, nodes[0]) ;
+
+  if ( tag >= 0 ) {
+    for ( i = 0 ; i < 3 ; i ++ ) {
+      g_assert(agg_mesh_point_tag(m, nodes[i]) == tag) ;
+      st[2*i+0] = agg_mesh_point_s(m, nodes[i]) ;
+      st[2*i+1] = agg_mesh_point_t(m, nodes[i]) ;
+      agg_patch_map(P, st[2*i+0], st[2*i+1], &u, &v) ;
+      agg_surface_point_eval(S, u, v, xc, w) ;
+
+      p = agg_mesh_point(m, nodes[i]) ;
+      if ( fabs(p[0]-xc[0]) > 1e-3 ||
+	   fabs(p[1]-xc[1]) > 1e-3 ||
+	   fabs(p[2]-xc[2]) > 1e-3 )
+	g_error("%s: incorrect point (%d) found at (s,t)=(%lg, %lg) "
+		"(%lg, %lg, %lg)=/=(%lg, %lg, %lg)",
+		__FUNCTION__, nodes[i], st[2*i+0], st[2*i+1],
+		xc[0], xc[1], xc[2], p[0], p[1], p[2]) ;
+    }
+
+    for ( i = 0 ; i < nst ; i ++ ) {
+      shapefunc(s[i*sstr], t[i*tstr], L) ;
+      si = st[2*0+0]*L[0] + st[2*1+0]*L[1] + st[2*2+0]*L[2] ;
+      ti = st[2*0+1]*L[0] + st[2*1+1]*L[1] + st[2*2+1]*L[2] ;
+      agg_patch_map(P, si, ti, &u, &v) ;
+      agg_surface_point_eval(S, u, v, &(x[i*xstr]), w) ;    
+    }
+    return ;
+  }
+
+  /*dealing with a surface blend*/
+  tag = -1 - tag ;
+  for ( i = 0 ; i < 3 ; i ++ ) {
+    g_assert(agg_mesh_point_tag(m, nodes[i]) == -1-tag) ;
+    st[2*i+0] = agg_mesh_point_s(m, nodes[i]) ;
+    st[2*i+1] = agg_mesh_point_t(m, nodes[i]) ;
+    agg_surface_blend_evaluate(agg_mesh_surface_blend(m,tag),
+			       st[2*i+0], st[2*i+1], xc, w) ;
+    p = agg_mesh_point(m, nodes[i]) ;
+    if ( fabs(p[0]-xc[0]) > 1e-3 ||
+	 fabs(p[1]-xc[1]) > 1e-3 ||
+	 fabs(p[2]-xc[2]) > 1e-3 )
+      g_error("%s: incorrect point (%d) found at (s,t)=(%lg, %lg) "
+	      "(%lg, %lg, %lg)=/=(%lg, %lg, %lg)",
+	      __FUNCTION__, nodes[i], st[2*i+0], st[2*i+1],
+	      xc[0], xc[1], xc[2], p[0], p[1], p[2]) ;
+  }
+
+  for ( i = 0 ; i < nst ; i ++ ) {
+    shapefunc(s[i*sstr], t[i*tstr], L) ;
+    si = st[2*0+0]*L[0] + st[2*1+0]*L[1] + st[2*2+0]*L[2] ;
+    ti = st[2*0+1]*L[0] + st[2*1+1]*L[1] + st[2*2+1]*L[2] ;
+    agg_surface_blend_evaluate(agg_mesh_surface_blend(m,tag), si, ti,
+			       &(x[i*xstr]), w) ;
+  }
+  
+  return ;
+}
+
+static void add_nbi_triangle(nbi_surface_t *s, agg_mesh_t *m, gint *nodes,
+			     gint surf, agg_surface_workspace_t *w,
+			     gdouble *st, gint nst)
 
 {
   gint i, np, nn, i3 = 3, xstr ;
   gdouble *x, work[3*453], K[454*454], ci[453*453], N ;
-  gdouble al, bt, u, v ;
-  
+  gdouble al, bt ;
+
   np = nbi_surface_patch_number(s) ;
   nn = nbi_surface_node_number(s) ;
   nbi_surface_patch_node(s, np) = nn ;
   nbi_surface_patch_node_number(s, np) = nst ;
-
-  g_assert(nn + nst <= nbi_surface_node_number_max(s)) ;
-
+  
   N = sqt_koornwinder_interp_matrix(&(st[0]), 3, &(st[1]), 3, &(st[2]), 3,
 				    nst, K) ;
 
-  for ( i = 0 ; i < nst ; i ++ ) {
-    x = (gdouble *)nbi_surface_node(s, nn+i) ;
-    agg_grid_element_interpolate(g, t, st[3*i+0], st[3*i+1], &u, &v) ;
-    agg_body_point_eval(b, u, v, x, w) ;
-  }
+  /*generate the mesh nodes*/
   al = 1.0 ; bt = 0.0 ; xstr = NBI_SURFACE_NODE_LENGTH ;
   x = (gdouble *)nbi_surface_node(s, nn) ;
+  element_interp(m, surf, nodes, &(st[0]), 3, &(st[1]), 3, nst, x, xstr, w) ;
   blaswrap_dgemm(FALSE, FALSE, nst, i3, nst, al, K, nst, x, xstr, bt, ci, i3) ;
-
+  
   for ( i = 0 ; i < nst ; i ++ ) {
     x = (gdouble *)nbi_surface_node(s, nn+i) ;
     sqt_element_interp(ci, nst, N, st[3*i+0], st[3*i+1],
@@ -80,73 +154,83 @@ static void add_agg_grid_patch(agg_body_t *b,
 
   nbi_surface_node_number(s) += nst ;
   nbi_surface_patch_number(s) ++ ;
+
+  return ;
+}
+
+static void add_nbi_patch(nbi_surface_t *s, agg_mesh_t *m,
+			  gint *nodes, gint nnodes,
+			  gint surf, agg_surface_workspace_t *w,
+			  gdouble *st, gint nst)
+
+{
+  gint ntri[3] ;
+  
+  if ( nnodes == 3 ) {
+    add_nbi_triangle(s, m, nodes, surf, w, st, nst) ;
+    
+    return ;
+  }
+
+  if ( nnodes == 4 ) {
+    ntri[0] = nodes[0] ; ntri[1] = nodes[1] ; ntri[2] = nodes[2] ; 
+    add_nbi_triangle(s, m, ntri, surf, w, st, nst) ;
+    
+    ntri[0] = nodes[0] ; ntri[1] = nodes[2] ; ntri[2] = nodes[3] ;
+    add_nbi_triangle(s, m, ntri, surf, w, st, nst) ;
+
+    return ;
+  }
+
+  g_assert_not_reached() ;
   
   return ;
 }
 
-nbi_surface_t *nbi_agg_mesh(gint fid, gint nq)
+nbi_surface_t *nbi_agg_mesh(gchar *file, gint nq)
 
 {
   nbi_surface_t *s = NULL ;
-  gint i, j, order, npts, ntri ;
-  agg_parser_t *p ;
-  agg_body_t *b ;
-  agg_crowd_t c ;
-  agg_distribution_t *d ;
-  agg_workspace_t *w ;
-  GScanner *scanner ;
+  gint i, nsec, nsp, pps, nodes[4], nnodes ;
+  gint surf, order ;
   gdouble *st ;
+  agg_body_t *b ;
+  agg_surface_workspace_t *w ;
+  agg_mesh_t *m ;
+  gchar *args = "pqza0.0005" ;
   
   g_assert(sizeof(NBI_REAL) == sizeof(gdouble)) ;
+  nsec = nsp = 16 ; pps = 2 ;
   
-  p = agg_parser_alloc() ;
-  b = agg_body_alloc() ;
-  scanner = agg_scanner_alloc() ;
-  g_scanner_input_file(scanner, fid) ;
+  b = agg_body_new(64, 64) ;
+  w = agg_surface_workspace_new() ;
+  agg_body_read(b, file, TRUE) ;
+  agg_body_globals_compile(b) ;
+  agg_body_globals_eval(b) ;
+  /* agg_body_globals_write(stderr, b) ; */
+  /* fprintf(stderr, "%d surface%s\n", agg_body_surface_number(b), */
+  /* 	  (agg_body_surface_number(b) > 1 ? "s" : "")) ; */
+  /* agg_body_surfaces_list(stderr, b) ; */
 
-  c.p = p ;
+  m = agg_mesh_new(65536, 65536, 65536) ;
+  agg_mesh_body(m, b, pps, w) ;
+  /* agg_mesh_body_triangle(m, b, nsec, nsp, pps, args, w) ; */
 
-  agg_parser_crowd_read(scanner, &c) ;
+  /* for ( i = 0 ; i < agg_body_surface_number(b) ; i ++ ) { */
+  /*   agg_mesh_surface(m,i) = agg_body_surface(b,i) ; */
+  /*   agg_mesh_patch(m,i) = agg_body_patch(b,i) ; */
+  /*   agg_mesh_surface_number(m) ++ ; */
+  /* } */
 
-  fprintf(stderr, "%d bod%s in crowd\n",
-	  agg_crowd_body_number(&c),
-	  (agg_crowd_body_number(&c) == 1 ? "y" : "ies")) ;
+  /* agg_mesh_body_regular(m, b, nsec, nsp, pps, w) ; */
 
-  npts = ntri = 0 ;
-  for ( i = 0 ; i < agg_crowd_body_number(&c) ; i ++ ) {
-    if ( c.b[i]->g != NULL ) {
-      fprintf(stderr, "  body %d: %d grid points; %d triangles\n", i,
-	      agg_grid_point_number_max(c.b[i]->g),
-	      agg_grid_triangle_number_max(c.b[i]->g)) ;
-      npts += agg_grid_point_number_max(c.b[i]->g) ;
-      ntri += agg_grid_triangle_number_max(c.b[i]->g) ;
-    }
-  }
-
-  fprintf(stderr, "   total: %d grid points; %d triangles\n", npts, ntri) ;
-
-  agg_parser_expressions_evaluate(c.p) ;
-
-  w = agg_workspace_alloc(32) ;
-  
-  s = nbi_surface_alloc(nq*ntri, ntri) ;
+  s = nbi_surface_alloc(nq*2*agg_mesh_element_number(m),
+			2*agg_mesh_element_number(m)) ;
   sqt_quadrature_select(nq, &st, &order) ;
-
-  nbi_surface_node_number(s) = 0 ;
-  nbi_surface_patch_number(s) = 0 ;
-
-  for ( i = 0 ; i < agg_crowd_body_number(&c) ; i ++ ) {
-    fprintf(stderr, "meshing body %d\n", i) ;
-    b = agg_crowd_body(&c, i) ;
-    for ( j = 0 ; j < agg_body_distribution_number(b) ; j ++ ) {
-      d = agg_body_distribution(b,j) ;
-      agg_distribution_interpolation_weights(d) ;
-    }
-    if ( b->g != NULL ) {
-      for ( j = 0 ; j < agg_grid_triangle_number(b->g) ; j ++ ) {
-        add_agg_grid_patch(b, b->g, j, w, p, st, nq, s) ;
-      }
-    }
+  
+  for ( i = 0 ; i < agg_mesh_element_number(m) ; i ++ ) {
+    agg_mesh_element_nodes(m, i, nodes, &nnodes, &surf) ;
+    add_nbi_patch(s, m, nodes, nnodes, surf, w, st, nq) ;
   }
   
   return s ;

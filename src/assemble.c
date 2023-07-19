@@ -147,8 +147,10 @@ static void local_correction_matrices_helmholtz(nbi_matrix_t *m,
   xstr = NBI_SURFACE_NODE_LENGTH ;
   /* fprintf(stderr, "patch %d/%d; %d neighbours\n", */
   /* 	  pt, nbi_surface_patch_number(s), nnbrs) ; */
-  g_assert(8*dmax*2*nst*(nnbrs-nst) + 12*nst + 3*nst +
-	   2*(nnbrs-nst) <= wsize) ;
+  /* g_assert(8*dmax*2*nst*(nnbrs-nst) + 12*nst + 3*nst + */
+  /* 	   2*(nnbrs-nst) + 4*nnbrs + 4*nst*nnbrs <= wsize) ; */
+  g_assert(3*nst + (12*nst + 2*nnbrs) + (4*dmax*4*nst*nnbrs+12*nst) +
+	   3*nnbrs + 4*nnbrs*nst <= wsize) ;
   sqt_helmholtz_source_indexed_kw_adaptive(k, xs, xstr, nst, q, nq, K0, NK0,
 					   tol, dmax,
 					   (gdouble *)nbi_surface_node(s,0),

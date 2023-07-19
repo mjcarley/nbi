@@ -1,8 +1,6 @@
 #!/bin/bash
 
 flag=$1
-#scalar=$2
-#arch=$3
 
 if ( test "$flag" = "include" ) ; then
     callflag=PETSC_CC_INCLUDES

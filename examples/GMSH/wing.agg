@@ -1,0 +1,46 @@
+# input file to test geometry parser in AGG
+global {
+ radius = 0.4
+ len = 5
+ root = 1.5
+ span = "len*0.7"
+ dihedral = "5*pi/180"
+ sweep = "25*pi/180"
+ taper = 0.5
+ twist = "15*pi/180"
+ xle = "0.35*len"
+ yle = "-0.3*radius"
+ del = "0"
+}
+
+surface {
+  name("wing:right")
+  section(0, "aerofoil", 0.5, 0.2, 0.0)
+  section(0.3, "aerofoil", 0.5, 0.12, 0.0)
+  section(0.9, "aerofoil", 0.5, 0.08, 0.0)
+  transform("shrink", 0, 0, "1+u*(taper-1)")
+  transform("yscale", "(1-u)^(1/8)")  
+  transform("scale", "root")
+  transform("rotate", 0, 0, "twist*u")
+  transform("translate", "xle + span*sin(sweep)*u",
+  			 "yle+span*sin(dihedral)*u",
+			 "del + span*u")
+  patch("tubular", "nowrap", "wrap")
+}
+
+surface {
+  name("wing:left")
+  section(0, "aerofoil", 0.5, 0.2, 0.0)
+  section(0.3, "aerofoil", 0.5, 0.12, 0.0)
+  section(0.9, "aerofoil", 0.5, 0.08, 0.0)
+  transform("shrink", 0, 0, "1+u*(taper-1)")  
+  transform("yscale", "(1-u)^(1/8)")  
+  transform("scale", "root")
+  transform("translate", "xle + span*sin(sweep)*u",
+  			 "yle + span*sin(dihedral)*u",
+  	    		 "del + span*u")
+  # patch requires inversion because of the axis transformation below
+  patch("tubular", "nowrap", "wrap", "invert")
+  #patch("spherical", "nowrap", "wrap")  
+  axes("+x+y-z")
+}

@@ -15,6 +15,9 @@
 /* Define if F77 and FC dummy `main' functions are identical. */
 /* #undef FC_DUMMY_MAIN_EQ_F77 */
 
+/* aerodynamic geometry library available */
+#define HAVE_AGG 1
+
 /* Define if avx2 instructions are supported */
 #define HAVE_AVX2_INSTRUCTIONS 1
 

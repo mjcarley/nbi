@@ -111,6 +111,23 @@ else
   exit
 fi
 
+AC_CHECK_PROG(AGG, agg-config, yes, no)
+if test x$AGG = xyes ; then
+   AC_DEFINE(HAVE_AGG, 1, [aerodynamic geometry library available])
+   agg_cflags=`agg-config --cflags`
+   agg_libs=`agg-config --libs`
+else
+  echo \#################################################################
+  echo \#
+  echo \# Aerodynamic Geometry Generator library not installed or
+  echo \# not properly installed. You can get it from
+  echo \#
+  echo \# https://github.com/mjcarley/agg
+  echo \#
+  echo \#################################################################
+  exit
+fi
+
 if test "${PETSC_DIR+set}" = set; then
    AC_DEFINE(HAVE_PETSC, 1, [PETSC solvers available])
    PETSC=yes
@@ -248,9 +265,9 @@ AC_F77_WRAPPERS
 ##DX_PS_FEATURE(OFF)
 #DX_INIT_DOXYGEN(nbi, doc/nbi.dxy)
 
-CPPFLAGS="$glib_cflags $wbfmm_cflags $sqt_cflags $blaswrap_cflags"
+CPPFLAGS="$glib_cflags $wbfmm_cflags $sqt_cflags $agg_cflags $blaswrap_cflags"
 CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS"
-LDFLAGS="$LDFLAGS $blaswrap_libs $glib_libs $wbfmm_libs $sqt_libs"
+LDFLAGS="$LDFLAGS $blaswrap_libs $glib_libs $wbfmm_libs $sqt_libs $agg_libs"
 
 AC_SUBST(petsc_real)
 AC_SUBST(CPPFLAGS)

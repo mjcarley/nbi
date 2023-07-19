@@ -336,7 +336,7 @@ gdouble *nbi_data_read(FILE *f, gint *nd, gint *ne) ;
 gint nbi_data_write(FILE *f, gdouble *dat, gint dstr, gint ne, gint nd) ;
 gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *bc) ;
 
-nbi_surface_t *nbi_agg_mesh(gint fid, gint nq) ;
+nbi_surface_t *nbi_agg_mesh(gchar *file, gint nq) ;
 
 nbi_surface_t *nbi_gmsh_mesh(gchar *file, gint nq) ;
 

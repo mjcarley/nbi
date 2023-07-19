@@ -239,6 +239,9 @@ static void print_help_text(FILE *output)
   fprintf(output,
 	  "Options:\n\n"
 	  "  -h print this message and exit\n"
+#ifdef HAVE_AGG
+	  "  -a # AGG geometry file\n"
+#endif /*HAVE_AGG*/
 	  "  -d # append a real argument for geometry specification\n"
 	  "  -f write list of geometry formats handled, and exit\n"
 	  "  -g # select a built-in geometry\n"
@@ -274,6 +277,9 @@ gint main(gint argc, gchar **argv)
 #ifdef HAVE_LIBGMSH
   gchar *gmshfile ;
 #endif /*HAVE_LIBGMSH*/
+#ifdef HAVE_AGG
+  gchar *aggfile ;
+#endif /*HAVE_AGG*/
   gdouble argd[16] ;
   gint argi[16], nq, argci, argcd ;
   nbi_surface_t *s ;
@@ -286,6 +292,9 @@ gint main(gint argc, gchar **argv)
 #ifdef HAVE_LIBGMSH
   gmshfile = NULL ;
 #endif /*HAVE_LIBGMSH*/
+#ifdef HAVE_AGG
+  aggfile = NULL ;
+#endif /*HAVE_AGG*/
 
   s = NULL ;
   nq = 7 ;
@@ -295,10 +304,24 @@ gint main(gint argc, gchar **argv)
 
   argci = argcd = 0 ;
   
-  while ( (ch = getopt(argc, argv, "hd:fGg:i:m:o:q:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "ha:d:fGg:i:m:o:q:")) != EOF ) {
     switch (ch ) {
     default: g_assert_not_reached() ; break ;
     case 'h': print_help_text(stderr) ; return 0 ; break ;
+#ifdef HAVE_AGG
+    case 'a':
+      if ( gfunc != NULL
+#ifdef HAVE_LIBGMSH
+	   || gmshfile != NULL
+#endif /*HAVE_LIBGMSH*/	   
+	   ) {
+	fprintf(stderr, "%s: use only one geometry specification\n",
+		progname) ;
+	return 1 ;
+      }
+      aggfile = g_strdup(optarg) ; break ;
+      break ;
+#endif /*HAVE_AGG*/
     case 'd': argd[argcd] = atof(optarg) ; argcd ++ ; break ;
     case 'f': list_input_formats(stderr) ; return 0 ; break ;
     case 'g':
@@ -314,8 +337,13 @@ gint main(gint argc, gchar **argv)
     case 'i': argi[argci] = atoi(optarg) ; argci ++ ; break ;
 #ifdef HAVE_LIBGMSH
     case 'm':
-      if ( gfunc != NULL ) {
-	fprintf(stderr, "%s: use -g or -m but not both\n", progname) ;
+      if ( gfunc != NULL
+#ifdef HAVE_AGG
+	   || aggfile != NULL
+#endif /*HAVE_AGG*/	   
+	   ) {
+	fprintf(stderr, "%s: use only one geometry specification\n",
+		progname) ;
 	return 1 ;
       }
       gmshfile = g_strdup(optarg) ; break ;
@@ -329,6 +357,9 @@ gint main(gint argc, gchar **argv)
 #ifdef HAVE_LIBGMSH
        && gmshfile == NULL
 #endif /*HAVE_LIBGMSH*/
+#ifdef HAVE_AGG
+       && aggfile == NULL
+#endif /*HAVE_AGG*/
        ) {
     fprintf(stderr, "%s: no geometry specified\n", progname) ;
 
@@ -348,7 +379,13 @@ gint main(gint argc, gchar **argv)
     gmshFinalize(&gmsh_err) ;
   }
 #endif /*HAVE_LIBGMSH*/
-  
+
+#ifdef HAVE_AGG
+  if ( aggfile != NULL ) {
+    s = nbi_agg_mesh(aggfile, nq) ;
+  }
+#endif /*HAVE_AGG*/
+
   if ( gfunc != NULL ) {
     s = gfunc(argd, argi, nq) ;
   }

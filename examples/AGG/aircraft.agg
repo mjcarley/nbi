@@ -1,0 +1,60 @@
+# input file to test geometry parser in AGG
+global {
+ radius = 0.4
+ len = 5
+ root = 1.5
+ span = "len*0.7"
+ dihedral = "5*pi/180"
+ sweep = "25*pi/180"
+ taper = 0.5
+ twist = "15*pi/180"
+ xle = "0.35*len"
+ yle = "-0.3*radius"
+ del = "span/1000"
+}
+
+surface {
+  name("wing:right")
+  section(0, "aerofoil", 0.5, 0.2, 0.0)
+  section(0.3, "aerofoil", 0.5, 0.12, 0.0)
+  section(0.9, "aerofoil", 0.5, 0.08, 0.0)
+  transform("shrink", 0, 0, "1+u*(taper-1)")
+  transform("yscale", "(1-u)^(1/8)")  
+  transform("scale", "root")
+  ##transform("rotate", 0, 0, "twist*u")
+  transform("translate", "xle + span*sin(sweep)*u",
+  			 "yle+span*sin(dihedral)*u",
+			 "span/1000 + span*u")
+  patch("tubular", "nowrap", "wrap")
+  grid("regular", 16, 24)
+}
+
+surface {
+  name("wing:left")
+  section(0, "aerofoil", 0.5, 0.2, 0.0)
+  section(0.3, "aerofoil", 0.5, 0.12, 0.0)
+  section(0.9, "aerofoil", 0.5, 0.08, 0.0)
+  transform("shrink", 0, 0, "1+u*(taper-1)")  
+  transform("yscale", "(1-u)^(1/8)")  
+  transform("scale", "root")
+  transform("translate", "xle + span*sin(sweep)*u",
+  			 "yle + span*sin(dihedral)*u",
+  	    		 "span/1000 + span*u")
+  # patch requires inversion because of the axis transformation below
+  patch("tubular", "nowrap", "wrap", "invert")
+  #patch("spherical", "nowrap", "wrap")  
+  axes("+x+y-z")
+  grid("regular", 16, 47)
+}
+ 
+surface {
+  name("fuselage")
+  section(0, "circle")
+  transform("translate", -0.5, 0, 0)
+  transform("scale", "2*radius")
+  transform("scale", "u^(0.25)*(1-u)^0.125")
+  transform("translate", 0, 0, "len*u")
+  patch("spherical", "nowrap", "wrap")
+  axes("zxy")
+  grid("triangle", 1e-3)
+}
