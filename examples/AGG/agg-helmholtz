@@ -1,12 +1,12 @@
 #!/bin/bash
 
-k=1.3
+k=4.0
 nqa=7
-nqp=7
+nqp=25
 nqu=25
-tol=1e-3
-eta=1.25
-depth=3
+tol=1e-6
+eta=1.5
+depth=5
 order=8
 nthreads=4
 
@@ -22,7 +22,7 @@ mfile=Matrices/matrix-aircraft-helmholtz-${nqp}-${nqu}-${order}-${depth}.dat
 ## generate the spherical surface using the internal geometry generator
 ##${bin}/nbi-surface -q ${nqp} -g ellipsoid-ico -i 2 -d 1 -d 1 -d 1 -o ${gfile}
 #${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
-${bin}/nbi-surface -q ${nqp} -a aircraft.agg -o ${gfile}
+#${bin}/nbi-surface -q ${nqp} -a aircraft.agg -o ${gfile}
 
 opts="-e ${tol} -a ${nqa} -u ${nqu} \
       -n ${eta} -d ${depth} -N ${order} \

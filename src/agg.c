@@ -204,25 +204,12 @@ nbi_surface_t *nbi_agg_mesh(gchar *file, gint nq)
   
   b = agg_body_new(64, 64) ;
   w = agg_surface_workspace_new() ;
-  agg_body_read(b, file, TRUE) ;
+  agg_body_read(b, file, FALSE) ;
   agg_body_globals_compile(b) ;
   agg_body_globals_eval(b) ;
-  /* agg_body_globals_write(stderr, b) ; */
-  /* fprintf(stderr, "%d surface%s\n", agg_body_surface_number(b), */
-  /* 	  (agg_body_surface_number(b) > 1 ? "s" : "")) ; */
-  /* agg_body_surfaces_list(stderr, b) ; */
 
   m = agg_mesh_new(65536, 65536, 65536) ;
   agg_mesh_body(m, b, pps, w) ;
-  /* agg_mesh_body_triangle(m, b, nsec, nsp, pps, args, w) ; */
-
-  /* for ( i = 0 ; i < agg_body_surface_number(b) ; i ++ ) { */
-  /*   agg_mesh_surface(m,i) = agg_body_surface(b,i) ; */
-  /*   agg_mesh_patch(m,i) = agg_body_patch(b,i) ; */
-  /*   agg_mesh_surface_number(m) ++ ; */
-  /* } */
-
-  /* agg_mesh_body_regular(m, b, nsec, nsp, pps, w) ; */
 
   s = nbi_surface_alloc(nq*2*agg_mesh_element_number(m),
 			2*agg_mesh_element_number(m)) ;

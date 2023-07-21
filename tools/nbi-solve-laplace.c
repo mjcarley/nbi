@@ -103,7 +103,7 @@ gint main(gint argc, gchar **argv)
   nbi_matrix_t *matrix ;
   nbi_boundary_condition_t *bc ;
   gdouble *f, *xp, *src, *p, *rhs, t, emax, fmax, e2, f2, G, dtree, pwt, nwt ;
-  gdouble error ;
+  gdouble error, erms ;
   FILE *output, *input ;
   gchar ch, *gfile, *mfile, *bfile, *sfile, *kspfile ;
   gdouble *work, tol ;
@@ -501,7 +501,7 @@ gint main(gint argc, gchar **argv)
 	    g_timer_elapsed(timer, NULL) - t) ;
   }
   
-  emax = fmax = e2 = f2 = 0.0 ;
+  emax = fmax = e2 = f2 = erms = 0.0 ;
   for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
     emax = MAX(emax,fabs(p[i]-src[2*i])) ;
     fmax = MAX(fmax, fabs(src[2*i])) ;
@@ -509,9 +509,10 @@ gint main(gint argc, gchar **argv)
     f2 += src[2*i]*src[2*i] ;
   }
 
+  erms = sqrt(e2)/nbi_surface_node_number(s) ;
   fprintf(stderr, "%s: emax = %lg; fmax = %lg;\n", progname, emax, fmax) ;
-  fprintf(stderr, "%s: L_inf norm = %lg; L_2 norm = %lg\n",
-	  progname, emax/fmax, sqrt(e2/f2)) ;
+  fprintf(stderr, "%s: L_inf norm = %lg; L_2 norm = %lg; rms error = %lg\n",
+	  progname, emax/fmax, sqrt(e2/f2), erms) ;
 
   if ( sfile != NULL ) {
     output = fopen(sfile, "w")  ;

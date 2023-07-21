@@ -248,7 +248,7 @@ AWK = gawk
 BLASWRAP = yes
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -O0 -g -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -fopenmp  -mavx -DWBFMM_USE_AVX -mfma -DWBFMM_USE_AVX
+CFLAGS = -O3 -g -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -fopenmp  -mavx -DWBFMM_USE_AVX -mfma -DWBFMM_USE_AVX
 CPP = gcc -E
 CPPFLAGS = -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -fopenmp -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include -I/home/michael/Codes/include
 CYGPATH_W = echo

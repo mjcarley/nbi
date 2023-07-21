@@ -121,6 +121,8 @@ gint main(gint argc, gchar **argv)
     exit(1) ;
   }
 
+  fprintf(stderr, "%s: geometry %s\n", progname, gfile) ;
+  
   s = nbi_surface_read(input) ;
 
   fclose(input) ;

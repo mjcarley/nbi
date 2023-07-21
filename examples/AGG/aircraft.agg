@@ -14,10 +14,13 @@ global {
 }
 
 surface {
-  name("wing:right")
-  section(0, "aerofoil", 0.5, 0.2, 0.0)
+  name("wing:left")
+  section(0.0, "aerofoil", 0.5, 0.2, 0.0)
   section(0.3, "aerofoil", 0.5, 0.12, 0.0)
   section(0.9, "aerofoil", 0.5, 0.08, 0.0)
+  #section(0, "ellipse", 0.2)
+  #section(0.3, "ellipse", 0.12)
+  #section(0.9, "ellipse", 0.08)
   transform("shrink", 0, 0, "1+u*(taper-1)")
   transform("yscale", "(1-u)^(1/8)")  
   transform("scale", "root")
@@ -26,14 +29,17 @@ surface {
   			 "yle+span*sin(dihedral)*u",
 			 "span/1000 + span*u")
   patch("tubular", "nowrap", "wrap")
-  grid("regular", 16, 24)
+  grid("regular", 24, 32)
 }
 
 surface {
-  name("wing:left")
-  section(0, "aerofoil", 0.5, 0.2, 0.0)
-  section(0.3, "aerofoil", 0.5, 0.12, 0.0)
-  section(0.9, "aerofoil", 0.5, 0.08, 0.0)
+  name("wing:right")
+  #section(0, "aerofoil", 0.5, 0.2, 0.0)
+  #section(0.3, "aerofoil", 0.5, 0.12, 0.0)
+  #section(0.9, "aerofoil", 0.5, 0.08, 0.0)
+  section(0, "ellipse", 0.2)
+  section(0.3, "ellipse", 0.12)
+  section(0.9, "ellipse", 0.08)
   transform("shrink", 0, 0, "1+u*(taper-1)")  
   transform("yscale", "(1-u)^(1/8)")  
   transform("scale", "root")
@@ -44,7 +50,7 @@ surface {
   patch("tubular", "nowrap", "wrap", "invert")
   #patch("spherical", "nowrap", "wrap")  
   axes("+x+y-z")
-  grid("regular", 16, 47)
+  grid("regular", 24, 32)
 }
  
 surface {
