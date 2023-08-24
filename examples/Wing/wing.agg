@@ -4,86 +4,24 @@
 #
 # global block contains parameter declarations
 #
-# distribution block(s) contain(s) description of geometry as
-# parameterized patches
-#
+# surface blocks contain sections and transformations
 
 global {
-# syntax: <identifier> = <constant>
-  l1 = 3.0
-  lr = 1.5
-  l2 = 3.0
-  span = 3
-  lt = 0.2
-# syntax: <identifier> = "<expression>" (quotes required)
-  len = "l1+lr+l2"
-  D = 3.8
-  ##  D = "len*0.2"
-  hu = 2.0 
-  tlen = 3.0
-  nlen = 2.5
-  n1 = 0.5
-  n2 = 0.5
+  span = 8
+  root = "span/6"
 }
 
-body("wing-body") 
-
-{
-grid(16384, 32768)
-
-## argument list:
-##   maximum number of points in grid
-##   maximum number of triangles in grid
-##   (an error is reported if the grid generator tries to add more points
-##    or triangles than allocated: there is no danger in allocating more
-##    than you need)
-
-{
-  invert()
-  spherical(2)
+surface {
+  name("wing")
+  patch("spherical", "nowrap", "wrap")
+  section(0, "aerofoil", 0.5, 0.2, 0.0)
+  transform("translate", -0.5, 0, 0)
+  #transform("xscale", "root*sqrt(u*(1-u))")
+  ##transform("xscale", "root")
+  transform(0.1, 0.9, "xscale", "root")
+  transform(0, 0.1, "xscale", "root*sqrt(u/0.1)*(3-u/0.1)/2")
+  transform(0.9, 1, "xscale", "root*sqrt((1-u)/0.1)*(3-(1-u)/0.1)/2")
+  transform("yscale", "2*root*sqrt(u*(1-u))")
+  transform("translate", 0, 0, "span*(u-1/2)")
+  grid("sphere-uv", 48, 32)
 }
-
-distribution("wing", 0.1, 0.9, 24, "cosine")
-
-## argument list:
-##   distribution label (for readability)
-##   tmin, tmax: parameter range
-##   number of sections to be generated for interpolation of shape
-##   section spacing for geometry
-
-{
-  axes("zyx")
-  transform("shrink", 0.5, 0.0, "tipright(0.5, 0.9, s)") ;
-  transform("rotate", 0.5, 0.0, "0.0*s")
-  transform("shift", "0", 0.0, "D/2+(s-0.5)*span")
-
-  shape("enaca", 4, 0.12, 0.0, 0.0) ;
-  ##shape("ellipse", -0.2, 0.2, n1, n2) ;  
-}
-
-distribution("ltip", 0.9, 1.0, 8, "cosine")
-
-{
-  axes("zyx")
-  transform("shrink", 0.5, 0.0, "tipright(0.5, 0.9, s)") ;
-  transform("rotate", 0.5, 0.0, "0.0*s")
-  transform("shift", "0", 0.0, "D/2+(s-0.5)*span")
-
-  shape("enaca", 4, 0.12, 0.0, 0.0) ;
-  ##shape("ellipse", -0.2, 0.2, n1, n2) ;  
-}
-
-distribution("rtip", 0.1, 0.0, 8, "cosine")
-
-{
-  invert
-  axes("zyx")
-  transform("shrink", 0.5, 0.0, "tipleft(0.5, 0.1, s)") ;
-  transform("rotate", 0.5, 0.0, "0.0*s")
-  transform("shift", "0", 0.0, "D/2+(s-0.5)*span")
-
-  shape("enaca", 4, 0.12, 0.0, 0.0) ;
-  ##shape("ellipse", -0.2, 0.2, n1, n2) ;  
-}
-}
-

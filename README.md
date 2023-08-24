@@ -16,7 +16,7 @@ https://github.com/mjcarley/wbfmm
 https://github.com/mjcarley/agg
 
 You should also install PETSc if you want to use it in place of the
-basic built-in iterative solver:
+(very) basic built-in iterative solver:
 
 https://petsc.org/
 
@@ -26,7 +26,7 @@ the shell.
 * Installation
 
 If you have downloaded the source from github or equivalent, you will
-need the autotools suite and you generate the configure script with
+need the autotools suite. Generate the configure script with
 
 . autogen.sh
 
@@ -39,3 +39,9 @@ To configure and install the code,
 For information on options to control configuration,
 
   ./configure --help
+
+* Using NBI
+
+The main documentation, including details of examples, is in the ./doc
+subdirectory of the distribution. Scripts for running examples and
+visualising results are in the ./examples subdirectory.

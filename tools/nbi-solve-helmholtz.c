@@ -73,6 +73,7 @@ static void print_help_text(FILE *f, gint depth,
 	  "  -K # ksp options file name for PETSc solver\n"
 #endif /*HAVE_PETSC*/
 	  "  -k # wavenumber\n"
+	  "  -I estimate error in interior potential\n"
 	  "  -L evaluate single and double layer potentials\n"
 	  "  -m # matrix file name\n"
 	  "  -o # FMM order (%d)\n"
@@ -104,7 +105,7 @@ gint main(gint argc, gchar **argv)
   gint nthreads, nproc, nnmax, matrix_work_size ;
   guint depth, order[48] = {0}, order_s, order_r, order_max ;
   gboolean fmm, shift_bw, greens_id, layer_potentials, precompute_local ;
-  gboolean calc_field ;
+  gboolean calc_field, interior ;
   gboolean petsc_solve ;
 #ifdef HAVE_PETSC
   Vec         b, sol ; /*RHS, solution*/
@@ -132,7 +133,7 @@ gint main(gint argc, gchar **argv)
   kspfile = NULL ;
   
   dtree = 1e-2 ; fmm = FALSE ; nqfmm = 1 ; shift_bw = TRUE ;
-  greens_id = FALSE ; layer_potentials = FALSE ;
+  greens_id = FALSE ; layer_potentials = FALSE ; interior = FALSE ;
   precompute_local = FALSE ; calc_field = FALSE ;
   petsc_solve = FALSE ;
   
@@ -148,7 +149,7 @@ gint main(gint argc, gchar **argv)
   gmres_max_iter = 1 ; gmres_restart = 10 ; tol = 1e-3 ;
     
   fstr = 4 ;
-  while ( (ch = getopt(argc, argv, "hBb:D:d:FfGg:K:k:Lm:o:Ppr:s:T:t:"))
+  while ( (ch = getopt(argc, argv, "hBb:D:d:FfGg:IK:k:Lm:o:Ppr:s:T:t:"))
 	  != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
@@ -170,6 +171,7 @@ gint main(gint argc, gchar **argv)
     case 'F': calc_field = TRUE ; break ;
     case 'G': greens_id = TRUE ; break ;
     case 'g': gfile = g_strdup(optarg) ; break ;
+    case 'I': interior = TRUE ; break ;
     case 'K': kspfile = g_strdup(optarg) ; break ;
     case 'k': k = atof(optarg) ; break ;
     case 'L': layer_potentials = TRUE ; break ;
@@ -428,6 +430,58 @@ gint main(gint argc, gchar **argv)
     return 0 ;
   }
 
+  if ( interior ) {
+    if ( sfile != NULL ) {
+      output = fopen(sfile, "w")  ;
+      if ( output == NULL ) {
+	fprintf(stderr,
+		"%s: cannot open output file %s; writing to stdout;\n",
+		progname, sfile) ;
+	output = stdout ;
+      }
+    }
+    fprintf(stderr, "%s: evaluating interior double-layer potential [%lg]\n",
+    	    progname, t = g_timer_elapsed(timer, NULL)) ;
+    matrix->potential = NBI_POTENTIAL_DOUBLE ;
+    f = (gdouble *)g_malloc0(nbi_surface_node_number(s)*fstr*
+			     sizeof(gdouble)) ;
+    nbi_matrix_multiply(matrix, &(src[0]), 4, 1.0, f, fstr, 0.0, nthreads,
+			work) ;
+    fprintf(stderr, "%s: evaluating interior single-layer potential [%lg]\n",
+	    progname, t = g_timer_elapsed(timer, NULL)) ;
+    matrix->potential = NBI_POTENTIAL_SINGLE ;
+    nbi_matrix_multiply(matrix, &(src[2]), 4, 2.0, f, fstr, -2.0, nthreads,
+			work) ;
+    fprintf(stderr, "%s: surface integration complete [%lg] (%lg)\n",
+	    progname,
+	    g_timer_elapsed(timer, NULL), g_timer_elapsed(timer, NULL) - t) ;
+    
+    emax = fmax = e2 = f2 = 0.0 ;
+    for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+      xp = (NBI_REAL *)nbi_surface_node(s,i) ;
+      G = &(src[4*i+0]) ;
+      fmax = MAX(fmax, sqrt(G[0]*G[0]+G[1]*G[1])) ;
+      emax = MAX(emax,
+		 sqrt((G[0] - f[i*fstr+0])*(G[0] - f[i*fstr+0]) +
+		      (G[1] - f[i*fstr+1])*(G[1] - f[i*fstr+1]))) ;
+      e2 +=
+	(G[0] - f[i*fstr+0])*(G[0] - f[i*fstr+0]) +
+	(G[1] - f[i*fstr+1])*(G[1] - f[i*fstr+1]) ;
+      f2 += G[0]*G[0]+G[1]*G[1] ;
+      fprintf(output, "%lg %lg %lg %lg %lg %lg %lg\n",
+	      xp[0], xp[1], xp[2], f[i*fstr+0], f[i*fstr+1],
+	      fabs(G[0] - f[i*fstr+0]),
+	      fabs(G[1] - f[i*fstr+1])) ;
+    }
+
+    if ( output != stdout ) fclose(output) ;
+    
+    fprintf(stderr, "L_inf norm: %lg; L_2 norm: %lg\n",
+	    emax/fmax, sqrt(e2/f2)) ;
+
+    return 0 ;
+  }
+  
 #ifdef HAVE_PETSC
   /*if we get to here, we're doing a solve: set up PETSc*/
   if ( petsc_solve ) {

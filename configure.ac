@@ -147,7 +147,7 @@ else
    echo \# If PETSc is installed on your system, check that PETSC_DIR
    echo \# is set correctly and run configure again.
    echo \#
-   echo \# If PETSc is not installed, you will not be limited to the built-in
+   echo \# If PETSc is not installed, you will be limited to the built-in
    echo \# GMRES solver
    echo \#
    echo \# You can install PETSc by downloading it from here:
@@ -242,7 +242,18 @@ if test x$hasfma = xyes; then
 fi
 
 AC_CHECK_HEADERS(gmshc.h) 
-AC_CHECK_LIB(gmsh, gmshInitialize)
+AC_CHECK_LIB(gmsh, gmshInitialize, [], [
+  echo \#################################################################
+  echo \#
+  echo \# GMSH API library not installed or not in library path
+  echo \# You can get it from
+  echo \#
+  echo \# https://www.gmsh.info/
+  echo \#
+  echo \#################################################################
+  exit
+		   
+])
 
 AC_CHECK_LIB(m, cos)
 AC_CONFIG_MACRO_DIR([m4])

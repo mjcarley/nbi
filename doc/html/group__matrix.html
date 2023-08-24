@@ -50,57 +50,133 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga70137a3b9b19a1acbf895517f9adc5c3"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#ga70137a3b9b19a1acbf895517f9adc5c3">nbi_matrix_write</a> (FILE *f, nbi_matrix_t *m)</td></tr>
-<tr class="memdesc:ga70137a3b9b19a1acbf895517f9adc5c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">write an ::nbi_matrix_t to file  <a href="group__matrix.html#ga70137a3b9b19a1acbf895517f9adc5c3">More...</a><br /></td></tr>
+<tr class="memitem:gaf34d1a98b58c7fd0d1d897dbf35aacea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#gaf34d1a98b58c7fd0d1d897dbf35aacea">nbi_matrix_new</a> (<a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *s)</td></tr>
+<tr class="memdesc:gaf34d1a98b58c7fd0d1d897dbf35aacea"><td class="mdescLeft">&#160;</td><td class="mdescRight">generate a new <a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> for use in solvers  <a href="group__matrix.html#gaf34d1a98b58c7fd0d1d897dbf35aacea">More...</a><br /></td></tr>
+<tr class="separator:gaf34d1a98b58c7fd0d1d897dbf35aacea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4c1ebfdcf5d79feaed3c796f219169e1"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#ga4c1ebfdcf5d79feaed3c796f219169e1">nbi_matrix_read</a> (FILE *f, <a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *m)</td></tr>
+<tr class="memdesc:ga4c1ebfdcf5d79feaed3c796f219169e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">read an <a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> from file  <a href="group__matrix.html#ga4c1ebfdcf5d79feaed3c796f219169e1">More...</a><br /></td></tr>
+<tr class="separator:ga4c1ebfdcf5d79feaed3c796f219169e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga70137a3b9b19a1acbf895517f9adc5c3"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#ga70137a3b9b19a1acbf895517f9adc5c3">nbi_matrix_write</a> (FILE *f, <a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *m)</td></tr>
+<tr class="memdesc:ga70137a3b9b19a1acbf895517f9adc5c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">write an <a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> to file  <a href="group__matrix.html#ga70137a3b9b19a1acbf895517f9adc5c3">More...</a><br /></td></tr>
 <tr class="separator:ga70137a3b9b19a1acbf895517f9adc5c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab1239cde2a51add7d52d12545e4d3131"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#gab1239cde2a51add7d52d12545e4d3131">nbi_data_write</a> (FILE *f, gdouble *dat, gint dstr, gint ne, gint nd)</td></tr>
-<tr class="memdesc:gab1239cde2a51add7d52d12545e4d3131"><td class="mdescLeft">&#160;</td><td class="mdescRight">write numerical data to file.  <a href="group__matrix.html#gab1239cde2a51add7d52d12545e4d3131">More...</a><br /></td></tr>
-<tr class="separator:gab1239cde2a51add7d52d12545e4d3131"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga28ac5aeac36e380dbf6498aeea865a29"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#ga28ac5aeac36e380dbf6498aeea865a29">nbi_matrix_fmm_init</a> (nbi_matrix_t *m, nbi_problem_t problem, wbfmm_shift_operators_t *shifts, guint *order_s, gint sstr, guint *order_r, gint rstr, gint depth, gdouble dtree, gboolean shift_bw, gboolean precompute_local, gdouble *work)</td></tr>
+<tr class="memitem:ga28ac5aeac36e380dbf6498aeea865a29"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#ga28ac5aeac36e380dbf6498aeea865a29">nbi_matrix_fmm_init</a> (<a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *m, <a class="el" href="nbi_8h.html#a329cac8a97b18950fea315f3cf46e6f8">nbi_problem_t</a> problem, wbfmm_shift_operators_t *shifts, guint *order_s, gint sstr, guint *order_r, gint rstr, gint depth, gdouble dtree, gboolean shift_bw, gboolean precompute_local, gdouble *work)</td></tr>
 <tr class="memdesc:ga28ac5aeac36e380dbf6498aeea865a29"><td class="mdescLeft">&#160;</td><td class="mdescRight">initialize Fast Multipole Method matrix  <a href="group__matrix.html#ga28ac5aeac36e380dbf6498aeea865a29">More...</a><br /></td></tr>
 <tr class="separator:ga28ac5aeac36e380dbf6498aeea865a29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf2ebf90fa9299de6bd7800f262713a67"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#gaf2ebf90fa9299de6bd7800f262713a67">nbi_matrix_multiply</a> (nbi_matrix_t *A, gdouble *x, gint xstr, gdouble al, gdouble *y, gint ystr, gdouble bt, gint nthreads, gdouble *work)</td></tr>
+<tr class="memitem:gaf2ebf90fa9299de6bd7800f262713a67"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#gaf2ebf90fa9299de6bd7800f262713a67">nbi_matrix_multiply</a> (<a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *A, gdouble *x, gint xstr, gdouble al, gdouble *y, gint ystr, gdouble bt, gint nthreads, gdouble *work)</td></tr>
 <tr class="memdesc:gaf2ebf90fa9299de6bd7800f262713a67"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform matrix multiplication <img class="formulaInl" alt="$y := \beta y + \alpha A x$" src="form_1.png" width="81" height="13"/>  <a href="group__matrix.html#gaf2ebf90fa9299de6bd7800f262713a67">More...</a><br /></td></tr>
 <tr class="separator:gaf2ebf90fa9299de6bd7800f262713a67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga52f233a36ee97f920ecafce97bceb5e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#ga52f233a36ee97f920ecafce97bceb5e4">nbi_matrix_assemble_helmholtz</a> (<a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *s, gdouble k, gdouble eta, gint nqa, gint dmax, gdouble tol, gint N, gint nu, gint nnmax, gint nthreads)</td></tr>
+<tr class="separator:ga52f233a36ee97f920ecafce97bceb5e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5de0b40675c087d006ec802413ac2dca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#ga5de0b40675c087d006ec802413ac2dca">nbi_matrix_assemble_laplace</a> (<a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *s, gdouble eta, gint nqa, gint dmax, gdouble tol, gint N, gint nu, gint nnmax, gint nthreads)</td></tr>
+<tr class="separator:ga5de0b40675c087d006ec802413ac2dca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadffe3f48c7e2b1e6d6397987948cbac9"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#gadffe3f48c7e2b1e6d6397987948cbac9">nbi_matrix_upsample_helmholtz</a> (<a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *m, gdouble *p, gint pstr, gdouble pwt, gdouble *pn, gint nstr, gdouble nwt)</td></tr>
+<tr class="separator:gadffe3f48c7e2b1e6d6397987948cbac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac7b5b086633e6c716ce6e7b01f60ff56"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#gac7b5b086633e6c716ce6e7b01f60ff56">nbi_surface_greens_identity_helmholtz</a> (<a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *m, gdouble *p, gint pstr, gdouble pwt, gdouble *pn, gint nstr, gdouble nwt, gdouble *f, gint fstr, gint nthreads, gdouble *work)</td></tr>
+<tr class="memdesc:gac7b5b086633e6c716ce6e7b01f60ff56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluate Green's identity for Helmholtz equation on surface.  <a href="group__matrix.html#gac7b5b086633e6c716ce6e7b01f60ff56">More...</a><br /></td></tr>
+<tr class="separator:gac7b5b086633e6c716ce6e7b01f60ff56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5d96d4be725e699641e81609431ee726"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#ga5d96d4be725e699641e81609431ee726">nbi_matrix_multiply_helmholtz</a> (<a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *A, gdouble *x, gint xstr, gdouble al, gdouble *y, gint ystr, gdouble bt, gint nthreads, gdouble *work)</td></tr>
+<tr class="memdesc:ga5d96d4be725e699641e81609431ee726"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform matrix multiplication for Helmholtz problem.  <a href="group__matrix.html#ga5d96d4be725e699641e81609431ee726">More...</a><br /></td></tr>
+<tr class="separator:ga5d96d4be725e699641e81609431ee726"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3fbad6dc4ed146c23c8fe3af62b94522"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#ga3fbad6dc4ed146c23c8fe3af62b94522">nbi_calc_field_helmholtz</a> (<a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *m, gdouble *p, gint pstr, gdouble pwt, gdouble *pn, gint nstr, gdouble nwt, gdouble *x, gdouble *f, gint nthreads, gdouble *work)</td></tr>
+<tr class="memdesc:ga3fbad6dc4ed146c23c8fe3af62b94522"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate field from surface.  <a href="group__matrix.html#ga3fbad6dc4ed146c23c8fe3af62b94522">More...</a><br /></td></tr>
+<tr class="separator:ga3fbad6dc4ed146c23c8fe3af62b94522"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4f06fd7054314c82368b2e92462813bc"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#ga4f06fd7054314c82368b2e92462813bc">nbi_surface_field_helmholtz</a> (<a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *s, gdouble k, gdouble *ps, gint pstr, gdouble *al, gdouble *bt, gdouble *x, gdouble *p)</td></tr>
+<tr class="memdesc:ga4f06fd7054314c82368b2e92462813bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate field from surface.  <a href="group__matrix.html#ga4f06fd7054314c82368b2e92462813bc">More...</a><br /></td></tr>
+<tr class="separator:ga4f06fd7054314c82368b2e92462813bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d1e4810ed2bf8198e73d81792b3edc6"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#ga8d1e4810ed2bf8198e73d81792b3edc6">nbi_matrix_upsample_laplace</a> (<a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *m, gdouble *p, gint pstr, gdouble pwt, gdouble *pn, gint nstr, gdouble nwt)</td></tr>
+<tr class="separator:ga8d1e4810ed2bf8198e73d81792b3edc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaee4efa9764d2ed945f360ff100d82825"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#gaee4efa9764d2ed945f360ff100d82825">nbi_surface_greens_identity_laplace</a> (<a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *m, gdouble *p, gint pstr, gdouble pwt, gdouble *pn, gint nstr, gdouble nwt, gdouble *f, gint fstr, gint nthreads, gdouble *work)</td></tr>
+<tr class="memdesc:gaee4efa9764d2ed945f360ff100d82825"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluate Green's identity for Laplace equation on surface.  <a href="group__matrix.html#gaee4efa9764d2ed945f360ff100d82825">More...</a><br /></td></tr>
+<tr class="separator:gaee4efa9764d2ed945f360ff100d82825"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaad9dadf91f0d1ae97d5500a5a515feab"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#gaad9dadf91f0d1ae97d5500a5a515feab">nbi_matrix_multiply_laplace</a> (<a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *A, gdouble *x, gint xstr, gdouble al, gdouble *y, gint ystr, gdouble bt, gint nthreads, gdouble *work)</td></tr>
+<tr class="memdesc:gaad9dadf91f0d1ae97d5500a5a515feab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform matrix multiplication for Laplace problem.  <a href="group__matrix.html#gaad9dadf91f0d1ae97d5500a5a515feab">More...</a><br /></td></tr>
+<tr class="separator:gaad9dadf91f0d1ae97d5500a5a515feab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga32937c6f4366030f64214880e50bcd0d"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#ga32937c6f4366030f64214880e50bcd0d">nbi_surface_field_laplace</a> (<a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *s, gdouble *ps, gint pstr, gdouble al, gdouble bt, gdouble *x, gdouble *p)</td></tr>
+<tr class="memdesc:ga32937c6f4366030f64214880e50bcd0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate field from surface.  <a href="group__matrix.html#ga32937c6f4366030f64214880e50bcd0d">More...</a><br /></td></tr>
+<tr class="separator:ga32937c6f4366030f64214880e50bcd0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4da7a1e9f7955de6d39b51e929cb5110"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#ga4da7a1e9f7955de6d39b51e929cb5110">nbi_gmres_real</a> (<a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *A, gint n, gdouble *x, gint xstr, gdouble *b, gint bstr, gint m, gint max_it, gdouble tol, gdouble *error, gint nthreads, gdouble *work)</td></tr>
+<tr class="memdesc:ga4da7a1e9f7955de6d39b51e929cb5110"><td class="mdescLeft">&#160;</td><td class="mdescRight">basic GMRES solver for real problems  <a href="group__matrix.html#ga4da7a1e9f7955de6d39b51e929cb5110">More...</a><br /></td></tr>
+<tr class="separator:ga4da7a1e9f7955de6d39b51e929cb5110"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad1015a7ec926bdd6b5bdb2e19a2dbb6b"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#gad1015a7ec926bdd6b5bdb2e19a2dbb6b">nbi_gmres_complex</a> (<a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *A, gint n, gdouble *x, gint xstr, gdouble *b, gint bstr, gint m, gint max_it, gdouble tol, gdouble *error, gint nthreads, gdouble *work)</td></tr>
+<tr class="memdesc:gad1015a7ec926bdd6b5bdb2e19a2dbb6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">basic GMRES solver for complex problems  <a href="group__matrix.html#gad1015a7ec926bdd6b5bdb2e19a2dbb6b">More...</a><br /></td></tr>
+<tr class="separator:gad1015a7ec926bdd6b5bdb2e19a2dbb6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae0e1ce93ef5eb67f95f90bb28069d3c4"><td class="memItemLeft" align="right" valign="top">typedef&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a></td></tr>
+<tr class="separator:gae0e1ce93ef5eb67f95f90bb28069d3c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p >Matrix operations and iterative solvers. </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gab1239cde2a51add7d52d12545e4d3131" name="gab1239cde2a51add7d52d12545e4d3131"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab1239cde2a51add7d52d12545e4d3131">&#9670;&nbsp;</a></span>nbi_data_write()</h2>
+<a id="ga3fbad6dc4ed146c23c8fe3af62b94522" name="ga3fbad6dc4ed146c23c8fe3af62b94522"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3fbad6dc4ed146c23c8fe3af62b94522">&#9670;&nbsp;</a></span>nbi_calc_field_helmholtz()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">gint nbi_data_write </td>
+          <td class="memname">gint nbi_calc_field_helmholtz </td>
           <td>(</td>
-          <td class="paramtype">FILE *&#160;</td>
-          <td class="paramname"><em>f</em>, </td>
+          <td class="paramtype"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">gdouble *&#160;</td>
-          <td class="paramname"><em>dat</em>, </td>
+          <td class="paramname"><em>p</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">gint&#160;</td>
-          <td class="paramname"><em>dstr</em>, </td>
+          <td class="paramname"><em>pstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>pwt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>pn</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">gint&#160;</td>
-          <td class="paramname"><em>ne</em>, </td>
+          <td class="paramname"><em>nstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>nwt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>f</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">gint&#160;</td>
-          <td class="paramname"><em>nd</em>&#160;</td>
+          <td class="paramname"><em>nthreads</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>work</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -110,21 +186,422 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>write numerical data to file. </p>
-<p >The function writes a header which can be interpreted by <a class="el" href="group__surfaces.html#gab1fbfbeecac2b690ea705cf90ddcb368" title="read numerical data from a file written with nbi_data_write">nbi_data_read</a> and writes <em>nd</em> lines of data in the form:</p>
-<p >dat[i*dstr+0] dat[i*dstr+1] ... dat[i*dstr+ne-1]</p>
-<p >with <img class="formulaInl" alt="$i=0,\ldots,nd-1$" src="form_0.png" width="91" height="13"/>.</p>
+<p>Calculate field from surface. </p>
+<p >Calculate field radiated from surface using specified boundary conditions. This is not FMM accelerated.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">f</td><td>output file stream; </td></tr>
-    <tr><td class="paramname">dat</td><td>data; </td></tr>
-    <tr><td class="paramname">dstr</td><td>stride between first components of successive data entries; </td></tr>
-    <tr><td class="paramname">ne</td><td>number of components per data entry; </td></tr>
-    <tr><td class="paramname">nd</td><td>number of data entries.</td></tr>
+    <tr><td class="paramname">m</td><td>problem matrix; </td></tr>
+    <tr><td class="paramname">p</td><td>complex surface potential; </td></tr>
+    <tr><td class="paramname">pstr</td><td>stride in <em>p</em>; </td></tr>
+    <tr><td class="paramname">pwt</td><td>weight for <em>p</em>; </td></tr>
+    <tr><td class="paramname">pn</td><td>complex surface potential gradient; </td></tr>
+    <tr><td class="paramname">nstr</td><td>stride in <em>pn</em>; </td></tr>
+    <tr><td class="paramname">nwt</td><td>weight for <em>pn</em>. </td></tr>
+    <tr><td class="paramname">x</td><td>point for field evaluation; </td></tr>
+    <tr><td class="paramname">f</td><td>on exit contains <img class="formulaInl" alt="$\phi(\mathbf{x})$" src="form_18.png" width="24" height="14"/>; </td></tr>
+    <tr><td class="paramname">nthreads</td><td>number of threads to use; </td></tr>
+    <tr><td class="paramname">work</td><td>workspace.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
+
+</div>
+</div>
+<a id="gad1015a7ec926bdd6b5bdb2e19a2dbb6b" name="gad1015a7ec926bdd6b5bdb2e19a2dbb6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad1015a7ec926bdd6b5bdb2e19a2dbb6b">&#9670;&nbsp;</a></span>nbi_gmres_complex()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gint nbi_gmres_complex </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *&#160;</td>
+          <td class="paramname"><em>A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>xstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>bstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>max_it</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>tol</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>error</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nthreads</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>work</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>basic GMRES solver for complex problems </p>
+<p >This is a basic implementation of a GMRES solver. You may find the PETSC solver more useful, if it is available.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">A</td><td>problem matrix; </td></tr>
+    <tr><td class="paramname">n</td><td>matrix size; </td></tr>
+    <tr><td class="paramname">x</td><td>initial guess for solution; </td></tr>
+    <tr><td class="paramname">xstr</td><td>stride in <em>x</em>; </td></tr>
+    <tr><td class="paramname">b</td><td>right hand side vector; </td></tr>
+    <tr><td class="paramname">bstr</td><td>stride in <em>b</em>; </td></tr>
+    <tr><td class="paramname">m</td><td>restart interval; </td></tr>
+    <tr><td class="paramname">max_it</td><td>maximum number of iterations; </td></tr>
+    <tr><td class="paramname">tol</td><td>convergence tolerance; </td></tr>
+    <tr><td class="paramname">error</td><td>on exit, contains error estimate; </td></tr>
+    <tr><td class="paramname">nthreads</td><td>number of threads; </td></tr>
+    <tr><td class="paramname">work</td><td>workspace.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
+
+</div>
+</div>
+<a id="ga4da7a1e9f7955de6d39b51e929cb5110" name="ga4da7a1e9f7955de6d39b51e929cb5110"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4da7a1e9f7955de6d39b51e929cb5110">&#9670;&nbsp;</a></span>nbi_gmres_real()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gint nbi_gmres_real </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *&#160;</td>
+          <td class="paramname"><em>A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>xstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>bstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>max_it</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>tol</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>error</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nthreads</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>work</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>basic GMRES solver for real problems </p>
+<p >This is a basic implementation of a GMRES solver. You may find the PETSC solver more useful, if it is available.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">A</td><td>problem matrix; </td></tr>
+    <tr><td class="paramname">n</td><td>matrix size; </td></tr>
+    <tr><td class="paramname">x</td><td>initial guess for solution; </td></tr>
+    <tr><td class="paramname">xstr</td><td>stride in <em>x</em>; </td></tr>
+    <tr><td class="paramname">b</td><td>right hand side vector; </td></tr>
+    <tr><td class="paramname">bstr</td><td>stride in <em>b</em>; </td></tr>
+    <tr><td class="paramname">m</td><td>restart interval; </td></tr>
+    <tr><td class="paramname">max_it</td><td>maximum number of iterations; </td></tr>
+    <tr><td class="paramname">tol</td><td>convergence tolerance; </td></tr>
+    <tr><td class="paramname">error</td><td>on exit, contains error estimate; </td></tr>
+    <tr><td class="paramname">nthreads</td><td>number of threads; </td></tr>
+    <tr><td class="paramname">work</td><td>workspace.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
+
+</div>
+</div>
+<a id="ga52f233a36ee97f920ecafce97bceb5e4" name="ga52f233a36ee97f920ecafce97bceb5e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga52f233a36ee97f920ecafce97bceb5e4">&#9670;&nbsp;</a></span>nbi_matrix_assemble_helmholtz()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> * nbi_matrix_assemble_helmholtz </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>k</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>eta</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nqa</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>dmax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>tol</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>N</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nu</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nnmax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nthreads</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Assemble a matrix for the Helmholtz boundary integral problem</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>surface for problem; </td></tr>
+    <tr><td class="paramname">k</td><td>wavenumber in Helmholtz equation </td></tr>
+    <tr><td class="paramname">eta</td><td>separation parameter for adaptive quadrature; </td></tr>
+    <tr><td class="paramname">nqa</td><td>number of points in adaptive quadrature rule; </td></tr>
+    <tr><td class="paramname">dmax</td><td>maximum recursion depth for adaptive quadrature; </td></tr>
+    <tr><td class="paramname">tol</td><td>tolerance for adaptive quadrature; </td></tr>
+    <tr><td class="paramname">N</td><td>order of singular quadrature rule; </td></tr>
+    <tr><td class="paramname">nu</td><td>number of upsampled sources per patch; </td></tr>
+    <tr><td class="paramname">nnmax</td><td>maximum number of neighbours in patch neighbour lists; </td></tr>
+    <tr><td class="paramname">nthreads</td><td>number of threads.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>newly allocated and assembled <a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> </dd></dl>
+
+</div>
+</div>
+<a id="ga5de0b40675c087d006ec802413ac2dca" name="ga5de0b40675c087d006ec802413ac2dca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5de0b40675c087d006ec802413ac2dca">&#9670;&nbsp;</a></span>nbi_matrix_assemble_laplace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> * nbi_matrix_assemble_laplace </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>eta</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nqa</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>dmax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>tol</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>N</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nu</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nnmax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nthreads</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Assemble a matrix for the Laplace boundary integral problem</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>surface for problem; </td></tr>
+    <tr><td class="paramname">eta</td><td>separation parameter for adaptive quadrature; </td></tr>
+    <tr><td class="paramname">nqa</td><td>number of points in adaptive quadrature rule; </td></tr>
+    <tr><td class="paramname">dmax</td><td>maximum recursion depth for adaptive quadrature; </td></tr>
+    <tr><td class="paramname">tol</td><td>tolerance for adaptive quadrature; </td></tr>
+    <tr><td class="paramname">N</td><td>order of singular quadrature rule; </td></tr>
+    <tr><td class="paramname">nu</td><td>number of upsampled sources per patch; </td></tr>
+    <tr><td class="paramname">nnmax</td><td>maximum number of neighbours in patch neighbour lists; </td></tr>
+    <tr><td class="paramname">nthreads</td><td>number of threads.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>newly allocated and assembled <a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> </dd></dl>
 
 </div>
 </div>
@@ -137,13 +614,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">gint nbi_matrix_fmm_init </td>
           <td>(</td>
-          <td class="paramtype">nbi_matrix_t *&#160;</td>
+          <td class="paramtype"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *&#160;</td>
           <td class="paramname"><em>m</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">nbi_problem_t&#160;</td>
+          <td class="paramtype"><a class="el" href="nbi_8h.html#a329cac8a97b18950fea315f3cf46e6f8">nbi_problem_t</a>&#160;</td>
           <td class="paramname"><em>problem</em>, </td>
         </tr>
         <tr>
@@ -217,8 +694,8 @@ Functions</h2></td></tr>
 <p>initialize Fast Multipole Method matrix </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">m</td><td>::nbi_matrix_t to be initialized; </td></tr>
-    <tr><td class="paramname">problem</td><td>::nbi_problem_t (Laplace or Helmholtz); </td></tr>
+    <tr><td class="paramname">m</td><td><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> to be initialized; </td></tr>
+    <tr><td class="paramname">problem</td><td><a class="el" href="nbi_8h.html#a329cac8a97b18950fea315f3cf46e6f8">nbi_problem_t</a> (Laplace or Helmholtz); </td></tr>
     <tr><td class="paramname">shifts</td><td>WBFMM shift operators; </td></tr>
     <tr><td class="paramname">order_s</td><td>order of singular expansion at leaf nodes; </td></tr>
     <tr><td class="paramname">sstr</td><td>increment in order of singular expansion at each level; </td></tr>
@@ -245,7 +722,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">gint nbi_matrix_multiply </td>
           <td>(</td>
-          <td class="paramtype">nbi_matrix_t *&#160;</td>
+          <td class="paramtype"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *&#160;</td>
           <td class="paramname"><em>A</em>, </td>
         </tr>
         <tr>
@@ -307,7 +784,7 @@ Functions</h2></td></tr>
 <p>perform matrix multiplication <img class="formulaInl" alt="$y := \beta y + \alpha A x$" src="form_1.png" width="81" height="13"/> </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">A</td><td>::nbi_matrix_t </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> </td></tr>
     <tr><td class="paramname">x</td><td>input vector; </td></tr>
     <tr><td class="paramname">xstr</td><td>stride in <em>x</em>; </td></tr>
     <tr><td class="paramname">al</td><td>weight <img class="formulaInl" alt="$\alpha$" src="form_2.png" width="8" height="6"/>; </td></tr>
@@ -316,6 +793,395 @@ Functions</h2></td></tr>
     <tr><td class="paramname">bt</td><td>weight <img class="formulaInl" alt="$\beta$" src="form_3.png" width="9" height="13"/>; </td></tr>
     <tr><td class="paramname">nthreads</td><td>number of threads to use (if available) in FMM and near-field corrections; </td></tr>
     <tr><td class="paramname">work</td><td>workspace.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
+
+</div>
+</div>
+<a id="ga5d96d4be725e699641e81609431ee726" name="ga5d96d4be725e699641e81609431ee726"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5d96d4be725e699641e81609431ee726">&#9670;&nbsp;</a></span>nbi_matrix_multiply_helmholtz()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gint nbi_matrix_multiply_helmholtz </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *&#160;</td>
+          <td class="paramname"><em>A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>xstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>al</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>ystr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>bt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nthreads</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>work</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Perform matrix multiplication for Helmholtz problem. </p>
+<p >Perform the matrix multiplication (actually corrected FMM evaluation) corresponding to operation <img class="formulaInl" alt="$y\to \alpha A x + \beta y$" src="form_16.png" width="81" height="13"/> (similar to BLAS implementation), mainly for use in iterative solvers.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">A</td><td>matrix for problem; </td></tr>
+    <tr><td class="paramname">x</td><td>input vector; </td></tr>
+    <tr><td class="paramname">xstr</td><td>stride in <em>x</em>; </td></tr>
+    <tr><td class="paramname">al</td><td><img class="formulaInl" alt="$\alpha$" src="form_2.png" width="8" height="6"/>; </td></tr>
+    <tr><td class="paramname">y</td><td>on output contains <img class="formulaInl" alt="$y\to \alpha A x + \beta$" src="form_17.png" width="74" height="13"/> </td></tr>
+    <tr><td class="paramname">ystr</td><td>stride in <em>y</em>; </td></tr>
+    <tr><td class="paramname">bt</td><td><img class="formulaInl" alt="$\beta$" src="form_3.png" width="9" height="13"/>; </td></tr>
+    <tr><td class="paramname">nthreads</td><td>number of threads to use; </td></tr>
+    <tr><td class="paramname">work</td><td>workspace.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
+
+</div>
+</div>
+<a id="gaad9dadf91f0d1ae97d5500a5a515feab" name="gaad9dadf91f0d1ae97d5500a5a515feab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaad9dadf91f0d1ae97d5500a5a515feab">&#9670;&nbsp;</a></span>nbi_matrix_multiply_laplace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gint nbi_matrix_multiply_laplace </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *&#160;</td>
+          <td class="paramname"><em>A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>xstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>al</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>ystr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>bt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nthreads</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>work</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Perform matrix multiplication for Laplace problem. </p>
+<p >Perform the matrix multiplication (actually corrected FMM evaluation) corresponding to operation <img class="formulaInl" alt="$y\to \alpha A x + \beta y$" src="form_16.png" width="81" height="13"/> (similar to BLAS implementation), mainly for use in iterative solvers.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">A</td><td>matrix for problem; </td></tr>
+    <tr><td class="paramname">x</td><td>input vector; </td></tr>
+    <tr><td class="paramname">xstr</td><td>stride in <em>x</em>; </td></tr>
+    <tr><td class="paramname">al</td><td><img class="formulaInl" alt="$\alpha$" src="form_2.png" width="8" height="6"/>; </td></tr>
+    <tr><td class="paramname">y</td><td>on output contains <img class="formulaInl" alt="$y\to \alpha A x + \beta$" src="form_17.png" width="74" height="13"/> </td></tr>
+    <tr><td class="paramname">ystr</td><td>stride in <em>y</em>; </td></tr>
+    <tr><td class="paramname">bt</td><td><img class="formulaInl" alt="$\beta$" src="form_3.png" width="9" height="13"/>; </td></tr>
+    <tr><td class="paramname">nthreads</td><td>number of threads to use; </td></tr>
+    <tr><td class="paramname">work</td><td>workspace.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
+
+</div>
+</div>
+<a id="gaf34d1a98b58c7fd0d1d897dbf35aacea" name="gaf34d1a98b58c7fd0d1d897dbf35aacea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf34d1a98b58c7fd0d1d897dbf35aacea">&#9670;&nbsp;</a></span>nbi_matrix_new()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> * nbi_matrix_new </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *&#160;</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>generate a new <a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> for use in solvers </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>an <a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>pointer to new <a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> corresponding to <em>s</em>. </dd></dl>
+
+<p class="reference">References <a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a>, and <a class="el" href="nbi_8h.html#a329cac8a97b18950fea315f3cf46e6f8a1e569f4423dff3ecbfeb5a99ce363a29">NBI_PROBLEM_UNDEFINED</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="group__matrix.html#ga52f233a36ee97f920ecafce97bceb5e4">nbi_matrix_assemble_helmholtz()</a>, and <a class="el" href="group__matrix.html#ga5de0b40675c087d006ec802413ac2dca">nbi_matrix_assemble_laplace()</a>.</p>
+
+</div>
+</div>
+<a id="ga4c1ebfdcf5d79feaed3c796f219169e1" name="ga4c1ebfdcf5d79feaed3c796f219169e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4c1ebfdcf5d79feaed3c796f219169e1">&#9670;&nbsp;</a></span>nbi_matrix_read()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gint nbi_matrix_read </td>
+          <td>(</td>
+          <td class="paramtype">FILE *&#160;</td>
+          <td class="paramname"><em>f</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *&#160;</td>
+          <td class="paramname"><em>m</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>read an <a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> from file </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">f</td><td>input file stream; </td></tr>
+    <tr><td class="paramname">m</td><td>pointer to an allocated <a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
+
+</div>
+</div>
+<a id="gadffe3f48c7e2b1e6d6397987948cbac9" name="gadffe3f48c7e2b1e6d6397987948cbac9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadffe3f48c7e2b1e6d6397987948cbac9">&#9670;&nbsp;</a></span>nbi_matrix_upsample_helmholtz()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gint nbi_matrix_upsample_helmholtz </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>pstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>pwt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>pn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>nwt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Upsample nodal data to upsample nodes, multiplying by real weights</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>matrix to upsample; </td></tr>
+    <tr><td class="paramname">p</td><td>complex surface potential to upsample; </td></tr>
+    <tr><td class="paramname">pstr</td><td>stride in <em>p</em>; </td></tr>
+    <tr><td class="paramname">pwt</td><td>weight for <em>p</em>; </td></tr>
+    <tr><td class="paramname">pn</td><td>complex surface potential gradient to upsample; </td></tr>
+    <tr><td class="paramname">nstr</td><td>stride in <em>pn</em>; </td></tr>
+    <tr><td class="paramname">nwt</td><td>weight for <em>pn</em>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
+
+</div>
+</div>
+<a id="ga8d1e4810ed2bf8198e73d81792b3edc6" name="ga8d1e4810ed2bf8198e73d81792b3edc6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8d1e4810ed2bf8198e73d81792b3edc6">&#9670;&nbsp;</a></span>nbi_matrix_upsample_laplace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gint nbi_matrix_upsample_laplace </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>pstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>pwt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>pn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>nwt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Upsample nodal data to upsample nodes, multiplying by real weights</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>matrix to upsample; </td></tr>
+    <tr><td class="paramname">p</td><td>complex surface potential to upsample; </td></tr>
+    <tr><td class="paramname">pstr</td><td>stride in <em>p</em>; </td></tr>
+    <tr><td class="paramname">pwt</td><td>weight for <em>p</em>; </td></tr>
+    <tr><td class="paramname">pn</td><td>complex surface potential gradient to upsample; </td></tr>
+    <tr><td class="paramname">nstr</td><td>stride in <em>pn</em>; </td></tr>
+    <tr><td class="paramname">nwt</td><td>weight for <em>pn</em>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -338,7 +1204,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">nbi_matrix_t *&#160;</td>
+          <td class="paramtype"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *&#160;</td>
           <td class="paramname"><em>m</em>&#160;</td>
         </tr>
         <tr>
@@ -349,11 +1215,94 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>write an ::nbi_matrix_t to file </p>
+<p>write an <a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> to file </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">f</td><td>output file stream; </td></tr>
-    <tr><td class="paramname">m</td><td>an ::nbi_matrix_t.</td></tr>
+    <tr><td class="paramname">m</td><td>an <a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
+
+<p class="reference">References <a class="el" href="nbi_8h.html#a2637027e2e05a257b815f60acb98e0a3">nbi_surface_patch_node_number</a>.</p>
+
+</div>
+</div>
+<a id="ga4f06fd7054314c82368b2e92462813bc" name="ga4f06fd7054314c82368b2e92462813bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4f06fd7054314c82368b2e92462813bc">&#9670;&nbsp;</a></span>nbi_surface_field_helmholtz()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gint nbi_surface_field_helmholtz </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>k</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>ps</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>pstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>al</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>bt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>p</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calculate field from surface. </p>
+<p >Calculate field radiated from surface using specified boundary conditions packed in a single vector. This is not FMM accelerated.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>surface for calculation; </td></tr>
+    <tr><td class="paramname">k</td><td>wavenumber; </td></tr>
+    <tr><td class="paramname">ps</td><td>complex surface potential and potential gradientto upsample; </td></tr>
+    <tr><td class="paramname">pstr</td><td>stride in <em>ps</em>; </td></tr>
+    <tr><td class="paramname">al</td><td><img class="formulaInl" alt="$\alpha$" src="form_2.png" width="8" height="6"/>; </td></tr>
+    <tr><td class="paramname">bt</td><td><img class="formulaInl" alt="$\beta$" src="form_3.png" width="9" height="13"/>; </td></tr>
+    <tr><td class="paramname">x</td><td>point for field evaluation; </td></tr>
+    <tr><td class="paramname">p</td><td>on exit contains <img class="formulaInl" alt="$\beta p + \alpha \phi(\mathbf{x})$" src="form_19.png" width="63" height="14"/>, with <img class="formulaInl" alt="$\phi$" src="form_7.png" width="8" height="13"/> calculated using Green's identity.</td></tr>
   </table>
   </dd>
 </dl>
@@ -361,10 +1310,306 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ga32937c6f4366030f64214880e50bcd0d" name="ga32937c6f4366030f64214880e50bcd0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga32937c6f4366030f64214880e50bcd0d">&#9670;&nbsp;</a></span>nbi_surface_field_laplace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gint nbi_surface_field_laplace </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>ps</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>pstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>al</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>bt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>p</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calculate field from surface. </p>
+<p >Calculate field radiated from surface using specified boundary conditions packed in a single vector. This is not FMM accelerated.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>surface for calculation; </td></tr>
+    <tr><td class="paramname">ps</td><td>complex surface potential and potential gradientto upsample; </td></tr>
+    <tr><td class="paramname">pstr</td><td>stride in <em>ps</em>; </td></tr>
+    <tr><td class="paramname">al</td><td><img class="formulaInl" alt="$\alpha$" src="form_2.png" width="8" height="6"/>; </td></tr>
+    <tr><td class="paramname">bt</td><td><img class="formulaInl" alt="$\beta$" src="form_3.png" width="9" height="13"/>; </td></tr>
+    <tr><td class="paramname">x</td><td>point for field evaluation; </td></tr>
+    <tr><td class="paramname">p</td><td>on exit contains <img class="formulaInl" alt="$\beta p + \alpha \phi(\mathbf{x})$" src="form_19.png" width="63" height="14"/>, with <img class="formulaInl" alt="$\phi$" src="form_7.png" width="8" height="13"/> calculated using Green's identity.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
+
+</div>
+</div>
+<a id="gac7b5b086633e6c716ce6e7b01f60ff56" name="gac7b5b086633e6c716ce6e7b01f60ff56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac7b5b086633e6c716ce6e7b01f60ff56">&#9670;&nbsp;</a></span>nbi_surface_greens_identity_helmholtz()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gint nbi_surface_greens_identity_helmholtz </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>pstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>pwt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>pn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>nwt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>f</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>fstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nthreads</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>work</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Evaluate Green's identity for Helmholtz equation on surface. </p>
+<p >Evaluate Green's identity for Helmholtz equation on surface. This is mainly used for checking discretizations and boundary condition evaluation.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>matrix for boundary integral problem; </td></tr>
+    <tr><td class="paramname">p</td><td>complex surface potential to upsample; </td></tr>
+    <tr><td class="paramname">pstr</td><td>stride in <em>p</em>; </td></tr>
+    <tr><td class="paramname">pwt</td><td>weight for <em>p</em>; </td></tr>
+    <tr><td class="paramname">pn</td><td>complex surface potential gradient to upsample; </td></tr>
+    <tr><td class="paramname">nstr</td><td>stride in <em>pn</em>; </td></tr>
+    <tr><td class="paramname">nwt</td><td>weight for <em>pn</em>. </td></tr>
+    <tr><td class="paramname">f</td><td>on exit contains surface potential at each node of <em>s</em> evaluated using Green's identity; </td></tr>
+    <tr><td class="paramname">fstr</td><td>stride in <em>f</em>; </td></tr>
+    <tr><td class="paramname">nthreads</td><td>number of threads to use; </td></tr>
+    <tr><td class="paramname">work</td><td>workspace.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
+
+</div>
+</div>
+<a id="gaee4efa9764d2ed945f360ff100d82825" name="gaee4efa9764d2ed945f360ff100d82825"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaee4efa9764d2ed945f360ff100d82825">&#9670;&nbsp;</a></span>nbi_surface_greens_identity_laplace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gint nbi_surface_greens_identity_laplace </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__matrix.html#gae0e1ce93ef5eb67f95f90bb28069d3c4">nbi_matrix_t</a> *&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>pstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>pwt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>pn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>nwt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>f</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>fstr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nthreads</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble *&#160;</td>
+          <td class="paramname"><em>work</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Evaluate Green's identity for Laplace equation on surface. </p>
+<p >Evaluate Green's identity for Laplace equation on surface. This is mainly used for checking discretizations and boundary condition evaluation.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>matrix for boundary integral problem; </td></tr>
+    <tr><td class="paramname">p</td><td>complex surface potential to upsample; </td></tr>
+    <tr><td class="paramname">pstr</td><td>stride in <em>p</em>; </td></tr>
+    <tr><td class="paramname">pwt</td><td>weight for <em>p</em>; </td></tr>
+    <tr><td class="paramname">pn</td><td>complex surface potential gradient to upsample; </td></tr>
+    <tr><td class="paramname">nstr</td><td>stride in <em>pn</em>; </td></tr>
+    <tr><td class="paramname">nwt</td><td>weight for <em>pn</em>. </td></tr>
+    <tr><td class="paramname">f</td><td>on exit contains surface potential at each node of <em>s</em> evaluated using Green's identity; </td></tr>
+    <tr><td class="paramname">fstr</td><td>stride in <em>f</em>; </td></tr>
+    <tr><td class="paramname">nthreads</td><td>number of threads to use; </td></tr>
+    <tr><td class="paramname">work</td><td>workspace.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="gae0e1ce93ef5eb67f95f90bb28069d3c4" name="gae0e1ce93ef5eb67f95f90bb28069d3c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae0e1ce93ef5eb67f95f90bb28069d3c4">&#9670;&nbsp;</a></span>nbi_matrix_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nbi_matrix_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Basic data type for NBI matrices, containing surface information, local correction matrices and Fast Multipole Method data </p>
+
+<p class="reference">Referenced by <a class="el" href="group__matrix.html#ga52f233a36ee97f920ecafce97bceb5e4">nbi_matrix_assemble_helmholtz()</a>, <a class="el" href="group__matrix.html#ga5de0b40675c087d006ec802413ac2dca">nbi_matrix_assemble_laplace()</a>, and <a class="el" href="group__matrix.html#gaf34d1a98b58c7fd0d1d897dbf35aacea">nbi_matrix_new()</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Apr 18 2023 18:22:46 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
+Generated on Thu Aug 24 2023 16:28:04 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
 </small></address>
 </body>
 </html>

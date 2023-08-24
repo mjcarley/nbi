@@ -8,14 +8,46 @@ Matrix operations and iterative solvers.
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-gint \textbf{ nbi\+\_\+matrix\+\_\+write} (FILE $\ast$f, nbi\+\_\+matrix\+\_\+t $\ast$m)
-\begin{DoxyCompactList}\small\item\em write an \+::nbi\+\_\+matrix\+\_\+t to file \end{DoxyCompactList}\item 
-gint \textbf{ nbi\+\_\+data\+\_\+write} (FILE $\ast$f, gdouble $\ast$dat, gint dstr, gint ne, gint nd)
-\begin{DoxyCompactList}\small\item\em write numerical data to file. \end{DoxyCompactList}\item 
-gint \textbf{ nbi\+\_\+matrix\+\_\+fmm\+\_\+init} (nbi\+\_\+matrix\+\_\+t $\ast$m, nbi\+\_\+problem\+\_\+t problem, wbfmm\+\_\+shift\+\_\+operators\+\_\+t $\ast$shifts, guint $\ast$order\+\_\+s, gint sstr, guint $\ast$order\+\_\+r, gint rstr, gint depth, gdouble dtree, gboolean shift\+\_\+bw, gboolean precompute\+\_\+local, gdouble $\ast$work)
+\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$ \textbf{ nbi\+\_\+matrix\+\_\+new} (\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$s)
+\begin{DoxyCompactList}\small\item\em generate a new \doxyref{nbi\+\_\+matrix\+\_\+t}{p.}{group__matrix_gae0e1ce93ef5eb67f95f90bb28069d3c4} for use in solvers \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+matrix\+\_\+read} (FILE $\ast$f, \textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$m)
+\begin{DoxyCompactList}\small\item\em read an \doxyref{nbi\+\_\+matrix\+\_\+t}{p.}{group__matrix_gae0e1ce93ef5eb67f95f90bb28069d3c4} from file \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+matrix\+\_\+write} (FILE $\ast$f, \textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$m)
+\begin{DoxyCompactList}\small\item\em write an \doxyref{nbi\+\_\+matrix\+\_\+t}{p.}{group__matrix_gae0e1ce93ef5eb67f95f90bb28069d3c4} to file \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+matrix\+\_\+fmm\+\_\+init} (\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$m, \textbf{ nbi\+\_\+problem\+\_\+t} problem, wbfmm\+\_\+shift\+\_\+operators\+\_\+t $\ast$shifts, guint $\ast$order\+\_\+s, gint sstr, guint $\ast$order\+\_\+r, gint rstr, gint depth, gdouble dtree, gboolean shift\+\_\+bw, gboolean precompute\+\_\+local, gdouble $\ast$work)
 \begin{DoxyCompactList}\small\item\em initialize Fast Multipole Method matrix \end{DoxyCompactList}\item 
-gint \textbf{ nbi\+\_\+matrix\+\_\+multiply} (nbi\+\_\+matrix\+\_\+t $\ast$A, gdouble $\ast$x, gint xstr, gdouble al, gdouble $\ast$y, gint ystr, gdouble bt, gint nthreads, gdouble $\ast$work)
-\begin{DoxyCompactList}\small\item\em perform matrix multiplication $y := \beta y + \alpha A x$ \end{DoxyCompactList}\end{DoxyCompactItemize}
+gint \textbf{ nbi\+\_\+matrix\+\_\+multiply} (\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$A, gdouble $\ast$x, gint xstr, gdouble al, gdouble $\ast$y, gint ystr, gdouble bt, gint nthreads, gdouble $\ast$work)
+\begin{DoxyCompactList}\small\item\em perform matrix multiplication $y := \beta y + \alpha A x$ \end{DoxyCompactList}\item 
+\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$ \textbf{ nbi\+\_\+matrix\+\_\+assemble\+\_\+helmholtz} (\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$s, gdouble k, gdouble eta, gint nqa, gint dmax, gdouble tol, gint N, gint nu, gint nnmax, gint nthreads)
+\item 
+\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$ \textbf{ nbi\+\_\+matrix\+\_\+assemble\+\_\+laplace} (\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$s, gdouble eta, gint nqa, gint dmax, gdouble tol, gint N, gint nu, gint nnmax, gint nthreads)
+\item 
+gint \textbf{ nbi\+\_\+matrix\+\_\+upsample\+\_\+helmholtz} (\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$m, gdouble $\ast$p, gint pstr, gdouble pwt, gdouble $\ast$pn, gint nstr, gdouble nwt)
+\item 
+gint \textbf{ nbi\+\_\+surface\+\_\+greens\+\_\+identity\+\_\+helmholtz} (\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$m, gdouble $\ast$p, gint pstr, gdouble pwt, gdouble $\ast$pn, gint nstr, gdouble nwt, gdouble $\ast$f, gint fstr, gint nthreads, gdouble $\ast$work)
+\begin{DoxyCompactList}\small\item\em Evaluate Green\textquotesingle{}s identity for Helmholtz equation on surface. \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+matrix\+\_\+multiply\+\_\+helmholtz} (\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$A, gdouble $\ast$x, gint xstr, gdouble al, gdouble $\ast$y, gint ystr, gdouble bt, gint nthreads, gdouble $\ast$work)
+\begin{DoxyCompactList}\small\item\em Perform matrix multiplication for Helmholtz problem. \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+calc\+\_\+field\+\_\+helmholtz} (\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$m, gdouble $\ast$p, gint pstr, gdouble pwt, gdouble $\ast$pn, gint nstr, gdouble nwt, gdouble $\ast$x, gdouble $\ast$f, gint nthreads, gdouble $\ast$work)
+\begin{DoxyCompactList}\small\item\em Calculate field from surface. \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+surface\+\_\+field\+\_\+helmholtz} (\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$s, gdouble k, gdouble $\ast$ps, gint pstr, gdouble $\ast$al, gdouble $\ast$bt, gdouble $\ast$x, gdouble $\ast$p)
+\begin{DoxyCompactList}\small\item\em Calculate field from surface. \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+matrix\+\_\+upsample\+\_\+laplace} (\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$m, gdouble $\ast$p, gint pstr, gdouble pwt, gdouble $\ast$pn, gint nstr, gdouble nwt)
+\item 
+gint \textbf{ nbi\+\_\+surface\+\_\+greens\+\_\+identity\+\_\+laplace} (\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$m, gdouble $\ast$p, gint pstr, gdouble pwt, gdouble $\ast$pn, gint nstr, gdouble nwt, gdouble $\ast$f, gint fstr, gint nthreads, gdouble $\ast$work)
+\begin{DoxyCompactList}\small\item\em Evaluate Green\textquotesingle{}s identity for Laplace equation on surface. \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+matrix\+\_\+multiply\+\_\+laplace} (\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$A, gdouble $\ast$x, gint xstr, gdouble al, gdouble $\ast$y, gint ystr, gdouble bt, gint nthreads, gdouble $\ast$work)
+\begin{DoxyCompactList}\small\item\em Perform matrix multiplication for Laplace problem. \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+surface\+\_\+field\+\_\+laplace} (\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$s, gdouble $\ast$ps, gint pstr, gdouble al, gdouble bt, gdouble $\ast$x, gdouble $\ast$p)
+\begin{DoxyCompactList}\small\item\em Calculate field from surface. \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+gmres\+\_\+real} (\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$A, gint n, gdouble $\ast$x, gint xstr, gdouble $\ast$b, gint bstr, gint m, gint max\+\_\+it, gdouble tol, gdouble $\ast$error, gint nthreads, gdouble $\ast$work)
+\begin{DoxyCompactList}\small\item\em basic GMRES solver for real problems \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+gmres\+\_\+complex} (\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$A, gint n, gdouble $\ast$x, gint xstr, gdouble $\ast$b, gint bstr, gint m, gint max\+\_\+it, gdouble tol, gdouble $\ast$error, gint nthreads, gdouble $\ast$work)
+\begin{DoxyCompactList}\small\item\em basic GMRES solver for complex problems \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactItemize}
+\item 
+typedef \textbf{ nbi\+\_\+matrix\+\_\+t}
+\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -24,43 +56,201 @@ Matrix operations and iterative solvers.
 
 
 \doxysubsection{Function Documentation}
-\mbox{\label{group__matrix_gab1239cde2a51add7d52d12545e4d3131}} 
-\index{Matrix operations@{Matrix operations}!nbi\_data\_write@{nbi\_data\_write}}
-\index{nbi\_data\_write@{nbi\_data\_write}!Matrix operations@{Matrix operations}}
-\doxysubsubsection{nbi\_data\_write()}
-{\footnotesize\ttfamily gint nbi\+\_\+data\+\_\+write (\begin{DoxyParamCaption}\item[{FILE $\ast$}]{f,  }\item[{gdouble $\ast$}]{dat,  }\item[{gint}]{dstr,  }\item[{gint}]{ne,  }\item[{gint}]{nd }\end{DoxyParamCaption})}
+\mbox{\label{group__matrix_ga3fbad6dc4ed146c23c8fe3af62b94522}} 
+\index{Matrix operations@{Matrix operations}!nbi\_calc\_field\_helmholtz@{nbi\_calc\_field\_helmholtz}}
+\index{nbi\_calc\_field\_helmholtz@{nbi\_calc\_field\_helmholtz}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_calc\_field\_helmholtz()}
+{\footnotesize\ttfamily gint nbi\+\_\+calc\+\_\+field\+\_\+helmholtz (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$}]{m,  }\item[{gdouble $\ast$}]{p,  }\item[{gint}]{pstr,  }\item[{gdouble}]{pwt,  }\item[{gdouble $\ast$}]{pn,  }\item[{gint}]{nstr,  }\item[{gdouble}]{nwt,  }\item[{gdouble $\ast$}]{x,  }\item[{gdouble $\ast$}]{f,  }\item[{gint}]{nthreads,  }\item[{gdouble $\ast$}]{work }\end{DoxyParamCaption})}
 
 
 
-write numerical data to file. 
+Calculate field from surface. 
 
-The function writes a header which can be interpreted by \doxyref{nbi\+\_\+data\+\_\+read}{p.}{group__surfaces_gab1fbfbeecac2b690ea705cf90ddcb368} and writes {\itshape nd} lines of data in the form\+:
-
-dat[i$\ast$dstr+0] dat[i$\ast$dstr+1] ... dat[i$\ast$dstr+ne-\/1]
-
-with $i=0,\ldots,nd-1$.
+Calculate field radiated from surface using specified boundary conditions. This is not FMM accelerated.
 
 
 \begin{DoxyParams}{Parameters}
-{\em f} & output file stream; \\
+{\em m} & problem matrix; \\
 \hline
-{\em dat} & data; \\
+{\em p} & complex surface potential; \\
 \hline
-{\em dstr} & stride between first components of successive data entries; \\
+{\em pstr} & stride in {\itshape p}; \\
 \hline
-{\em ne} & number of components per data entry; \\
+{\em pwt} & weight for {\itshape p}; \\
 \hline
-{\em nd} & number of data entries.\\
+{\em pn} & complex surface potential gradient; \\
+\hline
+{\em nstr} & stride in {\itshape pn}; \\
+\hline
+{\em nwt} & weight for {\itshape pn}. \\
+\hline
+{\em x} & point for field evaluation; \\
+\hline
+{\em f} & on exit contains $\phi(\mathbf{x})$; \\
+\hline
+{\em nthreads} & number of threads to use; \\
+\hline
+{\em work} & workspace.\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 0 on success. 
 \end{DoxyReturn}
+\mbox{\label{group__matrix_gad1015a7ec926bdd6b5bdb2e19a2dbb6b}} 
+\index{Matrix operations@{Matrix operations}!nbi\_gmres\_complex@{nbi\_gmres\_complex}}
+\index{nbi\_gmres\_complex@{nbi\_gmres\_complex}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_gmres\_complex()}
+{\footnotesize\ttfamily gint nbi\+\_\+gmres\+\_\+complex (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$}]{A,  }\item[{gint}]{n,  }\item[{gdouble $\ast$}]{x,  }\item[{gint}]{xstr,  }\item[{gdouble $\ast$}]{b,  }\item[{gint}]{bstr,  }\item[{gint}]{m,  }\item[{gint}]{max\+\_\+it,  }\item[{gdouble}]{tol,  }\item[{gdouble $\ast$}]{error,  }\item[{gint}]{nthreads,  }\item[{gdouble $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+basic GMRES solver for complex problems 
+
+This is a basic implementation of a GMRES solver. You may find the PETSC solver more useful, if it is available.
+
+
+\begin{DoxyParams}{Parameters}
+{\em A} & problem matrix; \\
+\hline
+{\em n} & matrix size; \\
+\hline
+{\em x} & initial guess for solution; \\
+\hline
+{\em xstr} & stride in {\itshape x}; \\
+\hline
+{\em b} & right hand side vector; \\
+\hline
+{\em bstr} & stride in {\itshape b}; \\
+\hline
+{\em m} & restart interval; \\
+\hline
+{\em max\+\_\+it} & maximum number of iterations; \\
+\hline
+{\em tol} & convergence tolerance; \\
+\hline
+{\em error} & on exit, contains error estimate; \\
+\hline
+{\em nthreads} & number of threads; \\
+\hline
+{\em work} & workspace.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__matrix_ga4da7a1e9f7955de6d39b51e929cb5110}} 
+\index{Matrix operations@{Matrix operations}!nbi\_gmres\_real@{nbi\_gmres\_real}}
+\index{nbi\_gmres\_real@{nbi\_gmres\_real}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_gmres\_real()}
+{\footnotesize\ttfamily gint nbi\+\_\+gmres\+\_\+real (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$}]{A,  }\item[{gint}]{n,  }\item[{gdouble $\ast$}]{x,  }\item[{gint}]{xstr,  }\item[{gdouble $\ast$}]{b,  }\item[{gint}]{bstr,  }\item[{gint}]{m,  }\item[{gint}]{max\+\_\+it,  }\item[{gdouble}]{tol,  }\item[{gdouble $\ast$}]{error,  }\item[{gint}]{nthreads,  }\item[{gdouble $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+basic GMRES solver for real problems 
+
+This is a basic implementation of a GMRES solver. You may find the PETSC solver more useful, if it is available.
+
+
+\begin{DoxyParams}{Parameters}
+{\em A} & problem matrix; \\
+\hline
+{\em n} & matrix size; \\
+\hline
+{\em x} & initial guess for solution; \\
+\hline
+{\em xstr} & stride in {\itshape x}; \\
+\hline
+{\em b} & right hand side vector; \\
+\hline
+{\em bstr} & stride in {\itshape b}; \\
+\hline
+{\em m} & restart interval; \\
+\hline
+{\em max\+\_\+it} & maximum number of iterations; \\
+\hline
+{\em tol} & convergence tolerance; \\
+\hline
+{\em error} & on exit, contains error estimate; \\
+\hline
+{\em nthreads} & number of threads; \\
+\hline
+{\em work} & workspace.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__matrix_ga52f233a36ee97f920ecafce97bceb5e4}} 
+\index{Matrix operations@{Matrix operations}!nbi\_matrix\_assemble\_helmholtz@{nbi\_matrix\_assemble\_helmholtz}}
+\index{nbi\_matrix\_assemble\_helmholtz@{nbi\_matrix\_assemble\_helmholtz}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_matrix\_assemble\_helmholtz()}
+{\footnotesize\ttfamily \textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$ nbi\+\_\+matrix\+\_\+assemble\+\_\+helmholtz (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$}]{s,  }\item[{gdouble}]{k,  }\item[{gdouble}]{eta,  }\item[{gint}]{nqa,  }\item[{gint}]{dmax,  }\item[{gdouble}]{tol,  }\item[{gint}]{N,  }\item[{gint}]{nu,  }\item[{gint}]{nnmax,  }\item[{gint}]{nthreads }\end{DoxyParamCaption})}
+
+Assemble a matrix for the Helmholtz boundary integral problem
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & surface for problem; \\
+\hline
+{\em k} & wavenumber in Helmholtz equation \\
+\hline
+{\em eta} & separation parameter for adaptive quadrature; \\
+\hline
+{\em nqa} & number of points in adaptive quadrature rule; \\
+\hline
+{\em dmax} & maximum recursion depth for adaptive quadrature; \\
+\hline
+{\em tol} & tolerance for adaptive quadrature; \\
+\hline
+{\em N} & order of singular quadrature rule; \\
+\hline
+{\em nu} & number of upsampled sources per patch; \\
+\hline
+{\em nnmax} & maximum number of neighbours in patch neighbour lists; \\
+\hline
+{\em nthreads} & number of threads.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+newly allocated and assembled \doxyref{nbi\+\_\+matrix\+\_\+t}{p.}{group__matrix_gae0e1ce93ef5eb67f95f90bb28069d3c4} 
+\end{DoxyReturn}
+\mbox{\label{group__matrix_ga5de0b40675c087d006ec802413ac2dca}} 
+\index{Matrix operations@{Matrix operations}!nbi\_matrix\_assemble\_laplace@{nbi\_matrix\_assemble\_laplace}}
+\index{nbi\_matrix\_assemble\_laplace@{nbi\_matrix\_assemble\_laplace}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_matrix\_assemble\_laplace()}
+{\footnotesize\ttfamily \textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$ nbi\+\_\+matrix\+\_\+assemble\+\_\+laplace (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$}]{s,  }\item[{gdouble}]{eta,  }\item[{gint}]{nqa,  }\item[{gint}]{dmax,  }\item[{gdouble}]{tol,  }\item[{gint}]{N,  }\item[{gint}]{nu,  }\item[{gint}]{nnmax,  }\item[{gint}]{nthreads }\end{DoxyParamCaption})}
+
+Assemble a matrix for the Laplace boundary integral problem
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & surface for problem; \\
+\hline
+{\em eta} & separation parameter for adaptive quadrature; \\
+\hline
+{\em nqa} & number of points in adaptive quadrature rule; \\
+\hline
+{\em dmax} & maximum recursion depth for adaptive quadrature; \\
+\hline
+{\em tol} & tolerance for adaptive quadrature; \\
+\hline
+{\em N} & order of singular quadrature rule; \\
+\hline
+{\em nu} & number of upsampled sources per patch; \\
+\hline
+{\em nnmax} & maximum number of neighbours in patch neighbour lists; \\
+\hline
+{\em nthreads} & number of threads.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+newly allocated and assembled \doxyref{nbi\+\_\+matrix\+\_\+t}{p.}{group__matrix_gae0e1ce93ef5eb67f95f90bb28069d3c4} 
+\end{DoxyReturn}
 \mbox{\label{group__matrix_ga28ac5aeac36e380dbf6498aeea865a29}} 
 \index{Matrix operations@{Matrix operations}!nbi\_matrix\_fmm\_init@{nbi\_matrix\_fmm\_init}}
 \index{nbi\_matrix\_fmm\_init@{nbi\_matrix\_fmm\_init}!Matrix operations@{Matrix operations}}
 \doxysubsubsection{nbi\_matrix\_fmm\_init()}
-{\footnotesize\ttfamily gint nbi\+\_\+matrix\+\_\+fmm\+\_\+init (\begin{DoxyParamCaption}\item[{nbi\+\_\+matrix\+\_\+t $\ast$}]{m,  }\item[{nbi\+\_\+problem\+\_\+t}]{problem,  }\item[{wbfmm\+\_\+shift\+\_\+operators\+\_\+t $\ast$}]{shifts,  }\item[{guint $\ast$}]{order\+\_\+s,  }\item[{gint}]{sstr,  }\item[{guint $\ast$}]{order\+\_\+r,  }\item[{gint}]{rstr,  }\item[{gint}]{depth,  }\item[{gdouble}]{dtree,  }\item[{gboolean}]{shift\+\_\+bw,  }\item[{gboolean}]{precompute\+\_\+local,  }\item[{gdouble $\ast$}]{work }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily gint nbi\+\_\+matrix\+\_\+fmm\+\_\+init (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$}]{m,  }\item[{\textbf{ nbi\+\_\+problem\+\_\+t}}]{problem,  }\item[{wbfmm\+\_\+shift\+\_\+operators\+\_\+t $\ast$}]{shifts,  }\item[{guint $\ast$}]{order\+\_\+s,  }\item[{gint}]{sstr,  }\item[{guint $\ast$}]{order\+\_\+r,  }\item[{gint}]{rstr,  }\item[{gint}]{depth,  }\item[{gdouble}]{dtree,  }\item[{gboolean}]{shift\+\_\+bw,  }\item[{gboolean}]{precompute\+\_\+local,  }\item[{gdouble $\ast$}]{work }\end{DoxyParamCaption})}
 
 
 
@@ -68,9 +258,9 @@ initialize Fast Multipole Method matrix
 
 
 \begin{DoxyParams}{Parameters}
-{\em m} & \+::nbi\+\_\+matrix\+\_\+t to be initialized; \\
+{\em m} & \doxyref{nbi\+\_\+matrix\+\_\+t}{p.}{group__matrix_gae0e1ce93ef5eb67f95f90bb28069d3c4} to be initialized; \\
 \hline
-{\em problem} & \+::nbi\+\_\+problem\+\_\+t (Laplace or Helmholtz); \\
+{\em problem} & \doxyref{nbi\+\_\+problem\+\_\+t}{p.}{nbi_8h_a329cac8a97b18950fea315f3cf46e6f8} (Laplace or Helmholtz); \\
 \hline
 {\em shifts} & WBFMM shift operators; \\
 \hline
@@ -100,7 +290,7 @@ initialize Fast Multipole Method matrix
 \index{Matrix operations@{Matrix operations}!nbi\_matrix\_multiply@{nbi\_matrix\_multiply}}
 \index{nbi\_matrix\_multiply@{nbi\_matrix\_multiply}!Matrix operations@{Matrix operations}}
 \doxysubsubsection{nbi\_matrix\_multiply()}
-{\footnotesize\ttfamily gint nbi\+\_\+matrix\+\_\+multiply (\begin{DoxyParamCaption}\item[{nbi\+\_\+matrix\+\_\+t $\ast$}]{A,  }\item[{gdouble $\ast$}]{x,  }\item[{gint}]{xstr,  }\item[{gdouble}]{al,  }\item[{gdouble $\ast$}]{y,  }\item[{gint}]{ystr,  }\item[{gdouble}]{bt,  }\item[{gint}]{nthreads,  }\item[{gdouble $\ast$}]{work }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily gint nbi\+\_\+matrix\+\_\+multiply (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$}]{A,  }\item[{gdouble $\ast$}]{x,  }\item[{gint}]{xstr,  }\item[{gdouble}]{al,  }\item[{gdouble $\ast$}]{y,  }\item[{gint}]{ystr,  }\item[{gdouble}]{bt,  }\item[{gint}]{nthreads,  }\item[{gdouble $\ast$}]{work }\end{DoxyParamCaption})}
 
 
 
@@ -108,7 +298,7 @@ perform matrix multiplication $y := \beta y + \alpha A x$
 
 
 \begin{DoxyParams}{Parameters}
-{\em A} & \+::nbi\+\_\+matrix\+\_\+t \\
+{\em A} & \doxyref{nbi\+\_\+matrix\+\_\+t}{p.}{group__matrix_gae0e1ce93ef5eb67f95f90bb28069d3c4} \\
 \hline
 {\em x} & input vector; \\
 \hline
@@ -130,23 +320,360 @@ perform matrix multiplication $y := \beta y + \alpha A x$
 \begin{DoxyReturn}{Returns}
 0 on success. 
 \end{DoxyReturn}
-\mbox{\label{group__matrix_ga70137a3b9b19a1acbf895517f9adc5c3}} 
-\index{Matrix operations@{Matrix operations}!nbi\_matrix\_write@{nbi\_matrix\_write}}
-\index{nbi\_matrix\_write@{nbi\_matrix\_write}!Matrix operations@{Matrix operations}}
-\doxysubsubsection{nbi\_matrix\_write()}
-{\footnotesize\ttfamily gint nbi\+\_\+matrix\+\_\+write (\begin{DoxyParamCaption}\item[{FILE $\ast$}]{f,  }\item[{nbi\+\_\+matrix\+\_\+t $\ast$}]{m }\end{DoxyParamCaption})}
+\mbox{\label{group__matrix_ga5d96d4be725e699641e81609431ee726}} 
+\index{Matrix operations@{Matrix operations}!nbi\_matrix\_multiply\_helmholtz@{nbi\_matrix\_multiply\_helmholtz}}
+\index{nbi\_matrix\_multiply\_helmholtz@{nbi\_matrix\_multiply\_helmholtz}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_matrix\_multiply\_helmholtz()}
+{\footnotesize\ttfamily gint nbi\+\_\+matrix\+\_\+multiply\+\_\+helmholtz (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$}]{A,  }\item[{gdouble $\ast$}]{x,  }\item[{gint}]{xstr,  }\item[{gdouble}]{al,  }\item[{gdouble $\ast$}]{y,  }\item[{gint}]{ystr,  }\item[{gdouble}]{bt,  }\item[{gint}]{nthreads,  }\item[{gdouble $\ast$}]{work }\end{DoxyParamCaption})}
 
 
 
-write an \+::nbi\+\_\+matrix\+\_\+t to file 
+Perform matrix multiplication for Helmholtz problem. 
+
+Perform the matrix multiplication (actually corrected FMM evaluation) corresponding to operation $y\to \alpha A x + \beta y$ (similar to BLAS implementation), mainly for use in iterative solvers.
 
 
 \begin{DoxyParams}{Parameters}
-{\em f} & output file stream; \\
+{\em A} & matrix for problem; \\
 \hline
-{\em m} & an \+::nbi\+\_\+matrix\+\_\+t.\\
+{\em x} & input vector; \\
+\hline
+{\em xstr} & stride in {\itshape x}; \\
+\hline
+{\em al} & $\alpha$; \\
+\hline
+{\em y} & on output contains $y\to \alpha A x + \beta$ \\
+\hline
+{\em ystr} & stride in {\itshape y}; \\
+\hline
+{\em bt} & $\beta$; \\
+\hline
+{\em nthreads} & number of threads to use; \\
+\hline
+{\em work} & workspace.\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 0 on success. 
 \end{DoxyReturn}
+\mbox{\label{group__matrix_gaad9dadf91f0d1ae97d5500a5a515feab}} 
+\index{Matrix operations@{Matrix operations}!nbi\_matrix\_multiply\_laplace@{nbi\_matrix\_multiply\_laplace}}
+\index{nbi\_matrix\_multiply\_laplace@{nbi\_matrix\_multiply\_laplace}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_matrix\_multiply\_laplace()}
+{\footnotesize\ttfamily gint nbi\+\_\+matrix\+\_\+multiply\+\_\+laplace (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$}]{A,  }\item[{gdouble $\ast$}]{x,  }\item[{gint}]{xstr,  }\item[{gdouble}]{al,  }\item[{gdouble $\ast$}]{y,  }\item[{gint}]{ystr,  }\item[{gdouble}]{bt,  }\item[{gint}]{nthreads,  }\item[{gdouble $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Perform matrix multiplication for Laplace problem. 
+
+Perform the matrix multiplication (actually corrected FMM evaluation) corresponding to operation $y\to \alpha A x + \beta y$ (similar to BLAS implementation), mainly for use in iterative solvers.
+
+
+\begin{DoxyParams}{Parameters}
+{\em A} & matrix for problem; \\
+\hline
+{\em x} & input vector; \\
+\hline
+{\em xstr} & stride in {\itshape x}; \\
+\hline
+{\em al} & $\alpha$; \\
+\hline
+{\em y} & on output contains $y\to \alpha A x + \beta$ \\
+\hline
+{\em ystr} & stride in {\itshape y}; \\
+\hline
+{\em bt} & $\beta$; \\
+\hline
+{\em nthreads} & number of threads to use; \\
+\hline
+{\em work} & workspace.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__matrix_gaf34d1a98b58c7fd0d1d897dbf35aacea}} 
+\index{Matrix operations@{Matrix operations}!nbi\_matrix\_new@{nbi\_matrix\_new}}
+\index{nbi\_matrix\_new@{nbi\_matrix\_new}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_matrix\_new()}
+{\footnotesize\ttfamily \textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$ nbi\+\_\+matrix\+\_\+new (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$}]{s }\end{DoxyParamCaption})}
+
+
+
+generate a new \doxyref{nbi\+\_\+matrix\+\_\+t}{p.}{group__matrix_gae0e1ce93ef5eb67f95f90bb28069d3c4} for use in solvers 
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & an \doxyref{nbi\+\_\+surface\+\_\+t}{p.}{group__surfaces_gaf7311c75f0c2eed96f648ce53d435c8c}\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to new \doxyref{nbi\+\_\+matrix\+\_\+t}{p.}{group__matrix_gae0e1ce93ef5eb67f95f90bb28069d3c4} corresponding to {\itshape s}. 
+\end{DoxyReturn}
+
+
+References \textbf{ nbi\+\_\+matrix\+\_\+t}, and \textbf{ NBI\+\_\+\+PROBLEM\+\_\+\+UNDEFINED}.
+
+
+
+Referenced by \textbf{ nbi\+\_\+matrix\+\_\+assemble\+\_\+helmholtz()}, and \textbf{ nbi\+\_\+matrix\+\_\+assemble\+\_\+laplace()}.
+
+\mbox{\label{group__matrix_ga4c1ebfdcf5d79feaed3c796f219169e1}} 
+\index{Matrix operations@{Matrix operations}!nbi\_matrix\_read@{nbi\_matrix\_read}}
+\index{nbi\_matrix\_read@{nbi\_matrix\_read}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_matrix\_read()}
+{\footnotesize\ttfamily gint nbi\+\_\+matrix\+\_\+read (\begin{DoxyParamCaption}\item[{FILE $\ast$}]{f,  }\item[{\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$}]{m }\end{DoxyParamCaption})}
+
+
+
+read an \doxyref{nbi\+\_\+matrix\+\_\+t}{p.}{group__matrix_gae0e1ce93ef5eb67f95f90bb28069d3c4} from file 
+
+
+\begin{DoxyParams}{Parameters}
+{\em f} & input file stream; \\
+\hline
+{\em m} & pointer to an allocated \doxyref{nbi\+\_\+matrix\+\_\+t}{p.}{group__matrix_gae0e1ce93ef5eb67f95f90bb28069d3c4}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__matrix_gadffe3f48c7e2b1e6d6397987948cbac9}} 
+\index{Matrix operations@{Matrix operations}!nbi\_matrix\_upsample\_helmholtz@{nbi\_matrix\_upsample\_helmholtz}}
+\index{nbi\_matrix\_upsample\_helmholtz@{nbi\_matrix\_upsample\_helmholtz}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_matrix\_upsample\_helmholtz()}
+{\footnotesize\ttfamily gint nbi\+\_\+matrix\+\_\+upsample\+\_\+helmholtz (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$}]{m,  }\item[{gdouble $\ast$}]{p,  }\item[{gint}]{pstr,  }\item[{gdouble}]{pwt,  }\item[{gdouble $\ast$}]{pn,  }\item[{gint}]{nstr,  }\item[{gdouble}]{nwt }\end{DoxyParamCaption})}
+
+Upsample nodal data to upsample nodes, multiplying by real weights
+
+
+\begin{DoxyParams}{Parameters}
+{\em m} & matrix to upsample; \\
+\hline
+{\em p} & complex surface potential to upsample; \\
+\hline
+{\em pstr} & stride in {\itshape p}; \\
+\hline
+{\em pwt} & weight for {\itshape p}; \\
+\hline
+{\em pn} & complex surface potential gradient to upsample; \\
+\hline
+{\em nstr} & stride in {\itshape pn}; \\
+\hline
+{\em nwt} & weight for {\itshape pn}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__matrix_ga8d1e4810ed2bf8198e73d81792b3edc6}} 
+\index{Matrix operations@{Matrix operations}!nbi\_matrix\_upsample\_laplace@{nbi\_matrix\_upsample\_laplace}}
+\index{nbi\_matrix\_upsample\_laplace@{nbi\_matrix\_upsample\_laplace}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_matrix\_upsample\_laplace()}
+{\footnotesize\ttfamily gint nbi\+\_\+matrix\+\_\+upsample\+\_\+laplace (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$}]{m,  }\item[{gdouble $\ast$}]{p,  }\item[{gint}]{pstr,  }\item[{gdouble}]{pwt,  }\item[{gdouble $\ast$}]{pn,  }\item[{gint}]{nstr,  }\item[{gdouble}]{nwt }\end{DoxyParamCaption})}
+
+Upsample nodal data to upsample nodes, multiplying by real weights
+
+
+\begin{DoxyParams}{Parameters}
+{\em m} & matrix to upsample; \\
+\hline
+{\em p} & complex surface potential to upsample; \\
+\hline
+{\em pstr} & stride in {\itshape p}; \\
+\hline
+{\em pwt} & weight for {\itshape p}; \\
+\hline
+{\em pn} & complex surface potential gradient to upsample; \\
+\hline
+{\em nstr} & stride in {\itshape pn}; \\
+\hline
+{\em nwt} & weight for {\itshape pn}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__matrix_ga70137a3b9b19a1acbf895517f9adc5c3}} 
+\index{Matrix operations@{Matrix operations}!nbi\_matrix\_write@{nbi\_matrix\_write}}
+\index{nbi\_matrix\_write@{nbi\_matrix\_write}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_matrix\_write()}
+{\footnotesize\ttfamily gint nbi\+\_\+matrix\+\_\+write (\begin{DoxyParamCaption}\item[{FILE $\ast$}]{f,  }\item[{\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$}]{m }\end{DoxyParamCaption})}
+
+
+
+write an \doxyref{nbi\+\_\+matrix\+\_\+t}{p.}{group__matrix_gae0e1ce93ef5eb67f95f90bb28069d3c4} to file 
+
+
+\begin{DoxyParams}{Parameters}
+{\em f} & output file stream; \\
+\hline
+{\em m} & an \doxyref{nbi\+\_\+matrix\+\_\+t}{p.}{group__matrix_gae0e1ce93ef5eb67f95f90bb28069d3c4}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+
+
+References \textbf{ nbi\+\_\+surface\+\_\+patch\+\_\+node\+\_\+number}.
+
+\mbox{\label{group__matrix_ga4f06fd7054314c82368b2e92462813bc}} 
+\index{Matrix operations@{Matrix operations}!nbi\_surface\_field\_helmholtz@{nbi\_surface\_field\_helmholtz}}
+\index{nbi\_surface\_field\_helmholtz@{nbi\_surface\_field\_helmholtz}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_surface\_field\_helmholtz()}
+{\footnotesize\ttfamily gint nbi\+\_\+surface\+\_\+field\+\_\+helmholtz (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$}]{s,  }\item[{gdouble}]{k,  }\item[{gdouble $\ast$}]{ps,  }\item[{gint}]{pstr,  }\item[{gdouble $\ast$}]{al,  }\item[{gdouble $\ast$}]{bt,  }\item[{gdouble $\ast$}]{x,  }\item[{gdouble $\ast$}]{p }\end{DoxyParamCaption})}
+
+
+
+Calculate field from surface. 
+
+Calculate field radiated from surface using specified boundary conditions packed in a single vector. This is not FMM accelerated.
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & surface for calculation; \\
+\hline
+{\em k} & wavenumber; \\
+\hline
+{\em ps} & complex surface potential and potential gradientto upsample; \\
+\hline
+{\em pstr} & stride in {\itshape ps}; \\
+\hline
+{\em al} & $\alpha$; \\
+\hline
+{\em bt} & $\beta$; \\
+\hline
+{\em x} & point for field evaluation; \\
+\hline
+{\em p} & on exit contains $\beta p + \alpha \phi(\mathbf{x})$, with $\phi$ calculated using Green\textquotesingle{}s identity.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__matrix_ga32937c6f4366030f64214880e50bcd0d}} 
+\index{Matrix operations@{Matrix operations}!nbi\_surface\_field\_laplace@{nbi\_surface\_field\_laplace}}
+\index{nbi\_surface\_field\_laplace@{nbi\_surface\_field\_laplace}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_surface\_field\_laplace()}
+{\footnotesize\ttfamily gint nbi\+\_\+surface\+\_\+field\+\_\+laplace (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$}]{s,  }\item[{gdouble $\ast$}]{ps,  }\item[{gint}]{pstr,  }\item[{gdouble}]{al,  }\item[{gdouble}]{bt,  }\item[{gdouble $\ast$}]{x,  }\item[{gdouble $\ast$}]{p }\end{DoxyParamCaption})}
+
+
+
+Calculate field from surface. 
+
+Calculate field radiated from surface using specified boundary conditions packed in a single vector. This is not FMM accelerated.
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & surface for calculation; \\
+\hline
+{\em ps} & complex surface potential and potential gradientto upsample; \\
+\hline
+{\em pstr} & stride in {\itshape ps}; \\
+\hline
+{\em al} & $\alpha$; \\
+\hline
+{\em bt} & $\beta$; \\
+\hline
+{\em x} & point for field evaluation; \\
+\hline
+{\em p} & on exit contains $\beta p + \alpha \phi(\mathbf{x})$, with $\phi$ calculated using Green\textquotesingle{}s identity.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__matrix_gac7b5b086633e6c716ce6e7b01f60ff56}} 
+\index{Matrix operations@{Matrix operations}!nbi\_surface\_greens\_identity\_helmholtz@{nbi\_surface\_greens\_identity\_helmholtz}}
+\index{nbi\_surface\_greens\_identity\_helmholtz@{nbi\_surface\_greens\_identity\_helmholtz}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_surface\_greens\_identity\_helmholtz()}
+{\footnotesize\ttfamily gint nbi\+\_\+surface\+\_\+greens\+\_\+identity\+\_\+helmholtz (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$}]{m,  }\item[{gdouble $\ast$}]{p,  }\item[{gint}]{pstr,  }\item[{gdouble}]{pwt,  }\item[{gdouble $\ast$}]{pn,  }\item[{gint}]{nstr,  }\item[{gdouble}]{nwt,  }\item[{gdouble $\ast$}]{f,  }\item[{gint}]{fstr,  }\item[{gint}]{nthreads,  }\item[{gdouble $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Evaluate Green\textquotesingle{}s identity for Helmholtz equation on surface. 
+
+Evaluate Green\textquotesingle{}s identity for Helmholtz equation on surface. This is mainly used for checking discretizations and boundary condition evaluation.
+
+
+\begin{DoxyParams}{Parameters}
+{\em m} & matrix for boundary integral problem; \\
+\hline
+{\em p} & complex surface potential to upsample; \\
+\hline
+{\em pstr} & stride in {\itshape p}; \\
+\hline
+{\em pwt} & weight for {\itshape p}; \\
+\hline
+{\em pn} & complex surface potential gradient to upsample; \\
+\hline
+{\em nstr} & stride in {\itshape pn}; \\
+\hline
+{\em nwt} & weight for {\itshape pn}. \\
+\hline
+{\em f} & on exit contains surface potential at each node of {\itshape s} evaluated using Green\textquotesingle{}s identity; \\
+\hline
+{\em fstr} & stride in {\itshape f}; \\
+\hline
+{\em nthreads} & number of threads to use; \\
+\hline
+{\em work} & workspace.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__matrix_gaee4efa9764d2ed945f360ff100d82825}} 
+\index{Matrix operations@{Matrix operations}!nbi\_surface\_greens\_identity\_laplace@{nbi\_surface\_greens\_identity\_laplace}}
+\index{nbi\_surface\_greens\_identity\_laplace@{nbi\_surface\_greens\_identity\_laplace}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_surface\_greens\_identity\_laplace()}
+{\footnotesize\ttfamily gint nbi\+\_\+surface\+\_\+greens\+\_\+identity\+\_\+laplace (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+matrix\+\_\+t} $\ast$}]{m,  }\item[{gdouble $\ast$}]{p,  }\item[{gint}]{pstr,  }\item[{gdouble}]{pwt,  }\item[{gdouble $\ast$}]{pn,  }\item[{gint}]{nstr,  }\item[{gdouble}]{nwt,  }\item[{gdouble $\ast$}]{f,  }\item[{gint}]{fstr,  }\item[{gint}]{nthreads,  }\item[{gdouble $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Evaluate Green\textquotesingle{}s identity for Laplace equation on surface. 
+
+Evaluate Green\textquotesingle{}s identity for Laplace equation on surface. This is mainly used for checking discretizations and boundary condition evaluation.
+
+
+\begin{DoxyParams}{Parameters}
+{\em m} & matrix for boundary integral problem; \\
+\hline
+{\em p} & complex surface potential to upsample; \\
+\hline
+{\em pstr} & stride in {\itshape p}; \\
+\hline
+{\em pwt} & weight for {\itshape p}; \\
+\hline
+{\em pn} & complex surface potential gradient to upsample; \\
+\hline
+{\em nstr} & stride in {\itshape pn}; \\
+\hline
+{\em nwt} & weight for {\itshape pn}. \\
+\hline
+{\em f} & on exit contains surface potential at each node of {\itshape s} evaluated using Green\textquotesingle{}s identity; \\
+\hline
+{\em fstr} & stride in {\itshape f}; \\
+\hline
+{\em nthreads} & number of threads to use; \\
+\hline
+{\em work} & workspace.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\label{group__matrix_gae0e1ce93ef5eb67f95f90bb28069d3c4}} 
+\index{Matrix operations@{Matrix operations}!nbi\_matrix\_t@{nbi\_matrix\_t}}
+\index{nbi\_matrix\_t@{nbi\_matrix\_t}!Matrix operations@{Matrix operations}}
+\doxysubsubsection{nbi\_matrix\_t}
+{\footnotesize\ttfamily nbi\+\_\+matrix\+\_\+t}
+
+Basic data type for NBI matrices, containing surface information, local correction matrices and Fast Multipole Method data 
+
+Referenced by \textbf{ nbi\+\_\+matrix\+\_\+assemble\+\_\+helmholtz()}, \textbf{ nbi\+\_\+matrix\+\_\+assemble\+\_\+laplace()}, and \textbf{ nbi\+\_\+matrix\+\_\+new()}.
+

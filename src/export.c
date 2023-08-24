@@ -35,7 +35,7 @@
 
 static gint patch_split_recursion(NBI_REAL *ce, gint ne, gint Nk,
 				  NBI_REAL *cf, gint nf,
-				  gint d, gint dmax, gint order, NBI_REAL tol,
+				  gint d, gint dmax,
 				  NBI_REAL *st,
 				  NBI_REAL *xi, gint xistr,
 				  NBI_REAL *fi, gint fistr,
@@ -77,19 +77,19 @@ static gint patch_split_recursion(NBI_REAL *ce, gint ne, gint Nk,
   }
 
   sqt_triangle_divide_loop30(st, st0) ;
-  patch_split_recursion(ce, ne, Nk, cf, nf, d+1, dmax, order, tol, st0,
+  patch_split_recursion(ce, ne, Nk, cf, nf, d+1, dmax, st0,
 			xi, xistr, fi, fistr, tri, tstr, np, nel,
 			npmax, ntmax) ;
   sqt_triangle_divide_loop31(st, st1) ;
-  patch_split_recursion(ce, ne, Nk, cf, nf, d+1, dmax, order, tol, st1,
+  patch_split_recursion(ce, ne, Nk, cf, nf, d+1, dmax, st1,
 			xi, xistr, fi, fistr, tri, tstr, np, nel,
 			npmax, ntmax) ;
   sqt_triangle_divide_loop32(st, st2) ;
-  patch_split_recursion(ce, ne, Nk, cf, nf, d+1, dmax, order, tol, st2,
+  patch_split_recursion(ce, ne, Nk, cf, nf, d+1, dmax, st2,
 			xi, xistr, fi, fistr, tri, tstr, np, nel,
 			npmax, ntmax) ;
   sqt_triangle_divide_loop33(st, st3) ;
-  patch_split_recursion(ce, ne, Nk, cf, nf, d+1, dmax, order, tol, st3,
+  patch_split_recursion(ce, ne, Nk, cf, nf, d+1, dmax, st3,
 			xi, xistr, fi, fistr, tri, tstr, np, nel,
 			npmax, ntmax) ;
   
@@ -99,7 +99,7 @@ static gint patch_split_recursion(NBI_REAL *ce, gint ne, gint Nk,
 static gint split_patch_elements(NBI_REAL *xp, gint xstr, gint np,
 				 NBI_REAL *f, gint fstr, gint nf,
 				 NBI_REAL *K, gint Nk,
-				 gint dmax, gint order, NBI_REAL tol,
+				 gint dmax,
 				 NBI_REAL *xi, gint xistr,
 				 NBI_REAL *fi, gint fistr,
 				 gint *tri, gint tstr,
@@ -117,7 +117,7 @@ static gint split_patch_elements(NBI_REAL *xp, gint xstr, gint np,
     blaswrap_dgemm(FALSE, FALSE, np, nf, np, al, K, np, f, fstr, bt, fe, nf) ;
   }
   
-  patch_split_recursion(ce, np, Nk, fe, nf, 0, dmax, order, tol, st,
+  patch_split_recursion(ce, np, Nk, fe, nf, 0, dmax, st,
 			xi, xistr, fi, fistr, tri, tstr, ni, ne,
 			npmax, ntmax) ;
   
@@ -125,8 +125,7 @@ static gint split_patch_elements(NBI_REAL *xp, gint xstr, gint np,
 }
 
 gint NBI_FUNCTION_NAME(nbi_mesh_triangulate)(nbi_surface_t *s,
-					     gint dmax, gint order,
-					     NBI_REAL tol,
+					     gint dmax,
 					     NBI_REAL *K, gint Nk,
 					     NBI_REAL *x, gint xstr,
 					     gint npmax,
@@ -151,7 +150,7 @@ gint NBI_FUNCTION_NAME(nbi_mesh_triangulate)(nbi_surface_t *s,
     xp = (NBI_REAL *)nbi_surface_node(s,ip) ;
 
     split_patch_elements(xp, str, ppp, &(f[ip*fstr]), fstr, fstr, K, Nk,
-			 dmax, order, tol, x, xstr, fi, fistr,
+			 dmax, x, xstr, fi, fistr,
 			 tri, tstr, npmax, ntmax, np, nt) ;
   }
   

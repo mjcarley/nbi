@@ -34,6 +34,24 @@
 
 #include "nbi-private.h"
 
+/**
+ * @ingroup export
+ *
+ * @{
+ * 
+ */
+
+/** 
+ * Insert a string into the header of an output data file
+ * 
+ * @param header header string;
+ * @param i index of insertion point in \a header;
+ * @param len length of \a header;
+ * @param str string to insert.
+ * 
+ * @return 0 on success.
+ */
+
 gint nbi_header_insert_string(gchar *header, gint i, gint len, gchar *str)
 
 {
@@ -53,6 +71,18 @@ gint nbi_header_insert_string(gchar *header, gint i, gint len, gchar *str)
   
   return 0 ;
 }
+
+/** 
+ * Initialize a header for an output file
+ * 
+ * @param header header string;
+ * @param id identification of output file type;
+ * @param version version number of output format;
+ * @param type type of file;
+ * @param format ASCII or binary.
+ * 
+ * @return 0 on success.
+ */
 
 gint nbi_header_init(gchar *header,
 		     gchar *id,
@@ -78,6 +108,15 @@ gint nbi_header_init(gchar *header,
   return 0 ;
 }
 
+/** 
+ * Read a header from input file
+ * 
+ * @param f input file stream;
+ * @param header header string.
+ * 
+ * @return 0 on success.
+ */
+
 gint nbi_header_read(FILE *f, gchar header[])
 
 {
@@ -89,6 +128,15 @@ gint nbi_header_read(FILE *f, gchar header[])
   return 0 ;
 }
 
+/** 
+ * Write a header to output
+ * 
+ * @param f output file stream;
+ * @param header header string.
+ * 
+ * @return 0 on success.
+ */
+
 gint nbi_header_write(FILE *f, gchar header[])
 
 {
@@ -99,6 +147,14 @@ gint nbi_header_write(FILE *f, gchar header[])
 
   return 0 ;
 }
+
+/** 
+ * Problem type string to be used in file headers
+ * 
+ * @param p problem type;
+ * 
+ * @return string identifying \a p.
+ */
 
 gchar *nbi_problem_type_string(nbi_problem_t p)
 
@@ -113,6 +169,14 @@ gchar *nbi_problem_type_string(nbi_problem_t p)
   return NULL ;
 }
 
+/** 
+ * Parse a problem identifier
+ * 
+ * @param p problem string, from a file header.
+ * 
+ * @return ::nbi_problem_t corresponding to \a p, or ::NBI_PROBLEM_UNDEFINED.
+ */
+
 nbi_problem_t nbi_problem_from_string(gchar *p)
 
 {
@@ -122,3 +186,10 @@ nbi_problem_t nbi_problem_from_string(gchar *p)
   
   return NBI_PROBLEM_UNDEFINED ;
 }
+
+
+/**
+ *
+ * @}
+ *
+ */

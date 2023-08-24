@@ -1,6 +1,6 @@
 #!/bin/bash
 
-k=1.3
+k=10
 nqa=7
 nqp=7
 nqu=25
@@ -18,11 +18,12 @@ bin=../../tools
 ##mfile=Matrices/matrix-sphere-helmholtz-${nqp}-${nqu}-${order}-${depth}.dat
 gfile=Geometries/wing-${nqp}.nbi
 mfile=Matrices/matrix-wing-helmholtz-${nqp}-${nqu}-${order}-${depth}.dat
+#gfile=Geometries/aircraft-${nqp}.nbi
+#mfile=Matrices/matrix-aircraft-helmholtz-${nqp}-${nqu}-${order}-${depth}.dat
 
-## generate the spherical surface using the internal geometry generator
-##${bin}/nbi-surface -q ${nqp} -g ellipsoid-ico -i 2 -d 1 -d 1 -d 1 -o ${gfile}
-#${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
-#${bin}/nbi-surface -q ${nqp} -a wing.agg -o ${gfile}
+## generate the geometry from the GMSH input
+${bin}/nbi-surface -q ${nqp} -m wing.geo -o ${gfile}
+#${bin}/nbi-surface -q ${nqp} -m aircraft.geo -o ${gfile}
 
 opts="-e ${tol} -a ${nqa} -u ${nqu} \
       -n ${eta} -d ${depth} -N ${order} \
@@ -30,14 +31,14 @@ opts="-e ${tol} -a ${nqa} -u ${nqu} \
 echo -- ${opts}
 
 ## assemble the problem matrices
-#${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
+${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
 
 opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
       -f -T ${nthreads} -K ksp-options \
       -k ${k} -b pcsource.bc -s solution.dat "
 echo ${opts}
 
-## solve with internal ring source
+## solve with internal point source
 ${bin}/nbi-solve-helmholtz -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-3 \
       -f -T ${nthreads} \
       -k ${k} -b pcsource.bc -s solution.dat
@@ -45,12 +46,9 @@ ${bin}/nbi-solve-helmholtz -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-3 \
 ## generate radiated field on 33x33 grid in plane z=2.5, -2 < x, y < 2
 ${bin}/nbi-surface -g grid-xy -d -2 -d -2 -d 2 -d 2 -d 2.5 \
       -i 33 -i 33 > grid.nbi
-## field radiated by surface solution (negative of ring source term)
+## field radiated by surface solution
 ${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
       -k ${k} -F grid.nbi > grid.dat
-## adding the incident term for an internal source should give zero field
-${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
-      -k ${k} -F grid.nbi -b pcsource.bc > error.dat
 ## generate gmsh files for visualization
 ${bin}/nbi-process -d grid.dat -g grid.nbi -r 2 > grid.msh
-${bin}/nbi-process -d error.dat -g grid.nbi -r 2 > error.msh
+

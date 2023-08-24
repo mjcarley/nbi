@@ -173,7 +173,7 @@ gint main(gint argc, gchar **argv)
   np = nbi_surface_patch_node(s, 1) - nbi_surface_patch_node(s, 0) ;
   nbi_element_interp_matrix(np, &K, &Nk) ;
 
-  nbi_mesh_triangulate(s, dmax, order, tol, K, Nk,
+  nbi_mesh_triangulate(s, dmax, K, Nk,
 		       xi, xistr, npmax, tri, tstr, ntmax,
 		       &(f[field]), fstr, fi, fistr,
 		       &ni, &ne) ;

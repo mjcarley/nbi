@@ -256,7 +256,20 @@ static void add_gmsh_grid_patch(gint *tags, gint *tri, gdouble *uvtri,
 
   return ;
 }
-  
+
+/** 
+ * @ingroup geometries
+ *
+ * Generate an ::nbi_surface_t from a GMSH .geo file (experimental,
+ * but has been reliable up to now)
+ * 
+ * @param file name of GMSH file;
+ * @param nq number of quadrature points per patch.
+ * 
+ * @return pointer to newly allocated ::nbi_surface_t containing
+ * surface generated from \a file.
+ */
+
 nbi_surface_t *nbi_gmsh_mesh(gchar *file, gint nq)
 
 {

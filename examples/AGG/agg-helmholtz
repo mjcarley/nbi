@@ -1,17 +1,20 @@
 #!/bin/bash
 
-k=4.0
+k=4.435
 nqa=7
-nqp=25
+nqp=7
 nqu=25
 tol=1e-6
-eta=1.5
-depth=5
+eta=1.25
+depth=4
 order=8
-nthreads=4
+nthreads=2
 
 ## path to executables
 bin=../../tools
+## boundary condition
+bcfile=pcsource.bc
+#bcfile=ring.bc
 
 ## store geometry and matrix data in subdirectories
 ##gfile=Geometries/sphere-${nqp}.nbi
@@ -22,7 +25,7 @@ mfile=Matrices/matrix-aircraft-helmholtz-${nqp}-${nqu}-${order}-${depth}.dat
 ## generate the spherical surface using the internal geometry generator
 ##${bin}/nbi-surface -q ${nqp} -g ellipsoid-ico -i 2 -d 1 -d 1 -d 1 -o ${gfile}
 #${bin}/nbi-surface -q ${nqp} -a sphere.agg -o ${gfile}
-#${bin}/nbi-surface -q ${nqp} -a aircraft.agg -o ${gfile}
+${bin}/nbi-surface -q ${nqp} -a aircraft.agg -o ${gfile}
 
 opts="-e ${tol} -a ${nqa} -u ${nqu} \
       -n ${eta} -d ${depth} -N ${order} \
@@ -34,25 +37,31 @@ ${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
 
 opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
       -f -T ${nthreads} -K ksp-options \
-      -k ${k} -b pcsource.bc -s solution.dat "
+      -k ${k} -b ${bcfile} -s solution.dat "
 echo ${opts}
 
-## solve with internal ring source
-${bin}/nbi-solve-helmholtz -m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-3 \
-      -f -T ${nthreads} \
-      -k ${k} -b pcsource.bc -s solution.dat
+## solve with specified boundary condition
+${bin}/nbi-solve-helmholtz -m ${mfile} -g ${gfile} -D 5 -o 4 -d 2 -t 1e-3 \
+      -f -T ${nthreads} -K ksp-options -P \
+      -k ${k} -b ${bcfile} -s solution.dat
+
+#${bin}/nbi-solve-helmholtz -m ${mfile} -g ${gfile} -D 4 -o 4 -d 4 -t 1e-3 \
+#      -f -T ${nthreads} -K ksp-options -P \
+#      -k ${k} -b ${bcfile} -I -s layer.dat
 
 ##-K ksp-options -P \
 
 ## generate radiated field on 33x33 grid in plane z=2.5, -2 < x, y < 2
-${bin}/nbi-surface -g grid-xy -d -2 -d -2 -d 2 -d 2 -d 2.5 \
+#${bin}/nbi-surface -g grid-xy -d -2 -d -2 -d 2 -d 2 -d 2.5 \
+#      -i 33 -i 33 > grid.nbi
+${bin}/nbi-surface -g grid-yz -d -4 -d -4 -d 4 -d 4 -d -1 \
       -i 33 -i 33 > grid.nbi
-## field radiated by surface solution (negative of ring source term)
+## field radiated by surface solution
 ${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
       -k ${k} -F grid.nbi > grid.dat
-## adding the incident term for an internal source should give zero field
+## adding the incident term gives total field
 ${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
-      -k ${k} -F grid.nbi -b pcsource.bc > error.dat
+      -k ${k} -F grid.nbi -b ${bcfile} > total.dat
 ## generate gmsh files for visualization
-${bin}/nbi-process -d grid.dat -g grid.nbi -r 2 > grid.msh
-${bin}/nbi-process -d error.dat -g grid.nbi -r 2 > error.msh
+#${bin}/nbi-process -d grid.dat -g grid.nbi -r 2 > grid.msh
+${bin}/nbi-process -d total.dat -g grid.nbi -r 2 > total.msh

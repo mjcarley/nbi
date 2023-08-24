@@ -62,17 +62,17 @@ gpointer geometries[] = {"ellipsoid-ico",
 			 "grid-xy",
 			 geometry_grid_xy,
 			 "nu, nv",
-			 "xmin, ymin, xmax, ymax",
+			 "xmin, ymin, xmax, ymax, z",
 
 			 "grid-yz",
 			 geometry_grid_yz,
 			 "nu, nv",
-			 "ymin, zmin, ymax, zmax",
+			 "ymin, zmin, ymax, zmax, x",
 
 			 "grid-zx",
 			 geometry_grid_zx,
 			 "nu, nv",
-			 "zmin, xmin, zmax, xmax",
+			 "zmin, xmin, zmax, xmax, y",
 			 NULL, NULL, NULL, NULL} ;
 
 nbi_surface_t *geometry_ellipsoid_ico(gdouble argd[], gint argi[], gint nq)

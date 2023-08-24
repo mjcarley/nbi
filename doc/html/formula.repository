@@ -2,3 +2,19 @@
 \_form#1=81x13:$y := \beta y + \alpha A x$
 \_form#2=8x6:$\alpha$
 \_form#3=9x13:$\beta$
+\_form#4=43x15:$\int G\sigma dS$
+\_form#5=71x15:$\int \partial G/\partial n\sigma dS$
+\_form#6=6x10:$\theta$
+\_form#7=8x13:$\phi$
+\_form#8=8x6:$x$
+\_form#9=8x9:$y$
+\_form#10=6x6:$z$
+\_form#11=29x9:$z=0$
+\_form#12=71x14:$(s_{\min},t_{\min},0)$
+\_form#13=75x14:$(s_{\max},t_{\max},0)$
+\_form#14=5x6:$s$
+\_form#15=5x9:$t$
+\_form#16=81x13:$y\to \alpha A x + \beta y$
+\_form#17=74x13:$y\to \alpha A x + \beta$
+\_form#18=24x14:$\phi(\mathbf{x})$
+\_form#19=63x14:$\beta p + \alpha \phi(\mathbf{x})$

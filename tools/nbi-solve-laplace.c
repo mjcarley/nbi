@@ -112,6 +112,7 @@ gint main(gint argc, gchar **argv)
   gint nthreads, nproc, nnmax, matrix_work_size ;
   guint depth, order[48] = {0}, order_s, order_r, order_max ;
   gboolean fmm, shift_bw, greens_id, layer_potentials, precompute_local ;
+  gboolean interior ;
   gboolean petsc_solve ;
 #ifdef HAVE_PETSC
   Vec         b, sol ; /*RHS, solution*/
@@ -138,7 +139,7 @@ gint main(gint argc, gchar **argv)
   kspfile = NULL ;
   
   dtree = 1e-2 ; fmm = FALSE ; nqfmm = 1 ; shift_bw = TRUE ;
-  greens_id = FALSE ; layer_potentials = FALSE ;
+  greens_id = FALSE ; layer_potentials = FALSE ; interior = FALSE ;
   precompute_local = FALSE ; petsc_solve = FALSE ;
   
   pwt = 2.0 ; nwt = 2.0 ;
@@ -171,6 +172,7 @@ gint main(gint argc, gchar **argv)
     case 'f': fmm = TRUE ; break ;
     case 'G': greens_id = TRUE ; break ;
     case 'g': gfile = g_strdup(optarg) ; break ;
+    case 'I': interior = TRUE ; break ;
     case 'K': kspfile = g_strdup(optarg) ; break ;
     case 'L': layer_potentials = TRUE ; break ;
     case 'm': mfile = g_strdup(optarg) ; break ;
@@ -393,6 +395,40 @@ gint main(gint argc, gchar **argv)
     return 0 ;
   }
 
+  if ( interior ) {
+    fprintf(stderr, "%s: evaluating interio double-layer potential [%lg]\n",
+    	    progname, t = g_timer_elapsed(timer, NULL)) ;
+    matrix->potential = NBI_POTENTIAL_DOUBLE ;
+    f = (gdouble *)g_malloc0(nbi_surface_node_number(s)*fstr*sizeof(gdouble)) ;
+    nbi_matrix_multiply(matrix, &(src[0]), 2, 1.0, f, fstr, 0.0, nthreads,
+			work) ;
+    fprintf(stderr, "%s: evaluating interior single-layer potential [%lg]\n",
+    	    progname, t = g_timer_elapsed(timer, NULL)) ;
+    matrix->potential = NBI_POTENTIAL_SINGLE ;
+    nbi_matrix_multiply(matrix, &(src[1]), 2, 2.0, f, fstr, -2.0, nthreads,
+			work) ;
+    fprintf(stderr, "%s: surface integration complete [%lg] (%lg)\n",
+	    progname,
+	    g_timer_elapsed(timer, NULL), g_timer_elapsed(timer, NULL) - t) ;
+    
+    emax = fmax = e2 = f2 = 0.0 ;
+    for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
+      xp = (NBI_REAL *)nbi_surface_node(s,i) ;
+      G = src[2*i+0] ;
+      fmax = MAX(fmax, G) ;
+      emax = MAX(emax, fabs(G - f[i*fstr])) ;
+      e2 += (G - f[i*fstr])*(G - f[i*fstr]) ;
+      f2 += G*G ;
+      fprintf(output, "%lg %lg %lg %lg %lg\n",
+	      xp[0], xp[1], xp[2], f[i*fstr], fabs(G - f[i*fstr])) ;
+    }
+    
+    fprintf(stderr, "L_inf norm: %lg; L_2 norm: %lg\n",
+	    emax/fmax, sqrt(e2/f2)) ;
+
+    return 0 ;
+  }
+  
 #ifdef HAVE_PETSC
   if ( petsc_solve ) {
   /*if we get to here, we're doing a solve: set up PETSc*/

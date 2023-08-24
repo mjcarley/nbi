@@ -8,7 +8,7 @@ Definition and evaluation of boundary conditions.
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-gint \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+set} (nbi\+\_\+surface\+\_\+t $\ast$s, gdouble $\ast$p, gint pstr, gdouble $\ast$pn, gint nstr, nbi\+\_\+boundary\+\_\+condition\+\_\+t $\ast$b)
+gint \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+set} (\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$s, gdouble $\ast$p, gint pstr, gdouble $\ast$pn, gint nstr, \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+t} $\ast$b)
 \begin{DoxyCompactList}\small\item\em compute boundary condition on surface \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -22,7 +22,7 @@ Definition and evaluation of boundary conditions.
 \index{Boundary conditions@{Boundary conditions}!nbi\_boundary\_condition\_set@{nbi\_boundary\_condition\_set}}
 \index{nbi\_boundary\_condition\_set@{nbi\_boundary\_condition\_set}!Boundary conditions@{Boundary conditions}}
 \doxysubsubsection{nbi\_boundary\_condition\_set()}
-{\footnotesize\ttfamily gint nbi\+\_\+boundary\+\_\+condition\+\_\+set (\begin{DoxyParamCaption}\item[{nbi\+\_\+surface\+\_\+t $\ast$}]{s,  }\item[{gdouble $\ast$}]{p,  }\item[{gint}]{pstr,  }\item[{gdouble $\ast$}]{pn,  }\item[{gint}]{nstr,  }\item[{nbi\+\_\+boundary\+\_\+condition\+\_\+t $\ast$}]{b }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily gint nbi\+\_\+boundary\+\_\+condition\+\_\+set (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$}]{s,  }\item[{gdouble $\ast$}]{p,  }\item[{gint}]{pstr,  }\item[{gdouble $\ast$}]{pn,  }\item[{gint}]{nstr,  }\item[{\textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+t} $\ast$}]{b }\end{DoxyParamCaption})}
 
 
 
@@ -30,7 +30,7 @@ compute boundary condition on surface
 
 
 \begin{DoxyParams}{Parameters}
-{\em s} & \+::nbi\+\_\+surface\+\_\+t on which to set boundary condition; \\
+{\em s} & \doxyref{nbi\+\_\+surface\+\_\+t}{p.}{group__surfaces_gaf7311c75f0c2eed96f648ce53d435c8c} on which to set boundary condition; \\
 \hline
 {\em p} & on exit contains \`{}`surface potential'\textquotesingle{} boundary condition; \\
 \hline

@@ -158,14 +158,6 @@ gdouble nbi_function_gfunc_helmholtz_dG_real(gdouble k,
 {
   gdouble dG[8], dR[4] ;
 
-  /* R = x*x + y*y + z*z ; */
-
-  /* if ( R == 0.0 ) return G_MAXDOUBLE ; */
-
-  /* R = sqrt(R) ; */
-
-  /* dG = 0.25*M_1_PI*(x*nx + y*ny + z*nz)/R/R/R*(-cos(k*R) - k*R*sin(k*R)) ; */
-
   dgfunc_helmholtz(k, x, y, z, dR, dG) ;
   
   return dG[2]*nx + dG[4]*ny + dG[6]*nz ;
@@ -178,15 +170,6 @@ gdouble nbi_function_gfunc_helmholtz_dG_imag(gdouble k,
 {
   gdouble dG[8], dR[4] ;
 
-  /* R = x*x + y*y + z*z ; */
-
-  /* if ( R == 0.0 ) return G_MAXDOUBLE ; */
-
-  /* R = sqrt(R) ; */
-
-  /* dG = 0.25*M_1_PI*(x*nx + y*ny + z*nz)/R/R/R*(-sin(k*R) + k*R*cos(k*R)) ; */
-  
-  /* return dG ; */
   dgfunc_helmholtz(k, x, y, z, dR, dG) ;
   
   return dG[3]*nx + dG[5]*ny + dG[7]*nz ;
@@ -197,17 +180,17 @@ static void gfunc_helmholtz_ring(gdouble a, gdouble n, gdouble k,
 				 gint ngp, gdouble *G)
 
 {
-  gdouble E[2], R, g[2], th1, x1, y1 ;
+  gdouble E[2], R, g[2], th1, x1, y1, z1 ;
   gint i ;
 
   G[0] = G[1] = 0 ;
   for ( i = 0 ; i < ngp ; i ++ ) {
     th1 = 2.0*M_PI*i/ngp ;
     E[0] = cos(n*th1) ; E[1] = sin(n*th1) ;
-    x1 = a*cos(th1) ; y1 = a*sin(th1) ;
-    gfunc_helmholtz(k, x-x1, y-y1, z, &R, g) ;
-    /* G[0] += E[0]*g[0] - E[1]*g[1] ;  */
-    /* G[1] += E[0]*g[1] + E[1]*g[0] ;  */
+    /* x1 = a*cos(th1) ; y1 = a*sin(th1) ; */
+    /* gfunc_helmholtz(k, x-x1, y-y1, z, &R, g) ; */
+    y1 = a*cos(th1) ; z1 = a*sin(th1) ;
+    gfunc_helmholtz(k, x, y-y1, z-z1, &R, g) ;
     G[0] += COMPLEX_MUL_REAL(E, g) ;
     G[1] += COMPLEX_MUL_IMAG(E, g) ;
   }
@@ -223,15 +206,18 @@ static void gfunc_helmholtz_ring_gradient(gdouble a, gdouble n, gdouble k,
 					  gint ngp, gdouble *dG)
 
 {
-  gdouble E[2], dR[4], dg[8], th1, x1, y1 ;
+  gdouble E[2], dR[4], dg[8], th1, x1, y1, z1, sc ;
   gint i ;
 
   memset(dG, 0, 8*sizeof(gdouble)) ;
+  sc = 2.0*M_PI/ngp ;  
   for ( i = 0 ; i < ngp ; i ++ ) {
     th1 = 2.0*M_PI*i/ngp ;
     E[0] = cos(n*th1) ; E[1] = sin(n*th1) ;
-    x1 = a*cos(th1) ; y1 = a*sin(th1) ;
-    dgfunc_helmholtz(k, x-x1, y-y1, z, dR, dg) ;
+    /* x1 = a*cos(th1) ; y1 = a*sin(th1) ; */
+    /* dgfunc_helmholtz(k, x-x1, y-y1, z, dR, dg) ; */
+    y1 = a*cos(th1) ; z1 = a*sin(th1) ;
+    dgfunc_helmholtz(k, x, y-y1, z-z1, dR, dg) ;
     dG[0] += COMPLEX_MUL_REAL(E, &(dg[0])) ;
     dG[1] += COMPLEX_MUL_IMAG(E, &(dg[0])) ;
     dG[2] += COMPLEX_MUL_REAL(E, &(dg[2])) ;
@@ -240,25 +226,10 @@ static void gfunc_helmholtz_ring_gradient(gdouble a, gdouble n, gdouble k,
     dG[5] += COMPLEX_MUL_IMAG(E, &(dg[4])) ;
     dG[6] += COMPLEX_MUL_REAL(E, &(dg[6])) ;
     dG[7] += COMPLEX_MUL_IMAG(E, &(dg[6])) ;
-    /* dG[0] += E[0]*dg[0] - E[1]*dg[1] ;  */
-    /* dG[1] += E[0]*dg[1] + E[1]*dg[0] ;  */
-    /* dG[2] += E[0]*dg[2] - E[1]*dg[3] ;  */
-    /* dG[3] += E[0]*dg[3] + E[1]*dg[2] ;  */
-    /* dG[4] += E[0]*dg[4] - E[1]*dg[5] ;  */
-    /* dG[5] += E[0]*dg[5] + E[1]*dg[4] ;  */
-    /* dG[6] += E[0]*dg[6] - E[1]*dg[7] ;  */
-    /* dG[7] += E[0]*dg[7] + E[1]*dg[6] ;  */
   }
 
-  dG[0] *= 2.0*M_PI/ngp ;
-  dG[1] *= 2.0*M_PI/ngp ;
-  dG[2] *= 2.0*M_PI/ngp ;
-  dG[3] *= 2.0*M_PI/ngp ;
-  dG[4] *= 2.0*M_PI/ngp ;
-  dG[5] *= 2.0*M_PI/ngp ;
-  dG[6] *= 2.0*M_PI/ngp ;
-  dG[7] *= 2.0*M_PI/ngp ;
-  dG[8] *= 2.0*M_PI/ngp ;
+  dG[0] *= sc ; dG[1] *= sc ; dG[2] *= sc ; dG[3] *= sc ;
+  dG[4] *= sc ; dG[5] *= sc ; dG[6] *= sc ; dG[7] *= sc ;
   
   return ;
 }
@@ -300,7 +271,6 @@ gdouble nbi_function_gfunc_helmholtz_ring_real_x(gdouble a, gdouble n,
   gint ngp ;
 
   ngp = 1024 ;
-
   gfunc_helmholtz_ring_gradient(a, n, k, x, y, z, ngp, G) ;
   
   return G[2] ;
@@ -316,7 +286,6 @@ gdouble nbi_function_gfunc_helmholtz_ring_real_y(gdouble a, gdouble n,
   gint ngp ;
 
   ngp = 1024 ;
-
   gfunc_helmholtz_ring_gradient(a, n, k, x, y, z, ngp, G) ;
   
   return G[4] ;
@@ -332,7 +301,6 @@ gdouble nbi_function_gfunc_helmholtz_ring_real_z(gdouble a, gdouble n,
   gint ngp ;
 
   ngp = 1024 ;
-
   gfunc_helmholtz_ring_gradient(a, n, k, x, y, z, ngp, G) ;
   
   return G[6] ;
@@ -348,7 +316,6 @@ gdouble nbi_function_gfunc_helmholtz_ring_imag_x(gdouble a, gdouble n,
   gint ngp ;
 
   ngp = 1024 ;
-
   gfunc_helmholtz_ring_gradient(a, n, k, x, y, z, ngp, G) ;
   
   return G[3] ;
@@ -364,7 +331,6 @@ gdouble nbi_function_gfunc_helmholtz_ring_imag_y(gdouble a, gdouble n,
   gint ngp ;
 
   ngp = 1024 ;
-
   gfunc_helmholtz_ring_gradient(a, n, k, x, y, z, ngp, G) ;
   
   return G[5] ;
@@ -380,7 +346,6 @@ gdouble nbi_function_gfunc_helmholtz_ring_imag_z(gdouble a, gdouble n,
   gint ngp ;
 
   ngp = 1024 ;
-
   gfunc_helmholtz_ring_gradient(a, n, k, x, y, z, ngp, G) ;
   
   return G[7] ;

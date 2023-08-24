@@ -1,5 +1,16 @@
 function [x,n,w]=nbisurf(file)
 
+  ## -- [X, N, W] = nbisurf(FILE)
+  ##
+  ## Read the points, normals and quadrature weights of an NBI surface
+  ##
+  ## FILE is the name of an NBI surface, generated using nbi-surface,
+  ## or similar
+  ##
+  ## X: matrix of surface nodes, one per row
+  ## N: matrix of surface normals, one per row
+  ## W: vector of quadrature weights
+  
   nbi_width = 7 ;
   
   fid = fopen(file, "r") ;

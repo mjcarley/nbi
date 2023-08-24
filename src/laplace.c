@@ -560,7 +560,6 @@ static void upsample_sources_double(nbi_surface_t *s,
 static void local_matrix_multiply(nbi_matrix_t *m, NBI_REAL *p, gint pstr,
 				  gint off, NBI_REAL al, NBI_REAL bt,
 				  NBI_REAL *buf, NBI_REAL *work,
-				  /* NBI_REAL *f, gint fstr, */
 				  gint pt0, gint pt1,
 				  gint nthreads)
 

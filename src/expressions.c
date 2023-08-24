@@ -41,6 +41,13 @@
 const gchar *variables[] = {"x", "y", "z", "nx", "ny", "nz", "rp", "ip",
   "rdp", "idp", NULL} ;
 
+/**
+ * @ingroup expressions
+ *
+ * @{
+ * 
+ */
+
 const te_variable functions[] = {
   {"laplace_G" , nbi_function_gfunc_laplace_G , TE_FUNCTION3},
   {"laplace_dG", nbi_function_gfunc_laplace_dG, TE_FUNCTION6},
@@ -129,6 +136,15 @@ const gchar *nbi_function_help(gchar *f)
   return NULL ;
 }
 
+/** 
+ * Write a list of built-in functions to file
+ * 
+ * @param f output file stream;
+ * @param help if TRUE, also write help text for functions.
+ * 
+ * @return 0 on success.
+ */
+
 gint nbi_functions_list(FILE *f, gboolean help)
 
 {
@@ -151,6 +167,13 @@ gint nbi_functions_list(FILE *f, gboolean help)
   return 0 ;
 }
 
+/** 
+ * Allocate a new boundary condition evaluator for a specified problem.
+ * 
+ * @param problem problem to which boundary condition applies.
+ * 
+ * @return pointer to newly allocated ::nbi_boundary_condition_t
+ */
 
 nbi_boundary_condition_t *nbi_boundary_condition_new(nbi_problem_t problem)
 
@@ -232,6 +255,16 @@ static gint getlongline(FILE *f, gchar *buf, gint nbmax, gchar *cont)
   return 0 ;
 }
 
+/** 
+ * Read the definition of a boundary condition from file
+ * 
+ * @param f input file stream;
+ * @param b boundary condition evaluator, allocated with 
+ * ::nbi_boundary_condition_new.
+ * 
+ * @return 0 on success.
+ */
+
 gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *b)
 
 {
@@ -296,6 +329,15 @@ gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *b)
   return 0 ;
 }
 
+/** 
+ * Check if a boundary condition evaluator includes a particular variable
+ * 
+ * @param b boundary condition evaluator to check;
+ * @param v name of variable to find.
+ * 
+ * @return index of \a v in the variable list of \a b, or -1 if not found.
+ */
+
 gint nbi_boundary_condition_has_variable(nbi_boundary_condition_t *b,
 					 gchar *v)
 
@@ -310,6 +352,15 @@ gint nbi_boundary_condition_has_variable(nbi_boundary_condition_t *b,
   return -1 ;
 }
 
+/** 
+ * Write a boundary condition evaluator to file
+ * 
+ * @param f output file stream;
+ * @param b boundary condition evaluator.
+ * 
+ * @return 0 on success.
+ */
+
 gint nbi_boundary_condition_write(FILE *f, nbi_boundary_condition_t *b)
 
 {
@@ -323,6 +374,16 @@ gint nbi_boundary_condition_write(FILE *f, nbi_boundary_condition_t *b)
   
   return 0 ;
 }
+
+/** 
+ * Evaluate a boundary condition at some point
+ * 
+ * @param b boundary condition evaluator;
+ * @param x point for evaluation;
+ * @param n surface normal at \a x.
+ * 
+ * @return 0 on success.
+ */
 
 gint nbi_boundary_condition_eval(nbi_boundary_condition_t *b, gdouble *x,
 				 gdouble *n)
@@ -357,6 +418,16 @@ gint nbi_boundary_condition_eval(nbi_boundary_condition_t *b, gdouble *x,
   return 0 ;
 }
 
+/** 
+ * Check if variable is defined in a boundary condition (simple
+ * version of ::nbi_boundary_condition_has_variable)
+ * 
+ * @param b boundary condition evaluator to check;
+ * @param v name of variable to find.
+ * 
+ * @return TRUE if \a v is defined in \a b, FALSE otherwise.
+ */
+
 gboolean nbi_boundary_condition_defined(nbi_boundary_condition_t *b,
 					gchar *v)
 
@@ -371,3 +442,9 @@ gboolean nbi_boundary_condition_defined(nbi_boundary_condition_t *b,
   
   return FALSE ;
 }
+
+/**
+ *
+ * @}
+ *
+ */

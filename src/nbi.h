@@ -39,22 +39,114 @@
 #define NBI_SOLVER_DATA_WORK     1
 #define NBI_SOLVER_DATA_NTHREADS 2
 
+#ifdef DOXYGEN
+/**
+ * @file   nbi.h
+ * @author  <michael@michael.paraffinalia.co.uk>
+ * @date   Thu Aug 24 12:48:32 2023
+ * 
+ * @brief  
+ * 
+ * 
+ */
+#endif /*DOXYGEN*/
+
+
+#ifdef DOXYGEN
+/**
+ * @typedef nbi_problem_t
+ * 
+ * Enumerated data type to specify problem to be solved
+ */
+#endif /*DOXYGEN*/
 typedef enum
   {
-   NBI_PROBLEM_UNDEFINED = 0,
+   NBI_PROBLEM_UNDEFINED = 0, /**< problem not defined */
    NBI_PROBLEM_LAPLACE = 1, /**< Laplace equation */
    NBI_PROBLEM_HELMHOLTZ = 2 /**< Helmholtz equation */	      
   } nbi_problem_t ;	      
 
+#ifdef DOXYGEN
+/**
+ * @typedef nbi_potential_t
+ * 
+ * Enumerated data type to select single or double layer potential
+ */
+#endif /*DOXYGEN*/
 typedef enum
   {
    NBI_POTENTIAL_UNDEFINED = 0,
-   NBI_POTENTIAL_SINGLE = 1, /*< single-layer potential 
-			       \f$\int G\sigma dS\f$*/
-   NBI_POTENTIAL_DOUBLE = 2  /*< double-layer potential 
-			       \f$\int \partial G/\partial n\sigma dS\f$*/
+   NBI_POTENTIAL_SINGLE = 1, /**< single-layer potential 
+				\f$\int G\sigma dS\f$*/
+   NBI_POTENTIAL_DOUBLE = 2  /**< double-layer potential 
+				\f$\int \partial G/\partial n\sigma dS\f$*/
   } nbi_potential_t ; 
 
+#ifdef DOXYGEN
+/**
+ * @{
+ * 
+ * @ingroup surfaces
+ */
+
+/**
+ * @typedef nbi_surface_t
+ * 
+ * Basic data type for NBI surfaces, including element and quadrature
+ * information
+ * 
+ */
+typedef nbi_surface_t ;
+
+/**
+ * @brief number of nodes on an ::nbi_surface_t
+ */
+#define nbi_surface_node_number(s)  
+/**
+ * @brief maximum number of nodes on an ::nbi_surface_t \a s
+ */
+#define nbi_surface_node_number_max(s)
+/**
+ * @brief number of surface patches on an ::nbi_surface_t \a s
+ */
+#define nbi_surface_patch_number(s)  
+/**
+ * @brief maximum number of surface patches on an ::nbi_surface_t \a s
+ */
+#define nbi_surface_patch_number_max(s)
+/**
+ * @brief index of first node on patch \a i of surface \a s
+ */
+#define nbi_surface_patch_node(s,i)
+/**
+ * @brief number of nodes on patch \a i of surface \a s
+ */
+#define nbi_surface_patch_node_number(s,i)
+/**
+ * @brief coordinates of estimated centroid of patch \a i of surface \a s
+ */
+#define nbi_surface_patch_centre(s,i)			
+/**
+ * @brief estimated radius of circumsphere of patch \a i of surface \a s
+ */
+#define nbi_surface_patch_sphere_radius(s,i)		
+/**
+ * @brief pointer to node \a i of surface \a s
+ */
+#define nbi_surface_node(s,i)			
+/**
+ * @brief pointer to normal \a i of surface \a s
+ */
+#define nbi_surface_normal(s,i)		
+/**
+ * @brief pointer to quadrature weight of node \a i of surface \a s
+ */
+#define nbi_surface_node_weight(s,i)		
+/**
+ * @}
+ */
+
+#else  /*DOXYGEN*/
 typedef struct _nbi_surface_t nbi_surface_t ;
 
 struct _nbi_surface_t {
@@ -93,7 +185,24 @@ struct _nbi_surface_t {
 
 #define nbi_surface_node_weight(_s,_i)		\
   &((_s)->xc[((_i)*NBI_SURFACE_NODE_LENGTH+6)*((_s)->fpsize)])
+#endif /*DOXYGEN*/
 
+#ifdef DOXYGEN
+/**
+ * @{
+ * 
+ * @ingroup matrix
+ */
+/**
+ * @typedef nbi_matrix_t
+ * 
+ * Basic data type for NBI matrices, containing surface information,
+ * local correction matrices and Fast Multipole Method data
+ * 
+ */
+typedef nbi_matrix_t ;
+
+#else  /*DOXYGEN*/
 typedef struct _nbi_matrix_t nbi_matrix_t ;
 
 #define NBI_PROBLEM_DATA_SIZE       8
@@ -128,6 +237,53 @@ struct _nbi_matrix_t {
 } ;
 
 #define nbi_matrix_wavenumber(_m) ((_m)->pdata[NBI_PROBLEM_DATA_WAVENUMBER])
+#endif /*DOXYGEN*/
+
+#ifdef DOXYGEN
+/**
+ * @typedef nbi_boundary_condition_t
+ *
+ * Specification of boundary conditions using analytical expressions
+ * 
+ */
+
+typedef nbi_boundary_condition_t ;
+/**
+ * @brief problem type (::nbi_problem_t) for which boundary condition
+ * is evaluated
+ */
+#define nbi_boundary_condition_problem(b)
+/**
+ * @brief boundary potential in real problems (synonym for
+ * ::nbi_boundary_condition_p_real)
+ */
+#define nbi_boundary_condition_p(b)		
+/**
+ * @brief real part of boundary potential in complex problems
+ */
+#define nbi_boundary_condition_p_real(b)	
+/**
+ * @brief imaginary part of boundary potential in complex problems
+ */
+#define nbi_boundary_condition_p_imag(b)	
+/**
+ * @brief 
+ */
+/**
+ * @brief boundary potential normal derivative in real problems (synonym for
+ * ::nbi_boundary_condition_dp_real)
+ */
+#define nbi_boundary_condition_dp(b)	
+/**
+ * @brief real part of boundary potential gradient in complex problems
+ */
+#define nbi_boundary_condition_dp_real(b)	
+/**
+ * @brief imaginary part of boundary potential gradient in complex problems
+ */
+#define nbi_boundary_condition_dp_imag(b)	
+
+#else /*DOXYGEN*/
 
 typedef struct _nbi_boundary_condition_t nbi_boundary_condition_t ;
 
@@ -163,6 +319,13 @@ struct _nbi_boundary_condition_t {
   ((_b)->x[NBI_BOUNDARY_CONDITION_DP_REAL])
 #define nbi_boundary_condition_dp_imag(_b)	\
   ((_b)->x[NBI_BOUNDARY_CONDITION_DP_IMAG])
+#endif /*DOXYGEN*/
+
+#ifdef DOXYGEN
+/**
+ * @}
+ */
+#endif /*DOXYGEN*/
 
 typedef gint (*nbi_mesh_export_func_t)(FILE *,
 				       gdouble *, gint, gint,
@@ -341,7 +504,7 @@ nbi_surface_t *nbi_agg_mesh(gchar *file, gint nq) ;
 nbi_surface_t *nbi_gmsh_mesh(gchar *file, gint nq) ;
 
 gint nbi_mesh_triangulate(nbi_surface_t *s,
-			  gint dmax, gint order, gdouble tol,
+			  gint dmax,
 			  gdouble *K, gint Nk,
 			  gdouble *x, gint xstr, gint npmax,
 			  gint *tri, gint tstr, gint ntmax,

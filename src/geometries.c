@@ -34,6 +34,13 @@
 
 #include "nbi-private.h"
 
+/**
+ * @ingroup geometries
+ *
+ * @{
+ * 
+ */
+
 static gint sphere_patch_pair(nbi_surface_t *s, NBI_REAL r,
 			      NBI_REAL th0, NBI_REAL th1,
 			      NBI_REAL ph0, NBI_REAL ph1,
@@ -472,3 +479,9 @@ gint NBI_FUNCTION_NAME(nbi_geometry_grid)(nbi_surface_t *s,
   return 0 ;
 }
 					 
+
+/**
+ *
+ * @}
+ *
+ */

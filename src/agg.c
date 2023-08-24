@@ -56,7 +56,7 @@ static void element_interp(agg_mesh_t *m, gint surf, gint *nodes,
 			   agg_surface_workspace_t *w)
 
 {
-  gdouble L[3], si, ti, st[6], u, v, xe[9], *p, xc[3] ;
+  gdouble L[3], si, ti, st[6], u, v, *p, xc[3] ;
   agg_surface_t *S ;
   agg_patch_t *P ;
   gint i, tag ;
@@ -84,12 +84,18 @@ static void element_interp(agg_mesh_t *m, gint surf, gint *nodes,
     }
 
     for ( i = 0 ; i < nst ; i ++ ) {
-      shapefunc(s[i*sstr], t[i*tstr], L) ;
-      si = st[2*0+0]*L[0] + st[2*1+0]*L[1] + st[2*2+0]*L[2] ;
-      ti = st[2*0+1]*L[0] + st[2*1+1]*L[1] + st[2*2+1]*L[2] ;
+      /* shapefunc(s[i*sstr], t[i*tstr], L) ; */
+      /* si = st[2*0+0]*L[0] + st[2*1+0]*L[1] + st[2*2+0]*L[2] ; */
+      /* ti = st[2*0+1]*L[0] + st[2*1+1]*L[1] + st[2*2+1]*L[2] ; */
+      agg_patch_triangle_interp(P,
+				st[2*0+0], st[2*0+1],
+				st[2*1+0], st[2*1+1],
+				st[2*2+0], st[2*2+1],
+				s[i*sstr], t[i*tstr], &si, &ti) ;
       agg_patch_map(P, si, ti, &u, &v) ;
       agg_surface_point_eval(S, u, v, &(x[i*xstr]), w) ;    
     }
+
     return ;
   }
 
@@ -130,7 +136,7 @@ static void add_nbi_triangle(nbi_surface_t *s, agg_mesh_t *m, gint *nodes,
   gint i, np, nn, i3 = 3, xstr ;
   gdouble *x, work[3*453], K[454*454], ci[453*453], N ;
   gdouble al, bt ;
-
+  
   np = nbi_surface_patch_number(s) ;
   nn = nbi_surface_node_number(s) ;
   nbi_surface_patch_node(s, np) = nn ;
@@ -144,14 +150,14 @@ static void add_nbi_triangle(nbi_surface_t *s, agg_mesh_t *m, gint *nodes,
   x = (gdouble *)nbi_surface_node(s, nn) ;
   element_interp(m, surf, nodes, &(st[0]), 3, &(st[1]), 3, nst, x, xstr, w) ;
   blaswrap_dgemm(FALSE, FALSE, nst, i3, nst, al, K, nst, x, xstr, bt, ci, i3) ;
-  
+
   for ( i = 0 ; i < nst ; i ++ ) {
     x = (gdouble *)nbi_surface_node(s, nn+i) ;
     sqt_element_interp(ci, nst, N, st[3*i+0], st[3*i+1],
 		       &(x[0]), &(x[3]), &(x[6]), NULL, work) ;
     x[6] *= st[3*i+2] ;
   }
-
+  
   nbi_surface_node_number(s) += nst ;
   nbi_surface_patch_number(s) ++ ;
 
@@ -191,16 +197,15 @@ nbi_surface_t *nbi_agg_mesh(gchar *file, gint nq)
 
 {
   nbi_surface_t *s = NULL ;
-  gint i, nsec, nsp, pps, nodes[4], nnodes ;
+  gint i, pps, nodes[4], nnodes ;
   gint surf, order ;
   gdouble *st ;
   agg_body_t *b ;
   agg_surface_workspace_t *w ;
   agg_mesh_t *m ;
-  gchar *args = "pqza0.0005" ;
   
   g_assert(sizeof(NBI_REAL) == sizeof(gdouble)) ;
-  nsec = nsp = 16 ; pps = 2 ;
+  pps = 2 ;
   
   b = agg_body_new(64, 64) ;
   w = agg_surface_workspace_new() ;
