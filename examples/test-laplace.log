@@ -1,0 +1,33 @@
+Laplace solve
+===============
+Parameters:
+
+   adaptive quadrature:       nqa=7
+   points per patch:          nqp=25
+   upsample points per patch: nqu=54
+   solver tolerance:          tol=1e-6
+   separation parameter:      eta=1.5
+   FMM tree depth:            depth=5
+   singular quadrature order: order=8
+   number of threads:         nthreads=2
+   boundary condition file    src=psource.bc
+   use PETSC solver:          petsc=no
+
+Generating geometry Geometries/sphere-25.nbi
+nbi-surface: icosohedral ellipsoid
+  subdivision depth: 1
+  points per patch:  25
+  semi-axis x: 4
+  semi-axis y: 1
+  semi-axis z: 1
+nbi-surface: patches: 80
+nbi-surface: nodes:   2000
+
+Assembling matrices with:
+nbi-assemble-laplace -e 1e-6 -a 7 -u 54 -n 1.5 -d 5 -N 8 -m Matrices/matrix-sphere-laplace-25-54-8-5.dat -g Geometries/sphere-25.nbi
+nbi-assemble-laplace: reading geometry [1e-06]
+nbi-assemble-laplace: starting matrix assembly [0.011719]
+nbi-assemble-laplace: matrix assembly complete [12.8261]
+
+Solving with:
+nbi-solve-laplace -m Matrices/matrix-sphere-laplace-25-54-8-5.dat -g Geometries/sphere-25.nbi -D 5 -o 10 -d 2 -t 1e-6 -f -T 2 -b psource.bc -s solution.dat -i 4

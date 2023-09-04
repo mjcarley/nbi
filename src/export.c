@@ -213,7 +213,7 @@ gint NBI_FUNCTION_NAME(nbi_mesh_export_gmsh)(FILE *f, gchar *view,
 	  "1\n"
 	  "%d\n", vn, np) ;
   for ( i = 0 ; i < np ; i ++ )
-    fprintf(stdout, "%d %lg\n", offp+i+1, data[i*dstr]) ;
+    fprintf(f, "%d %lg\n", offp+i+1, data[i*dstr]) ;
 
   fprintf(f, "$EndNodeData\n") ;
 

@@ -94,7 +94,7 @@ gint NBI_FUNCTION_NAME(nbi_gmres_real)(nbi_matrix_t *A, gint n,
   *error = blaswrap_dnrm2(n, r, one)/bnrm2 ;
 
   for ( iter = 0 ; iter < max_it ; iter ++ ) {
-    fprintf(stderr, "%s: iteration %d\n", __FUNCTION__, iter) ;
+    fprintf(stderr, "  %s: iteration %d\n", __FUNCTION__, iter) ;
     al = -1.0 ; bt = 1.0 ;
     blaswrap_dcopy(n, b, bstr, r, one) ;
     nbi_matrix_multiply(A, x, xstr, al, r, one, bt, nthreads, mwork) ;
@@ -136,7 +136,7 @@ gint NBI_FUNCTION_NAME(nbi_gmres_real)(nbi_matrix_t *A, gint n,
       H[i*m+i] = cs[i]*H[i*m+i] + sn[i]*H[(i+1)*m+i] ;
       H[(i+1)*m+i] = 0.0 ;
       *error = fabs(s[i+1])/bnrm2 ;
-      fprintf(stderr, "%s: substep %3d; error: %e\n",
+      fprintf(stderr, "  %s: substep %3d; error: %e\n",
 	      __FUNCTION__, i, *error) ;
       if ( *error <= tol ) {
 	gmres_update(x, xstr, i+1, H, n, m, s, V, y) ;
@@ -214,7 +214,7 @@ gint NBI_FUNCTION_NAME(nbi_gmres_complex)(nbi_matrix_t *A,
   *error = blaswrap_dnrm2(n, r, one)/bnrm2 ;
 
   for ( iter = 0 ; iter < max_it ; iter ++ ) {
-    fprintf(stderr, "%s: iteration %d\n", __FUNCTION__, iter) ;
+    fprintf(stderr, "  %s: iteration %d\n", __FUNCTION__, iter) ;
     al = -1.0 ; bt = 1.0 ;
     blaswrap_dcopy(n, b, one, r, one) ;
     nbi_matrix_multiply(A, x, xstr, al, r, two, bt, nthreads, mwork) ;
@@ -259,7 +259,7 @@ gint NBI_FUNCTION_NAME(nbi_gmres_complex)(nbi_matrix_t *A,
       H[i*m+i] = cs[i]*H[i*m+i] + sn[i]*H[(i+1)*m+i] ;
       H[(i+1)*m+i] = 0.0 ;
       *error = fabs(s[i+1])/bnrm2 ;
-      fprintf(stderr, "%s: substep %d; error: %e\n",
+      fprintf(stderr, "  %s: substep %d; error: %e\n",
 	      __FUNCTION__, i, *error) ;
       if ( *error <= tol ) {
 	gmres_update(x, one, i+1, H, n, m, s, V, y) ;

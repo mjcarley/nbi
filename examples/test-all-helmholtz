@@ -1,0 +1,9 @@
+rm -f test-helmholtz.log
+rm -f test-helmholtz-norm.log
+
+echo SphereHelmholtz test >> ../test-helmholtz.log
+cd SphereHelmholtz
+../solve-helmholtz -k 3.5 -p 25 -u 54 &>> ../test-helmholtz.log
+echo SphereHelmholtz test >> ../test-helmholtz-norm.log
+grep norm solution.log >> ../test-helmholtz-norm.log
+cd ..

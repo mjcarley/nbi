@@ -36,12 +36,13 @@ To configure and install the code,
   make
   make install
 
-For information on options to control configuration,
+For information on options to control configuration, including the
+installation location and where to find any required libraries:
 
   ./configure --help
 
 * Using NBI
 
-The main documentation, including details of examples, is in the ./doc
+The main documentation, including details of examples, is in the .../doc
 subdirectory of the distribution. Scripts for running examples and
-visualising results are in the ./examples subdirectory.
+visualising results are in the .../examples subdirectory.

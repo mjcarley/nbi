@@ -1,0 +1,140 @@
+#!/bin/bash
+
+# defaults
+nqa=7
+nqp=7
+nqu=25
+tol=1e-6
+eta=1.5
+depth=5
+order=8
+nthreads=2
+src=psource.bc
+petsc=no
+geometry=sphere
+
+## path to executables
+bin=../../tools
+
+while test $# -gt 0; do
+  case "$1" in
+  -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+  *) optarg= ;;
+  esac
+
+  case $1 in
+      -a)
+	  shift
+	  nqa=$1
+	  ;;
+      -d)
+	  shift
+	  depth=$1
+	  ;;
+      -e)
+	  shift
+	  eta=$1
+	  ;;
+      -g)
+	  shift
+	  geometry=$1
+	  ;;
+      -o)
+	  shift
+	  order=$1
+	  ;;
+      -P)
+	  shift
+	  petsc=yes
+	  ;;
+      -p)
+	  shift
+	  nqp=$1
+	  ;;
+      -s)
+	  shift
+	  src=$1
+	  ;;
+      -T)
+	  shift
+	  nthreads=$1
+	  ;;
+      -t)
+	  shift
+	  tol=$1
+	  ;;
+      -u)
+	  shift
+	  nqu=$1
+	  ;;
+  esac
+  shift
+done
+
+echo Laplace solve
+echo ===============
+echo Parameters:
+echo 
+echo "   adaptive quadrature:       nqa=${nqa}"
+echo "   points per patch:          nqp=${nqp}"
+echo "   upsample points per patch: nqu=${nqu}"
+echo "   solver tolerance:          tol=${tol}"
+echo "   separation parameter:      eta=${eta}"
+echo "   FMM tree depth:            depth=${depth}"
+echo "   singular quadrature order: order=${order}"
+echo "   number of threads:         nthreads=${nthreads}"
+echo "   boundary condition file    src=${src}"
+echo "   use PETSC solver:          petsc=${petsc}"
+echo
+
+## store geometry and matrix data in subdirectories
+gfile=Geometries/${geometry}-${nqp}.nbi
+mfile=Matrices/matrix-${geometry}-laplace-${nqp}-${nqu}-${order}-${depth}.dat
+
+echo Generating geometry ${gfile}
+. make-geometry ${geometry}
+echo
+
+## assemble the problem matrices
+opts="-e ${tol} -a ${nqa} -u ${nqu} -n ${eta} -d ${depth} -N ${order} \
+      -m ${mfile} -g ${gfile}"
+echo Assembling matrices with:
+echo nbi-assemble-laplace ${opts}
+${bin}/nbi-assemble-laplace ${opts} -T ${nthreads}
+echo
+
+## solve the problem
+opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
+      -f -T ${nthreads} -b ${src} -s solution.dat -i 4"
+if test x$petsc = xyes ; then
+    opts="${opts} -K ksp-options -P"
+fi
+echo Solving with:
+echo nbi-solve-laplace ${opts}
+
+## solve with specified source, using PETSc solver if requested
+${bin}/nbi-solve-laplace ${opts} >& solution.log
+
+## generate solution on surface mesh for visualisation
+${bin}/nbi-process -d solution.dat -g ${gfile} > ${geometry}.msh
+
+## generate solution on surface mesh for visualisation
+tmpfile=`mktemp`
+${bin}/nbi-process -d solution.dat -g ${gfile} -o ${geometry}.msh \
+      2>&1 | tee ${tmpfile}
+
+## find the indices of the first node and element of the visualization
+## mesh, to avoid conflicts with the surface solution
+offp=`grep point ${tmpfile} | cut -d: -f 2`
+offe=`grep element ${tmpfile} | cut -d: -f 2`
+rm ${tmpfile}
+
+. make-visualization-grid
+echo
+
+## field radiated by surface solution
+echo Computing radiated field
+${bin}/nbi-field-laplace -g ${gfile} -d solution.dat -F grid.nbi > grid.dat
+## generate gmsh files for visualization
+${bin}/nbi-process  -p ${offp} -e ${offe} -d grid.dat -g grid.nbi \
+      -r 2 -o grid.msh

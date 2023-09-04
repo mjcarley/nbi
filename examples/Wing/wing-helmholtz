@@ -1,8 +1,8 @@
 #!/bin/bash
 
 nqa=25
-nqp=7
-nqu=25
+nqp=25
+nqu=54
 tol=1e-6
 eta=1.5
 depth=4

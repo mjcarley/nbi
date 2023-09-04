@@ -1,0 +1,19 @@
+nbi-solve-laplace: 2 threads (4 processors)
+nbi-solve-laplace: reading geometry from Geometries/sphere-25.nbi
+nbi-solve-laplace: reading matrix from Matrices/matrix-sphere-laplace-25-54-8-5.dat
+nbi-solve-laplace: geometry initialized, 2000 nodes, 80 patches [2e-06]
+nbi-solve-laplace: setting boundary conditions [2.8e-05]
+nbi-solve-laplace: reading boundary conditions from psource.bc
+nbi-solve-laplace: allocating 52282 elements to solver work space
+nbi-solve-laplace: allocating 100530 elements to FMM work space
+nbi-solve-laplace: building tree [0.001741]
+nbi-solve-laplace: FMM matrix initialized [0.024307]
+nbi-solve-laplace: forming right hand side [0.024386]
+nbi-solve-laplace: starting built-in solver
+  nbi_gmres_real: iteration 0
+  nbi_gmres_real: substep   0; error: 7.237781e-02
+  nbi_gmres_real: substep   1; error: 1.106412e-02
+  nbi_gmres_real: substep   2; error: 1.424156e-03
+  nbi_gmres_real: substep   3; error: 1.389065e-04
+  nbi_gmres_real: substep   4; error: 1.840960e-05
+  nbi_gmres_real: substep   5; error: 3.833242e-06

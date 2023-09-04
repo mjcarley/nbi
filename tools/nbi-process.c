@@ -45,7 +45,7 @@ static void print_help_text(FILE *f, gint offt, gint field, gint offp,
   fprintf(f, 
 	  "%s: process NBI surfaces and data sets\n\n"
 	  "Usage:\n\n"
-	  "  %s <options> > <output>\n\n",
+	  "  %s <options>\n\n",
 	  progname, progname) ;
   
   fprintf(f,
@@ -62,6 +62,7 @@ static void print_help_text(FILE *f, gint offt, gint field, gint offp,
 	  "  -e # element index offset (%d)\n"
 	  "  -f # field element index (%d)\n"
 	  "  -g # geometry file\n"
+	  "  -o # output file (default is stdout)\n"
 	  "  -p # point index offset (%d)\n"
 	  "  -r # recursion depth for triangle generation (%d)\n"
 	  "  -v # name of view in GMSH file\n",
@@ -73,31 +74,29 @@ static void print_help_text(FILE *f, gint offt, gint field, gint offp,
 gint main(gint argc, gchar **argv)
 
 {
-  gchar *gfile, *dfile, ch, *view ;
+  gchar *gfile, *dfile, *ofile, ch, *view ;
   nbi_surface_t *s ;
   FILE *input, *output ;
-  gint np, fstr, dmax, order, Nk, xistr, ni, fistr, npmax, ntmax ;
+  gint np, fstr, dmax, Nk, xistr, ni, fistr, npmax, ntmax ;
   gint ntri, ne, nd, ppe, field, *tri, tstr, offp, offt ;
-  NBI_REAL *K, *xi, *fi, tol, *f ;
+  NBI_REAL *K, *xi, *fi, *f ;
 
   progname = g_strdup(g_path_get_basename(argv[0])) ;
 
-  dmax = 2 ; xistr = 3 ; tol = 0.0 ;
+  dmax = 2 ; xistr = 3 ;
   fi = NULL ; fistr = 0 ; fstr = 2 ;
   offp = 0 ; offt = 0 ;
 
-  /* offp = 100000 ; */
-
   /*linear output elements, 3 nodes per element*/
-  order = 1 ; ppe = 3 ;
+  ppe = 3 ;
   
   input = stdin ; output = stdout ;
-  gfile = NULL ; dfile = NULL ;
+  gfile = NULL ; dfile = NULL ; ofile = NULL ;
   view = NULL ;
   
   field = 0 ;
 
-  while ( (ch = getopt(argc, argv, "hd:e:f:g:p:r:v:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "hd:e:f:g:o:p:r:v:")) != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
     case 'h':
@@ -108,8 +107,9 @@ gint main(gint argc, gchar **argv)
     case 'e': offt = atoi(optarg) ; break ;
     case 'f': field = atoi(optarg) ; break ;
     case 'g': gfile = g_strdup(optarg) ; break ;
-    case 'r': dmax = atoi(optarg) ; break ;
+    case 'o': ofile = g_strdup(optarg) ; break ;
     case 'p': offp = atoi(optarg) ; break ;
+    case 'r': dmax = atoi(optarg) ; break ;
     case 'v': view = g_strdup(optarg) ; break ;
     }
   }
@@ -182,10 +182,20 @@ gint main(gint argc, gchar **argv)
 
   fprintf(stderr, "final point: %d\n", offp+ni) ;
   fprintf(stderr, "final element: %d\n", offt+ne) ;
+
+  if ( ofile != NULL ) {
+    output = fopen(ofile, "w") ;
+    if ( output == NULL ) {
+      fprintf(stderr, "%s: cannot open file %s, writing to stdout\n",
+	      progname, ofile) ;
+    }
+  }
   
   nbi_mesh_export_gmsh(output, view,
 		       xi, xistr, ni, offp,
 		       tri, tstr, ne, offt, fi, fistr) ;
+
+  if ( output != stdout) fclose(output) ;
 
   return 0 ;
 }

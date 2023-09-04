@@ -1,0 +1,11 @@
+rm -f test-laplace.log
+rm -f test-laplace-norm.log
+
+echo SphereLaplace test >> ../test-laplace.log
+cd SphereLaplace
+../solve-laplace -p 25 -u 54 &>> ../test-laplace.log
+echo SphereLaplace test >> ../test-laplace-norm.log
+grep norm solution.log >> ../test-laplace-norm.log
+cd ..
+
+

@@ -2,7 +2,7 @@
 # about the z axis, located at (x0,y0,z0), with wavenumber k and azimuthal
 # order n
 
-k = 4.3
+k = WAVENUMBER
 x0 = 0.1
 y0 = -0.0
 z0 = 0.5

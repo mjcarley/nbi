@@ -57,7 +57,8 @@ GTimer *timer ;
 gchar *progname ;
 
 static void print_help_text(FILE *f, gint depth,
-			    gint order_inc, gint order_fmm,
+			    gint order_inc, gint gmres_max_iter,
+			    gint order_fmm,
 			    gint gmres_restart,
 			    gint nthreads, gdouble tol)
 
@@ -78,6 +79,8 @@ static void print_help_text(FILE *f, gint depth,
 	  "  -f use FMM\n"
 	  "  -G evaluate Green's identity\n"
 	  "  -g # geometry file name\n"
+	  "  -I estimate error in interior potential\n"
+	  "  -i # maximum number of GMRES iterations (%d)\n"
 #ifdef HAVE_PETSC
 	  "  -K # ksp options file name for PETSc solver\n"
 #endif /*HAVE_PETSC*/
@@ -92,7 +95,8 @@ static void print_help_text(FILE *f, gint depth,
 	  "  -s # solution file name\n"
 	  "  -T # number of threads (%d)\n"
 	  "  -t # GMRES solution tolerance (%lg)\n",
-	  depth, order_inc, order_fmm, gmres_restart, nthreads, tol) ;
+	  depth, order_inc, gmres_max_iter, order_fmm, gmres_restart,
+	  nthreads, tol) ;
   return ;
 }
 
@@ -152,12 +156,13 @@ gint main(gint argc, gchar **argv)
   gmres_max_iter = 128 ; gmres_restart = 10 ; tol = 1e-9 ;
     
   fstr = 3 ;
-  while ( (ch = getopt(argc, argv, "hBb:D:d:fGg:K:Lm:o:Ppr:s:T:t:")) != EOF ) {
+  while ( (ch = getopt(argc, argv, "hBb:D:d:fGg:Ii:K:Lm:o:Ppr:s:T:t:"))
+	  != EOF ) {
     switch ( ch ) {
     default: g_assert_not_reached() ; break ;
     case 'h':
-      print_help_text(stderr, depth, order_inc, order_fmm, gmres_restart,
-		      nthreads, tol) ;
+      print_help_text(stderr, depth, order_inc, gmres_max_iter,
+		      order_fmm, gmres_restart, nthreads, tol) ;
       return 0 ;
       break ;
     case 'B':
@@ -173,6 +178,7 @@ gint main(gint argc, gchar **argv)
     case 'G': greens_id = TRUE ; break ;
     case 'g': gfile = g_strdup(optarg) ; break ;
     case 'I': interior = TRUE ; break ;
+    case 'i': gmres_max_iter = atoi(optarg) ; break ;
     case 'K': kspfile = g_strdup(optarg) ; break ;
     case 'L': layer_potentials = TRUE ; break ;
     case 'm': mfile = g_strdup(optarg) ; break ;
