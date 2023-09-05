@@ -14,6 +14,10 @@
  * along with NBI.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif /*HAVE_CONFIG_H*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,10 +33,6 @@
 
 #include <blaswrap.h>
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif /*HAVE_CONFIG_H*/
-
 #include <fenv.h>
 
 #ifdef HAVE_PETSC
@@ -46,6 +46,13 @@ PetscErrorCode nbi_petsc_MatMult_complex(Mat mat, Vec x, Vec y) ;
 
 GTimer *timer ;
 gchar *progname ;
+
+/**
+ * @page nbisolvehelmholtz Solving Helmholtz problems
+ *
+ * @c nbi-solve-helmholtz
+ * 
+ */
 
 static void print_help_text(FILE *f, gint depth,
 			    gint order_inc, gint gmres_max_iter,

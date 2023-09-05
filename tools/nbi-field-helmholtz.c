@@ -14,6 +14,11 @@
  * along with NBI.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif /*HAVE_CONFIG_H*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,14 +34,17 @@
 
 #include <blaswrap.h>
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif /*HAVE_CONFIG_H*/
-
 #include "nbi-private.h"
 
 GTimer *timer ;
 gchar *progname ;
+
+/**
+ * @page nbifieldhelmholtz Evaluating the Helmholtz potential field
+ *
+ * @c nbi-field-helmholtz
+ * 
+ */
 
 static void print_help_text(FILE *f, gint field)
 

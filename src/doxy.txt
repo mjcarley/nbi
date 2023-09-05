@@ -1,5 +1,5 @@
 /**
- * @mainpage NBI: Nystrom Boundary Integral calculations
+ * @mainpage Nystrom Boundary Integral calculations
  *
  * NBI is a library and a collection of tools for solving the Laplace
  * and Helmholtz problems using Nystrom Boundary Integral methods,
@@ -18,7 +18,7 @@
  * The main steps in solving a problem are:
  *
  * -# generate a geometry using \c nbi-surface
- * -# generate a matrix for the problem using \c nbi-assemble-laplace or
+ * -# assemble matrices for the problem using \c nbi-assemble-laplace or
  * \c nbi-assemble-helmholtz
  * -# solve the problem with the prescribed boundary conditions using
  * \c nbi-solve-laplace or \c nbi-solve-helmholtz
@@ -26,7 +26,36 @@
  * \c nbi-field-laplace or \c nbi-field-helmholtz
  *
  * Results can be visualized using \c nbi-process to generate mesh files
- * which can be viewed using \c gmsh, available from https://www.gmsh.info/
+ * which can be viewed using \c gmsh, available from
+ * https://www.gmsh.info/
+ *
+ * @section examples Examples
+ *
+ * A number of examples showing the use of NBI are available in the
+ *  .../examples directory. A basic calculation for the Helmholtz
+ * problem would be:
+ *
+ * @verbatim	
+ nbi-surface -g ellipsoid-ico -i 2 -o sphere.nbi
+ nbi-assemble -k 3.0 -d 5 -g sphere.nbi -m matrix.dat
+ nbi-solve-helmholtz -b point.bc -f -s solution.dat -k 3.0
+ @endverbatim
+ *
+ * This generates a spherical surface as a twice refined icosahedron;
+ * assembles the problem matrices for a wavenumber \f$k=3\f$; solves
+ * for a boundary condition given in the file point.bc
+ *
+ * More details are available on how to use the NBI executables to set
+ * up and solve problems, and to process the results
+ *
+ * - @ref nbisurface
+ * - @ref nbiassemblehelmholtz
+ * - @ref nbiassemblelaplace
+ * - @ref nbisolvehelmholtz
+ * - @ref nbisolvelaplace
+ * - @ref nbifieldhelmholtz
+ * - @ref nbifieldlaplace
+ * - @ref nbiprocess
  *
  * @section references References
  *
@@ -58,7 +87,7 @@
  * -# Nail A. Gumerov and Ramani Duraiswami, Comparison of the
  *    efficiency of translation operators used in
  *    the fast multipole method for the 3D Laplace equation, 2005,
- *http://www.umiacs.umd.edu/~ramani/pubs/comparisontranslationmethods_041205.pdf
+ * http://www.umiacs.umd.edu/~ramani/pubs/comparisontranslationmethods_041205.pdf
  *
  */
 

@@ -31,3 +31,16 @@ nbi-assemble-laplace: matrix assembly complete [12.8261]
 
 Solving with:
 nbi-solve-laplace -m Matrices/matrix-sphere-laplace-25-54-8-5.dat -g Geometries/sphere-25.nbi -D 5 -o 10 -d 2 -t 1e-6 -f -T 2 -b psource.bc -s solution.dat -i 4
+3840 nodes, 1280 elements generated
+final point: 3840
+final element: 1280
+3840 nodes, 1280 elements generated
+final point: 3840
+final element: 1280
+nbi-surface: patches: 2048
+nbi-surface: nodes:   14336
+
+Computing radiated field
+98304 nodes, 32768 elements generated
+final point: 102144
+final element: 36608

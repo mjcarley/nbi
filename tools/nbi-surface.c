@@ -14,6 +14,10 @@
  * along with NBI.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif /*HAVE_CONFIG_H*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,10 +33,6 @@
 
 #include <blaswrap.h>
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif /*HAVE_CONFIG_H*/
-
 #include "nbi-private.h"
 
 #ifdef HAVE_GMSHC_H
@@ -41,6 +41,13 @@
 
 GTimer *timer ;
 gchar *progname ;
+
+/**
+ * @page nbisurface Generating surfaces for NBI calculations
+ *
+ * @c nbi-surface
+ * 
+ */
 
 typedef nbi_surface_t *(*geometry_function)(gdouble *, gint *, gint) ;
 nbi_surface_t *geometry_ellipsoid_ico(gdouble argd[], gint argi[], gint nq) ;
@@ -227,7 +234,7 @@ static gint list_geometries(FILE *f)
   return 0 ;
 }
 
-static void print_help_text(FILE *output)
+static void print_help_text(FILE *output, gint nqp)
 
 {
   fprintf(output,
@@ -251,7 +258,8 @@ static void print_help_text(FILE *output)
 	  "  -m # GMSH geometry file\n"
 #endif /*HAVE_LIBGMSH*/
 	  "  -o # output file\n"
-	  "  -q # number of quadrature points per surface patch\n"
+	  "  -q # number of quadrature points per surface patch (%d)\n",
+	  nqp
 	  ) ;
   return ;
 }
@@ -307,7 +315,7 @@ gint main(gint argc, gchar **argv)
   while ( (ch = getopt(argc, argv, "ha:d:fGg:i:m:o:q:")) != EOF ) {
     switch (ch ) {
     default: g_assert_not_reached() ; break ;
-    case 'h': print_help_text(stderr) ; return 0 ; break ;
+    case 'h': print_help_text(stderr, nq) ; return 0 ; break ;
 #ifdef HAVE_AGG
     case 'a':
       if ( gfunc != NULL

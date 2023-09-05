@@ -6,12 +6,36 @@ The main steps in solving a problem are\+:
 
 \begin{DoxyEnumerate}
 \item generate a geometry using {\ttfamily nbi-\/surface} 
-\item generate a matrix for the problem using {\ttfamily nbi-\/assemble-\/laplace} or {\ttfamily nbi-\/assemble-\/helmholtz} 
+\item assemble matrices for the problem using {\ttfamily nbi-\/assemble-\/laplace} or {\ttfamily nbi-\/assemble-\/helmholtz} 
 \item solve the problem with the prescribed boundary conditions using {\ttfamily nbi-\/solve-\/laplace} or {\ttfamily nbi-\/solve-\/helmholtz} 
 \item if required, compute the field outside the surface using {\ttfamily nbi-\/field-\/laplace} or {\ttfamily nbi-\/field-\/helmholtz} 
 \end{DoxyEnumerate}
 
-Results can be visualized using {\ttfamily nbi-\/process} to generate mesh files which can be viewed using {\ttfamily gmsh}, available from {\texttt{ https\+://www.\+gmsh.\+info/}}\doxysection{References}\label{index_references}
+Results can be visualized using {\ttfamily nbi-\/process} to generate mesh files which can be viewed using {\ttfamily gmsh}, available from {\texttt{ https\+://www.\+gmsh.\+info/}}\doxysection{Examples}\label{index_examples}
+A number of examples showing the use of NBI are available in the .../examples directory. A basic calculation for the Helmholtz problem would be\+:
+
+\begin{DoxyVerb}nbi-surface -g ellipsoid-ico -i 2 -o sphere.nbi
+nbi-assemble -k 3.0 -d 5 -g sphere.nbi -m matrix.dat
+nbi-solve-helmholtz -b point.bc -f -s solution.dat -k 3.0
+\end{DoxyVerb}
+~\newline
+
+
+This generates a spherical surface as a twice refined icosahedron; assembles the problem matrices for a wavenumber $k=3$; solves for a boundary condition given in the file point.\+bc
+
+More details are available on how to use the NBI executables to set up and solve problems, and to process the results
+
+
+\begin{DoxyItemize}
+\item \doxyref{Generating surfaces for NBI calculations}{p.}{nbisurface}
+\item \doxyref{Assembling matrices for Helmholtz problems}{p.}{nbiassemblehelmholtz}
+\item \doxyref{Assembling matrices for Laplace problems}{p.}{nbiassemblelaplace}
+\item \doxyref{Solving Helmholtz problems}{p.}{nbisolvehelmholtz}
+\item \doxyref{Solving Laplace problems}{p.}{nbisolvelaplace}
+\item \doxyref{Evaluating the Helmholtz potential field}{p.}{nbifieldhelmholtz}
+\item \doxyref{Evaluating the Laplace potential field}{p.}{nbifieldlaplace}
+\item \doxyref{Processing NBI output}{p.}{nbiprocess}
+\end{DoxyItemize}\doxysection{References}\label{index_references}
 The following papers and reports have been used in developing NBI. The main theory and method is that of Greengard et al. Other papers are used in developing the FMM library wbfmm and are listed here for completeness.
 
 

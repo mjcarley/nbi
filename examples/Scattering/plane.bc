@@ -1,5 +1,5 @@
 # plane wave incident along the z axis
-k = 10.0
+k = 10
 # sphere radius
 a = 0.5
 # sphere centre (this should be the same as in sphere.agg)

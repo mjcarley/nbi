@@ -1,18 +1,11 @@
 The results of the plane wave scattering problem can checked using the
-sphscat function in the octave subdirectory. After adding the octave
-subdirectory to the Octave path:
+sphscat function in the octave subdirectory, using the script
+sphcheck.m. You need to add the path to the octave subdirectory of the
+nbi distribution, and then run the script.
 
-## read grid with computed scattered field
->> [x,n,w] = nbisurf("grid.nbi") ;
-## find spherical polar coordinates
->> r = sqrt(sum(x.^2,2)) ;
->> th = acos(x(:,3)./r) ;
-## read field data and convert to complex field amplitude
->> f = nbidata("grid.dat") ;
->> f = f(:,1:2)*[1; j] ;
-## calculate scattered field for sphere of radius 0.5 and wavenumber 10
->> p = sphscat(0.5, r, th, 10) ;
-## find points in field lying outside the scattering sphere
->> ii = find(r > 0.55) ;
-## find error estimate for field
->> err = max(abs(p(ii) - f(ii)))/max(abs(p(ii)))
+>> addpath(".../path/to/octave/functions/") ;
+>> sphcheck
+
+This will give an error estimate which is the absolute value of the
+maximum difference between the computed scattered field and the result
+from evaluating the exact series solution. 

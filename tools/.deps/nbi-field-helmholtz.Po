@@ -1,5 +1,5 @@
 nbi-field-helmholtz.o: nbi-field-helmholtz.c /usr/include/stdc-predef.h \
- /usr/include/stdio.h /usr/include/bits/libc-header-start.h \
+ ../config.h /usr/include/stdio.h /usr/include/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/bits/long-double.h \
  /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
@@ -135,8 +135,9 @@ nbi-field-helmholtz.o: nbi-field-helmholtz.c /usr/include/stdc-predef.h \
  /usr/include/bits/types/struct___jmp_buf_tag.h \
  /usr/include/glib-2.0/glib/glib-autocleanups.h ../src/nbi.h \
  /home/michael/Codes/include/wbfmm.h /home/michael/Codes/include/sqt.h \
- /home/michael/Codes/include/blaswrap.h ../config.h ../src/nbi-private.h
+ /home/michael/Codes/include/blaswrap.h ../src/nbi-private.h
 /usr/include/stdc-predef.h:
+../config.h:
 /usr/include/stdio.h:
 /usr/include/bits/libc-header-start.h:
 /usr/include/features.h:
@@ -345,5 +346,4 @@ nbi-field-helmholtz.o: nbi-field-helmholtz.c /usr/include/stdc-predef.h \
 /home/michael/Codes/include/wbfmm.h:
 /home/michael/Codes/include/sqt.h:
 /home/michael/Codes/include/blaswrap.h:
-../config.h:
 ../src/nbi-private.h:

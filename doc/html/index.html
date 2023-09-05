@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.3"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>NBI: NBI: Nystrom Boundary Integral calculations</title>
+<title>NBI: Nystrom Boundary Integral calculations</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -39,7 +39,7 @@ $(function() {
 <div id="main-nav"></div>
 </div><!-- top -->
 <div><div class="header">
-  <div class="headertitle"><div class="title">NBI: Nystrom Boundary Integral calculations </div></div>
+  <div class="headertitle"><div class="title">Nystrom Boundary Integral calculations </div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p >NBI is a library and a collection of tools for solving the Laplace and Helmholtz problems using Nystrom Boundary Integral methods, with Fast Multipole Method acceleration.</p>
@@ -49,11 +49,31 @@ Getting started</h1>
 <p >The main steps in solving a problem are:</p>
 <ol type="1">
 <li>generate a geometry using <code>nbi-surface</code> </li>
-<li>generate a matrix for the problem using <code>nbi-assemble-laplace</code> or <code>nbi-assemble-helmholtz</code> </li>
+<li>assemble matrices for the problem using <code>nbi-assemble-laplace</code> or <code>nbi-assemble-helmholtz</code> </li>
 <li>solve the problem with the prescribed boundary conditions using <code>nbi-solve-laplace</code> or <code>nbi-solve-helmholtz</code> </li>
 <li>if required, compute the field outside the surface using <code>nbi-field-laplace</code> or <code>nbi-field-helmholtz</code> </li>
 </ol>
 <p >Results can be visualized using <code>nbi-process</code> to generate mesh files which can be viewed using <code>gmsh</code>, available from <a href="https://www.gmsh.info/">https://www.gmsh.info/</a></p>
+<h1><a class="anchor" id="examples"></a>
+Examples</h1>
+<p >A number of examples showing the use of NBI are available in the .../examples directory. A basic calculation for the Helmholtz problem would be:</p>
+<pre class="fragment">nbi-surface -g ellipsoid-ico -i 2 -o sphere.nbi
+nbi-assemble -k 3.0 -d 5 -g sphere.nbi -m matrix.dat
+nbi-solve-helmholtz -b point.bc -f -s solution.dat -k 3.0
+</pre><p><br  />
+</p>
+<p >This generates a spherical surface as a twice refined icosahedron; assembles the problem matrices for a wavenumber <img class="formulaInl" alt="$k=3$" src="form_20.png" width="30" height="10"/>; solves for a boundary condition given in the file point.bc</p>
+<p >More details are available on how to use the NBI executables to set up and solve problems, and to process the results</p>
+<ul>
+<li><a class="el" href="nbisurface.html">Generating surfaces for NBI calculations</a></li>
+<li><a class="el" href="nbiassemblehelmholtz.html">Assembling matrices for Helmholtz problems</a></li>
+<li><a class="el" href="nbiassemblelaplace.html">Assembling matrices for Laplace problems</a></li>
+<li><a class="el" href="nbisolvehelmholtz.html">Solving Helmholtz problems</a></li>
+<li><a class="el" href="nbisolvelaplace.html">Solving Laplace problems</a></li>
+<li><a class="el" href="nbifieldhelmholtz.html">Evaluating the Helmholtz potential field</a></li>
+<li><a class="el" href="nbifieldlaplace.html">Evaluating the Laplace potential field</a></li>
+<li><a class="el" href="nbiprocess.html">Processing NBI output</a></li>
+</ul>
 <h1><a class="anchor" id="references"></a>
 References</h1>
 <p >The following papers and reports have been used in developing NBI. The main theory and method is that of Greengard et al. Other papers are used in developing the FMM library wbfmm and are listed here for completeness.</p>
@@ -68,7 +88,7 @@ References</h1>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 4 2023 12:32:16 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
+Generated on Tue Sep 5 2023 17:59:06 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
 </small></address>
 </body>
 </html>

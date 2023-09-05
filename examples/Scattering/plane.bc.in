@@ -1,0 +1,22 @@
+# plane wave incident along the z axis
+k = WAVENUMBER
+# sphere radius
+a = 0.5
+# sphere centre (this should be the same as in sphere.agg)
+z0 = 0.0
+
+# for Helmholtz problems, you must set the real and imaginary parts of
+# the surface potential (rp,ip) and of the surface potential gradient
+# (rdp, idp)
+#
+# the potential gradient is used to set the boundary condition and compute
+# the surface potential
+
+# incident plane wave
+rp = cos(k*(z-z0))
+ip = sin(k*(z-z0))
+
+# this is the negative of the gradient of incident potential, in order
+# to satisfy a no-penetration condition for the total field
+rdp =  k*sin(k*(z-z0))*nz
+idp = -k*cos(k*(z-z0))*nz

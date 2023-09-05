@@ -1,51 +1,58 @@
-nbi-solve-helmholtz: 3 threads (4 processors)
-nbi-solve-helmholtz: reading geometry from Geometries/sphere-7.nbi
-nbi-solve-helmholtz: reading matrix from Matrices/matrix-sphere-helmholtz-7-54-8-5.dat
-nbi-solve-helmholtz: geometry initialized, 2240 nodes, 320 patches [1e-06]
-nbi-solve-helmholtz: setting boundary conditions [2.2e-05]
-nbi-solve-helmholtz: reading boundary conditions from ring.bc
-nbi-solve-helmholtz: allocating 227594 elements to FMM work space
-nbi-solve-helmholtz: building tree [2.02318]
-nbi-solve-helmholtz: FMM matrix initialized [2.06461]
-nbi-solve-helmholtz: forming right hand side [2.0668]
-nbi-solve-helmholtz: starting PETSc solver
-  0 KSP Residual norm 0.205341 
-  1 KSP Residual norm 0.105031 
-  2 KSP Residual norm 0.0632294 
-  3 KSP Residual norm 0.0386718 
-  4 KSP Residual norm 0.0240012 
-  5 KSP Residual norm 0.0161144 
-  6 KSP Residual norm 0.0127273 
-  7 KSP Residual norm 0.0108509 
-  8 KSP Residual norm 0.00882733 
-  9 KSP Residual norm 0.00711379 
- 10 KSP Residual norm 0.00601188 
- 11 KSP Residual norm 0.00538581 
- 12 KSP Residual norm 0.00489388 
- 13 KSP Residual norm 0.00454936 
- 14 KSP Residual norm 0.00430435 
- 15 KSP Residual norm 0.00407719 
- 16 KSP Residual norm 0.00370219 
- 17 KSP Residual norm 0.00315597 
- 18 KSP Residual norm 0.00271226 
- 19 KSP Residual norm 0.00239102 
- 20 KSP Residual norm 0.00206833 
- 21 KSP Residual norm 0.0017336 
- 22 KSP Residual norm 0.00141166 
- 23 KSP Residual norm 0.00114418 
- 24 KSP Residual norm 0.000895955 
- 25 KSP Residual norm 0.000641417 
- 26 KSP Residual norm 0.000462247 
- 27 KSP Residual norm 0.000391697 
- 28 KSP Residual norm 0.000368637 
- 29 KSP Residual norm 0.000358596 
- 30 KSP Residual norm 0.000351001 
- 31 KSP Residual norm 0.000345411 
- 32 KSP Residual norm 0.000337487 
- 33 KSP Residual norm 0.00032752 
- 34 KSP Residual norm 0.000315011 
- 35 KSP Residual norm 0.000306383 
- 36 KSP Residual norm 0.000301145 
- 37 KSP Residual norm 0.00029631 
- 38 KSP Residual norm 0.000288316 
- 39 KSP Residual norm 0.000272143 
+nbi-solve-helmholtz: 2 threads (4 processors)
+nbi-solve-helmholtz: reading geometry from Geometries/sphere-54.nbi
+nbi-solve-helmholtz: reading matrix from Matrices/matrix-sphere-helmholtz-54-85-8-5.dat
+nbi-solve-helmholtz: geometry initialized, 17280 nodes, 320 patches [1e-06]
+nbi-solve-helmholtz: setting boundary conditions [2.8e-05]
+nbi-solve-helmholtz: reading boundary conditions from pcsource.bc
+nbi-solve-helmholtz: allocating 658499 elements to FMM work space
+nbi-solve-helmholtz: building tree [0.010713]
+nbi-solve-helmholtz: FMM matrix initialized [0.062325]
+nbi-solve-helmholtz: forming right hand side, [0.062366]
+nbi-solve-helmholtz: starting built-in solver
+  nbi_gmres_complex: iteration 0
+  nbi_gmres_complex: substep 0; error: 5.437252e-01
+  nbi_gmres_complex: substep 1; error: 3.939445e-01
+  nbi_gmres_complex: substep 2; error: 2.834120e-01
+  nbi_gmres_complex: substep 3; error: 2.213607e-01
+  nbi_gmres_complex: substep 4; error: 1.967829e-01
+  nbi_gmres_complex: substep 5; error: 1.555950e-01
+  nbi_gmres_complex: substep 6; error: 1.199768e-01
+  nbi_gmres_complex: substep 7; error: 8.407360e-02
+  nbi_gmres_complex: substep 8; error: 7.032338e-02
+  nbi_gmres_complex: substep 9; error: 6.393699e-02
+  nbi_gmres_complex: iteration 1
+  nbi_gmres_complex: substep 0; error: 6.230534e-02
+  nbi_gmres_complex: substep 1; error: 6.062944e-02
+  nbi_gmres_complex: substep 2; error: 5.871094e-02
+  nbi_gmres_complex: substep 3; error: 5.491060e-02
+  nbi_gmres_complex: substep 4; error: 5.132903e-02
+  nbi_gmres_complex: substep 5; error: 4.745114e-02
+  nbi_gmres_complex: substep 6; error: 4.259077e-02
+  nbi_gmres_complex: substep 7; error: 3.713397e-02
+  nbi_gmres_complex: substep 8; error: 3.120671e-02
+  nbi_gmres_complex: substep 9; error: 2.098973e-02
+  nbi_gmres_complex: iteration 2
+  nbi_gmres_complex: substep 0; error: 1.713323e-02
+  nbi_gmres_complex: substep 1; error: 1.429839e-02
+  nbi_gmres_complex: substep 2; error: 1.160736e-02
+  nbi_gmres_complex: substep 3; error: 1.037721e-02
+  nbi_gmres_complex: substep 4; error: 9.580852e-03
+  nbi_gmres_complex: substep 5; error: 8.654204e-03
+  nbi_gmres_complex: substep 6; error: 8.280745e-03
+  nbi_gmres_complex: substep 7; error: 8.018597e-03
+  nbi_gmres_complex: substep 8; error: 7.746587e-03
+  nbi_gmres_complex: substep 9; error: 7.233851e-03
+  nbi_gmres_complex: iteration 3
+  nbi_gmres_complex: substep 0; error: 7.007806e-03
+  nbi_gmres_complex: substep 1; error: 6.817880e-03
+  nbi_gmres_complex: substep 2; error: 6.558147e-03
+  nbi_gmres_complex: substep 3; error: 6.138176e-03
+  nbi_gmres_complex: substep 4; error: 5.831577e-03
+  nbi_gmres_complex: substep 5; error: 5.484113e-03
+  nbi_gmres_complex: substep 6; error: 4.807107e-03
+  nbi_gmres_complex: substep 7; error: 4.015310e-03
+  nbi_gmres_complex: substep 8; error: 3.528202e-03
+  nbi_gmres_complex: substep 9; error: 2.716773e-03
+nbi-solve-helmholtz: -4 iterations; error = 0.00271677, [1412.26] (1412.19)
+nbi-solve-helmholtz: emax = 0.000894062; fmax = 0.172007;
+nbi-solve-helmholtz: L_inf norm = 0.00519781; L_2 norm = 0.00825183; rms error = 3.09553e-06

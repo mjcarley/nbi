@@ -1,5 +1,5 @@
 nbi_solve_laplace-nbi-solve-laplace.o: nbi-solve-laplace.c \
- /usr/include/stdc-predef.h /usr/include/stdio.h \
+ /usr/include/stdc-predef.h ../config.h /usr/include/stdio.h \
  /usr/include/bits/libc-header-start.h /usr/include/features.h \
  /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
  /usr/include/bits/long-double.h /usr/include/gnu/stubs.h \
@@ -136,7 +136,7 @@ nbi_solve_laplace-nbi-solve-laplace.o: nbi-solve-laplace.c \
  /usr/include/bits/types/struct___jmp_buf_tag.h \
  /usr/include/glib-2.0/glib/glib-autocleanups.h ../src/nbi.h \
  /home/michael/Codes/include/wbfmm.h /home/michael/Codes/include/sqt.h \
- /home/michael/Codes/include/blaswrap.h ../config.h ../src/nbi-private.h \
+ /home/michael/Codes/include/blaswrap.h ../src/nbi-private.h \
  /home/michael/Codes/include/petscksp.h \
  /home/michael/Codes/include/petscpc.h \
  /home/michael/Codes/include/petscmat.h \
@@ -175,6 +175,7 @@ nbi_solve_laplace-nbi-solve-laplace.o: nbi-solve-laplace.c \
  /home/michael/Codes/include/petscdmtypes.h \
  /home/michael/Codes/include/petscpctypes.h
 /usr/include/stdc-predef.h:
+../config.h:
 /usr/include/stdio.h:
 /usr/include/bits/libc-header-start.h:
 /usr/include/features.h:
@@ -383,7 +384,6 @@ nbi_solve_laplace-nbi-solve-laplace.o: nbi-solve-laplace.c \
 /home/michael/Codes/include/wbfmm.h:
 /home/michael/Codes/include/sqt.h:
 /home/michael/Codes/include/blaswrap.h:
-../config.h:
 ../src/nbi-private.h:
 /home/michael/Codes/include/petscksp.h:
 /home/michael/Codes/include/petscpc.h:

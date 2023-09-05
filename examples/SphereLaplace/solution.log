@@ -17,3 +17,7 @@ nbi-solve-laplace: starting built-in solver
   nbi_gmres_real: substep   3; error: 1.389065e-04
   nbi_gmres_real: substep   4; error: 1.840960e-05
   nbi_gmres_real: substep   5; error: 3.833242e-06
+  nbi_gmres_real: substep   6; error: 4.658063e-07
+nbi-solve-laplace: 0 iterations; error = 4.65806e-07 [222.683] (222.658)
+nbi-solve-laplace: emax = 0.000220108; fmax = 0.106105;
+nbi-solve-laplace: L_inf norm = 0.00207444; L_2 norm = 0.000765901; rms error = 8.09576e-07
