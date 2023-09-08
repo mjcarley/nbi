@@ -1,5 +1,5 @@
 ## complex point source boundary condition
-k = 3.0
+k = WAVENUMBER
 x0 = -0.3
 y0 = -0.02
 z0 = 0.5

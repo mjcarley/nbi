@@ -53,8 +53,8 @@ gchar *progname ;
  *
  * gives a current list of command line options. The most important
  * options are:
- * - -g the name of the geometry file to be read (this is required);
- * - -d the name of the data file to be read;
+ * - @c -g the name of the geometry file to be read (this is required);
+ * - @c -d the name of the data file to be read;
  * 
  * If no data file is supplied, the mesh is output with no associated
  * data. This is useful for visualizing a surface to check it looks

@@ -51,11 +51,11 @@ gchar *progname ;
  *
  * gives a current list of command line options. The most important
  * options are:
- * - -k the wavenumber in the Helmholtz equation (this must be set);
- * - -g the geometry file name (this must be set);
- * - -u the number of upsampled nodes per patch (default is 25);
- * - -n separation parameter for patch neigbourhoods (default 1.25);
- * - -m file name for matrix data on output.
+ * - @c -k the wavenumber in the Helmholtz equation (this must be set);
+ * - @c -g the geometry file name (this must be set);
+ * - @c -u the number of upsampled nodes per patch (default is 25);
+ * - @c -n separation parameter for patch neigbourhoods (default 1.25);
+ * - @c -m file name for matrix data on output.
  * 
  */
 

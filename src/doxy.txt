@@ -1,135 +1,224 @@
 /**
- * @mainpage Nystrom Boundary Integral calculations
- *
- * NBI is a library and a collection of tools for solving the Laplace
- * and Helmholtz problems using Nystrom Boundary Integral methods,
- * with Fast Multipole Method acceleration.
- *
- * @section start Getting started
- *
- * NBI has a number of tools for generating surfaces and solving the
- * Laplace and Helmholtz problems on those surfaces, subject to
- * user-defined boundary conditions. The examples subdirectory of the
- * distribution contains a number of scripts showing how to run the
- * codes and generate results. Details of command line options for the
- * computation executables can be found using the `-h' for help
- *  option.
- *
- * The main steps in solving a problem are:
- *
- * -# generate a geometry using \c nbi-surface
- * -# assemble matrices for the problem using \c nbi-assemble-laplace or
- * \c nbi-assemble-helmholtz
- * -# solve the problem with the prescribed boundary conditions using
- * \c nbi-solve-laplace or \c nbi-solve-helmholtz
- * -# if required, compute the field outside the surface using
- * \c nbi-field-laplace or \c nbi-field-helmholtz
- *
- * Results can be visualized using \c nbi-process to generate mesh files
- * which can be viewed using \c gmsh, available from
- * https://www.gmsh.info/
- *
- * @section examples Examples
- *
- * A number of examples showing the use of NBI are available in the
- *  .../examples directory. A basic calculation for the Helmholtz
- * problem would be:
- *
- * @verbatim	
+ @mainpage Nystrom Boundary Integral calculations
+ 
+ NBI is a library and a collection of tools for solving the Laplace
+ and Helmholtz problems using Nystrom Boundary Integral methods,
+ with Fast Multipole Method acceleration.
+ 
+ @section start Getting started
+ 
+ NBI has a number of tools for generating surfaces and solving the
+ Laplace and Helmholtz problems on those surfaces, subject to
+ user-defined boundary conditions. The examples subdirectory of the
+ distribution contains a number of scripts showing how to run the
+ codes and generate results. Details of command line options for the
+ computation executables can be found using the `-h' for help
+  option.
+ 
+ The main steps in solving a problem are:
+ 
+ -# generate a geometry using \c nbi-surface
+ -# assemble matrices for the problem using \c nbi-assemble-laplace or
+ \c nbi-assemble-helmholtz
+ -# solve the problem with the prescribed boundary conditions using
+ \c nbi-solve-laplace or \c nbi-solve-helmholtz
+ -# if required, compute the field outside the surface using
+ \c nbi-field-laplace or \c nbi-field-helmholtz
+ 
+ Results can be visualized using \c nbi-process to generate mesh files
+ which can be viewed using \c gmsh, available from
+ https://www.gmsh.info/
+ 
+ @section examples Examples
+ 
+ A number of examples showing the use of NBI are available in the
+  .../examples directory. A basic calculation for the Helmholtz
+ problem would be:
+ 
+ @verbatim	
  nbi-surface -g ellipsoid-ico -i 2 -o sphere.nbi
  nbi-assemble -k 3.0 -d 5 -g sphere.nbi -m matrix.dat
  nbi-solve-helmholtz -b point.bc -f -s solution.dat -k 3.0
+ nbi-field-helmholtz -g sphere.nbi -s solution.dat -k 3.0 -F field.nbi> field.dat
+ nbi-process -F field.nbi -d field.dat -o field.msh
  @endverbatim
- *
- * This generates a spherical surface as a twice refined icosahedron;
- * assembles the problem matrices for a wavenumber \f$k=3\f$; solves
- * for a boundary condition given in the file point.bc
- *
- * More details are available on how to use the NBI executables to set
- * up and solve problems, and to process the results
- *
- * - @ref nbisurface
- * - @ref nbiassemblehelmholtz
- * - @ref nbiassemblelaplace
- * - @ref nbisolvehelmholtz
- * - @ref nbisolvelaplace
- * - @ref nbifieldhelmholtz
- * - @ref nbifieldlaplace
- * - @ref nbiprocess
- *
- * @section references References
- *
- * The following papers and reports have been used in developing
- * NBI. The main theory and method is that of Greengard et al. Other
- * papers are used in developing the FMM library wbfmm and are listed
- * here for completeness.
- *
- * -# Leslie Greengard, Michael O'Neil, Manas Rachh, Felipe Vico, Fast
- * multipole methods for the evaluation of layer potentials with
- * locally-corrected quadratures, Journal of Computational Physics,
- * 2021, https://doi.org/10.1016/j.jcpx.2021.100092
- * 
- * -# Nail A. Gumerov and Ramani Duraiswami, Recursions for the
- *    Computation of Multipole Translation and Rotation Coefficients
- *    for the 3-D Helmholtz Equation, SIAM J. Sci. Comput., 25(4),
- *    1344-1381, 2004, http://dx.doi.org/10.1137/S1064827501399705
- * 
- * -# Gumerov, Duraiswami, and Borovikov, Data Structures, Optimal
- *    Choice of Parameters, and Complexity Results for Generalized
- *    Multilevel Fast Multipole Methods in d Dimensions, 2003,
- *    http://users.umiacs.umd.edu/~gumerov/PDFs/cs-tr-4458.pdf
- * 
- * -# Nail A. Gumerov and Ramani Duraiswami, A broadband fast multipole
- *    accelerated boundary element method for the three dimensional
- *    Helmholtz equation, J. Acoust. Soc. Am., 125(1), 2009,
- *    http://dx.doi.org/10.1121/1.3021297
- *
- * -# Nail A. Gumerov and Ramani Duraiswami, Comparison of the
- *    efficiency of translation operators used in
- *    the fast multipole method for the 3D Laplace equation, 2005,
- * http://www.umiacs.umd.edu/~ramani/pubs/comparisontranslationmethods_041205.pdf
+ 
+ This generates a spherical surface as a twice refined icosahedron;
+ assembles the problem matrices for a wavenumber \f$k=3\f$; solves for
+ a boundary condition given in the file @c point.bc; computes the
+ resulting potential on a surface given in @c field.nbi and generates
+ a .msh file for the field, which can be viewed using GMSH. Boundary
+ conditions are defined using @link boundary analytical expressions
+ @endlink.
+ 
+ More details are available on how to use the NBI tools to set
+ up and solve problems, and to process the results
+ 
+ - @subpage nbisurface
+ - @subpage nbiassemblehelmholtz
+ - @subpage nbiassemblelaplace
+ - @subpage nbisolvehelmholtz
+ - @subpage nbisolvelaplace
+ - @subpage nbifieldhelmholtz
+ - @subpage nbifieldlaplace
+ - @subpage nbiprocess
+ 
+ @section references References
+ 
+ The following papers and reports have been used in developing
+ NBI. The main theory and method for the work in the main library is
+ that of Greengard et al, and of Bremer and Gimbutas. Other papers are
+ used in developing the FMM library wbfmm and are listed here for
+ completeness.
+ 
+ -# Leslie Greengard, Michael O'Neil, Manas Rachh, Felipe Vico, Fast
+ multipole methods for the evaluation of layer potentials with
+ locally-corrected quadratures, Journal of Computational Physics,
+ 2021, https://doi.org/10.1016/j.jcpx.2021.100092
+
+ -# James Bremer and Zydrunas Gimbutas, On the numerical evaluation of
+    the singular integrals of scattering theory. Journal of
+    Computational Physics 2013,
+    https://doi.org/10.1016/j.jcp.2013.05.048
+
+ -# Nail A. Gumerov and Ramani Duraiswami, Recursions for the
+    Computation of Multipole Translation and Rotation Coefficients
+    for the 3-D Helmholtz Equation, SIAM J. Sci. Comput., 25(4),
+    1344-1381, 2004, http://dx.doi.org/10.1137/S1064827501399705
+ 
+ -# Gumerov, Duraiswami, and Borovikov, Data Structures, Optimal
+    Choice of Parameters, and Complexity Results for Generalized
+    Multilevel Fast Multipole Methods in d Dimensions, 2003,
+    http://users.umiacs.umd.edu/~gumerov/PDFs/cs-tr-4458.pdf
+ 
+ -# Nail A. Gumerov and Ramani Duraiswami, A broadband fast multipole
+    accelerated boundary element method for the three dimensional
+    Helmholtz equation, J. Acoust. Soc. Am., 125(1), 2009,
+    http://dx.doi.org/10.1121/1.3021297
+ 
+ -# Nail A. Gumerov and Ramani Duraiswami, Comparison of the
+    efficiency of translation operators used in
+    the fast multipole method for the 3D Laplace equation, 2005,
+ http://www.umiacs.umd.edu/~ramani/pubs/comparisontranslationmethods_041205.pdf
+ 
+*/
+
+/**
+ @defgroup surfaces Surfaces
+ 
+ @brief Generating, discretizing and manipulating NBI surfaces
+
+ NBI represents surfaces as triangular patches which are mapped using
+ Koornwinder orthogonal polynomials, giving a high order
+ representation of the surface and of the potential on it. Surface
+ points are placed at the nodes of high order quadrature rules for the
+ unit triangle, and interpolation of surface quantities, including
+ position, is performed using the Koornwinder polynomials. 
+
+ A surface patch takes two discretization parameters. The first is the
+ number of nodes on the patch. These are the points where the solution
+ will be found when the problem is solved subject to a given set of
+ boundary conditions. The second parameter is the number of upsampled
+ nodes. In order to evaluate the surface integrals in the problem, the
+ estimated solution is interpolated, or upsampled, onto a set of nodes
+ on each patch, giving a more refined discretization for evaluation of
+ the potential integrals. The number of upsampled nodes should  be at
+ least equal to the number of nodes in the patch discretization.
+
+ Surfaces can be generated using the built-in geometries in NBI (a
+ list is available using the @c -G option of @c nbi-surface); a GMSH
+ @c .geo file; or an @c AGG file https://github.com/mjcarley/agg/
+ which uses the geometric representation methods of Kulfan,
+ https://www.brendakulfan.com/research
+
+ Built-in geometries are quite simple but are sufficient for testing
+ of code and checking the toolchain. There are also grid geometries
+ which are not intended for calculation but are suitable for
+ visualizing the potential field around surfaces after a problem has
+ been solved. 
+
+ */
+ 
+
+/**
+ @defgroup matrix Matrix operations
+ 
+ @brief Matrix operations and iterative solvers
+
+ An NBI "matrix" is a data type which can be used in matrix type
+ calculations, though it does not strictly contain a matrix. It
+ contains the surface discretization data required to perform a
+ matrix-free evaluation of the integrals which appear in the boundary
+ integral problem, typically accelerated using the Fast Multipole
+ Method.
+
+ The matrix-free implementation can be used with iterative methods to
+ solve problems much larger than be handled using dense matrices. NBI
+ has a built-in GMRES solver which can be used for real and complex
+ problems. It can also link to the PETSc library available from
+ https://petsc.org/ This makes a wide range of high-performance
+ solvers available, and is recommended as an option.
+
  *
  */
 
 /**
- * @defgroup surfaces Surfaces
- *
- * @brief Generating, discretizing and manipulating NBI surfaces
- *
- */
+ @defgroup boundary Boundary conditions
+
+ @brief Definition and evaluation of boundary conditions
+ 
+ Boundary conditions in NBI are defined using analytical expressions,
+ which are evaluated at each surface node using the <a href="
+ https://github.com/codeplea/tinyexpr">tinyexpr</a> parser which
+ accepts standard mathematical expressions, and a number of built-in
+ functions for standard cases, such as the point sources in the
+ Laplace and Helmholtz problems. The executables @c nbi-solve-laplace
+ and @c nbi-solve-helmholtz accept the @c -B option which lists the
+ built-in functions which can be used to define boundary conditions.
+
+ In practice, boundary conditions are defined in a file whose name is
+ supplied as a command line option to the solver. A sample file for a
+ point source illustrates the syntax:
+ @verbatim
+## complex point source boundary condition
+## wavenumber, defined as variable
+k = 3.5
+## source location (x0, y0, z0)
+x0 = 0.1
+y0 = -0.2
+z0=0.5
+## real part of surface potential using built-in function
+rp = helmholtz_Gr(k, x-x0, y-y0, z-z0)
+## imaginary part of surface potential using built-in function
+ip = helmholtz_Gi(k, x-x0, y-y0, z-z0)
+## real part of surface potential gradient using built-in function
+rdp = helmholtz_dGr(k, x-x0, y-y0, z-z0, nx, ny, nz)
+## imaginary part of surface potential gradient using built-in function
+idp = helmholtz_dGi(k, x-x0, y-y0, z-z0, nx, ny, nz)
+@endverbatim
+
+In the boundary condition file, comments are denoted by a
+\#. Variables, such as the wavenumber @c k, can be defined as
+required, with the exception of reserved variables which are defined
+at each surface node, or which are used as the name of a boundary
+condition. These are:
+- @verbatim x,y,z @endverbatim the node location;
+- @verbatim nx,ny,nz @endverbatim the node surface normal;
+- @verbatim rp,ip @endverbatim real and imaginary parts of surface potential;
+- @verbatim rdp,idp @endverbatim real and imaginary parts of surface
+potential normal derivative;
+
+There are built-in functions for the Laplace and Helmholtz Green's
+functions which can be used to generate the boundary condition for a
+point source excitation, as in the example above. The @c -B option for
+the solvers will give a list of built-in functions which can be used
+to generate other boundary conditions.
+
+*/
 
 /**
- * @defgroup matrix Matrix operations
- *
- * @brief Matrix operations and iterative solvers
- *
- */
-
-/**
- * @defgroup boundary Boundary conditions
- *
- * @brief Definition and evaluation of boundary conditions
- *
- */
-
-/**
- * @defgroup export Export and visualisation
- *
- * @brief Export and visualisation of surfaces and results
- *
- */
-
-/**
- * @defgroup expressions Expressions and functions
- *
- * @brief Expressions and functions used to set boundary conditions
- *
- */
-
-/**
- * @defgroup geometries Surface geometries
- *
- * @brief Generation of NBI surfaces using built-in and external methods
- *
- */
-
+ @defgroup export Export and visualisation
+ 
+ @brief Export and visualisation of surfaces and results
+ 
+*/

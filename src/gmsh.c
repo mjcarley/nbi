@@ -258,7 +258,7 @@ static void add_gmsh_grid_patch(gint *tags, gint *tri, gdouble *uvtri,
 }
 
 /** 
- * @ingroup geometries
+ * @ingroup surfaces
  *
  * Generate an ::nbi_surface_t from a GMSH .geo file (experimental,
  * but has been reliable up to now)

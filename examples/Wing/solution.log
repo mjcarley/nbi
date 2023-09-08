@@ -1,0 +1,58 @@
+nbi-solve-helmholtz: 2 threads (4 processors)
+nbi-solve-helmholtz: reading geometry from Geometries/wing-25.nbi
+nbi-solve-helmholtz: reading matrix from Matrices/matrix-wing-helmholtz-25-54-8-5.dat
+nbi-solve-helmholtz: geometry initialized, 18400 nodes, 736 patches [2e-06]
+nbi-solve-helmholtz: setting boundary conditions [3.5e-05]
+nbi-solve-helmholtz: reading boundary conditions from pcsource.bc
+nbi-solve-helmholtz: allocating 692087 elements to FMM work space
+nbi-solve-helmholtz: building tree [0.013667]
+nbi-solve-helmholtz: FMM matrix initialized [0.075235]
+nbi-solve-helmholtz: forming right hand side, [0.075277]
+nbi-solve-helmholtz: starting built-in solver
+  nbi_gmres_complex: iteration 0
+  nbi_gmres_complex: substep 0; error: 1.761331e-01
+  nbi_gmres_complex: substep 1; error: 5.036623e-02
+  nbi_gmres_complex: substep 2; error: 2.802582e-02
+  nbi_gmres_complex: substep 3; error: 2.307847e-02
+  nbi_gmres_complex: substep 4; error: 2.305135e-02
+  nbi_gmres_complex: substep 5; error: 2.067005e-02
+  nbi_gmres_complex: substep 6; error: 1.946318e-02
+  nbi_gmres_complex: substep 7; error: 1.929115e-02
+  nbi_gmres_complex: substep 8; error: 1.882790e-02
+  nbi_gmres_complex: substep 9; error: 1.828766e-02
+  nbi_gmres_complex: iteration 1
+  nbi_gmres_complex: substep 0; error: 1.802385e-02
+  nbi_gmres_complex: substep 1; error: 1.756187e-02
+  nbi_gmres_complex: substep 2; error: 1.754130e-02
+  nbi_gmres_complex: substep 3; error: 1.686025e-02
+  nbi_gmres_complex: substep 4; error: 1.562589e-02
+  nbi_gmres_complex: substep 5; error: 1.557408e-02
+  nbi_gmres_complex: substep 6; error: 1.437690e-02
+  nbi_gmres_complex: substep 7; error: 1.360993e-02
+  nbi_gmres_complex: substep 8; error: 1.355507e-02
+  nbi_gmres_complex: substep 9; error: 1.325079e-02
+  nbi_gmres_complex: iteration 2
+  nbi_gmres_complex: substep 0; error: 1.316331e-02
+  nbi_gmres_complex: substep 1; error: 1.313340e-02
+  nbi_gmres_complex: substep 2; error: 1.306721e-02
+  nbi_gmres_complex: substep 3; error: 1.298336e-02
+  nbi_gmres_complex: substep 4; error: 1.297893e-02
+  nbi_gmres_complex: substep 5; error: 1.294403e-02
+  nbi_gmres_complex: substep 6; error: 1.263432e-02
+  nbi_gmres_complex: substep 7; error: 1.238276e-02
+  nbi_gmres_complex: substep 8; error: 1.235408e-02
+  nbi_gmres_complex: substep 9; error: 1.218612e-02
+  nbi_gmres_complex: iteration 3
+  nbi_gmres_complex: substep 0; error: 1.216328e-02
+  nbi_gmres_complex: substep 1; error: 1.214411e-02
+  nbi_gmres_complex: substep 2; error: 1.207382e-02
+  nbi_gmres_complex: substep 3; error: 1.206145e-02
+  nbi_gmres_complex: substep 4; error: 1.203776e-02
+  nbi_gmres_complex: substep 5; error: 1.199710e-02
+  nbi_gmres_complex: substep 6; error: 1.188651e-02
+  nbi_gmres_complex: substep 7; error: 1.180388e-02
+  nbi_gmres_complex: substep 8; error: 1.163295e-02
+  nbi_gmres_complex: substep 9; error: 1.158245e-02
+nbi-solve-helmholtz: -4 iterations; error = 0.0115825, [1478.88] (1478.8)
+nbi-solve-helmholtz: emax = 1.09664; fmax = 0.977886;
+nbi-solve-helmholtz: L_inf norm = 1.12144; L_2 norm = 0.275197; rms error = 0.000153273

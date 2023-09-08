@@ -45,7 +45,25 @@ gchar *progname ;
 /**
  * @page nbisurface Generating surfaces for NBI calculations
  *
- * @c nbi-surface
+ * @c nbi-surface generates and discretizes surface geometries and
+ * outputs them in the NBI file format. 
+ * 
+ * @verbatim
+ nbi-surface -h
+ @endverbatim
+ * gives a current list of command line options. The most important of 
+ * these are:
+ * - @c -q number of quadrature points per surface patch;
+ * - @c -o output file name;
+ * - @c -g built-in surface geometry;
+ * - @c -G list available built-in geometries;
+ * - @c -m GMSH geometry file name;
+ * - @c -a AGG geometry file name;
+ * - @c -i add an integer argument to pass to the built-in geometry generator;
+ * - @c -f add a floating point argument to pass to the built-in geometry 
+ * generator.
+ *
+ * Option @c -f, @c -m, or @c -a must be specified. 
  * 
  */
 

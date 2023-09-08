@@ -51,13 +51,12 @@ gchar *progname ;
  * @verbatim
  nbi-assemble-laplace -h
  @endverbatim
- *
  * gives a current list of command line options. The most important
  * options are:
- * - -g the geometry file name (this must be set);
- * - -u the number of upsampled nodes per patch (default is 25);
- * - -n separation parameter for patch neigbourhoods (default 1.25);
- * - -m file name for matrix data on output.
+ * - @c -g the geometry file name (this must be set);
+ * - @c -u the number of upsampled nodes per patch (default is 25);
+ * - @c -n separation parameter for patch neigbourhoods (default 1.25);
+ * - @c -m file name for matrix data on output.
  * 
  */
 

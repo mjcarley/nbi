@@ -35,7 +35,7 @@
 #include "nbi-private.h"
 
 /**
- * @ingroup geometries
+ * @ingroup surfaces
  *
  * @{
  * 

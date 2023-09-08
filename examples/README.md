@@ -36,7 +36,10 @@ SphereHelmholtz: solve for the Helmholtz (wave equation) potential on
 		 an ellipsoid under excitation from a sinusoidally varying
 		 ring source (this can be used to simulate rotor and
 		 propeller noise).
-		 
+
+Wing: solve the Laplace or Helmholtz problem for a point source inside
+      a wing-type geometry, generated using the AGG library. 
+
 Scattering: solve for scattering of a plane wave by a sphere, with
 	    comparison to the analytical series solution. The error
 	    norms reported by the solver in this case are not

@@ -1,0 +1,2 @@
+${bin}/nbi-surface -q ${nqp} -a wing.agg -o ${gfile}
+

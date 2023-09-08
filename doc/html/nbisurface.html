@@ -37,17 +37,33 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="index.html">Nystrom Boundary Integral calculations</a></li>  </ul>
+</div>
 </div><!-- top -->
 <div><div class="header">
   <div class="headertitle"><div class="title">Generating surfaces for NBI calculations </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p ><code>nbi-surface</code> </p>
+<div class="textblock"><p ><code>nbi-surface</code> generates and discretizes surface geometries and outputs them in the NBI file format.</p>
+<pre class="fragment">nbi-surface -h
+</pre><p> gives a current list of command line options. The most important of these are:</p><ul>
+<li><code>-q</code> number of quadrature points per surface patch;</li>
+<li><code>-o</code> output file name;</li>
+<li><code>-g</code> built-in surface geometry;</li>
+<li><code>-G</code> list available built-in geometries;</li>
+<li><code>-m</code> GMSH geometry file name;</li>
+<li><code>-a</code> AGG geometry file name;</li>
+<li><code>-i</code> add an integer argument to pass to the built-in geometry generator;</li>
+<li><code>-f</code> add a floating point argument to pass to the built-in geometry generator.</li>
+</ul>
+<p >Option <code>-f</code>, <code>-m</code>, or <code>-a</code> must be specified. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 5 2023 17:59:06 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
+Generated on Fri Sep 8 2023 09:22:37 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
 </small></address>
 </body>
 </html>

@@ -27,7 +27,19 @@ gint \textbf{ nbi\+\_\+element\+\_\+interp\+\_\+matrix} (gint ns, gdouble $\ast$
 gdouble $\ast$ \textbf{ nbi\+\_\+patch\+\_\+upsample\+\_\+matrix} (gint ns, gint nu)
 \begin{DoxyCompactList}\small\item\em matrix for upsampling patch nodes to quadrature nodes \end{DoxyCompactList}\item 
 gint \textbf{ nbi\+\_\+surface\+\_\+set\+\_\+patch\+\_\+data} (\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$s)
-\begin{DoxyCompactList}\small\item\em set basic data (centroid and radius) for each patch of a surface. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em set basic data (centroid and radius) for each patch of a surface. \end{DoxyCompactList}\item 
+gint \textbf{ nbi\+\_\+geometry\+\_\+sphere} (\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$s, gdouble r, gint nth, gint nph, gint nq)
+\item 
+gint \textbf{ nbi\+\_\+geometry\+\_\+ellipsoid} (\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$s, gdouble a, gdouble b, gdouble c, gint nth, gint nph, gint nq)
+\item 
+gint \textbf{ nbi\+\_\+geometry\+\_\+sphere\+\_\+ico} (\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$s, gdouble r, gint nr, gint nq)
+\item 
+gint \textbf{ nbi\+\_\+geometry\+\_\+ellipsoid\+\_\+ico} (\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$s, gdouble a, gdouble b, gdouble c, gint nr, gint nq)
+\item 
+gint \textbf{ nbi\+\_\+geometry\+\_\+grid} (\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$s, gdouble smin, gdouble smax, gint ns, gdouble tmin, gdouble tmax, gint nt, gint nq)
+\item 
+\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$ \textbf{ nbi\+\_\+gmsh\+\_\+mesh} (gchar $\ast$file, gint nq)
+\end{DoxyCompactItemize}
 \begin{DoxyCompactItemize}
 \item 
 typedef \textbf{ nbi\+\_\+surface\+\_\+t}
@@ -37,7 +49,13 @@ typedef \textbf{ nbi\+\_\+surface\+\_\+t}
 \doxysubsection{Detailed Description}
 Generating, discretizing and manipulating NBI surfaces. 
 
+NBI represents surfaces as triangular patches which are mapped using Koornwinder orthogonal polynomials, giving a high order representation of the surface and of the potential on it. Surface points are placed at the nodes of high order quadrature rules for the unit triangle, and interpolation of surface quantities, including position, is performed using the Koornwinder polynomials.
 
+A surface patch takes two discretization parameters. The first is the number of nodes on the patch. These are the points where the solution will be found when the problem is solved subject to a given set of boundary conditions. The second parameter is the number of upsampled nodes. In order to evaluate the surface integrals in the problem, the estimated solution is interpolated, or upsampled, onto a set of nodes on each patch, giving a more refined discretization for evaluation of the potential integrals. The number of upsampled nodes should be at least equal to the number of nodes in the patch discretization.
+
+Surfaces can be generated using the built-\/in geometries in NBI (a list is available using the {\ttfamily -\/G} option of {\ttfamily nbi-\/surface}); a GMSH {\ttfamily }.geo file; or an {\ttfamily AGG} file {\texttt{ https\+://github.\+com/mjcarley/agg/}} which uses the geometric representation methods of Kulfan, {\texttt{ https\+://www.\+brendakulfan.\+com/research}}
+
+Built-\/in geometries are quite simple but are sufficient for testing of code and checking the toolchain. There are also grid geometries which are not intended for calculation but are suitable for visualizing the potential field around surfaces after a problem has been solved. 
 
 \doxysubsection{Function Documentation}
 \mbox{\label{group__surfaces_ga7b45ed83a49ee86f2524ac945ae182b2}} 
@@ -65,6 +83,158 @@ Koornwinder interpolation matrix for surface patch.
 
 
 Referenced by \textbf{ nbi\+\_\+patch\+\_\+upsample\+\_\+matrix()}.
+
+\mbox{\label{group__surfaces_gab8947234c5eab69c2fba9a34dc0cbc07}} 
+\index{Surfaces@{Surfaces}!nbi\_geometry\_ellipsoid@{nbi\_geometry\_ellipsoid}}
+\index{nbi\_geometry\_ellipsoid@{nbi\_geometry\_ellipsoid}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_geometry\_ellipsoid()}
+{\footnotesize\ttfamily gint nbi\+\_\+geometry\+\_\+ellipsoid (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$}]{s,  }\item[{gdouble}]{a,  }\item[{gdouble}]{b,  }\item[{gdouble}]{c,  }\item[{gint}]{nth,  }\item[{gint}]{nph,  }\item[{gint}]{nq }\end{DoxyParamCaption})}
+
+Generate an ellipsoidal surface
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & surface to which patches are to be added; \\
+\hline
+{\em a} & ellipsoid length on $x$ axis; \\
+\hline
+{\em b} & ellipsoid length on $y$ axis; \\
+\hline
+{\em c} & ellipsoid length on $z$ axis; \\
+\hline
+{\em nth} & number of patches in azimuth $\theta$; \\
+\hline
+{\em nph} & number of patches in elevation $\phi$; \\
+\hline
+{\em nq} & number of quadrature points per patch.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_ga868a1ac59c5ea67aeba5ba039d4c3721}} 
+\index{Surfaces@{Surfaces}!nbi\_geometry\_ellipsoid\_ico@{nbi\_geometry\_ellipsoid\_ico}}
+\index{nbi\_geometry\_ellipsoid\_ico@{nbi\_geometry\_ellipsoid\_ico}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_geometry\_ellipsoid\_ico()}
+{\footnotesize\ttfamily gint nbi\+\_\+geometry\+\_\+ellipsoid\+\_\+ico (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$}]{s,  }\item[{gdouble}]{a,  }\item[{gdouble}]{b,  }\item[{gdouble}]{c,  }\item[{gint}]{nr,  }\item[{gint}]{nq }\end{DoxyParamCaption})}
+
+Generate an ellipsoidal surface by recursive subvision of a deformed icosahedron
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & surface to which patches are to be added; \\
+\hline
+{\em a} & ellipsoid length on $x$ axis; \\
+\hline
+{\em b} & ellipsoid length on $y$ axis; \\
+\hline
+{\em c} & ellipsoid length on $z$ axis; \\
+\hline
+{\em nr} & number of subdivisions; \\
+\hline
+{\em nq} & number of quadrature points per patch.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_gac1dd6cb3d6366bd691de59cf608f0e92}} 
+\index{Surfaces@{Surfaces}!nbi\_geometry\_grid@{nbi\_geometry\_grid}}
+\index{nbi\_geometry\_grid@{nbi\_geometry\_grid}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_geometry\_grid()}
+{\footnotesize\ttfamily gint nbi\+\_\+geometry\+\_\+grid (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$}]{s,  }\item[{gdouble}]{smin,  }\item[{gdouble}]{smax,  }\item[{gint}]{ns,  }\item[{gdouble}]{tmin,  }\item[{gdouble}]{tmax,  }\item[{gint}]{nt,  }\item[{gint}]{nq }\end{DoxyParamCaption})}
+
+Generate a regular grid in plane $z=0$ which can be transformed and used for visualization. Nodes are interpolated between $(s_{\min},t_{\min},0)$ and $(s_{\max},t_{\max},0)$
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & surface to add patches to; \\
+\hline
+{\em smin} & coordinate of lower left corner of grid; \\
+\hline
+{\em smax} & coordinate of upper right corner of grid; \\
+\hline
+{\em ns} & number of nodes in $s$. \\
+\hline
+{\em tmin} & coordinate of lower left corner of grid; \\
+\hline
+{\em tmax} & coordinate of upper right corner of grid; \\
+\hline
+{\em nt} & number of nodes in $t$. \\
+\hline
+{\em nq} & number of quadrature nodes per patch on {\itshape s}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on succes. 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_ga4c31fb52e0ffe2f03eef01dc87b68b78}} 
+\index{Surfaces@{Surfaces}!nbi\_geometry\_sphere@{nbi\_geometry\_sphere}}
+\index{nbi\_geometry\_sphere@{nbi\_geometry\_sphere}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_geometry\_sphere()}
+{\footnotesize\ttfamily gint nbi\+\_\+geometry\+\_\+sphere (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$}]{s,  }\item[{gdouble}]{r,  }\item[{gint}]{nth,  }\item[{gint}]{nph,  }\item[{gint}]{nq }\end{DoxyParamCaption})}
+
+Generate a spherical surface
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & surface to which sphere patches are to be added; \\
+\hline
+{\em r} & radius of sphere; \\
+\hline
+{\em nth} & number of patches in azimuth $\theta$; \\
+\hline
+{\em nph} & number of patches in elevation $\phi$; \\
+\hline
+{\em nq} & number of quadrature points per patch.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_gaa2f2fa13ec9deaaa268df42ad2e18652}} 
+\index{Surfaces@{Surfaces}!nbi\_geometry\_sphere\_ico@{nbi\_geometry\_sphere\_ico}}
+\index{nbi\_geometry\_sphere\_ico@{nbi\_geometry\_sphere\_ico}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_geometry\_sphere\_ico()}
+{\footnotesize\ttfamily gint nbi\+\_\+geometry\+\_\+sphere\+\_\+ico (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$}]{s,  }\item[{gdouble}]{r,  }\item[{gint}]{nr,  }\item[{gint}]{nq }\end{DoxyParamCaption})}
+
+Generate a spherical surface by recursive subdivision of an icosahedron
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & surface to which sphere patches are to be added; \\
+\hline
+{\em r} & radius of sphere; \\
+\hline
+{\em nr} & number of subdivisions; \\
+\hline
+{\em nq} & number of quadrature points per patch.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__surfaces_ga5846326971e9c4dcf07a9f8a163ce281}} 
+\index{Surfaces@{Surfaces}!nbi\_gmsh\_mesh@{nbi\_gmsh\_mesh}}
+\index{nbi\_gmsh\_mesh@{nbi\_gmsh\_mesh}!Surfaces@{Surfaces}}
+\doxysubsubsection{nbi\_gmsh\_mesh()}
+{\footnotesize\ttfamily \textbf{ nbi\+\_\+surface\+\_\+t} $\ast$ nbi\+\_\+gmsh\+\_\+mesh (\begin{DoxyParamCaption}\item[{gchar $\ast$}]{file,  }\item[{gint}]{nq }\end{DoxyParamCaption})}
+
+Generate an \doxyref{nbi\+\_\+surface\+\_\+t}{p.}{group__surfaces_gaf7311c75f0c2eed96f648ce53d435c8c} from a GMSH .geo file (experimental, but has been reliable up to now)
+
+
+\begin{DoxyParams}{Parameters}
+{\em file} & name of GMSH file; \\
+\hline
+{\em nq} & number of quadrature points per patch.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to newly allocated \doxyref{nbi\+\_\+surface\+\_\+t}{p.}{group__surfaces_gaf7311c75f0c2eed96f648ce53d435c8c} containing surface generated from {\itshape file}. 
+\end{DoxyReturn}
+
+
+References \textbf{ nbi\+\_\+surface\+\_\+alloc()}, and \textbf{ nbi\+\_\+surface\+\_\+t}.
 
 \mbox{\label{group__surfaces_ga5e02aeb6ff57f50d45bcd73c14807ca9}} 
 \index{Surfaces@{Surfaces}!nbi\_patch\_neighbours@{nbi\_patch\_neighbours}}

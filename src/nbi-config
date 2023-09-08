@@ -70,7 +70,7 @@ while test $# -gt 0; do
       echo_exec_prefix=yes
       ;;
     --version)
-      echo 0.1.0
+      echo 1.0.0
       exit 0
       ;;
     --cflags)

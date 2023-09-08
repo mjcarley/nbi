@@ -42,7 +42,7 @@ const gchar *variables[] = {"x", "y", "z", "nx", "ny", "nz", "rp", "ip",
   "rdp", "idp", NULL} ;
 
 /**
- * @ingroup expressions
+ * @ingroup boundary
  *
  * @{
  * 
@@ -270,7 +270,6 @@ gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *b)
 {
   gchar **tokens, buf[16384], *cont = "\\" ;
   te_variable *vars ;
-  /* gsize n ; */
   ssize_t nc ;
   gint nt, i, err, nbmax = 16384 ;
   
@@ -278,13 +277,9 @@ gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *b)
     b->compiled[i] = NULL ;
   }
   nc = 0 ;
-  /* line = NULL ; n = 0 ; */
   vars = b->vars ;
-  /* nc = getline(&line, &n, f) ; */
   nc = getlongline(f, buf, nbmax, cont) ;
   while ( nc != -1 ) {
-    /* line[nc-1] = '\0' ; */
-    /* tokens = g_strsplit(line, "=", 0) ; */
     tokens = g_strsplit(buf, "=", 0) ;
 
     for ( nt = 0 ; tokens[nt] != NULL ; nt ++ ) ;
@@ -308,7 +303,6 @@ gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *b)
       
       b->nvars ++ ;
     }
-    /* nc = getline(&line, &n, f) ; */
     nc = getlongline(f, buf, nbmax, cont) ;
   }
 

@@ -284,12 +284,19 @@ gint NBI_FUNCTION_NAME(nbi_gmres_complex)(nbi_matrix_t *A,
   return iter ;
 }
 
-gint nbi_gmres_workspace_size_complex(gint n, gint m)
-
-/*
- * n: problem size (number of nodes)
- * m: GMRES restart interval
+/** 
+ * @ingroup solvers
+ * 
+ * Find the size of the workspace required to solve a complex problem
+ * using ::nbi_gmres_complex
+ * 
+ * @param n number of nodes (matrix dimension);
+ * @param m GMRES restart interval.
+ * 
+ * @return minimum size of workspace to allocate.
  */
+
+gint nbi_gmres_workspace_size_complex(gint n, gint m)
   
 {
   gint size ;
@@ -308,6 +315,18 @@ gint nbi_gmres_workspace_size_complex(gint n, gint m)
   
   return size ;
 }
+
+/** 
+ * @ingroup solvers
+ * 
+ * Find the size of the workspace required to solve a real problem
+ * using ::nbi_gmres_real
+ * 
+ * @param n number of nodes (matrix dimension);
+ * @param m GMRES restart interval.
+ * 
+ * @return minimum size of workspace to allocate.
+ */
 
 gint nbi_gmres_workspace_size_real(gint n, gint m)
 

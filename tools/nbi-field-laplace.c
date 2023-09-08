@@ -41,8 +41,21 @@ gchar *progname ;
 /**
  * @page nbifieldlaplace Evaluating the Laplace potential field
  *
- * @c nbi-field-laplace
+ * @c nbi-field-laplace evaluates the potential at specified points,
+ * given the boundary conditions on a surface, such as the output of
+ * @c nbi-solve-laplace. 
+ * @verbatim
+ nbi-solve-laplace -h
+ @endverbatim
+ * gives a current list of command line options. The most important are:
+ * - @c -g the geometry file name (this must be set);
+ * - @c -d surface data file name (this must be set);
+ * - @c -F geometry file name for field geometry.
  * 
+ * On completion, @c nbi-field-laplace outputs a data file
+ * containing the potential at each point on the surface defined in
+ * the field geometry file (from the -F option). This can be processed
+ * using @c nbi-process for visualisation using GMSH. 
  */
 
 static void print_help_text(FILE *f, gint field)

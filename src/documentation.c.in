@@ -438,7 +438,7 @@ gint nbi_mesh_export_gmsh_FLOAT(FILE *f, gchar *view,
 				NBI_REAL *data, gint dstr) ;
 
 /** 
- * @ingroup geometries
+ * @ingroup surfaces
  *
  * Generate a spherical surface
  * 
@@ -455,7 +455,7 @@ gint nbi_geometry_sphere_FLOAT(nbi_surface_t *s,
 			       NBI_REAL r, gint nth, gint nph,
 			       gint nq) ;
 /** 
- * @ingroup geometries
+ * @ingroup surfaces
  *
  * Generate an ellipsoidal surface
  * 
@@ -477,7 +477,7 @@ gint nbi_geometry_ellipsoid_FLOAT(nbi_surface_t *s,
 				  gint nq) ;
 
 /** 
- * @ingroup geometries
+ * @ingroup surfaces
  *
  * Generate a spherical surface by recursive subdivision of an
  * icosahedron
@@ -494,7 +494,7 @@ gint nbi_geometry_sphere_ico_FLOAT(nbi_surface_t *s,
 				   NBI_REAL r, gint nr, gint nq) ;
 
 /** 
- * @ingroup geometries
+ * @ingroup surfaces
  *
  * Generate an ellipsoidal surface by recursive subvision of a
  * deformed icosahedron
@@ -515,7 +515,7 @@ gint nbi_geometry_ellipsoid_ico_FLOAT(nbi_surface_t *s,
 				      gint nr, gint nq) ; 
 
 /** 
- * @ingroup geometries
+ * @ingroup surfaces
  *
  * Generate a regular grid in plane \f$z=0\f$ which can be transformed
  * and used for visualization. Nodes are interpolated between
@@ -819,7 +819,7 @@ gint nbi_surface_field_laplace(nbi_surface_t *s, NBI_REAL *ps, gint pstr,
  * @param tol convergence tolerance;
  * @param error on exit, contains error estimate;
  * @param nthreads number of threads;
- * @param work workspace.
+ * @param work workspace, sized using ::nbi_gmres_workspace_size_real.
  * 
  * @return 0 on success.
  */
@@ -851,7 +851,7 @@ gint nbi_gmres_real_FLOAT(nbi_matrix_t *A, gint n,
  * @param tol convergence tolerance;
  * @param error on exit, contains error estimate;
  * @param nthreads number of threads;
- * @param work workspace.
+ * @param work workspace, sized using ::nbi_gmres_workspace_size_complex.
  * 
  * @return 0 on success.
  */

@@ -37,17 +37,27 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="index.html">Nystrom Boundary Integral calculations</a></li>  </ul>
+</div>
 </div><!-- top -->
 <div><div class="header">
   <div class="headertitle"><div class="title">Evaluating the Laplace potential field </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p ><code>nbi-field-laplace</code> </p>
+<div class="textblock"><p ><code>nbi-field-laplace</code> evaluates the potential at specified points, given the boundary conditions on a surface, such as the output of <code>nbi-solve-laplace</code>. </p><pre class="fragment">nbi-solve-laplace -h
+</pre><p> gives a current list of command line options. The most important are:</p><ul>
+<li><code>-g</code> the geometry file name (this must be set);</li>
+<li><code>-d</code> surface data file name (this must be set);</li>
+<li><code>-F</code> geometry file name for field geometry.</li>
+</ul>
+<p >On completion, <code>nbi-field-laplace</code> outputs a data file containing the potential at each point on the surface defined in the field geometry file (from the -F option). This can be processed using <code>nbi-process</code> for visualisation using GMSH. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 5 2023 17:59:06 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
+Generated on Fri Sep 8 2023 09:22:37 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
 </small></address>
 </body>
 </html>

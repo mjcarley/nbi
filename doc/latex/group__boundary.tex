@@ -10,14 +10,156 @@ Definition and evaluation of boundary conditions.
 \item 
 gint \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+set} (\textbf{ nbi\+\_\+surface\+\_\+t} $\ast$s, gdouble $\ast$p, gint pstr, gdouble $\ast$pn, gint nstr, \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+t} $\ast$b)
 \begin{DoxyCompactList}\small\item\em compute boundary condition on surface \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactItemize}
+\item 
+gint \textbf{ nbi\+\_\+functions\+\_\+list} (FILE $\ast$f, gboolean help)
+\item 
+\textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+t} $\ast$ \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+new} (\textbf{ nbi\+\_\+problem\+\_\+t} problem)
+\item 
+gint \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+read} (FILE $\ast$f, \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+t} $\ast$b)
+\item 
+gint \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+has\+\_\+variable} (\textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+t} $\ast$b, gchar $\ast$v)
+\item 
+gint \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+write} (FILE $\ast$f, \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+t} $\ast$b)
+\item 
+gint \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+eval} (\textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+t} $\ast$b, gdouble $\ast$x, gdouble $\ast$n)
+\item 
+gboolean \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+defined} (\textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+t} $\ast$b, gchar $\ast$v)
+\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
 Definition and evaluation of boundary conditions. 
 
+Boundary conditions in NBI are defined using analytical expressions, which are evaluated at each surface node using the {\texttt{ tinyexpr}} parser which accepts standard mathematical expressions, and a number of built-\/in functions for standard cases, such as the point sources in the Laplace and Helmholtz problems. The executables {\ttfamily nbi-\/solve-\/laplace} and {\ttfamily nbi-\/solve-\/helmholtz} accept the {\ttfamily -\/B} option which lists the built-\/in functions which can be used to define boundary conditions.
 
+In practice, boundary conditions are defined in a file whose name is supplied as a command line option to the solver. A sample file for a point source illustrates the syntax\+: \begin{DoxyVerb}## complex point source boundary condition
+## wavenumber, defined as variable
+k = 3.5
+## source location (x0, y0, z0)
+x0 = 0.1
+y0 = -0.2
+z0=0.5
+## real part of surface potential using built-in function
+rp = helmholtz_Gr(k, x-x0, y-y0, z-z0)
+## imaginary part of surface potential using built-in function
+ip = helmholtz_Gi(k, x-x0, y-y0, z-z0)
+## real part of surface potential gradient using built-in function
+rdp = helmholtz_dGr(k, x-x0, y-y0, z-z0, nx, ny, nz)
+## imaginary part of surface potential gradient using built-in function
+idp = helmholtz_dGi(k, x-x0, y-y0, z-z0, nx, ny, nz)
+\end{DoxyVerb}
+
+
+In the boundary condition file, comments are denoted by a \#. Variables, such as the wavenumber {\ttfamily k}, can be defined as required, with the exception of reserved variables which are defined at each surface node, or which are used as the name of a boundary condition. These are\+:
+\begin{DoxyItemize}
+\item \begin{DoxyVerb}x,y,z \end{DoxyVerb}
+ the node location;
+\item \begin{DoxyVerb}nx,ny,nz \end{DoxyVerb}
+ the node surface normal;
+\item \begin{DoxyVerb}rp,ip \end{DoxyVerb}
+ real and imaginary parts of surface potential;
+\item \begin{DoxyVerb}rdp,idp \end{DoxyVerb}
+ real and imaginary parts of surface potential normal derivative;
+\end{DoxyItemize}
+
+There are built-\/in functions for the Laplace and Helmholtz Green\textquotesingle{}s functions which can be used to generate the boundary condition for a point source excitation, as in the example above. The {\ttfamily -\/B} option for the solvers will give a list of built-\/in functions which can be used to generate other boundary conditions. 
 
 \doxysubsection{Function Documentation}
+\mbox{\label{group__boundary_ga27cd98774d179b468c410144fbdce6ea}} 
+\index{Boundary conditions@{Boundary conditions}!nbi\_boundary\_condition\_defined@{nbi\_boundary\_condition\_defined}}
+\index{nbi\_boundary\_condition\_defined@{nbi\_boundary\_condition\_defined}!Boundary conditions@{Boundary conditions}}
+\doxysubsubsection{nbi\_boundary\_condition\_defined()}
+{\footnotesize\ttfamily gboolean nbi\+\_\+boundary\+\_\+condition\+\_\+defined (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+t} $\ast$}]{b,  }\item[{gchar $\ast$}]{v }\end{DoxyParamCaption})}
+
+Check if variable is defined in a boundary condition (simple version of \doxyref{nbi\+\_\+boundary\+\_\+condition\+\_\+has\+\_\+variable}{p.}{group__boundary_ga94ffef542e038eda9b914a57d846e2ca})
+
+
+\begin{DoxyParams}{Parameters}
+{\em b} & boundary condition evaluator to check; \\
+\hline
+{\em v} & name of variable to find.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+TRUE if {\itshape v} is defined in {\itshape b}, FALSE otherwise. 
+\end{DoxyReturn}
+\mbox{\label{group__boundary_gaa444c0c18f0896f66e6a08c84b711067}} 
+\index{Boundary conditions@{Boundary conditions}!nbi\_boundary\_condition\_eval@{nbi\_boundary\_condition\_eval}}
+\index{nbi\_boundary\_condition\_eval@{nbi\_boundary\_condition\_eval}!Boundary conditions@{Boundary conditions}}
+\doxysubsubsection{nbi\_boundary\_condition\_eval()}
+{\footnotesize\ttfamily gint nbi\+\_\+boundary\+\_\+condition\+\_\+eval (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+t} $\ast$}]{b,  }\item[{gdouble $\ast$}]{x,  }\item[{gdouble $\ast$}]{n }\end{DoxyParamCaption})}
+
+Evaluate a boundary condition at some point
+
+
+\begin{DoxyParams}{Parameters}
+{\em b} & boundary condition evaluator; \\
+\hline
+{\em x} & point for evaluation; \\
+\hline
+{\em n} & surface normal at {\itshape x}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__boundary_ga94ffef542e038eda9b914a57d846e2ca}} 
+\index{Boundary conditions@{Boundary conditions}!nbi\_boundary\_condition\_has\_variable@{nbi\_boundary\_condition\_has\_variable}}
+\index{nbi\_boundary\_condition\_has\_variable@{nbi\_boundary\_condition\_has\_variable}!Boundary conditions@{Boundary conditions}}
+\doxysubsubsection{nbi\_boundary\_condition\_has\_variable()}
+{\footnotesize\ttfamily gint nbi\+\_\+boundary\+\_\+condition\+\_\+has\+\_\+variable (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+t} $\ast$}]{b,  }\item[{gchar $\ast$}]{v }\end{DoxyParamCaption})}
+
+Check if a boundary condition evaluator includes a particular variable
+
+
+\begin{DoxyParams}{Parameters}
+{\em b} & boundary condition evaluator to check; \\
+\hline
+{\em v} & name of variable to find.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+index of {\itshape v} in the variable list of {\itshape b}, or -\/1 if not found. 
+\end{DoxyReturn}
+\mbox{\label{group__boundary_ga456ee948a5834598b2e71ab52f18bdef}} 
+\index{Boundary conditions@{Boundary conditions}!nbi\_boundary\_condition\_new@{nbi\_boundary\_condition\_new}}
+\index{nbi\_boundary\_condition\_new@{nbi\_boundary\_condition\_new}!Boundary conditions@{Boundary conditions}}
+\doxysubsubsection{nbi\_boundary\_condition\_new()}
+{\footnotesize\ttfamily \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+t} $\ast$ nbi\+\_\+boundary\+\_\+condition\+\_\+new (\begin{DoxyParamCaption}\item[{\textbf{ nbi\+\_\+problem\+\_\+t}}]{problem }\end{DoxyParamCaption})}
+
+Allocate a new boundary condition evaluator for a specified problem.
+
+
+\begin{DoxyParams}{Parameters}
+{\em problem} & problem to which boundary condition applies.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to newly allocated \doxyref{nbi\+\_\+boundary\+\_\+condition\+\_\+t}{p.}{nbi_8h_a2b88ce7b74802492cb671c7c5b4d59b2} 
+\end{DoxyReturn}
+
+
+References \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+problem}, and \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+t}.
+
+\mbox{\label{group__boundary_ga6abc17992474964c6002e51fdf96a520}} 
+\index{Boundary conditions@{Boundary conditions}!nbi\_boundary\_condition\_read@{nbi\_boundary\_condition\_read}}
+\index{nbi\_boundary\_condition\_read@{nbi\_boundary\_condition\_read}!Boundary conditions@{Boundary conditions}}
+\doxysubsubsection{nbi\_boundary\_condition\_read()}
+{\footnotesize\ttfamily gint nbi\+\_\+boundary\+\_\+condition\+\_\+read (\begin{DoxyParamCaption}\item[{FILE $\ast$}]{f,  }\item[{\textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+t} $\ast$}]{b }\end{DoxyParamCaption})}
+
+Read the definition of a boundary condition from file
+
+
+\begin{DoxyParams}{Parameters}
+{\em f} & input file stream; \\
+\hline
+{\em b} & boundary condition evaluator, allocated with \doxyref{nbi\+\_\+boundary\+\_\+condition\+\_\+new}{p.}{group__boundary_ga456ee948a5834598b2e71ab52f18bdef}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
 \mbox{\label{group__boundary_gab9229a8b903044800ff41e971a19bacb}} 
 \index{Boundary conditions@{Boundary conditions}!nbi\_boundary\_condition\_set@{nbi\_boundary\_condition\_set}}
 \index{nbi\_boundary\_condition\_set@{nbi\_boundary\_condition\_set}!Boundary conditions@{Boundary conditions}}
@@ -41,6 +183,42 @@ compute boundary condition on surface
 {\em nstr} & stride in {\itshape pn}; \\
 \hline
 {\em b} & boundary condition to apply.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__boundary_ga61f729ed6e095b8e2a30e54936d5d436}} 
+\index{Boundary conditions@{Boundary conditions}!nbi\_boundary\_condition\_write@{nbi\_boundary\_condition\_write}}
+\index{nbi\_boundary\_condition\_write@{nbi\_boundary\_condition\_write}!Boundary conditions@{Boundary conditions}}
+\doxysubsubsection{nbi\_boundary\_condition\_write()}
+{\footnotesize\ttfamily gint nbi\+\_\+boundary\+\_\+condition\+\_\+write (\begin{DoxyParamCaption}\item[{FILE $\ast$}]{f,  }\item[{\textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+t} $\ast$}]{b }\end{DoxyParamCaption})}
+
+Write a boundary condition evaluator to file
+
+
+\begin{DoxyParams}{Parameters}
+{\em f} & output file stream; \\
+\hline
+{\em b} & boundary condition evaluator.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\label{group__boundary_ga7564048a27ca1cc609aac4c32954286d}} 
+\index{Boundary conditions@{Boundary conditions}!nbi\_functions\_list@{nbi\_functions\_list}}
+\index{nbi\_functions\_list@{nbi\_functions\_list}!Boundary conditions@{Boundary conditions}}
+\doxysubsubsection{nbi\_functions\_list()}
+{\footnotesize\ttfamily gint nbi\+\_\+functions\+\_\+list (\begin{DoxyParamCaption}\item[{FILE $\ast$}]{f,  }\item[{gboolean}]{help }\end{DoxyParamCaption})}
+
+Write a list of built-\/in functions to file
+
+
+\begin{DoxyParams}{Parameters}
+{\em f} & output file stream; \\
+\hline
+{\em help} & if TRUE, also write help text for functions.\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}

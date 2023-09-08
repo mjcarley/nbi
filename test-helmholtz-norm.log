@@ -1,4 +1,3 @@
-SphereHelmholtz test k=3.5 nqp=25 nqu=54
-SphereHelmholtz test k=3.5 nqp=54 nqu=85
-Scattering test k=10 nqp=25 nqu=54
-Scattering test k=10 nqp=25 nqu=54
+Wing test k=3.0 nqp=25 nqu=54
+Wing test k=3.0 nqp=25 nqu=54
+Wing test k=3.0 nqp=25 nqu=54

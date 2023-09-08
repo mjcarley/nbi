@@ -88,13 +88,13 @@
 #define NBI_INTERFACE_AGE 0
 
 /* Major version */
-#define NBI_MAJOR_VERSION 0
+#define NBI_MAJOR_VERSION 1
 
 /* Micro version */
 #define NBI_MICRO_VERSION 0
 
 /* Minor version */
-#define NBI_MINOR_VERSION 1
+#define NBI_MINOR_VERSION 0
 
 /* Name of package */
 #define PACKAGE "nbi"
@@ -106,7 +106,7 @@
 #define PACKAGE_NAME "nbi"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "nbi 0.1"
+#define PACKAGE_STRING "nbi 1.0.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "nbi"
@@ -115,10 +115,10 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.1"
+#define PACKAGE_VERSION "1.0.0"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "0.1"
+#define VERSION "1.0.0"

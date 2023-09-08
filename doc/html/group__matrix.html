@@ -105,6 +105,8 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p >Matrix operations and iterative solvers. </p>
+<p >An NBI "matrix" is a data type which can be used in matrix type calculations, though it does not strictly contain a matrix. It contains the surface discretization data required to perform a matrix-free evaluation of the integrals which appear in the boundary integral problem, typically accelerated using the Fast Multipole Method.</p>
+<p >The matrix-free implementation can be used with iterative methods to solve problems much larger than be handled using dense matrices. NBI has a built-in GMRES solver which can be used for real and complex problems. It can also link to the PETSc library available from <a href="https://petsc.org/">https://petsc.org/</a> This makes a wide range of high-performance solvers available, and is recommended as an option. </p>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga3fbad6dc4ed146c23c8fe3af62b94522" name="ga3fbad6dc4ed146c23c8fe3af62b94522"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga3fbad6dc4ed146c23c8fe3af62b94522">&#9670;&nbsp;</a></span>nbi_calc_field_helmholtz()</h2>
@@ -309,7 +311,7 @@ Functions</h2></td></tr>
     <tr><td class="paramname">tol</td><td>convergence tolerance; </td></tr>
     <tr><td class="paramname">error</td><td>on exit, contains error estimate; </td></tr>
     <tr><td class="paramname">nthreads</td><td>number of threads; </td></tr>
-    <tr><td class="paramname">work</td><td>workspace.</td></tr>
+    <tr><td class="paramname">work</td><td>workspace, sized using <a class="el" href="nbi_8h.html#a5ffceb429abf6bac272f3b03418b0f45">nbi_gmres_workspace_size_complex</a>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -418,7 +420,7 @@ Functions</h2></td></tr>
     <tr><td class="paramname">tol</td><td>convergence tolerance; </td></tr>
     <tr><td class="paramname">error</td><td>on exit, contains error estimate; </td></tr>
     <tr><td class="paramname">nthreads</td><td>number of threads; </td></tr>
-    <tr><td class="paramname">work</td><td>workspace.</td></tr>
+    <tr><td class="paramname">work</td><td>workspace, sized using <a class="el" href="nbi_8h.html#a1549690e08b983e41cfa84382101a65b">nbi_gmres_workspace_size_real</a>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1609,7 +1611,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 5 2023 17:59:06 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
+Generated on Fri Sep 8 2023 09:22:37 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
 </small></address>
 </body>
 </html>

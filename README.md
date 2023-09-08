@@ -41,8 +41,10 @@ installation location and where to find any required libraries:
 
   ./configure --help
 
-* Using NBI
+* Using and testing NBI
 
-The main documentation, including details of examples, is in the .../doc
-subdirectory of the distribution. Scripts for running examples and
-visualising results are in the .../examples subdirectory.
+The main documentation, including details of examples, is in the
+.../doc subdirectory of the distribution. The .../examples
+subdirectory contains a number of examples which can be run using the
+scripts test-all-laplace and test-all-helmholtz. Further details are
+given in .../examples/README.md

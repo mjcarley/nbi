@@ -2,45 +2,39 @@ Helmholtz solve
 ===============
 Parameters:
 
-   wavenumber:                k=10
+   wavenumber:                k=3.0
    adaptive quadrature:       nqa=7
    points per patch:          nqp=25
    upsample points per patch: nqu=54
    integration tolerance:     tol=1e-6
-   separation parameter:      eta=1.5
+   separation parameter:      eta=1.25
    FMM tree depth:            depth=5
    singular quadrature order: order=8
    number of threads:         nthreads=2
-   boundary condition file    src=plane.bc
-   use PETSC solver:          petsc=yes
+   boundary condition file    src=pcsource.bc
+   use PETSC solver:          petsc=no
 
-Generating geometry Geometries/sphere-25.nbi
-nbi-surface: icosohedral ellipsoid
-  subdivision depth: 3
-  points per patch:  25
-  semi-axis x: 0.5
-  semi-axis y: 0.5
-  semi-axis z: 0.5
-nbi-surface: patches: 1280
-nbi-surface: nodes:   32000
+Generating geometry Geometries/wing-25.nbi
+nbi-surface: patches: 736
+nbi-surface: nodes:   18400
 
 Assembling matrices with:
-nbi-assemble-helmholtz -e 1e-6 -a 7 -u 54 -n 1.5 -d 5 -N 8 -m Matrices/matrix-sphere-helmholtz-25-54-8-5.dat -g Geometries/sphere-25.nbi -k 10
+nbi-assemble-helmholtz -e 1e-6 -a 7 -u 54 -n 1.25 -d 5 -N 8 -m Matrices/matrix-wing-helmholtz-25-54-8-5.dat -g Geometries/wing-25.nbi -k 3.0
 nbi-assemble-helmholtz: reading geometry [1e-06]
-nbi-assemble-helmholtz: starting matrix assembly [0.140963]
-nbi-assemble-helmholtz: matrix assembly complete [102.594]
+nbi-assemble-helmholtz: starting matrix assembly [0.108038]
+nbi-assemble-helmholtz: matrix assembly complete [852.931]
 
 Solving with:
-nbi-solve-helmholtz -m Matrices/matrix-sphere-helmholtz-25-54-8-5.dat -g Geometries/sphere-25.nbi -D 5 -o 10 -d 2 -t 1e-6 -f -T 2 -k 10 -b plane.bc -s solution.dat -i 4 -K ksp-options -P
+nbi-solve-helmholtz -m Matrices/matrix-wing-helmholtz-25-54-8-5.dat -g Geometries/wing-25.nbi -D 5 -o 10 -d 2 -t 1e-6 -f -T 2 -k 3.0 -b pcsource.bc -s solution.dat -i 4
 
-61440 nodes, 20480 elements generated
-final point: 61440
-final element: 20480
+35328 nodes, 11776 elements generated
+final point: 35328
+final element: 11776
 nbi-surface: patches: 2048
 nbi-surface: nodes:   14336
 
 Computing radiated field
-nbi-field-helmholtz: geometry Geometries/sphere-25.nbi
+nbi-field-helmholtz: geometry Geometries/wing-25.nbi
 98304 nodes, 32768 elements generated
-final point: 159744
-final element: 94208
+final point: 133632
+final element: 68096

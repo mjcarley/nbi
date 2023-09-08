@@ -53,7 +53,9 @@ typedef \textbf{ nbi\+\_\+matrix\+\_\+t}
 \doxysubsection{Detailed Description}
 Matrix operations and iterative solvers. 
 
+An NBI \char`\"{}matrix\char`\"{} is a data type which can be used in matrix type calculations, though it does not strictly contain a matrix. It contains the surface discretization data required to perform a matrix-\/free evaluation of the integrals which appear in the boundary integral problem, typically accelerated using the Fast Multipole Method.
 
+The matrix-\/free implementation can be used with iterative methods to solve problems much larger than be handled using dense matrices. NBI has a built-\/in GMRES solver which can be used for real and complex problems. It can also link to the PETSc library available from {\texttt{ https\+://petsc.\+org/}} This makes a wide range of high-\/performance solvers available, and is recommended as an option. 
 
 \doxysubsection{Function Documentation}
 \mbox{\label{group__matrix_ga3fbad6dc4ed146c23c8fe3af62b94522}} 
@@ -132,7 +134,7 @@ This is a basic implementation of a GMRES solver. You may find the PETSC solver 
 \hline
 {\em nthreads} & number of threads; \\
 \hline
-{\em work} & workspace.\\
+{\em work} & workspace, sized using \doxyref{nbi\+\_\+gmres\+\_\+workspace\+\_\+size\+\_\+complex}{p.}{nbi_8h_a5ffceb429abf6bac272f3b03418b0f45}.\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
@@ -174,7 +176,7 @@ This is a basic implementation of a GMRES solver. You may find the PETSC solver 
 \hline
 {\em nthreads} & number of threads; \\
 \hline
-{\em work} & workspace.\\
+{\em work} & workspace, sized using \doxyref{nbi\+\_\+gmres\+\_\+workspace\+\_\+size\+\_\+real}{p.}{nbi_8h_a1549690e08b983e41cfa84382101a65b}.\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}

@@ -5,10 +5,10 @@
 # It is necessary for linking the library.
 
 # The name that we can dlopen(3).
-dlname='libnbi-0.1.so.0'
+dlname='libnbi-1.0.so.0'
 
 # Names of this library.
-library_names='libnbi-0.1.so.0.0.0 libnbi-0.1.so.0 libnbi.so'
+library_names='libnbi-1.0.so.0.0.0 libnbi-1.0.so.0 libnbi.so'
 
 # The name of the static archive.
 old_library='libnbi.a'

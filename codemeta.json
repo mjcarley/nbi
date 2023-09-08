@@ -1,0 +1,23 @@
+{
+  "@context": "https://raw.githubusercontent.com/codemeta/codemeta/master/codemeta.jsonld",
+  "@type": "Code",
+  "author": [
+    {
+      "@id": "https://orcid.org/0000-0003-2965-8984",
+      "@type": "Person",
+      "email": "michael@paraffinalia.co.uk",
+      "name": "Michael Carley",
+      "affiliation": "University of Bath"
+    },
+  ],
+  "identifier": "",
+  "codeRepository": "https://github.com/mjcarley/nbi",
+  "datePublished": "2023-09-07",
+  "dateModified": "2023-09-07",
+  "dateCreated": "2023-09-07",
+  "description": "Library and executables for Nystrom solution of Boundary Integral equations",
+  "keywords": "Laplace equation, Helmholtz equation, boundary integral equation, Nystrom method, Fast Multipole Method",
+  "license": "GPL v3.0",
+  "title": "NBI",
+  "version": "v1.0.0"
+}

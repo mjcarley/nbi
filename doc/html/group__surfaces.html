@@ -80,11 +80,27 @@ Functions</h2></td></tr>
 <tr class="memitem:ga12135d339936f354de509a6fcb4e19b2"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__surfaces.html#ga12135d339936f354de509a6fcb4e19b2">nbi_surface_set_patch_data</a> (<a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *s)</td></tr>
 <tr class="memdesc:ga12135d339936f354de509a6fcb4e19b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">set basic data (centroid and radius) for each patch of a surface.  <a href="group__surfaces.html#ga12135d339936f354de509a6fcb4e19b2">More...</a><br /></td></tr>
 <tr class="separator:ga12135d339936f354de509a6fcb4e19b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4c31fb52e0ffe2f03eef01dc87b68b78"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__surfaces.html#ga4c31fb52e0ffe2f03eef01dc87b68b78">nbi_geometry_sphere</a> (<a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *s, gdouble r, gint nth, gint nph, gint nq)</td></tr>
+<tr class="separator:ga4c31fb52e0ffe2f03eef01dc87b68b78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab8947234c5eab69c2fba9a34dc0cbc07"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__surfaces.html#gab8947234c5eab69c2fba9a34dc0cbc07">nbi_geometry_ellipsoid</a> (<a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *s, gdouble a, gdouble b, gdouble c, gint nth, gint nph, gint nq)</td></tr>
+<tr class="separator:gab8947234c5eab69c2fba9a34dc0cbc07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa2f2fa13ec9deaaa268df42ad2e18652"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__surfaces.html#gaa2f2fa13ec9deaaa268df42ad2e18652">nbi_geometry_sphere_ico</a> (<a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *s, gdouble r, gint nr, gint nq)</td></tr>
+<tr class="separator:gaa2f2fa13ec9deaaa268df42ad2e18652"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga868a1ac59c5ea67aeba5ba039d4c3721"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__surfaces.html#ga868a1ac59c5ea67aeba5ba039d4c3721">nbi_geometry_ellipsoid_ico</a> (<a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *s, gdouble a, gdouble b, gdouble c, gint nr, gint nq)</td></tr>
+<tr class="separator:ga868a1ac59c5ea67aeba5ba039d4c3721"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac1dd6cb3d6366bd691de59cf608f0e92"><td class="memItemLeft" align="right" valign="top">gint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__surfaces.html#gac1dd6cb3d6366bd691de59cf608f0e92">nbi_geometry_grid</a> (<a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *s, gdouble smin, gdouble smax, gint ns, gdouble tmin, gdouble tmax, gint nt, gint nq)</td></tr>
+<tr class="separator:gac1dd6cb3d6366bd691de59cf608f0e92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5846326971e9c4dcf07a9f8a163ce281"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__surfaces.html#ga5846326971e9c4dcf07a9f8a163ce281">nbi_gmsh_mesh</a> (gchar *file, gint nq)</td></tr>
+<tr class="separator:ga5846326971e9c4dcf07a9f8a163ce281"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf7311c75f0c2eed96f648ce53d435c8c"><td class="memItemLeft" align="right" valign="top">typedef&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a></td></tr>
 <tr class="separator:gaf7311c75f0c2eed96f648ce53d435c8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p >Generating, discretizing and manipulating NBI surfaces. </p>
+<p >NBI represents surfaces as triangular patches which are mapped using Koornwinder orthogonal polynomials, giving a high order representation of the surface and of the potential on it. Surface points are placed at the nodes of high order quadrature rules for the unit triangle, and interpolation of surface quantities, including position, is performed using the Koornwinder polynomials.</p>
+<p >A surface patch takes two discretization parameters. The first is the number of nodes on the patch. These are the points where the solution will be found when the problem is solved subject to a given set of boundary conditions. The second parameter is the number of upsampled nodes. In order to evaluate the surface integrals in the problem, the estimated solution is interpolated, or upsampled, onto a set of nodes on each patch, giving a more refined discretization for evaluation of the potential integrals. The number of upsampled nodes should be at least equal to the number of nodes in the patch discretization.</p>
+<p >Surfaces can be generated using the built-in geometries in NBI (a list is available using the <code>-G</code> option of <code>nbi-surface</code>); a GMSH <code></code>.geo file; or an <code>AGG</code> file <a href="https://github.com/mjcarley/agg/">https://github.com/mjcarley/agg/</a> which uses the geometric representation methods of Kulfan, <a href="https://www.brendakulfan.com/research">https://www.brendakulfan.com/research</a></p>
+<p >Built-in geometries are quite simple but are sufficient for testing of code and checking the toolchain. There are also grid geometries which are not intended for calculation but are suitable for visualizing the potential field around surfaces after a problem has been solved. </p>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga7b45ed83a49ee86f2524ac945ae182b2" name="ga7b45ed83a49ee86f2524ac945ae182b2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga7b45ed83a49ee86f2524ac945ae182b2">&#9670;&nbsp;</a></span>nbi_element_interp_matrix()</h2>
@@ -130,6 +146,370 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
 
 <p class="reference">Referenced by <a class="el" href="group__surfaces.html#ga769eecc91ebe23607b5d6771888033cc">nbi_patch_upsample_matrix()</a>.</p>
+
+</div>
+</div>
+<a id="gab8947234c5eab69c2fba9a34dc0cbc07" name="gab8947234c5eab69c2fba9a34dc0cbc07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab8947234c5eab69c2fba9a34dc0cbc07">&#9670;&nbsp;</a></span>nbi_geometry_ellipsoid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gint nbi_geometry_ellipsoid </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nth</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nph</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Generate an ellipsoidal surface</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>surface to which patches are to be added; </td></tr>
+    <tr><td class="paramname">a</td><td>ellipsoid length on <img class="formulaInl" alt="$x$" src="form_8.png" width="8" height="6"/> axis; </td></tr>
+    <tr><td class="paramname">b</td><td>ellipsoid length on <img class="formulaInl" alt="$y$" src="form_9.png" width="8" height="9"/> axis; </td></tr>
+    <tr><td class="paramname">c</td><td>ellipsoid length on <img class="formulaInl" alt="$z$" src="form_10.png" width="6" height="6"/> axis; </td></tr>
+    <tr><td class="paramname">nth</td><td>number of patches in azimuth <img class="formulaInl" alt="$\theta$" src="form_6.png" width="6" height="10"/>; </td></tr>
+    <tr><td class="paramname">nph</td><td>number of patches in elevation <img class="formulaInl" alt="$\phi$" src="form_7.png" width="8" height="13"/>; </td></tr>
+    <tr><td class="paramname">nq</td><td>number of quadrature points per patch.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
+
+</div>
+</div>
+<a id="ga868a1ac59c5ea67aeba5ba039d4c3721" name="ga868a1ac59c5ea67aeba5ba039d4c3721"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga868a1ac59c5ea67aeba5ba039d4c3721">&#9670;&nbsp;</a></span>nbi_geometry_ellipsoid_ico()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gint nbi_geometry_ellipsoid_ico </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Generate an ellipsoidal surface by recursive subvision of a deformed icosahedron</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>surface to which patches are to be added; </td></tr>
+    <tr><td class="paramname">a</td><td>ellipsoid length on <img class="formulaInl" alt="$x$" src="form_8.png" width="8" height="6"/> axis; </td></tr>
+    <tr><td class="paramname">b</td><td>ellipsoid length on <img class="formulaInl" alt="$y$" src="form_9.png" width="8" height="9"/> axis; </td></tr>
+    <tr><td class="paramname">c</td><td>ellipsoid length on <img class="formulaInl" alt="$z$" src="form_10.png" width="6" height="6"/> axis; </td></tr>
+    <tr><td class="paramname">nr</td><td>number of subdivisions; </td></tr>
+    <tr><td class="paramname">nq</td><td>number of quadrature points per patch.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
+
+</div>
+</div>
+<a id="gac1dd6cb3d6366bd691de59cf608f0e92" name="gac1dd6cb3d6366bd691de59cf608f0e92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac1dd6cb3d6366bd691de59cf608f0e92">&#9670;&nbsp;</a></span>nbi_geometry_grid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gint nbi_geometry_grid </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>smin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>smax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>ns</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>tmin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>tmax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Generate a regular grid in plane <img class="formulaInl" alt="$z=0$" src="form_11.png" width="29" height="9"/> which can be transformed and used for visualization. Nodes are interpolated between <img class="formulaInl" alt="$(s_{\min},t_{\min},0)$" src="form_12.png" width="71" height="14"/> and <img class="formulaInl" alt="$(s_{\max},t_{\max},0)$" src="form_13.png" width="75" height="14"/></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>surface to add patches to; </td></tr>
+    <tr><td class="paramname">smin</td><td>coordinate of lower left corner of grid; </td></tr>
+    <tr><td class="paramname">smax</td><td>coordinate of upper right corner of grid; </td></tr>
+    <tr><td class="paramname">ns</td><td>number of nodes in <img class="formulaInl" alt="$s$" src="form_14.png" width="5" height="6"/>. </td></tr>
+    <tr><td class="paramname">tmin</td><td>coordinate of lower left corner of grid; </td></tr>
+    <tr><td class="paramname">tmax</td><td>coordinate of upper right corner of grid; </td></tr>
+    <tr><td class="paramname">nt</td><td>number of nodes in <img class="formulaInl" alt="$t$" src="form_15.png" width="5" height="9"/>. </td></tr>
+    <tr><td class="paramname">nq</td><td>number of quadrature nodes per patch on <em>s</em>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on succes. </dd></dl>
+
+</div>
+</div>
+<a id="ga4c31fb52e0ffe2f03eef01dc87b68b78" name="ga4c31fb52e0ffe2f03eef01dc87b68b78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4c31fb52e0ffe2f03eef01dc87b68b78">&#9670;&nbsp;</a></span>nbi_geometry_sphere()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gint nbi_geometry_sphere </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nth</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nph</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Generate a spherical surface</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>surface to which sphere patches are to be added; </td></tr>
+    <tr><td class="paramname">r</td><td>radius of sphere; </td></tr>
+    <tr><td class="paramname">nth</td><td>number of patches in azimuth <img class="formulaInl" alt="$\theta$" src="form_6.png" width="6" height="10"/>; </td></tr>
+    <tr><td class="paramname">nph</td><td>number of patches in elevation <img class="formulaInl" alt="$\phi$" src="form_7.png" width="8" height="13"/>; </td></tr>
+    <tr><td class="paramname">nq</td><td>number of quadrature points per patch.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
+
+</div>
+</div>
+<a id="gaa2f2fa13ec9deaaa268df42ad2e18652" name="gaa2f2fa13ec9deaaa268df42ad2e18652"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa2f2fa13ec9deaaa268df42ad2e18652">&#9670;&nbsp;</a></span>nbi_geometry_sphere_ico()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gint nbi_geometry_sphere_ico </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> *&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gdouble&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Generate a spherical surface by recursive subdivision of an icosahedron</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>surface to which sphere patches are to be added; </td></tr>
+    <tr><td class="paramname">r</td><td>radius of sphere; </td></tr>
+    <tr><td class="paramname">nr</td><td>number of subdivisions; </td></tr>
+    <tr><td class="paramname">nq</td><td>number of quadrature points per patch.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success. </dd></dl>
+
+</div>
+</div>
+<a id="ga5846326971e9c4dcf07a9f8a163ce281" name="ga5846326971e9c4dcf07a9f8a163ce281"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5846326971e9c4dcf07a9f8a163ce281">&#9670;&nbsp;</a></span>nbi_gmsh_mesh()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> * nbi_gmsh_mesh </td>
+          <td>(</td>
+          <td class="paramtype">gchar *&#160;</td>
+          <td class="paramname"><em>file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint&#160;</td>
+          <td class="paramname"><em>nq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Generate an <a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> from a GMSH .geo file (experimental, but has been reliable up to now)</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>name of GMSH file; </td></tr>
+    <tr><td class="paramname">nq</td><td>number of quadrature points per patch.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>pointer to newly allocated <a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a> containing surface generated from <em>file</em>. </dd></dl>
+
+<p class="reference">References <a class="el" href="group__surfaces.html#ga048335822ea13156e6e0b8873520839c">nbi_surface_alloc()</a>, and <a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a>.</p>
 
 </div>
 </div>
@@ -305,7 +685,7 @@ Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="nbi_8h.html#afc7009338be3c582c0406ed93289c068">nbi_surface_node_number</a>, <a class="el" href="nbi_8h.html#a73a94f14df8318eac46a3e3397f7e6e7">nbi_surface_node_number_max</a>, <a class="el" href="nbi_8h.html#ad3d474c794f9fcc2de123e39fe44716e">nbi_surface_patch_number</a>, <a class="el" href="nbi_8h.html#a656b4fd10de6ae08ba948f2bb6dcca21">nbi_surface_patch_number_max</a>, and <a class="el" href="group__surfaces.html#gaf7311c75f0c2eed96f648ce53d435c8c">nbi_surface_t</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="group__geometries.html#ga5846326971e9c4dcf07a9f8a163ce281">nbi_gmsh_mesh()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="group__surfaces.html#ga5846326971e9c4dcf07a9f8a163ce281">nbi_gmsh_mesh()</a>.</p>
 
 </div>
 </div>
@@ -605,14 +985,14 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p >Basic data type for NBI surfaces, including element and quadrature information </p>
 
-<p class="reference">Referenced by <a class="el" href="group__geometries.html#ga5846326971e9c4dcf07a9f8a163ce281">nbi_gmsh_mesh()</a>, <a class="el" href="group__surfaces.html#ga048335822ea13156e6e0b8873520839c">nbi_surface_alloc()</a>, and <a class="el" href="group__surfaces.html#ga1e35bb2cabf96f7e4063962f94816222">nbi_surface_read()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="group__surfaces.html#ga5846326971e9c4dcf07a9f8a163ce281">nbi_gmsh_mesh()</a>, <a class="el" href="group__surfaces.html#ga048335822ea13156e6e0b8873520839c">nbi_surface_alloc()</a>, and <a class="el" href="group__surfaces.html#ga1e35bb2cabf96f7e4063962f94816222">nbi_surface_read()</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 5 2023 17:59:06 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
+Generated on Fri Sep 8 2023 09:22:37 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
 </small></address>
 </body>
 </html>

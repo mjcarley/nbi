@@ -1,0 +1,2 @@
+## generate radiated field on 33x33 grid in plane x=-1, -4 < y, z < 4
+${bin}/nbi-surface -g grid-yz -d -4 -d -4 -d 4 -d 4 -d -1 -i 33 -i 33 > grid.nbi
