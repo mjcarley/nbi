@@ -10,7 +10,6 @@ tags:
 authors:
   - name: Michael J. Carley
     orcid: 0000-0003-2965-8984
-    equal-contrib: true
     affiliation: 1
 affiliations:
  - name: Department of Mechanical Engineering, University of Bath, UK
