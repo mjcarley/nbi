@@ -5,6 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Paper Draft
     steps:
+    - name: Create folder
+        run: |
+          mkdir -p nbi/nbi
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build draft PDF
