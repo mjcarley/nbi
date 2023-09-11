@@ -10,10 +10,10 @@ https://github.com/codeplea/tinyexpr
 
 You will need to have installed the following libraries:
 
-https://github.com/mjcarley/blaswrap
-https://github.com/mjcarley/sqt
-https://github.com/mjcarley/wbfmm
-https://github.com/mjcarley/agg
+- https://github.com/mjcarley/blaswrap
+- https://github.com/mjcarley/sqt
+- https://github.com/mjcarley/wbfmm
+- https://github.com/mjcarley/agg
 
 You should also install PETSc if you want to use it in place of the
 (very) basic built-in iterative solver:

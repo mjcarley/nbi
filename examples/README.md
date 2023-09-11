@@ -71,13 +71,13 @@ Catseye: solve for a point source inside a cat's eye geometry,
 The shell scripts take a number of options, which can be set from the
 command line using the following options:
 
--k k:        acoustic wavenumber, for Helmholtz problems
--a nqa:      number of quadrature points in rule used for adaptive integration
--p nqp:      number of quadrature points on discretized patches
--u nqu:      number of quadrature points on upsampled patches
--t tol:      adaptive integration tolerance
--o order:    order of singular integration
--e eta:      near/far field cutoff parameter
--d depth:    maximum recursion depth for adaptive quadrature
--T nthreads: number of threads to use in threaded computations
--s src:      boundary condition (source) filename
+- -k k:        acoustic wavenumber, for Helmholtz problems
+- -a nqa:      number of quadrature points in rule used for adaptive integration
+- -p nqp:      number of quadrature points on discretized patches
+- -u nqu:      number of quadrature points on upsampled patches
+- -t tol:      adaptive integration tolerance
+- -o order:    order of singular integration
+- -e eta:      near/far field cutoff parameter
+- -d depth:    maximum recursion depth for adaptive quadrature
+- -T nthreads: number of threads to use in threaded computations
+- -s src:      boundary condition (source) filename
