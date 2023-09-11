@@ -76,7 +76,9 @@ distribution are given by a boundary integral
 where $G$ is the Green's function for the problem. For points lying on
 the surface, the left hand side is replaced by $\phi/2$ and the
 equation is interpreted as a boundary integral equation to be solved
-subject to 
+subject to an appropriate boundary condition. By default, NBI
+implements a Neumann boundary condition as that most appropriate to
+acoustic scattering and to potential problems in fluid dynamics. 
 
 # Features
 
@@ -88,14 +90,41 @@ code documentation, but the basic steps are:
 - solution of the problem subject to a specified boundary condition;
 - postprocessing, including evaluation of the potential field, and
   visualization.
+  
+Each of these steps is carried out using an appropriate executable,
+and a full problem can be solved using a Unix or Linux shell script
+which runs each step in turn. 
 
 ## Surface generation and representation
 
+Surfaces in NBI are represented as high-order triangular patches,
+interpolated using Koornwindwer orthogonal polynomials
+[@greengard-oneil-rachh-vico21]. A number of surface generation
+methods are provided (built-in basic geometries, parametric surfaces,
+GMSH @c .geo files) allowing considerable flexibility in the workflow
+for real problems. 
+
 ## Quadratures
 
-[@bremer-gimbutas13]
+The quadrature methods used in NBI are specialized rules for
+quadrature on triangles, pre-computed using methods for generalized
+Gaussian rules [@bremer-gimbutas13]. 
 
 ## Solving problems
+
+Problems in NBI are solved using iterative solvers applied to
+matrix-free evaluation of integrals. The evaluation uses a Fast
+Multipole Method [@gumerov-duraiswami03; @gumerov-duraiswami05;
+@gumerov-duraiswami09]. There is a built-in GMRES solver and NBI also
+has an optional interface to the PETSc library and its solvers
+[@petsc-web-page]. Boundary conditions in NBI are specified using
+analytical formulae which are parsed and evaluated at each surface
+node. This allows an intuitive definition of boundary conditions,
+where user-defined variables simplify parametric variation, and a
+range of built-in functions for the most common boundary conditions
+are also available. These include point sources for the Laplace and
+Helmholtz problems, and ring sources for the simulation of rotor
+acoustics in aeronautics. 
 
 ## Postprocessing and visualization
 
