@@ -12,7 +12,6 @@ authors:
     orcid: 0000-0003-2965-8984
     equal-contrib: true
     affiliation: 1
-	corresponding: true
 affiliations:
  - name: Department of Mechanical Engineering, University of Bath, UK
    index: 1
@@ -104,14 +103,14 @@ code documentation, but the basic steps are:
 ![GMSH visualisation of output from sphere scattering
 example.\label{fig:scattering}](scattering.png){width=50%}
 
-Figure \autoref{fig:scattering} shows the GMSH visualisation of the
+\autoref{fig:scattering} shows the GMSH visualisation of the
 scattered field from a sphere subject to plane wave excitation, one of
 the test cases included in the package. 
 
 ![GMSH visualisation of output from rotor noise
 example.\label{rotor}](rotor.png){width=50%}
 
-Figure \autoref{rotor} shows the GMSH visualisation of the
+\autoref{rotor} shows the GMSH visualisation of the
 field scattered from an ellipsoid, subject to an incident field from a
 ring source, a simple model for scattering of rotor noise by a
 nacelle. 
