@@ -61,10 +61,8 @@ Rotor: solve the problem of scattering of noise from an azimuthally
        with a simple nacelle
 
 Catseye: solve for a point source inside a cat's eye geometry,
-	 generated using a GMSH input file.  To run the example in the
-	 directory,
-
-	 ./catseye-laplace
+	 generated using a GMSH input file. This is run by both the
+	 Laplace and Helmholtz test scripts.
 
 * Parameters
 
