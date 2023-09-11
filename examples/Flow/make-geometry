@@ -1,0 +1,1 @@
+${bin}/nbi-surface -q ${nqp} -g ellipsoid-ico -i 3 -d 1.5 -d 1.5 -d 1.5 -o ${gfile}

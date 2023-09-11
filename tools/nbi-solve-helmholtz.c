@@ -67,6 +67,7 @@ gchar *progname ;
  * - @c -B lists built-in functions for evaluating boundary conditions;
  * - @c -f use the Fast Multipole Method (strongly recommended for all but
  * the smallest problems); 
+ * - @c -t error tolerance for iterative solver;
  * - @c -P use a PETSc solver if available;
  * - @c -K name of file containing PETSc solver settings;
  * - @c -s name of output file for solution.
@@ -74,7 +75,26 @@ gchar *progname ;
  * The output file contains data in a format which can be read by @c
  * nbi-process or read using the @c nbidata function in the .../octave
  * directory.
- * 
+ *
+ * On completion, the solver reports the number of iterations used and
+ * the residual error in the solution. It also reports three error norms:
+ * \f$L_{\infty}=\max|\phi_{c}-\phi_{b}|/\max|\phi_{b}|\f$,
+ * \f$L_{2}=\sum|\phi_{c}-\phi_{b}|^{2}/\sum|\phi_{b}|^{2}\f$
+ * and
+ * \f$L_{rms}=\left(\sum|\phi_{c}-\phi_{b}|^{2}/n\right)^{1/2}\f$, 
+ * where \f$\phi_{c}\f$ is the computed surface potential, \f$\phi_{b}\f$
+ *  is the surface potential supplied as part of the boundary condition, 
+ * and \f$n\f$ is the number of nodes.
+ *
+ * These error norms are useful for checking that a problem has been
+ * properly set up and discretized, and for assessing the accuracy to
+ * be expected from the solver. If the input boundary condition is
+ * that due to a source which lies completely inside the surface, the
+ * result should be \f$\phi_{c}=\phi_{b}\f$. The difference between
+ * the input and computed potentials is thus a measure of the accuracy
+ * of the numerical solution. If the boundary condition is not that
+ * due to an internal source, these error norms can be ignored. 
+ *
  */
 
 static void print_help_text(FILE *f, gint depth,
@@ -575,7 +595,6 @@ gint main(gint argc, gchar **argv)
 
     matrix->diag = -0.5 ;
     matrix->potential = NBI_POTENTIAL_DOUBLE ;
-    fprintf(stderr, "%s: starting PETSc solver\n", progname) ;
 
     PetscCall(KSPCreate(PETSC_COMM_SELF, &ksp));
     PetscCall(KSPSetNormType(ksp, KSP_NORM_UNPRECONDITIONED)) ;
@@ -601,7 +620,6 @@ gint main(gint argc, gchar **argv)
   if ( !petsc_solve ) {
     rhs = (gdouble *)g_malloc0(2*nbi_surface_node_number(s)*sizeof(gdouble)) ;
     p   = (gdouble *)g_malloc0(2*nbi_surface_node_number(s)*sizeof(gdouble)) ;
-    /* for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) p[i] = 1.0 ; */
     
     /*form right hand side*/
     matrix->diag = 0.0 ;
@@ -614,16 +632,26 @@ gint main(gint argc, gchar **argv)
     
     matrix->diag = -0.5 ;
     matrix->potential = NBI_POTENTIAL_DOUBLE ;
-    fprintf(stderr, "%s: starting built-in solver\n", progname) ;
+    fprintf(stderr, "%s: starting built-in solver [%lg]\n",
+	    progname, g_timer_elapsed(timer, NULL)) ;
     
     i = nbi_gmres_complex(matrix, p, 2, rhs, 2,
 			  gmres_restart, gmres_max_iter, tol,
 			  &error, nthreads, work) ;
     
-    fprintf(stderr, "%s: %d iterations; error = %lg, [%lg] (%lg)\n",
-	    progname, i, error,
-	    g_timer_elapsed(timer, NULL),
-	    g_timer_elapsed(timer, NULL) - t) ;
+    if ( i >= 0 ) {
+      fprintf(stderr, "%s: %d iterations; error = %lg [%lg] (%lg)\n",
+	      progname, i, error,
+	      g_timer_elapsed(timer, NULL),
+	      g_timer_elapsed(timer, NULL) - t) ;
+    } else {
+      fprintf(stderr,
+	      "%s: GMRES did not converge after %d iterations; "
+	      "error = %lg [%lg] (%lg)\n",
+	      progname, -i, error,
+	      g_timer_elapsed(timer, NULL),
+	      g_timer_elapsed(timer, NULL) - t) ;
+    }
   }
 
   emax = fmax = e2 = f2 = erms = 0.0 ;
@@ -654,8 +682,6 @@ gint main(gint argc, gchar **argv)
   fprintf(stderr, "%s: emax = %lg; fmax = %lg;\n", progname, emax, fmax) ;
   fprintf(stderr, "%s: L_inf norm = %lg; L_2 norm = %lg; rms error = %lg\n",
 	  progname, emax/fmax, sqrt(e2/f2), erms) ;
-  /* fprintf(stderr, "e2 = %lg; f2 = %lg\n", e2, f2) ; */
-
 	 
   if ( sfile != NULL ) {
     output = fopen(sfile, "w")  ;

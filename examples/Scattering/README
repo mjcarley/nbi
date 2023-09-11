@@ -1,5 +1,5 @@
-The results of the plane wave scattering problem can checked using the
-sphscat function in the octave subdirectory, using the script
+The results of the plane wave scattering problem can be checked using
+the sphscat function in the octave subdirectory, using the script
 sphcheck.m. You need to add the path to the octave subdirectory of the
 nbi distribution, and then run the script.
 
@@ -8,4 +8,4 @@ nbi distribution, and then run the script.
 
 This will give an error estimate which is the absolute value of the
 maximum difference between the computed scattered field and the result
-from evaluating the exact series solution. 
+from evaluating the exact series solution.

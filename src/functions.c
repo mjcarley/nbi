@@ -180,15 +180,13 @@ static void gfunc_helmholtz_ring(gdouble a, gdouble n, gdouble k,
 				 gint ngp, gdouble *G)
 
 {
-  gdouble E[2], R, g[2], th1, x1, y1, z1 ;
+  gdouble E[2], R, g[2], th1, y1, z1 ;
   gint i ;
 
   G[0] = G[1] = 0 ;
   for ( i = 0 ; i < ngp ; i ++ ) {
     th1 = 2.0*M_PI*i/ngp ;
     E[0] = cos(n*th1) ; E[1] = sin(n*th1) ;
-    /* x1 = a*cos(th1) ; y1 = a*sin(th1) ; */
-    /* gfunc_helmholtz(k, x-x1, y-y1, z, &R, g) ; */
     y1 = a*cos(th1) ; z1 = a*sin(th1) ;
     gfunc_helmholtz(k, x, y-y1, z-z1, &R, g) ;
     G[0] += COMPLEX_MUL_REAL(E, g) ;
@@ -206,7 +204,7 @@ static void gfunc_helmholtz_ring_gradient(gdouble a, gdouble n, gdouble k,
 					  gint ngp, gdouble *dG)
 
 {
-  gdouble E[2], dR[4], dg[8], th1, x1, y1, z1, sc ;
+  gdouble E[2], dR[4], dg[8], th1, y1, z1, sc ;
   gint i ;
 
   memset(dG, 0, 8*sizeof(gdouble)) ;
@@ -214,8 +212,6 @@ static void gfunc_helmholtz_ring_gradient(gdouble a, gdouble n, gdouble k,
   for ( i = 0 ; i < ngp ; i ++ ) {
     th1 = 2.0*M_PI*i/ngp ;
     E[0] = cos(n*th1) ; E[1] = sin(n*th1) ;
-    /* x1 = a*cos(th1) ; y1 = a*sin(th1) ; */
-    /* dgfunc_helmholtz(k, x-x1, y-y1, z, dR, dg) ; */
     y1 = a*cos(th1) ; z1 = a*sin(th1) ;
     dgfunc_helmholtz(k, x, y-y1, z-z1, dR, dg) ;
     dG[0] += COMPLEX_MUL_REAL(E, &(dg[0])) ;

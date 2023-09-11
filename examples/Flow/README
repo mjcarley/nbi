@@ -1,0 +1,11 @@
+The results of the potential flow calculation can be checked using the
+sphpot function in the octave subdirectory, using the script
+sphcheck.m. You need to add the path to the octave subdirectory of the
+nbi distribution, and then run the script.
+
+>> addpath(".../path/to/octave/functions/") ;
+>> sphcheck
+
+This will give an error estimate which is the absolute value of the
+maximum difference between the computed potential and the analytical
+result.

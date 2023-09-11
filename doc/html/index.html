@@ -53,7 +53,7 @@ Getting started</h1>
 <li>solve the problem with the prescribed boundary conditions using <code>nbi-solve-laplace</code> or <code>nbi-solve-helmholtz</code> </li>
 <li>if required, compute the field outside the surface using <code>nbi-field-laplace</code> or <code>nbi-field-helmholtz</code> </li>
 </ol>
-<p >Results can be visualized using <code>nbi-process</code> to generate mesh files which can be viewed using <code>gmsh</code>, available from <a href="https://www.gmsh.info/">https://www.gmsh.info/</a></p>
+<p >Results can be visualised using <code>nbi-process</code> to generate mesh files which can be viewed using <code>gmsh</code>, available from <a href="https://www.gmsh.info/">https://www.gmsh.info/</a></p>
 <h1><a class="anchor" id="examples"></a>
 Examples</h1>
 <p >A number of examples showing the use of NBI are available in the .../examples directory. A basic calculation for the Helmholtz problem would be:</p>
@@ -62,7 +62,7 @@ nbi-assemble -k 3.0 -d 5 -g sphere.nbi -m matrix.dat
 nbi-solve-helmholtz -b point.bc -f -s solution.dat -k 3.0
 nbi-field-helmholtz -g sphere.nbi -s solution.dat -k 3.0 -F field.nbi&gt; field.dat
 nbi-process -F field.nbi -d field.dat -o field.msh
-</pre><p >This generates a spherical surface as a twice refined icosahedron; assembles the problem matrices for a wavenumber <img class="formulaInl" alt="$k=3$" src="form_20.png" width="30" height="10"/>; solves for a boundary condition given in the file <code>point.bc</code>; computes the resulting potential on a surface given in <code>field.nbi</code> and generates a .msh file for the field, which can be viewed using GMSH. Boundary conditions are defined using <a class="el" href="group__boundary.html">analytical expressions </a>.</p>
+</pre><p >This generates a spherical surface as a twice refined icosahedron; assembles the problem matrices for a wavenumber <img class="formulaInl" alt="$k=3$" src="form_20.png" width="30" height="10"/>; solves for a Neumann boundary condition given in the file <code>point.bc</code>; computes the resulting potential on a surface given in <code>field.nbi</code> and generates a .msh file for the field, which can be viewed using GMSH. Boundary conditions are defined using <a class="el" href="group__boundary.html">analytical expressions </a>.</p>
 <p >More details are available on how to use the NBI tools to set up and solve problems, and to process the results</p>
 <ul>
 <li><a class="el" href="nbisurface.html">Generating surfaces for NBI calculations</a></li>
@@ -89,7 +89,7 @@ References</h1>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 8 2023 09:22:37 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
+Generated on Mon Sep 11 2023 12:21:57 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
 </small></address>
 </body>
 </html>

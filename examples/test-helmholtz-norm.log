@@ -1,2 +1,25 @@
+SphereHelmholtz test
+nbi-solve-helmholtz: L_inf norm = 0.00519781; L_2 norm = 0.00825183; rms error = 3.09553e-06
+Scattering test
+  0 KSP Residual norm 79.7595 
+  1 KSP Residual norm 55.4748 
+  2 KSP Residual norm 42.119 
+  3 KSP Residual norm 26.37 
+  4 KSP Residual norm 12.6681 
+  5 KSP Residual norm 7.07106 
+  6 KSP Residual norm 4.50859 
+  7 KSP Residual norm 3.03824 
+  8 KSP Residual norm 1.74299 
+  9 KSP Residual norm 0.797981 
+ 10 KSP Residual norm 0.289781 
+ 11 KSP Residual norm 0.0964645 
+ 12 KSP Residual norm 0.0188124 
+ 13 KSP Residual norm 0.00205237 
+ 14 KSP Residual norm 7.8945e-05 
+nbi-solve-helmholtz: L_inf norm = 3.1441; L_2 norm = 1.10365; rms error = 0.0061696
 Wing test
-nbi-solve-helmholtz: L_inf norm = 1.12144; L_2 norm = 0.275197; rms error = 0.000153273
+nbi-solve-laplace: L_inf norm = 3.23031; L_2 norm = 0.602007; rms error = 0.000335292
+Catseye test
+nbi-solve-laplace: L_inf norm = 0.00897256; L_2 norm = 0.00144355; rms error = 1.08191e-06
+Rotor test
+nbi-solve-helmholtz: L_inf norm = 0.225383; L_2 norm = 0.294684; rms error = 0.00012429

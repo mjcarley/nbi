@@ -106,7 +106,8 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p >Matrix operations and iterative solvers. </p>
 <p >An NBI "matrix" is a data type which can be used in matrix type calculations, though it does not strictly contain a matrix. It contains the surface discretization data required to perform a matrix-free evaluation of the integrals which appear in the boundary integral problem, typically accelerated using the Fast Multipole Method.</p>
-<p >The matrix-free implementation can be used with iterative methods to solve problems much larger than be handled using dense matrices. NBI has a built-in GMRES solver which can be used for real and complex problems. It can also link to the PETSc library available from <a href="https://petsc.org/">https://petsc.org/</a> This makes a wide range of high-performance solvers available, and is recommended as an option. </p>
+<p >The matrix-free implementation can be used with iterative methods to solve problems much larger than be handled using dense matrices. NBI has a built-in GMRES solver which can be used for real and complex problems. It can also link to the PETSc library available from <a href="https://petsc.org/">https://petsc.org/</a> This makes a wide range of high-performance solvers available, and is recommended as an option.</p>
+<p >There are also a number of functions which can be used to evaluate Green's identity for a given source distribution. These can be used to test discretizations and model parameters by using the surface source terms to compute the surface potential, using the integral formulation for the problem. If the setup is exactly correct, the potential evaluated using Green's identity will be equal to the supplied value. The difference between the exact and computed value is then a measure of the error in the problem formulation. </p>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga3fbad6dc4ed146c23c8fe3af62b94522" name="ga3fbad6dc4ed146c23c8fe3af62b94522"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga3fbad6dc4ed146c23c8fe3af62b94522">&#9670;&nbsp;</a></span>nbi_calc_field_helmholtz()</h2>
@@ -1611,7 +1612,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 8 2023 09:22:37 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
+Generated on Mon Sep 11 2023 12:21:57 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
 </small></address>
 </body>
 </html>

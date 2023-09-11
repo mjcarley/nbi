@@ -54,16 +54,19 @@ $(function() {
 <li><code>-b</code> name of file containing boundary condition (this must be set)</li>
 <li><code>-B</code> lists built-in functions for evaluating boundary conditions;</li>
 <li><code>-f</code> use the Fast Multipole Method (strongly recommended for all but the smallest problems);</li>
+<li><code>-t</code> error tolerance for iterative solver;</li>
 <li><code>-P</code> use a PETSc solver if available;</li>
 <li><code>-K</code> name of file containing PETSc solver settings;</li>
 <li><code>-s</code> name of output file for solution.</li>
 </ul>
-<p >The output file contains data in a format which can be read by <code>nbi-process</code> or read using the <code>nbidata</code> function in the .../octave directory. </p>
+<p >The output file contains data in a format which can be read by <code>nbi-process</code> or read using the <code>nbidata</code> function in the .../octave directory.</p>
+<p >On completion, the solver reports the number of iterations used and the residual error in the solution. It also reports three error norms: <img class="formulaInl" alt="$L_{\infty}=\max|\phi_{c}-\phi_{b}|/\max|\phi_{b}|$" src="form_21.png" width="160" height="14"/>, <img class="formulaInl" alt="$L_{2}=\sum|\phi_{c}-\phi_{b}|^{2}/\sum|\phi_{b}|^{2}$" src="form_24.png" width="146" height="15"/> and <img class="formulaInl" alt="$L_{rms}=\left(\sum|\phi_{c}-\phi_{b}|^{2}/n\right)^{1/2}$" src="form_23.png" width="151" height="20"/>, where <img class="formulaInl" alt="$\phi_{c}$" src="form_25.png" width="13" height="13"/> is the computed surface potential, <img class="formulaInl" alt="$\phi_{b}$" src="form_26.png" width="11" height="13"/> is the surface potential supplied as part of the boundary condition, and <img class="formulaInl" alt="$n$" src="form_27.png" width="9" height="6"/> is the number of nodes.</p>
+<p >These error norms are useful for checking that a problem has been properly set up and discretized, and for assessing the accuracy to be expected from the solver. If the input boundary condition is that due to a source which lies completely inside the surface, the result should be <img class="formulaInl" alt="$\phi_{c}=\phi_{b}$" src="form_28.png" width="41" height="13"/>. The difference between the input and computed potentials is thus a measure of the accuracy of the numerical solution. If the boundary condition is not that due to an internal source, these error norms can be ignored. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 8 2023 09:22:37 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
+Generated on Mon Sep 11 2023 12:21:57 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
 </small></address>
 </body>
 </html>

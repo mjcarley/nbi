@@ -789,7 +789,7 @@ static void matrix_multiply_single(nbi_matrix_t *m,
   al[0] = -Al[0] ; al[1] = -Al[1] ;
   bt[0] = 1 ; bt[1] = 0 ;
   point_source_summation(m, f, fstr, al, bt, work, nth) ;
-
+  /* return ; */
   /*local corrections*/
   al[0] = Al[0] ; al[1] = Al[1] ;
   bt[0] = 0.0 ; bt[1] = 0.0 ;

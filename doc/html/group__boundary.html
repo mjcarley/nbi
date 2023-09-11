@@ -70,7 +70,7 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p >Definition and evaluation of boundary conditions. </p>
-<p >Boundary conditions in NBI are defined using analytical expressions, which are evaluated at each surface node using the <a href="
+<p >NBI solves boundary integral problems subject to a Neumann boundary condition, which corresponds to a surface normal velocity. This is the boundary condition appropriate to acoustic scattering from a hard surface, or to solving a potential problem in fluid dynamics. The boundary conditions are defined using analytical expressions, which are evaluated at each surface node using the <a href="
  https://github.com/codeplea/tinyexpr">tinyexpr</a> parser which accepts standard mathematical expressions, and a number of built-in functions for standard cases, such as the point sources in the Laplace and Helmholtz problems. The executables <code>nbi-solve-laplace</code> and <code>nbi-solve-helmholtz</code> accept the <code>-B</code> option which lists the built-in functions which can be used to define boundary conditions.</p>
 <p >In practice, boundary conditions are defined in a file whose name is supplied as a command line option to the solver. A sample file for a point source illustrates the syntax: </p><pre class="fragment">## complex point source boundary condition
 ## wavenumber, defined as variable
@@ -421,7 +421,7 @@ idp = helmholtz_dGi(k, x-x0, y-y0, z-z0, nx, ny, nz)
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 8 2023 09:22:37 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
+Generated on Mon Sep 11 2023 12:21:57 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
 </small></address>
 </body>
 </html>

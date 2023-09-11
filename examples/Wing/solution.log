@@ -1,58 +1,59 @@
-nbi-solve-helmholtz: 2 threads (4 processors)
-nbi-solve-helmholtz: reading geometry from Geometries/wing-25.nbi
-nbi-solve-helmholtz: reading matrix from Matrices/matrix-wing-helmholtz-25-54-8-5.dat
-nbi-solve-helmholtz: geometry initialized, 18400 nodes, 736 patches [2e-06]
-nbi-solve-helmholtz: setting boundary conditions [3.5e-05]
-nbi-solve-helmholtz: reading boundary conditions from pcsource.bc
-nbi-solve-helmholtz: allocating 692087 elements to FMM work space
-nbi-solve-helmholtz: building tree [0.013667]
-nbi-solve-helmholtz: FMM matrix initialized [0.075235]
-nbi-solve-helmholtz: forming right hand side, [0.075277]
-nbi-solve-helmholtz: starting built-in solver
-  nbi_gmres_complex: iteration 0
-  nbi_gmres_complex: substep 0; error: 1.761331e-01
-  nbi_gmres_complex: substep 1; error: 5.036623e-02
-  nbi_gmres_complex: substep 2; error: 2.802582e-02
-  nbi_gmres_complex: substep 3; error: 2.307847e-02
-  nbi_gmres_complex: substep 4; error: 2.305135e-02
-  nbi_gmres_complex: substep 5; error: 2.067005e-02
-  nbi_gmres_complex: substep 6; error: 1.946318e-02
-  nbi_gmres_complex: substep 7; error: 1.929115e-02
-  nbi_gmres_complex: substep 8; error: 1.882790e-02
-  nbi_gmres_complex: substep 9; error: 1.828766e-02
-  nbi_gmres_complex: iteration 1
-  nbi_gmres_complex: substep 0; error: 1.802385e-02
-  nbi_gmres_complex: substep 1; error: 1.756187e-02
-  nbi_gmres_complex: substep 2; error: 1.754130e-02
-  nbi_gmres_complex: substep 3; error: 1.686025e-02
-  nbi_gmres_complex: substep 4; error: 1.562589e-02
-  nbi_gmres_complex: substep 5; error: 1.557408e-02
-  nbi_gmres_complex: substep 6; error: 1.437690e-02
-  nbi_gmres_complex: substep 7; error: 1.360993e-02
-  nbi_gmres_complex: substep 8; error: 1.355507e-02
-  nbi_gmres_complex: substep 9; error: 1.325079e-02
-  nbi_gmres_complex: iteration 2
-  nbi_gmres_complex: substep 0; error: 1.316331e-02
-  nbi_gmres_complex: substep 1; error: 1.313340e-02
-  nbi_gmres_complex: substep 2; error: 1.306721e-02
-  nbi_gmres_complex: substep 3; error: 1.298336e-02
-  nbi_gmres_complex: substep 4; error: 1.297893e-02
-  nbi_gmres_complex: substep 5; error: 1.294403e-02
-  nbi_gmres_complex: substep 6; error: 1.263432e-02
-  nbi_gmres_complex: substep 7; error: 1.238276e-02
-  nbi_gmres_complex: substep 8; error: 1.235408e-02
-  nbi_gmres_complex: substep 9; error: 1.218612e-02
-  nbi_gmres_complex: iteration 3
-  nbi_gmres_complex: substep 0; error: 1.216328e-02
-  nbi_gmres_complex: substep 1; error: 1.214411e-02
-  nbi_gmres_complex: substep 2; error: 1.207382e-02
-  nbi_gmres_complex: substep 3; error: 1.206145e-02
-  nbi_gmres_complex: substep 4; error: 1.203776e-02
-  nbi_gmres_complex: substep 5; error: 1.199710e-02
-  nbi_gmres_complex: substep 6; error: 1.188651e-02
-  nbi_gmres_complex: substep 7; error: 1.180388e-02
-  nbi_gmres_complex: substep 8; error: 1.163295e-02
-  nbi_gmres_complex: substep 9; error: 1.158245e-02
-nbi-solve-helmholtz: -4 iterations; error = 0.0115825, [1478.88] (1478.8)
-nbi-solve-helmholtz: emax = 1.09664; fmax = 0.977886;
-nbi-solve-helmholtz: L_inf norm = 1.12144; L_2 norm = 0.275197; rms error = 0.000153273
+nbi-solve-laplace: 2 threads (4 processors)
+nbi-solve-laplace: reading geometry from Geometries/sphere-25.nbi
+nbi-solve-laplace: reading matrix from Matrices/matrix-sphere-laplace-25-54-8-5.dat
+nbi-solve-laplace: geometry initialized, 18400 nodes, 736 patches [2e-06]
+nbi-solve-laplace: setting boundary conditions [5.2e-05]
+nbi-solve-laplace: reading boundary conditions from psource.bc
+nbi-solve-laplace: allocating 478682 elements to solver work space
+nbi-solve-laplace: allocating 100530 elements to FMM work space
+nbi-solve-laplace: building tree [0.006146]
+nbi-solve-laplace: FMM matrix initialized [0.074034]
+nbi-solve-laplace: forming right hand side [0.07425]
+nbi-solve-laplace: starting built-in solver
+  nbi_gmres_real: iteration 0
+  nbi_gmres_real: substep   0; error: 6.307426e-01
+  nbi_gmres_real: substep   1; error: 2.678343e-01
+  nbi_gmres_real: substep   2; error: 1.871061e-01
+  nbi_gmres_real: substep   3; error: 1.735465e-01
+  nbi_gmres_real: substep   4; error: 1.159199e-01
+  nbi_gmres_real: substep   5; error: 9.437309e-02
+  nbi_gmres_real: substep   6; error: 9.435569e-02
+  nbi_gmres_real: substep   7; error: 8.037727e-02
+  nbi_gmres_real: substep   8; error: 7.562842e-02
+  nbi_gmres_real: substep   9; error: 6.244254e-02
+  nbi_gmres_real: iteration 1
+  nbi_gmres_real: substep   0; error: 4.622818e-02
+  nbi_gmres_real: substep   1; error: 3.975537e-02
+  nbi_gmres_real: substep   2; error: 3.727011e-02
+  nbi_gmres_real: substep   3; error: 3.599525e-02
+  nbi_gmres_real: substep   4; error: 3.530977e-02
+  nbi_gmres_real: substep   5; error: 3.014600e-02
+  nbi_gmres_real: substep   6; error: 3.008522e-02
+  nbi_gmres_real: substep   7; error: 2.864327e-02
+  nbi_gmres_real: substep   8; error: 2.447852e-02
+  nbi_gmres_real: substep   9; error: 2.342567e-02
+  nbi_gmres_real: iteration 2
+  nbi_gmres_real: substep   0; error: 2.335929e-02
+  nbi_gmres_real: substep   1; error: 2.269450e-02
+  nbi_gmres_real: substep   2; error: 2.028476e-02
+  nbi_gmres_real: substep   3; error: 1.711643e-02
+  nbi_gmres_real: substep   4; error: 1.705746e-02
+  nbi_gmres_real: substep   5; error: 1.596525e-02
+  nbi_gmres_real: substep   6; error: 1.553255e-02
+  nbi_gmres_real: substep   7; error: 1.553114e-02
+  nbi_gmres_real: substep   8; error: 1.486026e-02
+  nbi_gmres_real: substep   9; error: 1.436587e-02
+  nbi_gmres_real: iteration 3
+  nbi_gmres_real: substep   0; error: 1.433274e-02
+  nbi_gmres_real: substep   1; error: 1.415184e-02
+  nbi_gmres_real: substep   2; error: 1.393560e-02
+  nbi_gmres_real: substep   3; error: 1.368792e-02
+  nbi_gmres_real: substep   4; error: 1.354774e-02
+  nbi_gmres_real: substep   5; error: 1.305104e-02
+  nbi_gmres_real: substep   6; error: 1.283565e-02
+  nbi_gmres_real: substep   7; error: 1.267803e-02
+  nbi_gmres_real: substep   8; error: 1.246232e-02
+  nbi_gmres_real: substep   9; error: 1.239708e-02
+nbi-solve-laplace: -4 iterations; error = 0.0123971 [1764] (1763.92)
+nbi-solve-laplace: emax = 3.15887; fmax = 0.977886;
+nbi-solve-laplace: L_inf norm = 3.23031; L_2 norm = 0.602007; rms error = 0.000335292

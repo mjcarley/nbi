@@ -111,7 +111,7 @@ ${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
 echo
 
 ## solve the problem
-opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
+opts="-m ${mfile} -g ${gfile} -D 5 -o 8 -d 2 -t 1e-6 \
       -f -T ${nthreads} -k ${k} -b ${src} -s solution.dat -i 4"
 if test x$petsc = xyes ; then
     opts="${opts} -K ksp-options -P"
@@ -128,7 +128,7 @@ echo
 
 ## generate solution on surface mesh for visualisation
 tmpfile=`mktemp`
-${bin}/nbi-process -d solution.dat -g ${gfile} -o ${geometry}.msh \
+${bin}/nbi-process -d solution.dat -g ${gfile} -o ${geometry}.msh -v "Surface" \
       2>&1 | tee ${tmpfile}
 
 ## find the indices of the first node and element of the visualization
@@ -146,4 +146,4 @@ ${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
       -k ${k} -F grid.nbi > grid.dat
 ## generate gmsh files for visualization
 ${bin}/nbi-process  -p ${offp} -e ${offe} -d grid.dat -g grid.nbi \
-      -r 2 -o grid.msh
+      -r 2 -o grid.msh -v "Grid"

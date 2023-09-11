@@ -5,7 +5,7 @@ nqa=7
 nqp=7
 nqu=25
 tol=1e-6
-eta=1.5
+eta=1.25
 depth=5
 order=8
 nthreads=2
@@ -105,7 +105,7 @@ echo
 
 ## solve the problem
 opts="-m ${mfile} -g ${gfile} -D 5 -o 10 -d 2 -t 1e-6 \
-      -f -T ${nthreads} -b ${src} -s solution.dat -i 4"
+      -f -T ${nthreads} -b ${src} -s solution.dat -i 4 -p"
 if test x$petsc = xyes ; then
     opts="${opts} -K ksp-options -P"
 fi

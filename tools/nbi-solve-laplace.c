@@ -67,6 +67,7 @@ gchar *progname ;
  * - @c -B lists built-in functions for evaluating boundary conditions;
  * - @c -f use the Fast Multipole Method (strongly recommended for all but
  * the smallest problems); 
+ * - @c -t error tolerance for iterative solver;
  * - @c -P use a PETSc solver if available;
  * - @c -K name of file containing PETSc solver settings;
  * - @c -s name of output file for solution.
@@ -74,6 +75,25 @@ gchar *progname ;
  * The output file contains data in a format which can be read by @c
  * nbi-process or read using the @c nbidata function in the .../octave
  * directory.
+ *
+ * On completion, the solver reports the number of iterations used and
+ * the residual error in the solution. It also reports three error norms:
+ * \f$L_{\infty}=\max|\phi_{c}-\phi_{b}|/\max|\phi_{b}|\f$,
+ * \f$L_{2}=\sum|\phi_{c}-\phi_{b}|^{2}/\sum|\phi_{b}|^{2}\f$
+ * and
+ * \f$L_{rms}=\left(\sum|\phi_{c}-\phi_{b}|^{2}/n\right)^{1/2}\f$, 
+ * where \f$\phi_{c}\f$ is the computed surface potential, \f$\phi_{b}\f$
+ *  is the surface potential supplied as part of the boundary condition, 
+ * and \f$n\f$ is the number of nodes.
+ *
+ * These error norms are useful for checking that a problem has been
+ * properly set up and discretized, and for assessing the accuracy to
+ * be expected from the solver. If the input boundary condition is
+ * that due to a source which lies completely inside the surface, the
+ * result should be \f$\phi_{c}=\phi_{b}\f$. The difference between
+ * the input and computed potentials is thus a measure of the accuracy
+ * of the numerical solution. If the boundary condition is not that
+ * due to an internal source, these error norms can be ignored. 
  * 
  */
 
@@ -174,7 +194,7 @@ gint main(gint argc, gchar **argv)
   order_fmm = 12 ; order_inc = 2 ; depth = 4 ;
 
   solver_work_size = 0 ;
-  gmres_max_iter = 128 ; gmres_restart = 10 ; tol = 1e-9 ;
+  gmres_max_iter = 128 ; gmres_restart = 10 ; tol = 1e-3 ;
     
   fstr = 3 ;
   while ( (ch = getopt(argc, argv, "hBb:D:d:fGg:Ii:K:Lm:o:Ppr:s:T:t:"))
@@ -506,7 +526,8 @@ gint main(gint argc, gchar **argv)
 
   matrix->diag = -0.5 ;
   matrix->potential = NBI_POTENTIAL_DOUBLE ;
-  fprintf(stderr, "%s: starting PETSc solver\n", progname) ;
+  fprintf(stderr, "%s: starting PETSc solver [%lg]\n",
+	  progname, g_timer_elapsed(timer, NULL)) ;
 
   PetscCall(KSPCreate(PETSC_COMM_SELF, &ksp));
   PetscCall(KSPSetNormType(ksp, KSP_NORM_UNPRECONDITIONED)) ;
@@ -529,18 +550,11 @@ gint main(gint argc, gchar **argv)
 	  g_timer_elapsed(timer, NULL) - t) ;
   }
 #endif /*HAVE_PETSC*/
-  
-  /* fprintf(stderr, */
-  /* 	  "%s: compiled without PETSc, using internal GMRES solver\n\n" */
-  /* 	  "  If you want solver support, recompile NBI with PETSc\n" */
-  /* 	  "  available from https://petsc.org/\n\n", */
-  /* 	  progname) ; */
 
   if ( !petsc_solve ) {
     rhs = (gdouble *)g_malloc0(nbi_surface_node_number(s)*sizeof(gdouble)) ;
     p   = (gdouble *)g_malloc0(nbi_surface_node_number(s)*sizeof(gdouble)) ;
-    for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) p[i] = 1.0 ;
-    
+     
     /*form right hand side*/
     matrix->diag = 0.0 ;
     matrix->potential = NBI_POTENTIAL_SINGLE ;
@@ -549,19 +563,28 @@ gint main(gint argc, gchar **argv)
     
     nbi_matrix_multiply(matrix, &(src[1]), 2, 1.0, rhs, 1, 0.0, nthreads,
 			work) ;
-    
     matrix->diag = -0.5 ;
     matrix->potential = NBI_POTENTIAL_DOUBLE ;
-    fprintf(stderr, "%s: starting built-in solver\n", progname) ;
+    fprintf(stderr, "%s: starting built-in solver [%lg]\n",
+	    progname, g_timer_elapsed(timer, NULL)) ;
     
     i = nbi_gmres_real(matrix, nbi_surface_node_number(matrix->s),
 		       p, 1, rhs, 1, gmres_restart, gmres_max_iter, tol,
 		       &error, nthreads, work) ;
-    
-    fprintf(stderr, "%s: %d iterations; error = %lg [%lg] (%lg)\n",
-	    progname, i, error,
-	    g_timer_elapsed(timer, NULL),
-	    g_timer_elapsed(timer, NULL) - t) ;
+
+    if ( i >= 0 ) {
+      fprintf(stderr, "%s: %d iterations; error = %lg [%lg] (%lg)\n",
+	      progname, i, error,
+	      g_timer_elapsed(timer, NULL),
+	      g_timer_elapsed(timer, NULL) - t) ;
+    } else {
+      fprintf(stderr,
+	      "%s: GMRES did not converge after %d iterations; "
+	      "error = %lg [%lg] (%lg)\n",
+	      progname, -i, error,
+	      g_timer_elapsed(timer, NULL),
+	      g_timer_elapsed(timer, NULL) - t) ;
+    }
   }
   
   emax = fmax = e2 = f2 = erms = 0.0 ;

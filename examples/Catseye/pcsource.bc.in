@@ -1,0 +1,13 @@
+# source location
+x0 = -0.2
+y0 = -0.1
+z0 = -0.3
+
+k = WAVENUMBER
+
+# potential from point source
+rp = helmholtz_Gr(k, x-x0, y-y0, z-z0)
+ip = helmholtz_Gi(k, x-x0, y-y0, z-z0)
+# normal derivative of potential from point source
+rdp = helmholtz_dGr(k, x-x0, y-y0, z-z0, nx, ny, nz)
+idp = helmholtz_dGi(k, x-x0, y-y0, z-z0, nx, ny, nz)

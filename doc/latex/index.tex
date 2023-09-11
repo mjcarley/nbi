@@ -11,7 +11,7 @@ The main steps in solving a problem are\+:
 \item if required, compute the field outside the surface using {\ttfamily nbi-\/field-\/laplace} or {\ttfamily nbi-\/field-\/helmholtz} 
 \end{DoxyEnumerate}
 
-Results can be visualized using {\ttfamily nbi-\/process} to generate mesh files which can be viewed using {\ttfamily gmsh}, available from {\texttt{ https\+://www.\+gmsh.\+info/}}\doxysection{Examples}\label{index_examples}
+Results can be visualised using {\ttfamily nbi-\/process} to generate mesh files which can be viewed using {\ttfamily gmsh}, available from {\texttt{ https\+://www.\+gmsh.\+info/}}\doxysection{Examples}\label{index_examples}
 A number of examples showing the use of NBI are available in the .../examples directory. A basic calculation for the Helmholtz problem would be\+:
 
 \begin{DoxyVerb}nbi-surface -g ellipsoid-ico -i 2 -o sphere.nbi
@@ -22,7 +22,7 @@ nbi-process -F field.nbi -d field.dat -o field.msh
 \end{DoxyVerb}
 
 
-This generates a spherical surface as a twice refined icosahedron; assembles the problem matrices for a wavenumber $k=3$; solves for a boundary condition given in the file {\ttfamily point.\+bc}; computes the resulting potential on a surface given in {\ttfamily field.\+nbi} and generates a .msh file for the field, which can be viewed using GMSH. Boundary conditions are defined using \doxyref{analytical expressions }{p.}{group__boundary}.
+This generates a spherical surface as a twice refined icosahedron; assembles the problem matrices for a wavenumber $k=3$; solves for a Neumann boundary condition given in the file {\ttfamily point.\+bc}; computes the resulting potential on a surface given in {\ttfamily field.\+nbi} and generates a .msh file for the field, which can be viewed using GMSH. Boundary conditions are defined using \doxyref{analytical expressions }{p.}{group__boundary}.
 
 More details are available on how to use the NBI tools to set up and solve problems, and to process the results
 

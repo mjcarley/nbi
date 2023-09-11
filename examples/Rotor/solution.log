@@ -1,0 +1,23 @@
+nbi-solve-helmholtz: 2 threads (4 processors)
+nbi-solve-helmholtz: reading geometry from Geometries/rotor-25.nbi
+nbi-solve-helmholtz: reading matrix from Matrices/matrix-rotor-helmholtz-25-54-8-2.dat
+nbi-solve-helmholtz: geometry initialized, 32000 nodes, 1280 patches [1e-06]
+nbi-solve-helmholtz: setting boundary conditions [2.7e-05]
+nbi-solve-helmholtz: reading boundary conditions from ring.bc
+nbi-solve-helmholtz: allocating 1099459 elements to FMM work space
+nbi-solve-helmholtz: building tree [29.8344]
+nbi-solve-helmholtz: FMM matrix initialized [29.9258]
+nbi-solve-helmholtz: forming right hand side, [29.9258]
+nbi-solve-helmholtz: starting built-in solver [48.5257]
+  nbi_gmres_complex: iteration 0
+  nbi_gmres_complex: substep 0; error: 1.214713e-01
+  nbi_gmres_complex: substep 1; error: 1.052778e-02
+  nbi_gmres_complex: substep 2; error: 6.734509e-04
+  nbi_gmres_complex: substep 3; error: 3.774998e-05
+  nbi_gmres_complex: substep 4; error: 4.660160e-06
+  nbi_gmres_complex: substep 5; error: 2.169945e-06
+  nbi_gmres_complex: substep 6; error: 1.442420e-06
+  nbi_gmres_complex: substep 7; error: 9.213796e-07
+nbi-solve-helmholtz: 0 iterations; error = 9.2138e-07 [214.52] (184.594)
+nbi-solve-helmholtz: emax = 0.0386741; fmax = 0.171593;
+nbi-solve-helmholtz: L_inf norm = 0.225383; L_2 norm = 0.294684; rms error = 0.00012429

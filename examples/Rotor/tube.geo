@@ -1,22 +1,22 @@
 // tube geometry for visualization of acoustic field around rotor and
 // nacelle
-len = 1.5 ;
-D = 1.2 ;
+len = 3 ;
+D = 2.5 ;
 
 // mesh resolution setting
 lc = 0.1 ;
 
-Point( 1) = {   0,    0, -len/2, lc} ;
-Point( 2) = { D/2,    0, -len/2, lc} ;
-Point( 3) = {   0,  D/2, -len/2, lc} ;
-Point( 4) = {-D/2,    0, -len/2, lc} ;
-Point( 5) = {   0, -D/2, -len/2, lc} ;
-
-Point( 6) = {   0,    0,  len/2, lc} ;
-Point( 7) = { D/2,    0,  len/2, lc} ;
-Point( 8) = {   0,  D/2,  len/2, lc} ;
-Point( 9) = {-D/2,    0,  len/2, lc} ;
-Point(10) = {   0, -D/2,  len/2, lc} ;
+Point( 1) = {-len/2,    0,    0, lc} ;
+Point( 2) = {-len/2,  D/2,    0, lc} ;
+Point( 3) = {-len/2,    0,  D/2, lc} ;
+Point( 4) = {-len/2, -D/2,    0, lc} ;
+Point( 5) = {-len/2,    0, -D/2, lc} ;
+	             
+Point( 6) = { len/2,    0,    0, lc} ;
+Point( 7) = { len/2,  D/2,    0, lc} ;
+Point( 8) = { len/2,    0,  D/2, lc} ;
+Point( 9) = { len/2, -D/2,    0, lc} ;
+Point(10) = { len/2,    0, -D/2, lc} ;
 
 //+
 Circle(1) = {7, 6, 8};

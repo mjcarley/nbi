@@ -31,7 +31,7 @@ gboolean \textbf{ nbi\+\_\+boundary\+\_\+condition\+\_\+defined} (\textbf{ nbi\+
 \doxysubsection{Detailed Description}
 Definition and evaluation of boundary conditions. 
 
-Boundary conditions in NBI are defined using analytical expressions, which are evaluated at each surface node using the {\texttt{ tinyexpr}} parser which accepts standard mathematical expressions, and a number of built-\/in functions for standard cases, such as the point sources in the Laplace and Helmholtz problems. The executables {\ttfamily nbi-\/solve-\/laplace} and {\ttfamily nbi-\/solve-\/helmholtz} accept the {\ttfamily -\/B} option which lists the built-\/in functions which can be used to define boundary conditions.
+NBI solves boundary integral problems subject to a Neumann boundary condition, which corresponds to a surface normal velocity. This is the boundary condition appropriate to acoustic scattering from a hard surface, or to solving a potential problem in fluid dynamics. The boundary conditions are defined using analytical expressions, which are evaluated at each surface node using the {\texttt{ tinyexpr}} parser which accepts standard mathematical expressions, and a number of built-\/in functions for standard cases, such as the point sources in the Laplace and Helmholtz problems. The executables {\ttfamily nbi-\/solve-\/laplace} and {\ttfamily nbi-\/solve-\/helmholtz} accept the {\ttfamily -\/B} option which lists the built-\/in functions which can be used to define boundary conditions.
 
 In practice, boundary conditions are defined in a file whose name is supplied as a command line option to the solver. A sample file for a point source illustrates the syntax\+: \begin{DoxyVerb}## complex point source boundary condition
 ## wavenumber, defined as variable

@@ -1,2 +1,8 @@
 SphereLaplace test
-nbi-solve-laplace: L_inf norm = 0.00207444; L_2 norm = 0.000765901; rms error = 8.09576e-07
+nbi-solve-laplace: L_inf norm = 0.036146; L_2 norm = 0.0202635; rms error = 4.04106e-05
+Flow test
+nbi-solve-laplace: L_inf norm = inf; L_2 norm = inf; rms error = 0.00457995
+Wing test
+nbi-solve-laplace: L_inf norm = 3.23031; L_2 norm = 0.602007; rms error = 0.000335292
+Catseye test
+nbi-solve-laplace: L_inf norm = 0.00897256; L_2 norm = 0.00144355; rms error = 1.08191e-06

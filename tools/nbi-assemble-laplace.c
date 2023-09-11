@@ -163,7 +163,6 @@ gint main(gint argc, gchar **argv)
 					  nthreads) ;
   fprintf(stderr, "%s: matrix assembly complete [%lg]\n",
 	  progname, t = g_timer_elapsed(timer, NULL)) ;
-
   
   output = fopen(mfile, "w") ;
   nbi_matrix_write(output, m) ;

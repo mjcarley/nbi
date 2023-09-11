@@ -1,0 +1,6 @@
+## boundary conditions for uniform flow in the z direction
+
+## surface potential will be solved for, so set it to zero
+rp = 0
+## negative of potential gradient on surface, for unit velocity
+rdp = -nz

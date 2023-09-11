@@ -19,3 +19,11 @@
 \_form#18=24x14:$\phi(\mathbf{x})$
 \_form#19=63x14:$\beta p + \alpha \phi(\mathbf{x})$
 \_form#20=30x10:$k=3$
+\_form#21=160x14:$L_{\infty}=\max|\phi_{c}-\phi_{b}|/\max|\phi_{b}|$
+\_form#22=140x15:$L_{2}=\sum|\phi_{c}-\phi_{b}|^{2}\sum|\phi_{b}|^{2}$
+\_form#23=151x20:$L_{rms}=\left(\sum|\phi_{c}-\phi_{b}|^{2}/n\right)^{1/2}$
+\_form#24=146x15:$L_{2}=\sum|\phi_{c}-\phi_{b}|^{2}/\sum|\phi_{b}|^{2}$
+\_form#25=13x13:$\phi_{c}$
+\_form#26=11x13:$\phi_{b}$
+\_form#27=9x6:$n$
+\_form#28=41x13:$\phi_{c}=\phi_{b}$

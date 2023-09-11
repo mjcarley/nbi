@@ -100,7 +100,7 @@ Functions</h2></td></tr>
 <p >NBI represents surfaces as triangular patches which are mapped using Koornwinder orthogonal polynomials, giving a high order representation of the surface and of the potential on it. Surface points are placed at the nodes of high order quadrature rules for the unit triangle, and interpolation of surface quantities, including position, is performed using the Koornwinder polynomials.</p>
 <p >A surface patch takes two discretization parameters. The first is the number of nodes on the patch. These are the points where the solution will be found when the problem is solved subject to a given set of boundary conditions. The second parameter is the number of upsampled nodes. In order to evaluate the surface integrals in the problem, the estimated solution is interpolated, or upsampled, onto a set of nodes on each patch, giving a more refined discretization for evaluation of the potential integrals. The number of upsampled nodes should be at least equal to the number of nodes in the patch discretization.</p>
 <p >Surfaces can be generated using the built-in geometries in NBI (a list is available using the <code>-G</code> option of <code>nbi-surface</code>); a GMSH <code></code>.geo file; or an <code>AGG</code> file <a href="https://github.com/mjcarley/agg/">https://github.com/mjcarley/agg/</a> which uses the geometric representation methods of Kulfan, <a href="https://www.brendakulfan.com/research">https://www.brendakulfan.com/research</a></p>
-<p >Built-in geometries are quite simple but are sufficient for testing of code and checking the toolchain. There are also grid geometries which are not intended for calculation but are suitable for visualizing the potential field around surfaces after a problem has been solved. </p>
+<p >Built-in geometries are quite simple but are sufficient for testing of code and checking the toolchain. There are also grid geometries which are not intended for calculation but are suitable for visualising the potential field around surfaces after a problem has been solved. </p>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga7b45ed83a49ee86f2524ac945ae182b2" name="ga7b45ed83a49ee86f2524ac945ae182b2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga7b45ed83a49ee86f2524ac945ae182b2">&#9670;&nbsp;</a></span>nbi_element_interp_matrix()</h2>
@@ -347,7 +347,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Generate a regular grid in plane <img class="formulaInl" alt="$z=0$" src="form_11.png" width="29" height="9"/> which can be transformed and used for visualization. Nodes are interpolated between <img class="formulaInl" alt="$(s_{\min},t_{\min},0)$" src="form_12.png" width="71" height="14"/> and <img class="formulaInl" alt="$(s_{\max},t_{\max},0)$" src="form_13.png" width="75" height="14"/></p>
+<p >Generate a regular grid in plane <img class="formulaInl" alt="$z=0$" src="form_11.png" width="29" height="9"/> which can be transformed and used for visualisation. Nodes are interpolated between <img class="formulaInl" alt="$(s_{\min},t_{\min},0)$" src="form_12.png" width="71" height="14"/> and <img class="formulaInl" alt="$(s_{\max},t_{\max},0)$" src="form_13.png" width="75" height="14"/></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">s</td><td>surface to add patches to; </td></tr>
@@ -992,7 +992,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 8 2023 09:22:37 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
+Generated on Mon Sep 11 2023 12:21:57 for NBI by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
 </small></address>
 </body>
 </html>

@@ -55,7 +55,9 @@ Matrix operations and iterative solvers.
 
 An NBI \char`\"{}matrix\char`\"{} is a data type which can be used in matrix type calculations, though it does not strictly contain a matrix. It contains the surface discretization data required to perform a matrix-\/free evaluation of the integrals which appear in the boundary integral problem, typically accelerated using the Fast Multipole Method.
 
-The matrix-\/free implementation can be used with iterative methods to solve problems much larger than be handled using dense matrices. NBI has a built-\/in GMRES solver which can be used for real and complex problems. It can also link to the PETSc library available from {\texttt{ https\+://petsc.\+org/}} This makes a wide range of high-\/performance solvers available, and is recommended as an option. 
+The matrix-\/free implementation can be used with iterative methods to solve problems much larger than be handled using dense matrices. NBI has a built-\/in GMRES solver which can be used for real and complex problems. It can also link to the PETSc library available from {\texttt{ https\+://petsc.\+org/}} This makes a wide range of high-\/performance solvers available, and is recommended as an option.
+
+There are also a number of functions which can be used to evaluate Green\textquotesingle{}s identity for a given source distribution. These can be used to test discretizations and model parameters by using the surface source terms to compute the surface potential, using the integral formulation for the problem. If the setup is exactly correct, the potential evaluated using Green\textquotesingle{}s identity will be equal to the supplied value. The difference between the exact and computed value is then a measure of the error in the problem formulation. 
 
 \doxysubsection{Function Documentation}
 \mbox{\label{group__matrix_ga3fbad6dc4ed146c23c8fe3af62b94522}} 

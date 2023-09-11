@@ -518,7 +518,7 @@ gint nbi_geometry_ellipsoid_ico_FLOAT(nbi_surface_t *s,
  * @ingroup surfaces
  *
  * Generate a regular grid in plane \f$z=0\f$ which can be transformed
- * and used for visualization. Nodes are interpolated between
+ * and used for visualisation. Nodes are interpolated between
  * \f$(s_{\min},t_{\min},0)\f$ and \f$(s_{\max},t_{\max},0)\f$
  * 
  * @param s surface to add patches to;
