@@ -1,7 +1,7 @@
 rm -f test-helmholtz.log
 rm -f test-helmholtz-norm.log
 
-# Sphere
+## point source inside sphere
 k=3.5
 nqp=25
 nqu=54
@@ -10,13 +10,13 @@ echo SphereHelmholtz test k=${k} nqp=${nqp} nqu=${nqu} >> \
 echo SphereHelmholtz test k=${k} nqp=${nqp} nqu=${nqu} >> \
      ../test-helmholtz-norm.log
 cd SphereHelmholtz
-#../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s ring.bc \
-#     &>> ../test-helmholtz.log
+../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s ring.bc \
+     &>> ../test-helmholtz.log
 echo SphereHelmholtz test >> ../test-helmholtz-norm.log
 grep norm solution.log >> ../test-helmholtz-norm.log
 cd ..
 
-## Scattering
+## scattering of a plane wave
 k=10
 nqp=25
 nqu=54
@@ -25,13 +25,13 @@ echo Scattering test k=${k} nqp=${nqp} nqu=${nqu} >> \
 echo Scattering test k=${k} nqp=${nqp} nqu=${nqu} >> \
      ../test-helmholtz-norm.log
 cd Scattering
-#../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s plane.bc -P \
-#     &>> ../test-helmholtz.log
+../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s plane.bc -P \
+     &>> ../test-helmholtz.log
 echo Scattering test >> ../test-helmholtz-norm.log
 grep norm solution.log >> ../test-helmholtz-norm.log
 cd ..
 
-## Wing 
+## point source inside a wing 
 k=3.0
 nqp=25
 nqu=54
@@ -40,13 +40,13 @@ echo Wing test k=${k} nqp=${nqp} nqu=${nqu} >> \
 echo Wing test k=${k} nqp=${nqp} nqu=${nqu} >> \
      ../test-helmholtz-norm.log
 cd Wing
-#../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s pcsource.bc -g wing \
-#     &>> ../test-helmholtz.log
+../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s pcsource.bc -g wing \
+     &>> ../test-helmholtz.log
 echo Wing test >> ../test-helmholtz-norm.log
 grep norm solution.log >> ../test-helmholtz-norm.log
 cd ..
 
-## Catseye 
+## point source inside a catseye 
 k=3.0
 nqp=25
 nqu=54
@@ -55,13 +55,14 @@ echo Catseye test k=${k} nqp=${nqp} nqu=${nqu} >> \
 echo Catseye test k=${k} nqp=${nqp} nqu=${nqu} >> \
      ../test-helmholtz-norm.log
 cd Catseye
-#../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s pcsource.bc -g catseye \
-#     &>> ../test-helmholtz.log
+../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s pcsource.bc -g catseye \
+     &>> ../test-helmholtz.log
 echo Catseye test >> ../test-helmholtz-norm.log
 grep norm solution.log >> ../test-helmholtz-norm.log
 cd ..
 
-# Rotor
+## scattering of rotor noise by an ellipsoid
+## wavenumber is calculated from source Mach number and azimuthal order
 k=`echo 4*1.1/0.7 | bc -l`
 nqp=25
 nqu=54

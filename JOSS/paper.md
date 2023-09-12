@@ -101,8 +101,8 @@ Surfaces in NBI are represented as high-order triangular patches,
 interpolated using Koornwindwer orthogonal polynomials
 [@greengard-oneil-rachh-vico21]. A number of surface generation
 methods are provided (built-in basic geometries, parametric surfaces,
-GMSH @c .geo files) allowing considerable flexibility in the workflow
-for real problems. 
+GMSH geo files) allowing considerable flexibility in the workflow for
+real problems.
 
 ## Quadratures
 
@@ -119,19 +119,19 @@ selected automatically during matrix assembly.
 
 ## Solving problems
 
-Problems in NBI are solved using iterative solvers applied to
-matrix-free evaluation of integrals. The evaluation uses a Fast
-Multipole Method [@gumerov-duraiswami03; @gumerov-duraiswami04;
-@gumerov-duraiswami05; @gumerov-duraiswami09]. There is a built-in
-GMRES solver and NBI also has an optional interface to the PETSc
-library and its solvers [@petsc-web-page]. Boundary conditions in NBI
-are specified using analytical formulae which are parsed and evaluated
-at each surface node. This allows an intuitive definition of boundary
-conditions, where user-defined variables simplify parametric
-variation, and a range of built-in functions for the most common
-boundary conditions are also available. These include point sources
-for the Laplace and Helmholtz problems, and ring sources for the
-simulation of rotor acoustics in aeronautics.
+Problems in NBI are solved using iterative solvers with matrix-free
+evaluation of integrals. The evaluation uses a Fast Multipole Method
+[@gumerov-duraiswami03; @gumerov-duraiswami04; @gumerov-duraiswami05;
+@gumerov-duraiswami09]. There is a built-in GMRES solver and NBI also
+has an optional interface to the PETSc library and its solvers
+[@petsc-web-page]. Boundary conditions in NBI are specified using
+analytical formulae which are parsed and evaluated at each surface
+node. This allows an intuitive definition of boundary conditions,
+where user-defined variables simplify parametric variation, and a
+range of built-in functions for the most common boundary conditions
+are also available. These include point sources for the Laplace and
+Helmholtz problems, and ring sources for the simulation of rotor
+acoustics in aeronautics.
 
 ## Postprocessing and visualization
 ![GMSH visualisation of output from sphere scattering
