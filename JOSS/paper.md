@@ -14,7 +14,7 @@ authors:
 affiliations:
  - name: Department of Mechanical Engineering, University of Bath, UK
    index: 1
-date: 7 September 2023
+date: 12 September 2023
 bibliography: paper.bib
 --- 
 
@@ -77,8 +77,9 @@ where $G$ is the Green's function for the problem. For points lying on
 the surface, the left hand side is replaced by $\phi/2$ and the
 equation is interpreted as a boundary integral equation to be solved
 subject to an appropriate boundary condition. By default, NBI
-implements a Neumann boundary condition as that most appropriate to
-acoustic scattering and to potential problems in fluid dynamics. 
+implements a Neumann (surface normal derivative) boundary condition as
+that most appropriate to acoustic scattering and to potential problems
+in fluid dynamics.
 
 # Features
 
@@ -104,9 +105,9 @@ methods are provided (built-in basic geometries, parametric surfaces,
 GMSH geo files) allowing considerable flexibility in the workflow for
 real problems.
 
-## Quadratures
+## Quadrature rules
 
-Two main sets of quadratures are used in NBI. Surface points are
+Two main types of quadrature rule are used in NBI. Surface points are
 generated on each patch at the nodes of high order rules for triangles
 [@wandzura-xiao03; @xiao-gimbutas10]. These nodes are used, via the
 FMM, to evaluate the far-field interactions in the boundary
@@ -122,8 +123,8 @@ selected automatically during matrix assembly.
 Problems in NBI are solved using iterative solvers with matrix-free
 evaluation of integrals. The evaluation uses a Fast Multipole Method
 [@gumerov-duraiswami03; @gumerov-duraiswami04; @gumerov-duraiswami05;
-@gumerov-duraiswami09]. There is a built-in GMRES solver and NBI also
-has an optional interface to the PETSc library and its solvers
+@gumerov-duraiswami09]. A GMRES solver is built in and there is an
+optional interface to the PETSc library and its solvers
 [@petsc-web-page]. Boundary conditions in NBI are specified using
 analytical formulae which are parsed and evaluated at each surface
 node. This allows an intuitive definition of boundary conditions,
