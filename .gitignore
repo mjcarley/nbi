@@ -15,6 +15,9 @@
 *.msh
 *.mat
 *.nbi
+*.log
+
+bigfiles
 
 ## scratch directory
 scratch
