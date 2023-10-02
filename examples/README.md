@@ -1,4 +1,4 @@
-* Examples for use of NBI in Laplace and Helmholtz problems
+# Examples for use of NBI in Laplace and Helmholtz problems
 
 The examples in each directory are run using the scripts
 solve-helmholtz and solve-laplace, which can also be used to configure
@@ -64,7 +64,7 @@ Catseye: solve for a point source inside a cat's eye geometry,
 	 generated using a GMSH input file. This is run by both the
 	 Laplace and Helmholtz test scripts. 
 
-* Parameters
+# Parameters
 
 The shell scripts take a number of options, which can be set from the
 command line using the following options:
