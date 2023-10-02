@@ -1,9 +1,21 @@
 # Examples for use of NBI in Laplace and Helmholtz problems
 
+To run all of the test cases for Laplace and Helmholtz problems:
+
+`. test-all-laplace`
+
+and
+
+`. test-all-helmholtz`
+
+These will enter each directory in turn and run the tests, logging
+output to `test-[laplace|helmholtz].log` and estimated error norms to
+`test-[laplace|helmholtz]-norm.log`.
+
 The examples in each directory are run using the scripts
 `solve-helmholtz` and `solve-laplace`, which can also be used to
 configure the problem. Each directory contains scripts `make-geometry`
-and `make-visualization-grid` which generate the surface mesh and a
+and `make-visualization-grid` which generate a surface mesh and a
 visualization mesh, respectively. There are also configurable boundary
 condition (source) files which are used in running the tests.
 
@@ -52,17 +64,6 @@ internal source is used to generate the boundary condition, these
 norms are an assessment of the accuracy of the solution on the
 supplied surface discretization. 
 
-To run all of the test cases for Laplace and Helmholtz problems:
-
-`. test-all-laplace`
-
-and
-
-`. test-all-helmholtz`
-
-These will enter each directory in turn and run the tests, logging
-output to `test-[laplace|helmholtz].log` and estimated error norms to
-`test-[laplace|helmholtz]-norm.log`.
 
 # Test cases
 
