@@ -1,9 +1,9 @@
 # Examples for use of NBI in Laplace and Helmholtz problems
 
 The examples in each directory are run using the scripts
-solve-helmholtz and solve-laplace, which can also be used to configure
-the problem. Each directory contains scripts make-geometry and
-make-visualization-grid which generate the surface mesh and a
+`solve-helmholtz` and `solve-laplace`, which can also be used to
+configure the problem. Each directory contains scripts `make-geometry`
+and `make-visualization-grid` which generate the surface mesh and a
 visualization mesh, respectively. There are also configurable boundary
 condition (source) files which are used in running the tests.
 
@@ -15,25 +15,54 @@ and r.m.s.) computed as the difference between the potential specified
 in the boundary condition file, and that computed by the solver.
 
 The output from the calculation which be visualized using GMSH is two
-.msh files, one named according to the geometry of the problem,
-e.g. sphere.msh, and one called grid.msh which shows the computed
+`.msh` files, one named according to the geometry of the problem,
+e.g. `sphere.msh`, and one called `grid.msh` which shows the computed
 field around the surface. 
 
-# Running tests
+To run a test case, from inside the directory, use the script
+`solve-helmholtz` or `solve-laplace` as appropriate. For example:
 
-Each directory contains a full set of inputs to set up and solve a
-problem. To run a test case, from inside the directory, use the script
-`solve-helmholtz` or `solve-laplace` as appropriate. 
+```
+cd SphereHelmholtz
+../solve-helmholtz -k 1.0
+gmsh sphere.msh`
+```
+
+generates a spheroidal surface and solves the boundary integral
+problem with an interior point source of wavenumber 1.0. The command
+`gmsh sphere.msh` displays the solution surface potential. The output
+from the solver will be in a file called `solution.log`, which
+contains details of the progress of the solution. The last few lines
+will look something like this:
+
+```
+nbi-solve-helmholtz: 1 iterations; error = 5.09449e-07 [287.509] (287.48)
+nbi-solve-helmholtz: emax = 0.00250532; fmax = 0.172267;
+nbi-solve-helmholtz: L_inf norm = 0.0145432; L_2 norm = 0.00484112; rms error = 
+5.03861e-06
+```
+
+Figures in square brackets, such as `[287.509]` are wall-clock time
+since the solver started, and are used to assess code performance. The
+next line gives the absolute value of the maximum difference between
+computed potential and input boundary condition potential (valid for
+an internal source) and the maximum absolute value of the boundary
+condition. The last line gives the various error norms. When an
+internal source is used to generate the boundary condition, these
+norms are an assessment of the accuracy of the solution on the
+supplied surface discretization. 
 
 To run all of the test cases for Laplace and Helmholtz problems:
 
 `. test-all-laplace`
 
+and
+
 `. test-all-helmholtz`
 
 These will enter each directory in turn and run the tests, logging
-output to test-[laplace|helmholtz].log and estimated error norms to
-test-[laplace|helmholtz]-norm.log
+output to `test-[laplace|helmholtz].log` and estimated error norms to
+`test-[laplace|helmholtz]-norm.log`
 
 SphereLaplace: solve for the Laplace potential on an ellipsoid
 	       (deformed sphere)

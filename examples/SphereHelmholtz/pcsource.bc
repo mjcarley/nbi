@@ -1,5 +1,5 @@
 ## complex point source boundary condition
-k = 3.5
+k = 1.0
 x0 = 0.1
 y0 = -0.2
 z0=0.5

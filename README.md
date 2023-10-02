@@ -33,8 +33,8 @@ need the autotools suite. Generate the configure script with
 To configure and install the code,
 
   `./configure [OPTIONS]`
-  `make`
-  `make install`
+   make
+   make install`
 
 For information on options to control configuration, including the
 installation location and where to find any required libraries:
