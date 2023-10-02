@@ -6,7 +6,7 @@ here:
 
 https://github.com/codeplea/tinyexpr
 
-* Prerequisites
+# Prerequisites
 
 You will need to have installed the following libraries:
 
@@ -23,7 +23,7 @@ https://petsc.org/
 and make sure the environment variable PETSC_DIR is set and visible in
 the shell.
 
-* Installation
+# Installation
 
 If you have downloaded the source from github or equivalent, you will
 need the autotools suite. Generate the configure script with
@@ -41,7 +41,7 @@ installation location and where to find any required libraries:
 
   ./configure --help
 
-* Using and testing NBI
+# Using and testing NBI
 
 The main documentation, including details of examples, is in the
 .../doc subdirectory of the distribution. The .../examples
