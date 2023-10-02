@@ -113,6 +113,7 @@ Catseye
 The shell scripts take a number of options, which can be set from the
 command line using the following options:
 
+
 - -k k:        acoustic wavenumber, for Helmholtz problems
 - -a nqa:      number of quadrature points in rule used for adaptive integration
 - -p nqp:      number of quadrature points on discretized patches
