@@ -28,23 +28,23 @@ the shell.
 If you have downloaded the source from github or equivalent, you will
 need the autotools suite. Generate the configure script with
 
-. autogen.sh
+`. autogen.sh`
 
 To configure and install the code,
 
-  ./configure [OPTIONS]
-  make
-  make install
+  `./configure [OPTIONS]`
+  `make`
+  `make install`
 
 For information on options to control configuration, including the
 installation location and where to find any required libraries:
 
-  ./configure --help
+  `./configure --help`
 
 # Using and testing NBI
 
 The main documentation, including details of examples, is in the
-.../doc subdirectory of the distribution. The .../examples
+`.../doc` subdirectory of the distribution. The `.../examples`
 subdirectory contains a number of examples which can be run using the
 scripts test-all-laplace and test-all-helmholtz. Further details are
-given in .../examples/README.md
+given in `.../examples/README.md`

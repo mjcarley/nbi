@@ -19,10 +19,17 @@ The output from the calculation which be visualized using GMSH is two
 e.g. sphere.msh, and one called grid.msh which shows the computed
 field around the surface. 
 
+# Running tests
+
+Each directory contains a full set of inputs to set up and solve a
+problem. To run a test case, from inside the directory, use the script
+`solve-helmholtz` or `solve-laplace` as appropriate. 
+
 To run all of the test cases for Laplace and Helmholtz problems:
 
-. test-all-laplace
-. test-all-helmholtz
+`. test-all-laplace`
+
+`. test-all-helmholtz`
 
 These will enter each directory in turn and run the tests, logging
 output to test-[laplace|helmholtz].log and estimated error norms to
