@@ -38,6 +38,7 @@ autom4te.cache
 /stamp-h1
 Makefile.in
 Makefile
+ltmain.sh
 
 # http://www.gnu.org/software/m4/
 

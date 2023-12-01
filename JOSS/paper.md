@@ -96,6 +96,16 @@ Each of these steps is carried out using an appropriate executable,
 and a full problem can be solved using a Unix or Linux shell script
 which runs each step in turn. 
 
+The intention has been to develop an implementation of the main
+elements of [@greengard-oneil-rachh-vico21] in a code which is
+relatively easy to use in applications. The principal differences
+which a user will note between NBI and the reference implementation of
+the method of [@greengard-oneil-rachh-vico21] are: the range of
+geometry formats supported, including the widely used GMSH standard;
+the use of the standard PETSc iterative solvers; and the ability to
+define boundary conditions using a built-in parser for mathematical
+expressions. 
+
 ## Surface generation and representation
 
 Surfaces in NBI are represented as high-order triangular patches,
