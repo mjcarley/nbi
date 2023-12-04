@@ -1,0 +1,3 @@
+[submodule "externals/blaswrap"]
+	path = externals/blaswrap
+	url = https://github.com/mjcarley/blaswrap
