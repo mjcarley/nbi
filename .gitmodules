@@ -4,3 +4,9 @@
 [submodule "externals/sqt"]
 	path = externals/sqt
 	url = https://github.com/mjcarley/sqt
+[submodule "externals/agg"]
+	path = externals/agg
+	url = https://github.com/mjcarley/agg
+[submodule "externals/wbfmm"]
+	path = externals/wbfmm
+	url = https://github.com/mjcarley/wbfmm
