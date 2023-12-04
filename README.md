@@ -39,7 +39,7 @@ need the autotools suite. Generate the configure script with
 
 To configure and install the code,
 
-  `./configure [OPTIONS]`
+  `./configure [OPTIONS]
    make
    make install`
 
