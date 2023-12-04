@@ -1,3 +1,6 @@
 [submodule "externals/blaswrap"]
 	path = externals/blaswrap
 	url = https://github.com/mjcarley/blaswrap
+[submodule "externals/sqt"]
+	path = externals/sqt
+	url = https://github.com/mjcarley/sqt
