@@ -15,6 +15,13 @@ You will need to have installed the following libraries:
 - https://github.com/mjcarley/wbfmm
 - https://github.com/mjcarley/agg
 
+If you clone the github repository using
+
+`git clone --recursive https://github.com/mjcarley/nbi`
+
+these libraries will be downloaded automatically in the `externals`
+subdirectory of `nbi`. 
+
 You should also install PETSc if you want to use it in place of the
 (very) basic built-in iterative solver:
 
