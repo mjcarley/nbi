@@ -96,17 +96,11 @@ if test "$echo_exec_prefix" = "yes"; then
 	echo $exec_prefix
 fi
 if test "$echo_cflags" = "yes"; then
-    glib_cflags="$glib_cflags -I${prefix}/include"
-    glib_cflags=`uniquify "$glib_cflags"`
-
     nbi_cflags="$nbi_cflags $openmp_cflags -I${prefix}/include"
     nbi_cflags=`uniquify "$nbi_cflags"`
     echo $nbi_cppflags $nbi_cflags $glib_cflags
 fi
 if test "$echo_libs" = "yes"; then
-    glib_libs="-L${exec_prefix}/lib $lib_wmpi @LDFLAGS@  $glib_libs -lm"
-    glib_libs=`uniquify "$glib_libs"`
-
     #nbi_libs="-L${exec_prefix}/lib -lnbi @LDFLAGS@ -lm $nbi_libs"
     nbi_libs="-L${exec_prefix}/lib -lnbi @LIBS@"
     nbi_libs=`uniquify "$nbi_libs"`

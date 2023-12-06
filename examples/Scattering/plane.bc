@@ -11,21 +11,12 @@ z0 = 0.0
 #
 # the potential gradient is used to set the boundary condition and compute
 # the surface potential
-#
-# an error estimate is made, assuming that the supplied potential is the
-# "correct" solution corresponding to the boundary condition
 
-# this is the solution for the surface potential on a sphere of radius a
-# centred at (0,0,z0)
-#rp = sphere_scattered_r(a, k, x, y, z-z0)
-#ip = sphere_scattered_i(a, k, x, y, z-z0)
-
-# this is the incident field, which can be added to the radiated solution
+# incident plane wave
 rp = cos(k*(z-z0))
 ip = sin(k*(z-z0))
 
-# this is the boundary condition which should generate the surface potential
-# above; note the inclusion of the sphere axial position to keep the phase
-# correct
+# this is the negative of the gradient of incident potential, in order
+# to satisfy a no-penetration condition for the total field
 rdp =  k*sin(k*(z-z0))*nz
 idp = -k*cos(k*(z-z0))*nz
