@@ -101,7 +101,7 @@ if test "$echo_cflags" = "yes"; then
     echo $nbi_cppflags $nbi_cflags $glib_cflags
 fi
 if test "$echo_libs" = "yes"; then
-    #nbi_libs="-L${exec_prefix}/lib -lnbi @LDFLAGS@ -lm $nbi_libs"
+    nbi_libs="-L${exec_prefix}/lib -lnbi @LDFLAGS@ -lm $nbi_libs"
     nbi_libs="-L${exec_prefix}/lib -lnbi @LIBS@"
     nbi_libs=`uniquify "$nbi_libs"`
     echo ${nbi_libs}
