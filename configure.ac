@@ -1,5 +1,6 @@
 AC_INIT([nbi],[1.0.0])
 AC_CONFIG_SRCDIR([src/nbi.h])
+AM_INIT_AUTOMAKE
 
 NBI_MAJOR_VERSION=1
 NBI_MINOR_VERSION=0
@@ -30,7 +31,7 @@ PACKAGE=nbi
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
 
-AM_INIT_AUTOMAKE(subdir-objects)
+#(subdir-objects)
 
 ##$PACKAGE, $VERSION, no-define)
 
@@ -58,42 +59,70 @@ fi
 
 AC_PROG_AWK
 AC_SEARCH_LIBS([strerror],[cposix])
-##AC_HEADER_STDC
 
-AC_CHECK_PROG(BLASWRAP, blaswrap-config, yes, no)
-if test x$BLASWRAP = xyes ; then
-   AC_DEFINE(HAVE_BLASWRAP, 1, [BLAS wrapper header available])
-   blaswrap_cflags=`blaswrap-config --cflags`
-   blaswrap_libs=`blaswrap-config --libs`
+submodules=no
+if test -d "externals/blaswrap" ; then
+    echo "BLASWRAP included as submodule."
+    submodules=yes
+    blaswrap_submodule=externals/blaswrap/src/.libs
+    AC_CONFIG_SUBDIRS([externals/blaswrap])
 else
-  echo \#################################################################
-  echo \#
-  echo \# BLAS wrapper library not installed or not properly installed.
-  echo \# You can get it from
-  echo \#
-  echo \# https://github.com/mjcarley/blaswrap
-  echo \#
-  echo \#################################################################
-  exit
+    echo "BLASWRAP not included as submodule."
+    blaswrap_submodule=
+    AC_CHECK_PROG(BLASWRAP, blaswrap-config, yes, no)
+    if test x$BLASWRAP = xyes ; then
+       AC_DEFINE(HAVE_BLASWRAP, 1, [BLAS wrapper header available])
+       blaswrap_cflags=`blaswrap-config --cflags`
+       blaswrap_libs=`blaswrap-config --libs`
+    else
+      echo \#################################################################
+      echo \#
+      echo \# BLAS wrapper library not installed or not properly installed.
+      echo \# You can get it from
+      echo \#
+      echo \# https://github.com/mjcarley/blaswrap
+      echo \#
+      echo \#################################################################
+    exit
+  fi
 fi
 
-AC_CHECK_PROG(SQT, sqt-config, yes, no)
-if test x$SQT = xyes ; then
-   AC_DEFINE(HAVE_SQT, 1, [singular quadrature library available])
-   sqt_cflags=`sqt-config --cflags`
-   sqt_libs=`sqt-config --libs`
+if test -d "externals/sqt" ; then
+    echo "SQT included as submodule."
+    submodules=yes
+    sqt_submodule=externals/sqt/src/.libs
+    AC_CONFIG_SUBDIRS([externals/sqt])
+    sqt_cflags=`sh externals/sqt/src/sqt-config --cflags`
+    sqt_libs=`sh externals/sqt/src/sqt-config --libs`
 else
-  echo \#################################################################
-  echo \#
-  echo \# Singular Quadrature on Triangles library not installed or
-  echo \# not properly installed. You can get it from
-  echo \#
-  echo \# https://github.com/mjcarley/sqt
-  echo \#
-  echo \#################################################################
-  exit
+    echo "SQT not included as submodule."
+    sqt_submodule=
+    AC_CHECK_PROG(SQT, sqt-config, yes, no)
+    if test x$SQT = xyes ; then
+    AC_DEFINE(HAVE_SQT, 1, [singular quadrature library available])
+    sqt_cflags=`sqt-config --cflags`
+    sqt_libs=`sqt-config --libs`
+    else
+      echo \#################################################################
+      echo \#
+      echo \# Singular Quadrature on Triangles library not installed or
+      echo \# not properly installed. You can get it from
+      echo \#
+      echo \# https://github.com/mjcarley/sqt
+      echo \#
+      echo \#################################################################
+      exit
+    fi
 fi
 
+if test -d "externals/wbfmm" ; then
+    echo "WBFMM included as submodule."
+    submodules=yes
+    wbfmm_submodule=externals/wbfmm/src/.libs
+    AC_CONFIG_SUBDIRS([externals/wbfmm])
+    wbfmm_cflags=`sh externals/wbfmm/src/wbfmm-config --cflags`
+    wbfmm_libs=`sh externals/wbfmm/src/wbfmm-config --libs`
+else
 AC_CHECK_PROG(WBFMM, wbfmm-config, yes, no)
 if test x$WBFMM = xyes ; then
    AC_DEFINE(HAVE_WBFMM, 1, [wide band FMM library available])
@@ -109,6 +138,7 @@ else
   echo \#
   echo \#################################################################
   exit
+fi
 fi
 
 AC_CHECK_PROG(AGG, agg-config, yes, no)
@@ -180,8 +210,7 @@ AC_CHECK_LIB(gmsh, gmshInitialize, [], [
   echo \# https://www.gmsh.info/
   echo \#
   echo \#################################################################
-  exit
-		   
+  exit		   
 ])
 
 AC_CHECK_LIB(m, cos)
@@ -207,15 +236,17 @@ AC_F77_WRAPPERS
 
 CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $GLIB_CFLAGS $blaswrap_cflags $wbfmm_cflags $sqt_cflags $agg_cflags"
 LIBS="$GLIB_LIBS $blaswrap_libs $wbfmm_libs $sqt_libs $agg_libs $LAPACK_LIBS $LIBS $FLIBS"
-##LDFLAGS="$LDFLAGS $blaswrap_libs $glib_libs $wbfmm_libs $sqt_libs $agg_libs"
 
 AC_SUBST(petsc_real)
 ##AC_SUBST(CPPFLAGS)
+AC_SUBST(external_module_libs)
+AC_SUBST(subdirs)
 AC_SUBST(CFLAGS)
 AC_SUBST(LIBS)
 AC_SUBST(LDFLAGS)
 
 AM_CONDITIONAL(PETSC, test x$PETSC = xyes)
+AM_CONDITIONAL(SUBMODULES, test x$submodules = xyes)
 
 AC_CONFIG_FILES([
 Makefile

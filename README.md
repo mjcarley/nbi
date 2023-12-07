@@ -22,8 +22,12 @@ If you clone the github repository using
 these libraries will be downloaded automatically in the `externals`
 subdirectory of `nbi`. 
 
-You should also install PETSc if you want to use it in place of the
-(very) basic built-in iterative solver:
+You will also need the GMSH API library, available from
+
+- https://www.gmsh.info/
+
+You should install PETSc if you want to use it in place of the (very)
+basic built-in iterative solver (recommended):
 
 https://petsc.org/
 

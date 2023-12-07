@@ -25,7 +25,7 @@
 #define HAVE_AVX_INSTRUCTIONS 1
 
 /* BLAS wrapper header available */
-#define HAVE_BLASWRAP 1
+/* #undef HAVE_BLASWRAP */
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #define HAVE_DLFCN_H 1
@@ -52,7 +52,7 @@
 #define HAVE_PETSC 1
 
 /* singular quadrature library available */
-#define HAVE_SQT 1
+/* #undef HAVE_SQT */
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #define HAVE_STDINT_H 1
@@ -76,7 +76,7 @@
 #define HAVE_UNISTD_H 1
 
 /* wide band FMM library available */
-#define HAVE_WBFMM 1
+/* #undef HAVE_WBFMM */
 
 /* Define to the sub-directory where libtool stores uninstalled libraries. */
 #define LT_OBJDIR ".libs/"

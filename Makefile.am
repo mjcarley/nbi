@@ -1,1 +1,1 @@
-SUBDIRS = src tools doc
+SUBDIRS = $(subdirs) src tools doc 
