@@ -1,0 +1,108 @@
+#!/bin/sh
+# src/nbi-config.  Generated from nbi-config.in by configure.
+
+nbi_cflags="-g -O2 -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -fopenmp  -mavx -DWBFMM_USE_AVX -mfma -DWBFMM_USE_AVX -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/home/michael/Codes/include -g -O2 -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -fopenmp -mavx -mfma -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/home/michael/Codes/include -I/home/michael/Codes/include -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/home/michael/Codes/include "
+nbi_cppflags="-I/home/michael/Codes/include"
+openmp_cflags="-fopenmp"
+glib_libs="@glib_libs@"
+
+prefix=/home/michael/Codes
+exec_prefix=${prefix}
+includedir=${prefix}/include
+
+single_precision=no
+
+usage()
+{
+	cat <<EOF
+Usage: nbi-config [OPTIONS] [LIBRARIES]
+Options:
+	[--prefix[=DIR]]
+	[--exec-prefix[=DIR]]
+	[--version]
+	[--libs]
+	[--cflags]
+Libraries:
+	nbi
+EOF
+	exit $1
+}
+
+uniquify()
+{
+    echo $1 | awk '{
+	for (i = 1; i <= NF; i++) {
+	    unique = 1;
+	    for (j = i + 1; j <= NF && unique; j++)
+		if ($i == $j)
+		    unique = 0;
+            if (unique)
+		printf ("%s ", $i);
+	}
+    }'
+}
+
+if test $# -eq 0; then
+	usage 1 1>&2
+fi
+
+while test $# -gt 0; do
+  case "$1" in
+  -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+  *) optarg= ;;
+  esac
+
+  case $1 in
+    --prefix=*)
+      prefix=$optarg
+      if test $exec_prefix_set = no ; then
+        exec_prefix=$optarg
+      fi
+      ;;
+    --prefix)
+      echo_prefix=yes
+      ;;
+    --exec-prefix=*)
+      exec_prefix=$optarg
+      exec_prefix_set=yes
+      ;;
+    --exec-prefix)
+      echo_exec_prefix=yes
+      ;;
+    --version)
+      echo 1.0.0
+      exit 0
+      ;;
+    --cflags)
+      echo_cflags=yes
+      ;;
+    --libs)
+      echo_libs=yes
+      ;;
+    nbi)
+      lib_nbi=yes
+      ;;
+    *)
+      usage 1 1>&2
+      ;;
+  esac
+  shift
+done
+
+if test "$echo_prefix" = "yes"; then
+	echo $prefix
+fi
+if test "$echo_exec_prefix" = "yes"; then
+	echo $exec_prefix
+fi
+if test "$echo_cflags" = "yes"; then
+    nbi_cflags="$nbi_cflags $openmp_cflags -I${prefix}/include"
+    nbi_cflags=`uniquify "$nbi_cflags"`
+    echo $nbi_cppflags $nbi_cflags $glib_cflags
+fi
+if test "$echo_libs" = "yes"; then
+    nbi_libs="-L${exec_prefix}/lib -lnbi -L/home/michael/Codes/lib -lm $nbi_libs"
+    nbi_libs="-L${exec_prefix}/lib -lnbi -lglib-2.0 -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -L/home/michael/Codes/lib -lwbfmm -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -L/home/michael/Codes/lib -lsqt -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lquadmath   -lm -lgmsh   -L/home/michael/Codes/lib -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lgmsh -lquadmath"
+    nbi_libs=`uniquify "$nbi_libs"`
+    echo ${nbi_libs}
+fi
