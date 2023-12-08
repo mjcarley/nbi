@@ -61,36 +61,28 @@ AC_PROG_AWK
 AC_SEARCH_LIBS([strerror],[cposix])
 
 submodules=no
-if test -d "externals/blaswrap" ; then
-    echo "BLASWRAP included as submodule."
-    submodules=yes
-    blaswrap_submodule=externals/blaswrap/src/.libs
-    AC_CONFIG_SUBDIRS([externals/blaswrap])
+AC_CHECK_PROG(BLASWRAP, blaswrap-config, yes, no)
+if test x$BLASWRAP = xyes ; then
+   AC_DEFINE(HAVE_BLASWRAP, 1, [BLAS wrapper header available])
+   blaswrap_cflags=`blaswrap-config --cflags`
+   blaswrap_libs=`blaswrap-config --libs`
 else
-    echo "BLASWRAP not included as submodule."
-    blaswrap_submodule=
-    AC_CHECK_PROG(BLASWRAP, blaswrap-config, yes, no)
-    if test x$BLASWRAP = xyes ; then
-       AC_DEFINE(HAVE_BLASWRAP, 1, [BLAS wrapper header available])
-       blaswrap_cflags=`blaswrap-config --cflags`
-       blaswrap_libs=`blaswrap-config --libs`
-    else
-      echo \#################################################################
-      echo \#
-      echo \# BLAS wrapper library not installed or not properly installed.
-      echo \# You can get it from
-      echo \#
-      echo \# https://github.com/mjcarley/blaswrap
-      echo \#
-      echo \#################################################################
-    exit
-  fi
+  echo \#################################################################
+  echo \#
+  echo \# BLAS wrapper library not installed or not properly installed.
+  echo \# You can get it from
+  echo \#
+  echo \# https://github.com/mjcarley/blaswrap
+  echo \#
+  echo \#################################################################
+exit
 fi
 
 if test -d "externals/sqt" ; then
     echo "SQT included as submodule."
     submodules=yes
     sqt_submodule=externals/sqt/src/.libs
+
     AC_CONFIG_SUBDIRS([externals/sqt])
     sqt_cflags=`sh externals/sqt/src/sqt-config --cflags`
     sqt_libs=`sh externals/sqt/src/sqt-config --libs`
@@ -123,6 +115,8 @@ if test -d "externals/wbfmm" ; then
     wbfmm_cflags=`sh externals/wbfmm/src/wbfmm-config --cflags`
     wbfmm_libs=`sh externals/wbfmm/src/wbfmm-config --libs`
 else
+    echo "WBFMM not included as submodule."
+    wbfmm_submodule=
 AC_CHECK_PROG(WBFMM, wbfmm-config, yes, no)
 if test x$WBFMM = xyes ; then
    AC_DEFINE(HAVE_WBFMM, 1, [wide band FMM library available])
@@ -239,7 +233,8 @@ LIBS="$GLIB_LIBS $blaswrap_libs $wbfmm_libs $sqt_libs $agg_libs $LAPACK_LIBS $LI
 
 AC_SUBST(petsc_real)
 ##AC_SUBST(CPPFLAGS)
-AC_SUBST(external_module_libs)
+AC_SUBST(sqt_submodule)
+AC_SUBST(wbfmm_submodule)
 AC_SUBST(subdirs)
 AC_SUBST(CFLAGS)
 AC_SUBST(LIBS)
