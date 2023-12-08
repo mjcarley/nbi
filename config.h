@@ -16,7 +16,7 @@
 /* #undef FC_DUMMY_MAIN_EQ_F77 */
 
 /* aerodynamic geometry library available */
-#define HAVE_AGG 1
+/* #undef HAVE_AGG */
 
 /* Define if avx2 instructions are supported */
 #define HAVE_AVX2_INSTRUCTIONS 1

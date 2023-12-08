@@ -4,7 +4,8 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir)
 if SUBMODULES
 AM_LDFLAGS = \
 	-L$(ac_abs_topbuilddir)/$(sqt_submodule) \
-	-L$(ac_abs_topbuilddir)/$(wbfmm_submodule)
+	-L$(ac_abs_topbuilddir)/$(wbfmm_submodule) \
+	-L$(ac_abs_topbuilddir)/$(agg_submodule)
 endif
 
 DEPS = $(top_builddir)/src/libnbi.la

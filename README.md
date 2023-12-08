@@ -8,9 +8,13 @@ https://github.com/codeplea/tinyexpr
 
 # Prerequisites
 
-You will need to have installed the following libraries:
+NBI and a number of its dependencies use a wrapper to interface with
+BLAS, which you need to install first. This is available from:
 
 - https://github.com/mjcarley/blaswrap
+
+You will also need to have installed the following libraries:
+
 - https://github.com/mjcarley/sqt
 - https://github.com/mjcarley/wbfmm
 - https://github.com/mjcarley/agg
@@ -20,16 +24,23 @@ If you clone the github repository using
 `git clone --recursive https://github.com/mjcarley/nbi`
 
 these libraries will be downloaded automatically in the `externals`
-subdirectory of `nbi`. 
+subdirectory of `nbi`, and will be built as part of the NBI build
+process. 
 
 You will also need the GMSH API library, available from
 
 - https://www.gmsh.info/
 
+If you are installing the AGG geometry library from within this tree,
+you will need to install Christian Woltering's API for Jonathan
+Shewchuk's Triangle code, available from:
+
+- https://github.com/wo80/Triangle/
+
 You should install PETSc if you want to use it in place of the (very)
 basic built-in iterative solver (recommended):
 
-https://petsc.org/
+- https://petsc.org/
 
 and make sure the environment variable PETSC_DIR is set and visible in
 the shell.

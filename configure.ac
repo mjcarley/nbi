@@ -63,9 +63,9 @@ AC_SEARCH_LIBS([strerror],[cposix])
 submodules=no
 AC_CHECK_PROG(BLASWRAP, blaswrap-config, yes, no)
 if test x$BLASWRAP = xyes ; then
-   AC_DEFINE(HAVE_BLASWRAP, 1, [BLAS wrapper header available])
-   blaswrap_cflags=`blaswrap-config --cflags`
-   blaswrap_libs=`blaswrap-config --libs`
+  AC_DEFINE(HAVE_BLASWRAP, 1, [BLAS wrapper header available])
+  blaswrap_cflags=`blaswrap-config --cflags`
+  blaswrap_libs=`blaswrap-config --libs`
 else
   echo \#################################################################
   echo \#
@@ -79,106 +79,116 @@ exit
 fi
 
 if test -d "externals/sqt" ; then
-    echo "SQT included as submodule."
-    submodules=yes
-    sqt_submodule=externals/sqt/src/.libs
+  echo "SQT included as submodule."
+  submodules=yes
+  sqt_submodule=externals/sqt/src/.libs
 
-    AC_CONFIG_SUBDIRS([externals/sqt])
-    sqt_cflags=`sh externals/sqt/src/sqt-config --cflags`
-    sqt_libs=`sh externals/sqt/src/sqt-config --libs`
+  AC_CONFIG_SUBDIRS([externals/sqt])
+  sqt_cflags=`sh externals/sqt/src/sqt-config --cflags`
+  sqt_libs=`sh externals/sqt/src/sqt-config --libs`
 else
-    echo "SQT not included as submodule."
-    sqt_submodule=
-    AC_CHECK_PROG(SQT, sqt-config, yes, no)
-    if test x$SQT = xyes ; then
-    AC_DEFINE(HAVE_SQT, 1, [singular quadrature library available])
-    sqt_cflags=`sqt-config --cflags`
-    sqt_libs=`sqt-config --libs`
-    else
-      echo \#################################################################
-      echo \#
-      echo \# Singular Quadrature on Triangles library not installed or
-      echo \# not properly installed. You can get it from
-      echo \#
-      echo \# https://github.com/mjcarley/sqt
-      echo \#
-      echo \#################################################################
-      exit
-    fi
+  echo "SQT not included as submodule."
+  sqt_submodule=
+  AC_CHECK_PROG(SQT, sqt-config, yes, no)
+  if test x$SQT = xyes ; then
+  AC_DEFINE(HAVE_SQT, 1, [singular quadrature library available])
+  sqt_cflags=`sqt-config --cflags`
+  sqt_libs=`sqt-config --libs`
+  else
+    echo \#################################################################
+    echo \#
+    echo \# Singular Quadrature on Triangles library not installed or
+    echo \# not properly installed. You can get it from
+    echo \#
+    echo \# https://github.com/mjcarley/sqt
+    echo \#
+    echo \#################################################################
+    exit
+  fi
 fi
 
 if test -d "externals/wbfmm" ; then
-    echo "WBFMM included as submodule."
-    submodules=yes
-    wbfmm_submodule=externals/wbfmm/src/.libs
-    AC_CONFIG_SUBDIRS([externals/wbfmm])
-    wbfmm_cflags=`sh externals/wbfmm/src/wbfmm-config --cflags`
-    wbfmm_libs=`sh externals/wbfmm/src/wbfmm-config --libs`
+  echo "WBFMM included as submodule."
+  submodules=yes
+  wbfmm_submodule=externals/wbfmm/src/.libs
+  AC_CONFIG_SUBDIRS([externals/wbfmm])
+  wbfmm_cflags=`sh externals/wbfmm/src/wbfmm-config --cflags`
+  wbfmm_libs=`sh externals/wbfmm/src/wbfmm-config --libs`
 else
-    echo "WBFMM not included as submodule."
-    wbfmm_submodule=
-AC_CHECK_PROG(WBFMM, wbfmm-config, yes, no)
-if test x$WBFMM = xyes ; then
-   AC_DEFINE(HAVE_WBFMM, 1, [wide band FMM library available])
-   wbfmm_cflags=`wbfmm-config --cflags`
-   wbfmm_libs=`wbfmm-config --libs`
-else
-  echo \#################################################################
-  echo \#
-  echo \# Wide Band Fast Multipole Method library not installed or
-  echo \# not properly installed. You can get it from
-  echo \#
-  echo \# https://github.com/mjcarley/wbfmm
-  echo \#
-  echo \#################################################################
-  exit
-fi
+  echo "WBFMM not included as submodule."
+  wbfmm_submodule=
+  AC_CHECK_PROG(WBFMM, wbfmm-config, yes, no)
+  if test x$WBFMM = xyes ; then
+    AC_DEFINE(HAVE_WBFMM, 1, [wide band FMM library available])
+    wbfmm_cflags=`wbfmm-config --cflags`
+    wbfmm_libs=`wbfmm-config --libs`
+  else
+    echo \#################################################################
+    echo \#
+    echo \# Wide Band Fast Multipole Method library not installed or
+    echo \# not properly installed. You can get it from
+    echo \#
+    echo \# https://github.com/mjcarley/wbfmm
+    echo \#
+    echo \#################################################################
+    exit
+  fi
 fi
 
-AC_CHECK_PROG(AGG, agg-config, yes, no)
-if test x$AGG = xyes ; then
-   AC_DEFINE(HAVE_AGG, 1, [aerodynamic geometry library available])
-   agg_cflags=`agg-config --cflags`
-   agg_libs=`agg-config --libs`
+if test -d "externals/agg" ; then
+  echo "AGG included as submodule."
+  submodules=yes
+  agg_submodule=externals/agg/src/.libs
+
+  AC_CONFIG_SUBDIRS([externals/agg])
+  agg_cflags=`sh externals/agg/src/agg-config --cflags`
+  agg_libs=`sh externals/agg/src/agg-config --libs`
 else
-  echo \#################################################################
-  echo \#
-  echo \# Aerodynamic Geometry Generator library not installed or
-  echo \# not properly installed. You can get it from
-  echo \#
-  echo \# https://github.com/mjcarley/agg
-  echo \#
-  echo \#################################################################
-  exit
+  AC_CHECK_PROG(AGG, agg-config, yes, no)
+  if test x$AGG = xyes ; then
+     AC_DEFINE(HAVE_AGG, 1, [aerodynamic geometry library available])
+     agg_cflags=`agg-config --cflags`
+     agg_libs=`agg-config --libs`
+  else
+    echo \#################################################################
+    echo \#
+    echo \# Aerodynamic Geometry Generator library not installed or
+    echo \# not properly installed. You can get it from
+    echo \#
+    echo \# https://github.com/mjcarley/agg
+    echo \#
+    echo \#################################################################
+    exit
+  fi
 fi
 
 if test "${PETSC_DIR+set}" = set; then
-   AC_DEFINE(HAVE_PETSC, 1, [PETSC solvers available])
-   PETSC=yes
-   echo \#################################################################
-   echo \#
-   echo \# Environment variable PETSC_DIR=${PETSC_DIR}
-   echo \#   PETSc solvers will be available
-   echo \#
-   echo \#################################################################
+  AC_DEFINE(HAVE_PETSC, 1, [PETSC solvers available])
+  PETSC=yes
+  echo \#################################################################
+  echo \#
+  echo \# Environment variable PETSC_DIR=${PETSC_DIR}
+  echo \#   PETSc solvers will be available
+  echo \#
+  echo \#################################################################
 else
-   PETSC=no
-   echo \#################################################################
-   echo \#
-   echo \# Environment variable PETSC_DIR not set: PETSc solvers will not
-   echo \# be available
-   echo \#
-   echo \# If PETSc is installed on your system, check that PETSC_DIR
-   echo \# is set correctly and run configure again.
-   echo \#
-   echo \# If PETSc is not installed, you will be limited to the built-in
-   echo \# GMRES solver
-   echo \#
-   echo \# You can install PETSc by downloading it from here:
-   echo \#
-   echo \# https://petsc.org/
-   echo \#
-   echo \#################################################################
+  PETSC=no
+  echo \#################################################################
+  echo \#
+  echo \# Environment variable PETSC_DIR not set: PETSc solvers will not
+  echo \# be available
+  echo \#
+  echo \# If PETSc is installed on your system, check that PETSC_DIR
+  echo \# is set correctly and run configure again.
+  echo \#
+  echo \# If PETSc is not installed, you will be limited to the built-in
+  echo \# GMRES solver
+  echo \#
+  echo \# You can install PETSc by downloading it from here:
+  echo \#
+  echo \# https://petsc.org/
+  echo \#
+  echo \#################################################################
 fi 				    
 
 PKG_CHECK_MODULES([GLIB], [glib-2.0])
@@ -188,10 +198,10 @@ AX_GCC_X86_CPU_SUPPORTS(avx2, hasavx2=yes)
 AX_GCC_X86_CPU_SUPPORTS(fma, hasfma=yes) 
 
 if test x$hasavx = xyes; then
-   SIMD_FLAGS="$SIMD_FLAGS -mavx -DWBFMM_USE_AVX"
+ SIMD_FLAGS="$SIMD_FLAGS -mavx -DWBFMM_USE_AVX"
 fi
 if test x$hasfma = xyes; then
-   SIMD_FLAGS="$SIMD_FLAGS -mfma -DWBFMM_USE_AVX"
+ SIMD_FLAGS="$SIMD_FLAGS -mfma -DWBFMM_USE_AVX"
 fi
 
 AC_CHECK_HEADERS(gmshc.h) 
@@ -235,6 +245,7 @@ AC_SUBST(petsc_real)
 ##AC_SUBST(CPPFLAGS)
 AC_SUBST(sqt_submodule)
 AC_SUBST(wbfmm_submodule)
+AC_SUBST(agg_submodule)
 AC_SUBST(subdirs)
 AC_SUBST(CFLAGS)
 AC_SUBST(LIBS)
