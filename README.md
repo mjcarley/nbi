@@ -8,6 +8,16 @@ https://github.com/codeplea/tinyexpr
 
 # Prerequisites
 
+To install NBI, you will need to install some or all of the following:
+
+- BLAS wrapper https://github.com/mjcarley/blaswrap
+- Singular Quadrature for Triangles https://github.com/mjcarley/sqt
+- Wide Band Fast Multipole Method https://github.com/mjcarley/wbfmm
+- Aerodynamic Geometry Generator https://github.com/mjcarley/agg
+- GMSH API https://www.gmsh.info/
+- Triangle API https://github.com/wo80/Triangle/
+- PETSc https://petsc.org/
+
 NBI and a number of its dependencies use a wrapper to interface with
 BLAS, which you need to install first. This is available from:
 
