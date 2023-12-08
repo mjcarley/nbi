@@ -149,3 +149,5 @@ ${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
 ## generate gmsh files for visualization
 ${bin}/nbi-process  -p ${offp} -e ${offe} -d grid.dat -g grid.nbi \
       -r 2 -o grid.msh -v "Grid"
+echo
+echo

@@ -140,3 +140,5 @@ ${bin}/nbi-field-laplace -g ${gfile} -d solution.dat -F grid.nbi > grid.dat
 ## generate gmsh files for visualization
 ${bin}/nbi-process  -p ${offp} -e ${offe} -d grid.dat -g grid.nbi \
       -r 2 -o grid.msh
+echo
+echo
