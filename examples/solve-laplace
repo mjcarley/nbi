@@ -88,6 +88,8 @@ echo "   use PETSC solver:          petsc=${petsc}"
 echo
 
 ## store geometry and matrix data in subdirectories
+mkdir -p Geometries
+mkdir -p Matrices
 gfile=Geometries/${geometry}-${nqp}.nbi
 mfile=Matrices/matrix-${geometry}-laplace-${nqp}-${nqu}-${order}-${depth}.dat
 
