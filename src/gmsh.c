@@ -14,6 +14,10 @@
  * along with NBI.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif /*HAVE_CONFIG_H*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,18 +28,20 @@
 
 #include <nbi.h>
 
+
+#ifdef HAVE_SQT
 #include <sqt.h>
+#endif /*HAVE_SQT*/
+
+#ifdef HAVE_BLASWRAP
 #include <blaswrap.h>
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif /*HAVE_CONFIG_H*/
-
-#include "nbi-private.h"
+#endif /*HAVE_BLASWRAP*/
 
 #ifdef HAVE_GMSHC_H
 #include <gmshc.h>
 #endif /*HAVE_GMSHC_H*/
+
+#include "nbi-private.h"
 
 #define GMSH_NODE_SIZE      5
 #define GMSH_NODE_DATA_SIZE 3

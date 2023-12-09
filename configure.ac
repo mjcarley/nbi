@@ -82,10 +82,11 @@ if test -d "externals/sqt" ; then
   echo "SQT included as submodule."
   submodules=yes
   sqt_submodule=externals/sqt/src/.libs
-
+  sqt_libs=-lsqt
+  sqt_include=externals/sqt/src
+  
   AC_CONFIG_SUBDIRS([externals/sqt])
-  sqt_cflags=`sh externals/sqt/src/sqt-config --cflags`
-  sqt_libs=`sh externals/sqt/src/sqt-config --libs`
+  AC_DEFINE(HAVE_SQT, 1, [singular quadrature library available])
 else
   echo "SQT not included as submodule."
   sqt_submodule=
@@ -111,9 +112,11 @@ if test -d "externals/wbfmm" ; then
   echo "WBFMM included as submodule."
   submodules=yes
   wbfmm_submodule=externals/wbfmm/src/.libs
+  wbfmm_libs=-lwbfmm
+  wbfmm_include=externals/wbfmm/src
+
   AC_CONFIG_SUBDIRS([externals/wbfmm])
-  wbfmm_cflags=`sh externals/wbfmm/src/wbfmm-config --cflags`
-  wbfmm_libs=`sh externals/wbfmm/src/wbfmm-config --libs`
+  AC_DEFINE(HAVE_WBFMM, 1, [wide band FMM library available])
 else
   echo "WBFMM not included as submodule."
   wbfmm_submodule=
@@ -139,10 +142,11 @@ if test -d "externals/agg" ; then
   echo "AGG included as submodule."
   submodules=yes
   agg_submodule=externals/agg/src/.libs
+  agg_libs=-lagg
+  agg_include=externals/agg/src
 
   AC_CONFIG_SUBDIRS([externals/agg])
-  agg_cflags=`sh externals/agg/src/agg-config --cflags`
-  agg_libs=`sh externals/agg/src/agg-config --libs`
+  AC_DEFINE(HAVE_AGG, 1, [aerodynamic geometry library available])
 else
   AC_CHECK_PROG(AGG, agg-config, yes, no)
   if test x$AGG = xyes ; then
@@ -161,6 +165,19 @@ else
     exit
   fi
 fi
+
+AC_CHECK_HEADERS(gmshc.h) 
+AC_CHECK_LIB(gmsh, gmshInitialize, [], [
+  echo \#################################################################
+  echo \#
+  echo \# GMSH API library not installed or not in library path
+  echo \# You can get it from
+  echo \#
+  echo \# https://www.gmsh.info/
+  echo \#
+  echo \#################################################################
+  exit		   
+])
 
 if test "${PETSC_DIR+set}" = set; then
   AC_DEFINE(HAVE_PETSC, 1, [PETSC solvers available])
@@ -204,19 +221,6 @@ if test x$hasfma = xyes; then
  SIMD_FLAGS="$SIMD_FLAGS -mfma -DWBFMM_USE_AVX"
 fi
 
-AC_CHECK_HEADERS(gmshc.h) 
-AC_CHECK_LIB(gmsh, gmshInitialize, [], [
-  echo \#################################################################
-  echo \#
-  echo \# GMSH API library not installed or not in library path
-  echo \# You can get it from
-  echo \#
-  echo \# https://www.gmsh.info/
-  echo \#
-  echo \#################################################################
-  exit		   
-])
-
 AC_CHECK_LIB(m, cos)
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -239,14 +243,21 @@ AC_F77_WRAPPERS
 #DX_INIT_DOXYGEN(nbi, doc/nbi.dxy)
 
 CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $GLIB_CFLAGS $blaswrap_cflags $wbfmm_cflags $sqt_cflags $agg_cflags"
-LIBS="$GLIB_LIBS $blaswrap_libs $wbfmm_libs $sqt_libs $agg_libs $LAPACK_LIBS $LIBS $FLIBS"
+LIBS="$GLIB_LIBS $blaswrap_libs $LAPACK_LIBS $LIBS $FLIBS"
 
 AC_SUBST(petsc_real)
 ##AC_SUBST(CPPFLAGS)
 AC_SUBST(sqt_submodule)
+AC_SUBST(sqt_include)
+AC_SUBST(sqt_libs)
 AC_SUBST(wbfmm_submodule)
+AC_SUBST(wbfmm_include)
+AC_SUBST(wbfmm_libs)
 AC_SUBST(agg_submodule)
+AC_SUBST(agg_include)
+AC_SUBST(agg_libs)
 AC_SUBST(subdirs)
+
 AC_SUBST(CFLAGS)
 AC_SUBST(LIBS)
 AC_SUBST(LDFLAGS)

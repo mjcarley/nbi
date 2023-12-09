@@ -28,10 +28,21 @@
 
 #include <nbi.h>
 
+#ifdef HAVE_WBFMM
 #include <wbfmm.h>
-#include <sqt.h>
+#endif /*HAVE_WBFMM*/
 
+#ifdef HAVE_SQT
+#include <sqt.h>
+#endif /*HAVE_SQT*/
+
+#ifdef HAVE_BLASWRAP
 #include <blaswrap.h>
+#endif /*HAVE_BLASWRAP*/
+
+#ifdef HAVE_AGG
+#include <agg.h>
+#endif /*HAVE_AGG*/
 
 #include "nbi-private.h"
 
@@ -334,6 +345,12 @@ gint main(gint argc, gchar **argv)
     switch (ch ) {
     default: g_assert_not_reached() ; break ;
     case 'h': print_help_text(stderr, nq) ; return 0 ; break ;
+#ifndef HAVE_AGG
+    case 'a':
+      fprintf(stderr, "%s: AGG not supported\n", progname) ;
+      return 1 ;
+      break ;
+#endif /*HAVE_AGG*/
 #ifdef HAVE_AGG
     case 'a':
       if ( gfunc != NULL

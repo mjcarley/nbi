@@ -134,8 +134,10 @@ nbi_solve_helmholtz-petsc-helmholtz.o: petsc-helmholtz.c \
  /usr/include/bits/types/struct_sched_param.h /usr/include/bits/cpu-set.h \
  /usr/include/bits/setjmp.h \
  /usr/include/bits/types/struct___jmp_buf_tag.h \
- /usr/include/glib-2.0/glib/glib-autocleanups.h ../src/nbi.h \
- /home/michael/Codes/include/wbfmm.h /home/michael/Codes/include/sqt.h \
+ /usr/include/glib-2.0/glib/glib-autocleanups.h \
+ /home/michael/Codes/Libraries/nbi/src/nbi.h \
+ /home/michael/Codes/Libraries/nbi/externals/wbfmm/src/wbfmm.h \
+ /home/michael/Codes/Libraries/nbi/externals/sqt/src/sqt.h \
  /home/michael/Codes/include/blaswrap.h ../config.h \
  /home/michael/Codes/include/petscksp.h \
  /home/michael/Codes/include/petscpc.h \
@@ -379,9 +381,9 @@ nbi_solve_helmholtz-petsc-helmholtz.o: petsc-helmholtz.c \
 /usr/include/bits/setjmp.h:
 /usr/include/bits/types/struct___jmp_buf_tag.h:
 /usr/include/glib-2.0/glib/glib-autocleanups.h:
-../src/nbi.h:
-/home/michael/Codes/include/wbfmm.h:
-/home/michael/Codes/include/sqt.h:
+/home/michael/Codes/Libraries/nbi/src/nbi.h:
+/home/michael/Codes/Libraries/nbi/externals/wbfmm/src/wbfmm.h:
+/home/michael/Codes/Libraries/nbi/externals/sqt/src/sqt.h:
 /home/michael/Codes/include/blaswrap.h:
 ../config.h:
 /home/michael/Codes/include/petscksp.h:

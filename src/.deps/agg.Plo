@@ -1,4 +1,4 @@
-agg.lo: agg.c /usr/include/stdc-predef.h /usr/include/stdio.h \
+agg.lo: agg.c /usr/include/stdc-predef.h ../config.h /usr/include/stdio.h \
  /usr/include/bits/libc-header-start.h /usr/include/features.h \
  /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
  /usr/include/bits/long-double.h /usr/include/gnu/stubs.h \
@@ -133,11 +133,13 @@ agg.lo: agg.c /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/bits/types/struct_sched_param.h /usr/include/bits/cpu-set.h \
  /usr/include/bits/setjmp.h \
  /usr/include/bits/types/struct___jmp_buf_tag.h \
- /usr/include/glib-2.0/glib/glib-autocleanups.h \
- /home/michael/Codes/include/sqt.h /home/michael/Codes/include/wbfmm.h \
- /home/michael/Codes/include/blaswrap.h nbi.h ../config.h nbi-private.h \
- /home/michael/Codes/include/agg.h
+ /usr/include/glib-2.0/glib/glib-autocleanups.h nbi.h \
+ /home/michael/Codes/Libraries/nbi/externals/wbfmm/src/wbfmm.h \
+ /home/michael/Codes/Libraries/nbi/externals/sqt/src/sqt.h \
+ /home/michael/Codes/include/blaswrap.h nbi-private.h \
+ /home/michael/Codes/Libraries/nbi/externals/agg/src/agg.h
 /usr/include/stdc-predef.h:
+../config.h:
 /usr/include/stdio.h:
 /usr/include/bits/libc-header-start.h:
 /usr/include/features.h:
@@ -342,10 +344,9 @@ agg.lo: agg.c /usr/include/stdc-predef.h /usr/include/stdio.h \
 /usr/include/bits/setjmp.h:
 /usr/include/bits/types/struct___jmp_buf_tag.h:
 /usr/include/glib-2.0/glib/glib-autocleanups.h:
-/home/michael/Codes/include/sqt.h:
-/home/michael/Codes/include/wbfmm.h:
-/home/michael/Codes/include/blaswrap.h:
 nbi.h:
-../config.h:
+/home/michael/Codes/Libraries/nbi/externals/wbfmm/src/wbfmm.h:
+/home/michael/Codes/Libraries/nbi/externals/sqt/src/sqt.h:
+/home/michael/Codes/include/blaswrap.h:
 nbi-private.h:
-/home/michael/Codes/include/agg.h:
+/home/michael/Codes/Libraries/nbi/externals/agg/src/agg.h:

@@ -14,6 +14,10 @@
  * along with NBI.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif /*HAVE_CONFIG_H*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,17 +26,15 @@
 
 #include <glib.h>
 
-#include <sqt.h>
-
-#include <wbfmm.h>
-
-#include <blaswrap.h>
-
 #include <nbi.h>
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif /*HAVE_CONFIG_H*/
+#ifdef HAVE_WBFMM
+#include <wbfmm.h>
+#endif /*HAVE_WBFMM*/
+
+#ifdef HAVE_BLASWRAP
+#include <blaswrap.h>
+#endif /*HAVE_BLASWRAP*/
 
 #include "nbi-private.h"
 #define wbfmm_tree_point_index(_t,_i)			\

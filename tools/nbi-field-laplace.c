@@ -28,10 +28,18 @@
 
 #include <nbi.h>
 
-#include <wbfmm.h>
-#include <sqt.h>
 
+#ifdef HAVE_WBFMM
+#include <wbfmm.h>
+#endif /*HAVE_WBFMM*/
+
+#ifdef HAVE_SQT
+#include <sqt.h>
+#endif /*HAVE_SQT*/
+
+#ifdef HAVE_BLASWRAP
 #include <blaswrap.h>
+#endif /*HAVE_BLASWRAP*/
 
 #include "nbi-private.h"
 

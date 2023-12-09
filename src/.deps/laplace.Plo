@@ -1,8 +1,8 @@
-laplace.lo: laplace.c /usr/include/stdc-predef.h /usr/include/stdio.h \
- /usr/include/bits/libc-header-start.h /usr/include/features.h \
- /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
- /usr/include/bits/long-double.h /usr/include/gnu/stubs.h \
- /usr/include/gnu/stubs-64.h \
+laplace.lo: laplace.c /usr/include/stdc-predef.h ../config.h \
+ /usr/include/stdio.h /usr/include/bits/libc-header-start.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/bits/long-double.h \
+ /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
  /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/stddef.h \
  /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/stdarg.h \
  /usr/include/bits/types.h /usr/include/bits/timesize.h \
@@ -133,10 +133,11 @@ laplace.lo: laplace.c /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/bits/types/struct_sched_param.h /usr/include/bits/cpu-set.h \
  /usr/include/bits/setjmp.h \
  /usr/include/bits/types/struct___jmp_buf_tag.h \
- /usr/include/glib-2.0/glib/glib-autocleanups.h \
- /home/michael/Codes/include/sqt.h /home/michael/Codes/include/wbfmm.h \
- /home/michael/Codes/include/blaswrap.h nbi.h ../config.h nbi-private.h
+ /usr/include/glib-2.0/glib/glib-autocleanups.h nbi.h \
+ /home/michael/Codes/Libraries/nbi/externals/wbfmm/src/wbfmm.h \
+ /home/michael/Codes/include/blaswrap.h nbi-private.h
 /usr/include/stdc-predef.h:
+../config.h:
 /usr/include/stdio.h:
 /usr/include/bits/libc-header-start.h:
 /usr/include/features.h:
@@ -341,9 +342,7 @@ laplace.lo: laplace.c /usr/include/stdc-predef.h /usr/include/stdio.h \
 /usr/include/bits/setjmp.h:
 /usr/include/bits/types/struct___jmp_buf_tag.h:
 /usr/include/glib-2.0/glib/glib-autocleanups.h:
-/home/michael/Codes/include/sqt.h:
-/home/michael/Codes/include/wbfmm.h:
-/home/michael/Codes/include/blaswrap.h:
 nbi.h:
-../config.h:
+/home/michael/Codes/Libraries/nbi/externals/wbfmm/src/wbfmm.h:
+/home/michael/Codes/include/blaswrap.h:
 nbi-private.h:

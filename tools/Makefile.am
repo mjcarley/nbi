@@ -1,11 +1,18 @@
 ## Process this file with automake to produce Makefile.in
 
-AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir)
 if SUBMODULES
+AM_CPPFLAGS = -I@abs_top_builddir@ -I@abs_top_builddir@/src -I$(includedir) \
+	-I@abs_top_builddir@/$(sqt_include) \
+	-I@abs_top_builddir@/$(wbfmm_include) \
+	-I@abs_top_builddir@/$(agg_include) \
+	-DG_LOG_DOMAIN=\"NBI\"
 AM_LDFLAGS = \
-	-L$(ac_abs_topbuilddir)/$(sqt_submodule) \
-	-L$(ac_abs_topbuilddir)/$(wbfmm_submodule) \
-	-L$(ac_abs_topbuilddir)/$(agg_submodule)
+	-L@abs_top_builddir@/$(sqt_submodule) $(sqt_libs) \
+	-L@abs_top_builddir@/$(wbfmm_submodule) $(wbfmm_libs) \
+	-L@abs_top_builddir@/$(agg_submodule) $(agg_libs)
+else
+AM_CPPFLAGS = -I@abs_top_builddir@ -I$(includedir) -DG_LOG_DOMAIN=\"NBI\"
+AM_LDFLAGS = $(sqt_libs) $(wbfmm_libs) $(agg_libs)
 endif
 
 DEPS = $(top_builddir)/src/libnbi.la
@@ -29,28 +36,30 @@ nbi_solve_laplace_SOURCES = nbi-solve-laplace.c petsc-laplace.c
 nbi_solve_helmholtz_SOURCES = nbi-solve-helmholtz.c petsc-helmholtz.c
 
 if PETSC
-nbi_solve_laplace_CPPFLAGS = \
-	-I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir) \
-	`./petsc-config include`
+nbi_solve_laplace_CPPFLAGS = $(AM_CPPFLAGS) `./petsc-config include`
+#	-I@abs_top_builddir@ -I@abs_top_builddir@/src -I$(includedir) \
 nbi_solve_laplace_DEPS = $(top_builddir)/src/libnbi.la
-nbi_solve_laplace_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a \
-	`./petsc-config lib`
+nbi_solve_laplace_LDFLAGS = $(AM_LDFLAGS) `./petsc-config lib`
 
-nbi_solve_helmholtz_CPPFLAGS = \
-	-I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir) \
-	`./petsc-config include`
+nbi_solve_helmholtz_CPPFLAGS = $(AM_CPPFLAGS) `./petsc-config include`
+#nbi_solve_helmholtz_CPPFLAGS = \
+#	-I@abs_top_builddir@ -I@abs_top_builddir@/src -I$(includedir) \
+#	`./petsc-config include`
 nbi_solve_helmholtz_DEPS = $(top_builddir)/src/libnbi.la
-nbi_solve_helmholtz_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a \
-	`./petsc-config lib`
+nbi_solve_helmholtz_LDFLAGS = $(AM_LDFLAGS) `./petsc-config lib`
+#nbi_solve_helmholtz_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a \
+#	`./petsc-config lib`
 else
-nbi_solve_laplace_CPPFLAGS = \
-	-I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir)
-nbi_solve_laplace_DEPS = $(top_builddir)/src/libnbi.la
-nbi_solve_laplace_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a
+#nbi_solve_laplace_CPPFLAGS = \
+#	-I@abs_top_builddir@ -I@abs_top_builddir@/src -I$(includedir)
+#nbi_solve_laplace_DEPS = $(top_builddir)/src/libnbi.la
+#nbi_solve_laplace_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a
 
-nbi_solve_helmholtz_CPPFLAGS = \
-	-I$(top_srcdir) -I$(top_srcdir)/src -I$(includedir)
-nbi_solve_helmholtz_DEPS = $(top_builddir)/src/libnbi.la
-nbi_solve_helmholtz_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a
+#nbi_solve_helmholtz_CPPFLAGS = \
+#	-I@abs_top_builddir@ -I@abs_top_builddir@/src -I$(includedir)
+#nbi_solve_helmholtz_DEPS = $(top_builddir)/src/libnbi.la
+#nbi_solve_helmholtz_LDFLAGS = $(top_builddir)/src/.libs/libnbi.a
+#nbi_solve_laplace_LDFLAGS = $(AM_LDFLAGS) `./petsc-config lib`
+
 endif
 

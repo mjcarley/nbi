@@ -16,7 +16,7 @@
 /* #undef FC_DUMMY_MAIN_EQ_F77 */
 
 /* aerodynamic geometry library available */
-/* #undef HAVE_AGG */
+#define HAVE_AGG 1
 
 /* Define if avx2 instructions are supported */
 #define HAVE_AVX2_INSTRUCTIONS 1
@@ -52,7 +52,7 @@
 #define HAVE_PETSC 1
 
 /* singular quadrature library available */
-/* #undef HAVE_SQT */
+#define HAVE_SQT 1
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #define HAVE_STDINT_H 1
@@ -76,7 +76,7 @@
 #define HAVE_UNISTD_H 1
 
 /* wide band FMM library available */
-/* #undef HAVE_WBFMM */
+#define HAVE_WBFMM 1
 
 /* Define to the sub-directory where libtool stores uninstalled libraries. */
 #define LT_OBJDIR ".libs/"
