@@ -1,11 +1,11 @@
 ACLOCAL_AMFLAGS = -I m4
 
-if SUBMODULES
-AM_CPPFLAGS = \
-	-I$(abs_top_srcdir)/externals/sqt/src \
-	-I$(abs_top_srcdir)/externals/wbfmm/src \
-	-I$(abs_top_srcdir)/externals/agg/src
-endif
+#if SUBMODULES
+#AM_CPPFLAGS = \
+#	-I$(abs_top_srcdir)/externals/sqt/src \
+#	-I$(abs_top_srcdir)/externals/wbfmm/src \
+#	-I$(abs_top_srcdir)/externals/agg/src
+#endif
 
 bin_SCRIPTS=nbi-config
 
