@@ -1,17 +1,3 @@
-if SUBMODULES
-AM_CFLAGS = @CFLAGS@ -I@abs_top_builddir@ -I$(includedir) \
-	-I@abs_top_builddir@/$(sqt_include) \
-	-I@abs_top_builddir@/$(wbfmm_include) \
-	-I@abs_top_builddir@/$(agg_include) \
-	-DG_LOG_DOMAIN=\"NBI\"
-##AM_LDFLAGS = \
-##	-L@abs_top_builddir@/$(sqt_submodule) \
-##	-L@abs_top_builddir@/$(wbfmm_submodule) \
-##	-L@abs_top_builddir@/$(agg_submodule)
-else
-AM_CFLAGS = @CFLAGS@ -I@abs_top_builddir@ -I$(includedir) -DG_LOG_DOMAIN=\"NBI\"
-endif
-
 bin_SCRIPTS=nbi-config
 
 BUILT_SOURCES= \

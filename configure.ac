@@ -81,12 +81,14 @@ fi
 if test -d "externals/sqt" ; then
   echo "SQT included as submodule."
   submodules=yes
-  sqt_submodule=externals/sqt/src/.libs
-  sqt_libs=-lsqt
-  sqt_include=externals/sqt/src
-  
   AC_CONFIG_SUBDIRS([externals/sqt])
   AC_DEFINE(HAVE_SQT, 1, [singular quadrature library available])
+
+sqt_submodule=externals/sqt/src/.libs
+  sqt_libs=-lsqt
+  sqt_include=externals/sqt/src
+  sqt_cflags=-I../${sqt_include}
+
 else
   echo "SQT not included as submodule."
   sqt_submodule=
@@ -111,12 +113,14 @@ fi
 if test -d "externals/wbfmm" ; then
   echo "WBFMM included as submodule."
   submodules=yes
+  AC_CONFIG_SUBDIRS([externals/wbfmm])
+  AC_DEFINE(HAVE_WBFMM, 1, [wide band FMM library available])
+
   wbfmm_submodule=externals/wbfmm/src/.libs
   wbfmm_libs=-lwbfmm
   wbfmm_include=externals/wbfmm/src
+  wbfmm_cflags=-I../${wbfmm_include}
 
-  AC_CONFIG_SUBDIRS([externals/wbfmm])
-  AC_DEFINE(HAVE_WBFMM, 1, [wide band FMM library available])
 else
   echo "WBFMM not included as submodule."
   wbfmm_submodule=
@@ -141,12 +145,14 @@ fi
 if test -d "externals/agg" ; then
   echo "AGG included as submodule."
   submodules=yes
+  AC_CONFIG_SUBDIRS([externals/agg])
+  AC_DEFINE(HAVE_AGG, 1, [aerodynamic geometry library available])
+
   agg_submodule=externals/agg/src/.libs
   agg_libs=-lagg
   agg_include=externals/agg/src
+  agg_cflags=-I../${agg_include}
 
-  AC_CONFIG_SUBDIRS([externals/agg])
-  AC_DEFINE(HAVE_AGG, 1, [aerodynamic geometry library available])
 else
   AC_CHECK_PROG(AGG, agg-config, yes, no)
   if test x$AGG = xyes ; then
