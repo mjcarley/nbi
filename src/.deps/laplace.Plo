@@ -134,8 +134,8 @@ laplace.lo: laplace.c /usr/include/stdc-predef.h ../config.h \
  /usr/include/bits/setjmp.h \
  /usr/include/bits/types/struct___jmp_buf_tag.h \
  /usr/include/glib-2.0/glib/glib-autocleanups.h nbi.h \
- /home/michael/Codes/Libraries/nbi/externals/wbfmm/src/wbfmm.h \
- /home/michael/Codes/include/blaswrap.h nbi-private.h
+ ../externals/wbfmm/src/wbfmm.h /home/michael/Codes/include/blaswrap.h \
+ nbi-private.h
 /usr/include/stdc-predef.h:
 ../config.h:
 /usr/include/stdio.h:
@@ -343,6 +343,6 @@ laplace.lo: laplace.c /usr/include/stdc-predef.h ../config.h \
 /usr/include/bits/types/struct___jmp_buf_tag.h:
 /usr/include/glib-2.0/glib/glib-autocleanups.h:
 nbi.h:
-/home/michael/Codes/Libraries/nbi/externals/wbfmm/src/wbfmm.h:
+../externals/wbfmm/src/wbfmm.h:
 /home/michael/Codes/include/blaswrap.h:
 nbi-private.h:
