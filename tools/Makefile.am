@@ -13,7 +13,8 @@ AM_LDFLAGS = \
 	-L@abs_top_builddir@/$(wbfmm_submodule) $(wbfmm_libs) \
 	-L@abs_top_builddir@/$(agg_submodule) $(agg_libs)
 else
-AM_CPPFLAGS = -I@abs_top_builddir@ -I$(includedir) -DG_LOG_DOMAIN=\"NBI\"
+AM_CPPFLAGS = -I@abs_top_builddir@ -I@abs_top_builddir@/src -I$(includedir) \
+		-DG_LOG_DOMAIN=\"NBI\"
 AM_LDFLAGS = $(sqt_libs) $(wbfmm_libs) $(agg_libs)
 endif
 
