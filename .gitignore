@@ -5,6 +5,7 @@
 *.dll
 *.exe
 *.o
+*.lo
 *.so
 
 ## don't include emacs backups
