@@ -1,6 +1,6 @@
 AC_INIT([nbi],[1.0.0])
 AC_CONFIG_SRCDIR([src/nbi.h])
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([subdir-objects])
 
 NBI_MAJOR_VERSION=1
 NBI_MINOR_VERSION=0
@@ -84,7 +84,7 @@ if test -d "externals/sqt" ; then
   AC_CONFIG_SUBDIRS([externals/sqt])
   AC_DEFINE(HAVE_SQT, 1, [singular quadrature library available])
 
-sqt_submodule=externals/sqt/src/.libs
+  sqt_submodule=externals/sqt/src/.libs
   sqt_libs=-lsqt
   sqt_include=externals/sqt/src
   sqt_cflags=-I../${sqt_include}
