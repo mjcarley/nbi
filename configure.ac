@@ -31,10 +31,6 @@ PACKAGE=nbi
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
 
-#(subdir-objects)
-
-##$PACKAGE, $VERSION, no-define)
-
 # Specify a configuration file
 AC_CONFIG_HEADERS(config.h)
 
@@ -46,9 +42,6 @@ AC_DEFINE_UNQUOTED(NBI_BINARY_AGE, $NBI_BINARY_AGE, [Binary age])
 
 dnl Initialize libtool
 LT_INIT
-
-dnl Initialize maintainer mode
-#AM_MAINTAINER_MODE
 
 AC_PROG_CC
 AM_PROG_CC_C_O
@@ -87,8 +80,6 @@ if test -d "externals/sqt" ; then
   sqt_submodule=externals/sqt/src/.libs
   sqt_libs=-lsqt
   sqt_include=externals/sqt/src
-  ##sqt_cflags=-I../${sqt_include}
-
 else
   echo "SQT not included as submodule."
   sqt_submodule=

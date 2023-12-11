@@ -1,3 +1,5 @@
+ACLOCAL_AMFLAGS = -I m4
+
 if SUBMODULES
 AM_CPPFLAGS = \
 	-I$(abs_top_srcdir)/externals/sqt/src \
