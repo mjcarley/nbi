@@ -87,7 +87,7 @@ if test -d "externals/sqt" ; then
   sqt_submodule=externals/sqt/src/.libs
   sqt_libs=-lsqt
   sqt_include=externals/sqt/src
-  sqt_cflags=-I../${sqt_include}
+  ##sqt_cflags=-I../${sqt_include}
 
 else
   echo "SQT not included as submodule."
@@ -119,7 +119,7 @@ if test -d "externals/wbfmm" ; then
   wbfmm_submodule=externals/wbfmm/src/.libs
   wbfmm_libs=-lwbfmm
   wbfmm_include=externals/wbfmm/src
-  wbfmm_cflags=-I../${wbfmm_include}
+  ##wbfmm_cflags=-I../${wbfmm_include}
 
 else
   echo "WBFMM not included as submodule."
@@ -151,7 +151,7 @@ if test -d "externals/agg" ; then
   agg_submodule=externals/agg/src/.libs
   agg_libs=-lagg
   agg_include=externals/agg/src
-  agg_cflags=-I../${agg_include}
+  ##agg_cflags=-I../${agg_include}
 
 else
   AC_CHECK_PROG(AGG, agg-config, yes, no)

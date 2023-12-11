@@ -26,7 +26,9 @@
 
 #include <glib.h>
 
-#include <nbi.h>
+#ifdef HAVE_WBFMM
+#include <wbfmm.h>
+#endif /*HAVE_WBFMM*/
 
 #ifdef HAVE_SQT
 #include <sqt.h>
@@ -35,6 +37,8 @@
 #ifdef HAVE_BLASWRAP
 #include <blaswrap.h>
 #endif /*HAVE_BLASWRAP*/
+
+#include <nbi.h>
 
 #include "nbi-private.h"
 

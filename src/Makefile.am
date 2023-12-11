@@ -1,3 +1,10 @@
+if SUBMODULES
+AM_CPPFLAGS = \
+	-I$(abs_top_srcdir)/externals/sqt/src \
+	-I$(abs_top_srcdir)/externals/wbfmm/src \
+	-I$(abs_top_srcdir)/externals/agg/src
+endif
+
 bin_SCRIPTS=nbi-config
 
 BUILT_SOURCES= \
