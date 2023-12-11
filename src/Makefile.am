@@ -1,5 +1,5 @@
 if SUBMODULES
-AM_CPPFLAGS = -I@abs_top_builddir@ -I$(includedir) \
+AM_CFLAGS = @CFLAGS@ -I@abs_top_builddir@ -I$(includedir) \
 	-I@abs_top_builddir@/$(sqt_include) \
 	-I@abs_top_builddir@/$(wbfmm_include) \
 	-I@abs_top_builddir@/$(agg_include) \
@@ -9,7 +9,7 @@ AM_CPPFLAGS = -I@abs_top_builddir@ -I$(includedir) \
 ##	-L@abs_top_builddir@/$(wbfmm_submodule) \
 ##	-L@abs_top_builddir@/$(agg_submodule)
 else
-AM_CPPFLAGS = -I@abs_top_builddir@ -I$(includedir) -DG_LOG_DOMAIN=\"NBI\"
+AM_CFLAGS = @CFLAGS@ -I@abs_top_builddir@ -I$(includedir) -DG_LOG_DOMAIN=\"NBI\"
 endif
 
 bin_SCRIPTS=nbi-config
