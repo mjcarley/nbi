@@ -55,5 +55,10 @@ scratch
 ## directory for writing manual
 latex
 
+## symbolic links to external headers
+src/wbfmm.h
+src/sqt.h
+src/agg.h
+
 ## m4 cache
 autom4te.cache
