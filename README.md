@@ -55,8 +55,8 @@ code, available from:
 
 - https://github.com/wo80/Triangle/
 
-You should install PETSc if you want to use it in place of the (very)
-basic built-in iterative solver (recommended):
+You should install PETSc if you want to use its solvers in place of
+the (very) basic built-in iterative solver:
 
 - https://petsc.org/
 
