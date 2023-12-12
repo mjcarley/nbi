@@ -63,11 +63,11 @@ the (very) basic built-in iterative solver:
 and make sure the environment variable PETSC_DIR is set and visible in
 the shell.
 
-To install NBI, it is to clone the NBI repository using
+To install NBI, it is recommended to clone the NBI repository using
 
 `git clone --recursive https://github.com/mjcarley/nbi`
 
-This will download the NBI repository and SQT, WBFMM, and AGG as
+This will download the NBI repository including SQT, WBFMM, and AGG as
 submodules. In the top directory of the repository, generate the
 configuration scripts using
 
@@ -77,9 +77,9 @@ To configure the code:
 
 `./configure [OPTIONS]`
 
-You may need to export certain variables to tell `configure` how to
-set certain flags, such as the location of libraries and headers.  You
-can set these variables when you call `configure`. For example:
+You may need to set some variables to tell `configure` how to set
+certain flags, such as the location of libraries and headers.  You can
+set these variables when you call `configure`. For example:
 
 `CPPFLAGS=-I/.../include LDFLAGS=-L/.../lib ./configure`
 
