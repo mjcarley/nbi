@@ -48,7 +48,8 @@ You will also need to install the GMSH API library, available from
 
 - https://www.gmsh.info/
 
-If you are installing the AGG geometry library you will need to
+If you are installing the AGG geometry library (this is done by
+default if you clone the repository from github) you will need to
 install Christian Woltering's API for Jonathan Shewchuk's Triangle
 code, available from:
 
