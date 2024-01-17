@@ -6,9 +6,9 @@ k=10
 nqp=25
 nqu=54
 echo Scattering test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     ../test-helmholtz.log
+     test-helmholtz.log
 echo Scattering test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     ../test-helmholtz-norm.log
+     test-helmholtz-norm.log
 cd Scattering
 ../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s plane.bc -P \
      &>> ../test-helmholtz.log
@@ -21,9 +21,9 @@ k=3.5
 nqp=25
 nqu=54
 echo SphereHelmholtz test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     ../test-helmholtz.log
+     test-helmholtz.log
 echo SphereHelmholtz test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     ../test-helmholtz-norm.log
+     test-helmholtz-norm.log
 cd SphereHelmholtz
 ../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s ring.bc \
      &>> ../test-helmholtz.log
@@ -36,9 +36,9 @@ k=3.0
 nqp=25
 nqu=54
 echo Wing test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     ../test-helmholtz.log
+     test-helmholtz.log
 echo Wing test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     ../test-helmholtz-norm.log
+     test-helmholtz-norm.log
 cd Wing
 ../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s pcsource.bc -g wing \
      &>> ../test-helmholtz.log
@@ -51,9 +51,9 @@ k=3.0
 nqp=25
 nqu=54
 echo Catseye test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     ../test-helmholtz.log
+     test-helmholtz.log
 echo Catseye test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     ../test-helmholtz-norm.log
+     test-helmholtz-norm.log
 cd Catseye
 ../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s pcsource.bc -g catseye \
      &>> ../test-helmholtz.log
@@ -67,9 +67,9 @@ k=`echo 4*1.1/0.7 | bc -l`
 nqp=25
 nqu=54
 echo Rotor test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     ../test-helmholtz.log
+     test-helmholtz.log
 echo Rotor test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     ../test-helmholtz-norm.log
+     test-helmholtz-norm.log
 cd Rotor
 ../solve-helmholtz -k ${k} -d 2 -p ${nqp} -u ${nqu} -s ring.bc -g rotor \
      &>> ../test-helmholtz.log
