@@ -49,7 +49,7 @@
 #define HAVE_MEMORY_H 1
 
 /* PETSC solvers available */
-#define HAVE_PETSC 1
+/* #undef HAVE_PETSC */
 
 /* singular quadrature library available */
 #define HAVE_SQT 1

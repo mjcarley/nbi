@@ -12,29 +12,29 @@ nbi_solve_laplace-nbi-solve-laplace.o: nbi-solve-laplace.c \
  /usr/include/bits/types/__fpos64_t.h /usr/include/bits/types/__FILE.h \
  /usr/include/bits/types/FILE.h /usr/include/bits/types/struct_FILE.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/floatn.h \
- /usr/include/bits/floatn-common.h /usr/include/bits/stdio.h \
- /usr/include/stdlib.h /usr/include/bits/waitflags.h \
- /usr/include/bits/waitstatus.h /usr/include/sys/types.h \
- /usr/include/bits/types/clock_t.h /usr/include/bits/types/clockid_t.h \
- /usr/include/bits/types/time_t.h /usr/include/bits/types/timer_t.h \
- /usr/include/bits/stdint-intn.h /usr/include/endian.h \
- /usr/include/bits/endian.h /usr/include/bits/endianness.h \
- /usr/include/bits/byteswap.h /usr/include/bits/uintn-identity.h \
- /usr/include/sys/select.h /usr/include/bits/select.h \
- /usr/include/bits/types/sigset_t.h /usr/include/bits/types/__sigset_t.h \
+ /usr/include/bits/floatn-common.h /usr/include/stdlib.h \
+ /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
+ /usr/include/sys/types.h /usr/include/bits/types/clock_t.h \
+ /usr/include/bits/types/clockid_t.h /usr/include/bits/types/time_t.h \
+ /usr/include/bits/types/timer_t.h /usr/include/bits/stdint-intn.h \
+ /usr/include/endian.h /usr/include/bits/endian.h \
+ /usr/include/bits/endianness.h /usr/include/bits/byteswap.h \
+ /usr/include/bits/uintn-identity.h /usr/include/sys/select.h \
+ /usr/include/bits/select.h /usr/include/bits/types/sigset_t.h \
+ /usr/include/bits/types/__sigset_t.h \
  /usr/include/bits/types/struct_timeval.h \
  /usr/include/bits/types/struct_timespec.h \
  /usr/include/bits/pthreadtypes.h /usr/include/bits/thread-shared-types.h \
  /usr/include/bits/pthreadtypes-arch.h /usr/include/bits/struct_mutex.h \
  /usr/include/bits/struct_rwlock.h /usr/include/alloca.h \
- /usr/include/bits/stdlib-bsearch.h /usr/include/bits/stdlib-float.h \
- /usr/include/string.h /usr/include/bits/types/locale_t.h \
- /usr/include/bits/types/__locale_t.h /usr/include/strings.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/environments.h /usr/include/bits/confname.h \
- /usr/include/bits/getopt_posix.h /usr/include/bits/getopt_core.h \
- /usr/include/bits/unistd_ext.h /usr/include/math.h \
- /usr/include/bits/math-vector.h /usr/include/bits/libm-simd-decl-stubs.h \
+ /usr/include/bits/stdlib-float.h /usr/include/string.h \
+ /usr/include/bits/types/locale_t.h /usr/include/bits/types/__locale_t.h \
+ /usr/include/strings.h /usr/include/unistd.h \
+ /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
+ /usr/include/bits/confname.h /usr/include/bits/getopt_posix.h \
+ /usr/include/bits/getopt_core.h /usr/include/bits/unistd_ext.h \
+ /usr/include/math.h /usr/include/bits/math-vector.h \
+ /usr/include/bits/libm-simd-decl-stubs.h \
  /usr/include/bits/flt-eval-method.h /usr/include/bits/fp-logb.h \
  /usr/include/bits/fp-fast.h \
  /usr/include/bits/mathcalls-helper-functions.h \
@@ -139,44 +139,7 @@ nbi_solve_laplace-nbi-solve-laplace.o: nbi-solve-laplace.c \
  /home/michael/Codes/Libraries/nbi/externals/wbfmm/src/wbfmm.h \
  /home/michael/Codes/Libraries/nbi/externals/sqt/src/sqt.h \
  /home/michael/Codes/include/blaswrap.h \
- /home/michael/Codes/Libraries/nbi/src/nbi-private.h \
- /home/michael/Codes/include/petscksp.h \
- /home/michael/Codes/include/petscpc.h \
- /home/michael/Codes/include/petscmat.h \
- /home/michael/Codes/include/petscvec.h \
- /home/michael/Codes/include/petscsys.h \
- /home/michael/Codes/include/petscconf.h \
- /home/michael/Codes/include/petscconf_poison.h \
- /home/michael/Codes/include/petscfix.h \
- /home/michael/Codes/include/petscmacros.h \
- /home/michael/Codes/include/petscversion.h \
- /home/michael/Codes/include/petscsystypes.h \
- /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/stdint.h \
- /usr/include/stdint.h /usr/include/bits/wchar.h \
- /usr/include/bits/stdint-uintn.h /usr/include/inttypes.h \
- /usr/include/complex.h /usr/include/bits/mathdef.h \
- /usr/include/bits/cmathcalls.h \
- /home/michael/Codes/include/petsc/mpiuni/mpi.h \
- /home/michael/Codes/include/petscmath.h \
- /home/michael/Codes/include/petscerror.h \
- /home/michael/Codes/include/petscviewertypes.h \
- /home/michael/Codes/include/petscoptions.h \
- /home/michael/Codes/include/petsclog.h \
- /home/michael/Codes/include/petsctime.h \
- /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/xmmintrin.h \
- /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/mmintrin.h \
- /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/mm_malloc.h \
- /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/emmintrin.h \
- /home/michael/Codes/include/petscsftypes.h \
- /home/michael/Codes/include/petscis.h \
- /home/michael/Codes/include/petscsectiontypes.h \
- /home/michael/Codes/include/petscistypes.h \
- /home/michael/Codes/include/petscdevicetypes.h \
- /home/michael/Codes/include/petscviewer.h \
- /home/michael/Codes/include/petscdrawtypes.h \
- /home/michael/Codes/include/petscmatcoarsen.h \
- /home/michael/Codes/include/petscdmtypes.h \
- /home/michael/Codes/include/petscpctypes.h
+ /home/michael/Codes/Libraries/nbi/src/nbi-private.h
 /usr/include/stdc-predef.h:
 ../config.h:
 /usr/include/stdio.h:
@@ -202,7 +165,6 @@ nbi_solve_laplace-nbi-solve-laplace.o: nbi-solve-laplace.c \
 /usr/include/bits/stdio_lim.h:
 /usr/include/bits/floatn.h:
 /usr/include/bits/floatn-common.h:
-/usr/include/bits/stdio.h:
 /usr/include/stdlib.h:
 /usr/include/bits/waitflags.h:
 /usr/include/bits/waitstatus.h:
@@ -229,7 +191,6 @@ nbi_solve_laplace-nbi-solve-laplace.o: nbi-solve-laplace.c \
 /usr/include/bits/struct_mutex.h:
 /usr/include/bits/struct_rwlock.h:
 /usr/include/alloca.h:
-/usr/include/bits/stdlib-bsearch.h:
 /usr/include/bits/stdlib-float.h:
 /usr/include/string.h:
 /usr/include/bits/types/locale_t.h:
@@ -388,43 +349,3 @@ nbi_solve_laplace-nbi-solve-laplace.o: nbi-solve-laplace.c \
 /home/michael/Codes/Libraries/nbi/externals/sqt/src/sqt.h:
 /home/michael/Codes/include/blaswrap.h:
 /home/michael/Codes/Libraries/nbi/src/nbi-private.h:
-/home/michael/Codes/include/petscksp.h:
-/home/michael/Codes/include/petscpc.h:
-/home/michael/Codes/include/petscmat.h:
-/home/michael/Codes/include/petscvec.h:
-/home/michael/Codes/include/petscsys.h:
-/home/michael/Codes/include/petscconf.h:
-/home/michael/Codes/include/petscconf_poison.h:
-/home/michael/Codes/include/petscfix.h:
-/home/michael/Codes/include/petscmacros.h:
-/home/michael/Codes/include/petscversion.h:
-/home/michael/Codes/include/petscsystypes.h:
-/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/stdint.h:
-/usr/include/stdint.h:
-/usr/include/bits/wchar.h:
-/usr/include/bits/stdint-uintn.h:
-/usr/include/inttypes.h:
-/usr/include/complex.h:
-/usr/include/bits/mathdef.h:
-/usr/include/bits/cmathcalls.h:
-/home/michael/Codes/include/petsc/mpiuni/mpi.h:
-/home/michael/Codes/include/petscmath.h:
-/home/michael/Codes/include/petscerror.h:
-/home/michael/Codes/include/petscviewertypes.h:
-/home/michael/Codes/include/petscoptions.h:
-/home/michael/Codes/include/petsclog.h:
-/home/michael/Codes/include/petsctime.h:
-/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/xmmintrin.h:
-/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/mmintrin.h:
-/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/mm_malloc.h:
-/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/emmintrin.h:
-/home/michael/Codes/include/petscsftypes.h:
-/home/michael/Codes/include/petscis.h:
-/home/michael/Codes/include/petscsectiontypes.h:
-/home/michael/Codes/include/petscistypes.h:
-/home/michael/Codes/include/petscdevicetypes.h:
-/home/michael/Codes/include/petscviewer.h:
-/home/michael/Codes/include/petscdrawtypes.h:
-/home/michael/Codes/include/petscmatcoarsen.h:
-/home/michael/Codes/include/petscdmtypes.h:
-/home/michael/Codes/include/petscpctypes.h:
