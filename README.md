@@ -26,7 +26,8 @@ NBI requires the following packages:
 NBI can also make use of:
 - AGG (Aerodynamic Geometry Generator) https://github.com/mjcarley/agg,
   which requires the Triangle API https://github.com/wo80/Triangle/
-- the iterative solvers in PETSc https://petsc.org/
+- the iterative solvers in PETSc https://petsc.org/ with a version
+  number greater than or equal to 3.17
 
 AGG provides a geometry specification interface based on the
 methods of Brenda Kulfan https://www.brendakulfan.com/research, which
@@ -37,6 +38,7 @@ It is recommended to install PETSc to provide a choice of
 high-performance iterative solvers for the boundary integral
 equations. NBI does have a built-in basic GMRES solver but PETSc
 provides access to a range of methods which are not otherwise available.
+PETSc version 3.17 or higher is required.
 
 # Installation
 

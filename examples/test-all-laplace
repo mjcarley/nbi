@@ -3,6 +3,7 @@ rm -f test-laplace-norm.log
 
 ## point source inside a sphere
 echo SphereLaplace test >> test-laplace.log
+echo SphereLaplace test >> test-laplace-norm.log
 cd SphereLaplace
 ../solve-laplace -p 7 -u 25 &>> ../test-laplace.log
 echo SphereLaplace test >> ../test-laplace-norm.log
@@ -11,6 +12,7 @@ cd ..
 
 ## potential flow around sphere
 echo Flow test >> test-laplace.log
+echo Flow test >> test-laplace-norm.log
 cd Flow
 ../solve-laplace -p 7 -u 25 -s axial.bc &>> ../test-laplace.log
 echo Flow test >> ../test-laplace-norm.log
@@ -19,6 +21,7 @@ cd ..
 
 ## point source inside a wing
 echo Wing test >> test-laplace.log
+echo Wing test >> test-laplace-norm.log
 cd Wing
 ../solve-laplace -p 25 -u 54 -g wing &>> ../test-laplace.log
 echo Wing test >> ../test-laplace-norm.log
@@ -27,6 +30,7 @@ cd ..
 
 ## point source inside a catseye
 echo Catseye test >> test-laplace.log
+echo Catseye test >> test-laplace-norm.log
 cd Catseye
 ../solve-laplace -p 7 -u 25 -g catseye &>> ../test-laplace.log
 echo Catseye test >> ../test-laplace-norm.log

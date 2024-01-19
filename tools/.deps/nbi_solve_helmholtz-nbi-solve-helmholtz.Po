@@ -139,7 +139,43 @@ nbi_solve_helmholtz-nbi-solve-helmholtz.o: nbi-solve-helmholtz.c \
  /home/michael/Codes/Libraries/nbi/externals/wbfmm/src/wbfmm.h \
  /home/michael/Codes/Libraries/nbi/externals/sqt/src/sqt.h \
  /home/michael/Codes/include/blaswrap.h /usr/include/fenv.h \
- /usr/include/bits/fenv.h \
+ /usr/include/bits/fenv.h /home/michael/Codes/include/petscksp.h \
+ /home/michael/Codes/include/petscpc.h \
+ /home/michael/Codes/include/petscmat.h \
+ /home/michael/Codes/include/petscvec.h \
+ /home/michael/Codes/include/petscsys.h \
+ /home/michael/Codes/include/petscconf.h \
+ /home/michael/Codes/include/petscconf_poison.h \
+ /home/michael/Codes/include/petscfix.h \
+ /home/michael/Codes/include/petscmacros.h \
+ /home/michael/Codes/include/petscversion.h \
+ /home/michael/Codes/include/petscsystypes.h \
+ /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/stdint.h \
+ /usr/include/stdint.h /usr/include/bits/wchar.h \
+ /usr/include/bits/stdint-uintn.h /usr/include/inttypes.h \
+ /usr/include/complex.h /usr/include/bits/mathdef.h \
+ /usr/include/bits/cmathcalls.h \
+ /home/michael/Codes/include/petsc/mpiuni/mpi.h \
+ /home/michael/Codes/include/petscmath.h \
+ /home/michael/Codes/include/petscerror.h \
+ /home/michael/Codes/include/petscviewertypes.h \
+ /home/michael/Codes/include/petscoptions.h \
+ /home/michael/Codes/include/petsclog.h \
+ /home/michael/Codes/include/petsctime.h \
+ /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/xmmintrin.h \
+ /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/mmintrin.h \
+ /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/mm_malloc.h \
+ /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/emmintrin.h \
+ /home/michael/Codes/include/petscsftypes.h \
+ /home/michael/Codes/include/petscis.h \
+ /home/michael/Codes/include/petscsectiontypes.h \
+ /home/michael/Codes/include/petscistypes.h \
+ /home/michael/Codes/include/petscdevicetypes.h \
+ /home/michael/Codes/include/petscviewer.h \
+ /home/michael/Codes/include/petscdrawtypes.h \
+ /home/michael/Codes/include/petscmatcoarsen.h \
+ /home/michael/Codes/include/petscdmtypes.h \
+ /home/michael/Codes/include/petscpctypes.h \
  /home/michael/Codes/Libraries/nbi/src/nbi-private.h
 /usr/include/stdc-predef.h:
 ../config.h:
@@ -351,4 +387,44 @@ nbi_solve_helmholtz-nbi-solve-helmholtz.o: nbi-solve-helmholtz.c \
 /home/michael/Codes/include/blaswrap.h:
 /usr/include/fenv.h:
 /usr/include/bits/fenv.h:
+/home/michael/Codes/include/petscksp.h:
+/home/michael/Codes/include/petscpc.h:
+/home/michael/Codes/include/petscmat.h:
+/home/michael/Codes/include/petscvec.h:
+/home/michael/Codes/include/petscsys.h:
+/home/michael/Codes/include/petscconf.h:
+/home/michael/Codes/include/petscconf_poison.h:
+/home/michael/Codes/include/petscfix.h:
+/home/michael/Codes/include/petscmacros.h:
+/home/michael/Codes/include/petscversion.h:
+/home/michael/Codes/include/petscsystypes.h:
+/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/stdint.h:
+/usr/include/stdint.h:
+/usr/include/bits/wchar.h:
+/usr/include/bits/stdint-uintn.h:
+/usr/include/inttypes.h:
+/usr/include/complex.h:
+/usr/include/bits/mathdef.h:
+/usr/include/bits/cmathcalls.h:
+/home/michael/Codes/include/petsc/mpiuni/mpi.h:
+/home/michael/Codes/include/petscmath.h:
+/home/michael/Codes/include/petscerror.h:
+/home/michael/Codes/include/petscviewertypes.h:
+/home/michael/Codes/include/petscoptions.h:
+/home/michael/Codes/include/petsclog.h:
+/home/michael/Codes/include/petsctime.h:
+/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/xmmintrin.h:
+/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/mmintrin.h:
+/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/mm_malloc.h:
+/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/emmintrin.h:
+/home/michael/Codes/include/petscsftypes.h:
+/home/michael/Codes/include/petscis.h:
+/home/michael/Codes/include/petscsectiontypes.h:
+/home/michael/Codes/include/petscistypes.h:
+/home/michael/Codes/include/petscdevicetypes.h:
+/home/michael/Codes/include/petscviewer.h:
+/home/michael/Codes/include/petscdrawtypes.h:
+/home/michael/Codes/include/petscmatcoarsen.h:
+/home/michael/Codes/include/petscdmtypes.h:
+/home/michael/Codes/include/petscpctypes.h:
 /home/michael/Codes/Libraries/nbi/src/nbi-private.h:

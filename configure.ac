@@ -178,14 +178,35 @@ AC_CHECK_LIB(gmsh, gmshInitialize, [], [
 ])
 
 if test "${PETSC_DIR+set}" = set; then
+  cd tools
+  TMPFLAGS=`./petsc-config include`
+  cc $TMPFLAGS petsc-version.c
+  petsc_version=`./a.out`
+  rm a.out
+  cd ..
+  petsc_major=`echo ${petsc_version} | cut -d . -f 1`
+  petsc_minor=`echo ${petsc_version} | cut -d . -f 2`
+  if [[ ${petsc_major} -lt 3 -o ${petsc_minor} -lt 17 ]]; then
+  PETSC=no
+  echo \#################################################################
+  echo \#
+  echo \# Environment variable PETSC_DIR=${PETSC_DIR}
+  echo \# PETSc version ${petsc_version} detected
+  echo \# PETSc version greater than or equal to 3.17 required
+  echo \# PETSc solvers will NOT be available
+  echo \#
+  echo \#################################################################
+  else
   AC_DEFINE(HAVE_PETSC, 1, [PETSC solvers available])
   PETSC=yes
   echo \#################################################################
   echo \#
   echo \# Environment variable PETSC_DIR=${PETSC_DIR}
-  echo \#   PETSc solvers will be available
+  echo \# PETSc version ${petsc_version} detected
+  echo \# PETSc solvers will be available
   echo \#
   echo \#################################################################
+  fi  
 else
   PETSC=no
   echo \#################################################################
