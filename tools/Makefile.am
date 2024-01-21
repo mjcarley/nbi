@@ -31,25 +31,5 @@ bin_PROGRAMS = \
 	nbi-surface \
 	nbi-process
 
-dist = \
-	petsc-makefile \
-	petsc-config
-
 nbi_solve_laplace_SOURCES = nbi-solve-laplace.c petsc-laplace.c
 nbi_solve_helmholtz_SOURCES = nbi-solve-helmholtz.c petsc-helmholtz.c
-
-if PETSC
-nbi_solve_laplace_CPPFLAGS = $(AM_CPPFLAGS) `./petsc-config include`
-nbi_solve_laplace_LDFLAGS  = $(AM_LDFLAGS) `./petsc-config lib`
-
-nbi_solve_helmholtz_CPPFLAGS = $(AM_CPPFLAGS) `./petsc-config include`
-nbi_solve_helmholtz_LDFLAGS  = $(AM_LDFLAGS) `./petsc-config lib`
-else
-nbi_solve_laplace_CPPFLAGS = $(AM_CPPFLAGS)
-nbi_solve_laplace_LDFLAGS  = $(AM_LDFLAGS) `./petsc-config lib`
-
-nbi_solve_helmholtz_CPPFLAGS = $(AM_CPPFLAGS)
-nbi_solve_helmholtz_LDFLAGS  = $(AM_LDFLAGS) 
-
-endif
-

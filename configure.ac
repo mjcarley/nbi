@@ -80,7 +80,6 @@ if test -d "externals/sqt" ; then
   sqt_submodule=externals/sqt/src/.libs
   sqt_libs=-lsqt
   sqt_include=externals/sqt/src
-  ##ln -s ../externals/sqt/src/sqt.h src/sqt.h 
 else
   echo "SQT not included as submodule."
   sqt_submodule=
@@ -111,8 +110,6 @@ if test -d "externals/wbfmm" ; then
   wbfmm_submodule=externals/wbfmm/src/.libs
   wbfmm_libs=-lwbfmm
   wbfmm_include=externals/wbfmm/src
-  ##wbfmm_cflags=-I../${wbfmm_include}
-  ##ln -s ../externals/wbfmm/src/wbfmm.h src/wbfmm.h 
 else
   echo "WBFMM not included as submodule."
   wbfmm_submodule=
@@ -143,8 +140,6 @@ if test -d "externals/agg" ; then
   agg_submodule=externals/agg/src/.libs
   agg_libs=-lagg
   agg_include=externals/agg/src
-  ##agg_cflags=-I../${agg_include}
-  ##ln -s ../externals/agg/src/agg.h src/agg.h 
 else
   AC_CHECK_PROG(AGG, agg-config, yes, no)
   if test x$AGG = xyes ; then
@@ -177,55 +172,21 @@ AC_CHECK_LIB(gmsh, gmshInitialize, [], [
   exit		   
 ])
 
-if test "${PETSC_DIR+set}" = set; then
-  cd tools
-  TMPFLAGS=`./petsc-config include`
-  cc $TMPFLAGS petsc-version.c
-  petsc_version=`./a.out`
-  rm a.out
-  cd ..
-  petsc_major=`echo ${petsc_version} | cut -d . -f 1`
-  petsc_minor=`echo ${petsc_version} | cut -d . -f 2`
-  if [[ ${petsc_major} -lt 3 -o ${petsc_minor} -lt 17 ]]; then
-  PETSC=no
+PKG_CHECK_MODULES([PETSC], [petsc >= 3.17],
+		  AC_DEFINE([HAVE_PETSC], [1], [Have PETSc]),
+		  [
   echo \#################################################################
+  echo \# 
+  echo \# PETSc solver library \>= 3.17 not found, built-in solver will
+  echo \# be used
   echo \#
-  echo \# Environment variable PETSC_DIR=${PETSC_DIR}
-  echo \# PETSc version ${petsc_version} detected
-  echo \# PETSc version greater than or equal to 3.17 required
-  echo \# PETSc solvers will NOT be available
+  echo \# You can get PETSc from
+  echo \#
+  echo \# https://www.petsc.org/
   echo \#
   echo \#################################################################
-  else
-  AC_DEFINE(HAVE_PETSC, 1, [PETSC solvers available])
-  PETSC=yes
-  echo \#################################################################
-  echo \#
-  echo \# Environment variable PETSC_DIR=${PETSC_DIR}
-  echo \# PETSc version ${petsc_version} detected
-  echo \# PETSc solvers will be available
-  echo \#
-  echo \#################################################################
-  fi  
-else
-  PETSC=no
-  echo \#################################################################
-  echo \#
-  echo \# Environment variable PETSC_DIR not set: PETSc solvers will not
-  echo \# be available
-  echo \#
-  echo \# If PETSc is installed on your system, check that PETSC_DIR
-  echo \# is set correctly and run configure again.
-  echo \#
-  echo \# If PETSc is not installed, you will be limited to the built-in
-  echo \# GMRES solver
-  echo \#
-  echo \# You can install PETSc by downloading it from here:
-  echo \#
-  echo \# https://petsc.org/
-  echo \#
-  echo \#################################################################
-fi 				    
+]
+)
 
 PKG_CHECK_MODULES([GLIB], [glib-2.0])
 
@@ -261,11 +222,9 @@ AC_F77_WRAPPERS
 ##DX_PS_FEATURE(OFF)
 #DX_INIT_DOXYGEN(nbi, doc/nbi.dxy)
 
-CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $GLIB_CFLAGS $blaswrap_cflags $wbfmm_cflags $sqt_cflags $agg_cflags"
-LIBS="$GLIB_LIBS $blaswrap_libs $LAPACK_LIBS $LIBS $FLIBS"
+CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $GLIB_CFLAGS $blaswrap_cflags $wbfmm_cflags $sqt_cflags $agg_cflags $PETSC_CFLAGS"
+LIBS="$GLIB_LIBS $blaswrap_libs $LAPACK_LIBS $LIBS $FLIBS $PETSC_LIBS"
 
-AC_SUBST(petsc_real)
-##AC_SUBST(CPPFLAGS)
 AC_SUBST(sqt_submodule)
 AC_SUBST(sqt_include)
 AC_SUBST(sqt_libs)

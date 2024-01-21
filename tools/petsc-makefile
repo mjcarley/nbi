@@ -1,5 +1,0 @@
-## dummy makefile used to generate variables for different PETSc architectures
-include ${PETSC_DIR}/lib/petsc/conf/variables
-$(info PETSC_CC_INCLUDES="$(PETSC_CC_INCLUDES)")
-$(info PETSC_FLAGS="$(PETSC_FLAGS)")
-$(info PETSC_LIB="$(PETSC_LIB)")
