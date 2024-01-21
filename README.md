@@ -38,7 +38,7 @@ It is recommended to install PETSc to provide a choice of
 high-performance iterative solvers for the boundary integral
 equations. NBI does have a built-in basic GMRES solver but PETSc
 provides access to a range of methods which are not otherwise available.
-PETSc version 3.17 or higher is required.
+PETSc version 3.17 or higher is required. 
 
 # Installation
 
@@ -62,8 +62,12 @@ the (very) basic built-in iterative solver:
 
 - https://petsc.org/
 
-and make sure the environment variable PETSC_DIR is set and visible in
-the shell.
+and make sure that configuration files for pkg-config are installed on
+a default search path. It is recommended to install a version of PETSc
+*without* MPI support, using the `--with-mpi=0` option to the PETSc
+configure. NBI is a single-processor (threaded) code and using a
+sequential version of PETSc avoids problems with linking to MPI
+libraries whose features will not be used. 
 
 To install NBI, it is recommended to clone the NBI repository using
 
