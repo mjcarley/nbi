@@ -5,7 +5,7 @@ rm -f test-laplace-norm.log
 echo SphereLaplace test >> test-laplace.log
 echo SphereLaplace test >> test-laplace-norm.log
 cd SphereLaplace
-../solve-laplace -p 7 -u 25 &>> ../test-laplace.log
+../solve-laplace -P -p 7 -u 25 &>> ../test-laplace.log
 echo SphereLaplace test >> ../test-laplace-norm.log
 grep norm solution.log >> ../test-laplace-norm.log
 cd ..
