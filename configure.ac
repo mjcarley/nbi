@@ -188,7 +188,18 @@ PKG_CHECK_MODULES([PETSC], [petsc >= 3.17],
 ]
 )
 
-PKG_CHECK_MODULES([GLIB], [glib-2.0])
+PKG_CHECK_MODULES([GLIB], [glib-2.0], [],
+[
+  echo \#################################################################
+  echo \# 
+  echo \# GLIB-2.0 not installed. You can install it using your 
+  echo \# distribution's package manager or from:
+  echo \#
+  echo \# https://gitlab.gnome.org/GNOME/glib/
+  echo \#
+  echo \#################################################################
+  exit
+])
 
 AX_GCC_X86_CPU_SUPPORTS(avx, hasavx=yes) 
 AX_GCC_X86_CPU_SUPPORTS(avx2, hasavx2=yes) 
