@@ -71,6 +71,83 @@ else
 exit
 fi
 
+AC_CHECK_HEADERS(gmshc.h) 
+AC_CHECK_LIB(gmsh, gmshInitialize, [], [
+  echo \#################################################################
+  echo \#
+  echo \# GMSH API library not installed or not in library path
+  echo \# You can get it from
+  echo \#
+  echo \# https://www.gmsh.info/
+  echo \#
+  echo \#################################################################
+  exit		   
+])
+
+PKG_CHECK_MODULES([PETSC], [petsc >= 3.17],
+		  AC_DEFINE([HAVE_PETSC], [1], [Have PETSc]),
+		  [
+  echo \#################################################################
+  echo \# 
+  echo \# PETSc solver library \>= 3.17 not found, built-in solver will
+  echo \# be used
+  echo \#
+  echo \# You can get PETSc from
+  echo \#
+  echo \# https://www.petsc.org/
+  echo \#
+  echo \#################################################################
+]
+)
+
+PKG_CHECK_MODULES([GLIB], [glib-2.0], [],
+[
+  echo \#################################################################
+  echo \# 
+  echo \# GLIB-2.0 not installed. You can install it using your 
+  echo \# distribution's package manager or from:
+  echo \#
+  echo \# https://gitlab.gnome.org/GNOME/glib/
+  echo \#
+  echo \#################################################################
+  exit
+])
+
+AX_GCC_X86_CPU_SUPPORTS(avx, hasavx=yes) 
+AX_GCC_X86_CPU_SUPPORTS(avx2, hasavx2=yes) 
+AX_GCC_X86_CPU_SUPPORTS(fma, hasfma=yes) 
+
+if test x$hasavx = xyes; then
+ SIMD_FLAGS="$SIMD_FLAGS -mavx -DWBFMM_USE_AVX"
+fi
+if test x$hasfma = xyes; then
+ SIMD_FLAGS="$SIMD_FLAGS -mfma -DWBFMM_USE_AVX"
+fi
+
+AC_CHECK_LIB(m, cos)
+AC_CONFIG_MACRO_DIR([m4])
+
+AC_OPENMP
+AC_PROG_F77
+AC_F77_LIBRARY_LDFLAGS
+AC_F77_DUMMY_MAIN
+AC_F77_WRAPPERS
+
+#DX_DOXYGEN_FEATURE(ON)
+##DX_DOT_FEATURE(ON)
+#DX_HTML_FEATURE(ON)
+##DX_CHM_FEATURE(OFF)
+##DX_CHI_FEATURE(OFF)
+##DX_MAN_FEATURE(OFF)
+##DX_RTF_FEATURE(OFF)
+##DX_XML_FEATURE(OFF)
+##DX_PDF_FEATURE(OFF)
+##DX_PS_FEATURE(OFF)
+#DX_INIT_DOXYGEN(nbi, doc/nbi.dxy)
+
+CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $GLIB_CFLAGS $blaswrap_cflags $wbfmm_cflags $sqt_cflags $agg_cflags $PETSC_CFLAGS"
+LIBS="$GLIB_LIBS $blaswrap_libs $LAPACK_LIBS $LIBS $FLIBS $PETSC_LIBS"
+
 if test -d "externals/sqt" ; then
   echo "SQT included as submodule."
   submodules=yes
@@ -158,83 +235,6 @@ else
     exit
   fi
 fi
-
-AC_CHECK_HEADERS(gmshc.h) 
-AC_CHECK_LIB(gmsh, gmshInitialize, [], [
-  echo \#################################################################
-  echo \#
-  echo \# GMSH API library not installed or not in library path
-  echo \# You can get it from
-  echo \#
-  echo \# https://www.gmsh.info/
-  echo \#
-  echo \#################################################################
-  exit		   
-])
-
-PKG_CHECK_MODULES([PETSC], [petsc >= 3.17],
-		  AC_DEFINE([HAVE_PETSC], [1], [Have PETSc]),
-		  [
-  echo \#################################################################
-  echo \# 
-  echo \# PETSc solver library \>= 3.17 not found, built-in solver will
-  echo \# be used
-  echo \#
-  echo \# You can get PETSc from
-  echo \#
-  echo \# https://www.petsc.org/
-  echo \#
-  echo \#################################################################
-]
-)
-
-PKG_CHECK_MODULES([GLIB], [glib-2.0], [],
-[
-  echo \#################################################################
-  echo \# 
-  echo \# GLIB-2.0 not installed. You can install it using your 
-  echo \# distribution's package manager or from:
-  echo \#
-  echo \# https://gitlab.gnome.org/GNOME/glib/
-  echo \#
-  echo \#################################################################
-  exit
-])
-
-AX_GCC_X86_CPU_SUPPORTS(avx, hasavx=yes) 
-AX_GCC_X86_CPU_SUPPORTS(avx2, hasavx2=yes) 
-AX_GCC_X86_CPU_SUPPORTS(fma, hasfma=yes) 
-
-if test x$hasavx = xyes; then
- SIMD_FLAGS="$SIMD_FLAGS -mavx -DWBFMM_USE_AVX"
-fi
-if test x$hasfma = xyes; then
- SIMD_FLAGS="$SIMD_FLAGS -mfma -DWBFMM_USE_AVX"
-fi
-
-AC_CHECK_LIB(m, cos)
-AC_CONFIG_MACRO_DIR([m4])
-
-AC_OPENMP
-AC_PROG_F77
-AC_F77_LIBRARY_LDFLAGS
-AC_F77_DUMMY_MAIN
-AC_F77_WRAPPERS
-
-#DX_DOXYGEN_FEATURE(ON)
-##DX_DOT_FEATURE(ON)
-#DX_HTML_FEATURE(ON)
-##DX_CHM_FEATURE(OFF)
-##DX_CHI_FEATURE(OFF)
-##DX_MAN_FEATURE(OFF)
-##DX_RTF_FEATURE(OFF)
-##DX_XML_FEATURE(OFF)
-##DX_PDF_FEATURE(OFF)
-##DX_PS_FEATURE(OFF)
-#DX_INIT_DOXYGEN(nbi, doc/nbi.dxy)
-
-CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $GLIB_CFLAGS $blaswrap_cflags $wbfmm_cflags $sqt_cflags $agg_cflags $PETSC_CFLAGS"
-LIBS="$GLIB_LIBS $blaswrap_libs $LAPACK_LIBS $LIBS $FLIBS $PETSC_LIBS"
 
 AC_SUBST(sqt_submodule)
 AC_SUBST(sqt_include)

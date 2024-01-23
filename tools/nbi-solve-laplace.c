@@ -148,6 +148,18 @@ static void print_help_text(FILE *f, gint depth,
   return ;
 }
 
+static gboolean check_file_read(gchar *file)
+
+{
+  FILE *f ;
+
+  f = fopen(file, "r") ;
+  if ( f == NULL ) return FALSE ;
+  fclose(f) ;
+  
+  return TRUE ;
+}
+
 gint main(gint argc, gchar **argv)
 
 {
@@ -487,74 +499,80 @@ gint main(gint argc, gchar **argv)
   if ( petsc_solve ) {
   /*if we get to here, we're doing a solve: set up PETSc*/
   /*check that we are linking to the real version of PETSc*/
-  g_assert(sizeof(PetscScalar) == sizeof(PetscReal)) ;
+    g_assert(sizeof(PetscScalar) == sizeof(PetscReal)) ;
   
-  PetscFunctionBeginUser;
-  i = 0 ;
-  if ( kspfile != NULL )
-    PetscCall(PetscInitialize(&i, &argv, kspfile, help));
-  else
-    PetscCall(PetscInitialize(&i, &argv, (gchar *)0, help));
-
-  PetscCallMPI(MPI_Comm_size(PETSC_COMM_WORLD, &size));
-  PetscCheck(size == 1, PETSC_COMM_WORLD, PETSC_ERR_WRONG_MPI_SIZE,
-	     "%s: single processor only", progname);
-
-  n = nbi_surface_node_number(s) ;
-  PetscCall(VecCreate(PETSC_COMM_SELF, &b));
-  PetscCall(PetscObjectSetName((PetscObject)b, "rhs"));
-  PetscCall(VecSetSizes(b, PETSC_DECIDE, n));
-  PetscCall(VecSetFromOptions(b));
-  PetscCall(VecDuplicate(b, &sol));
-  PetscCall(PetscObjectSetName((PetscObject)sol, "solution"));
-
-  petsc_ctx[NBI_SOLVER_DATA_MATRIX]   =  matrix ;
-  petsc_ctx[NBI_SOLVER_DATA_WORK]     =  work ;
-  petsc_ctx[NBI_SOLVER_DATA_NTHREADS] = &nthreads ;
-  
-  PetscCall(MatCreateShell(PETSC_COMM_SELF, n, n, n, n, &petsc_ctx, &A)) ;
-  PetscCall(MatShellSetOperation(A, MATOP_MULT,
-				 (void *)nbi_petsc_MatMult_real)) ;
-  PetscCall(MatSetFromOptions(A));
-  PetscCall(MatSetUp(A));
-
-  PetscCall(MatAssemblyBegin(A, MAT_FINAL_ASSEMBLY));
-  
-  PetscCall(MatAssemblyEnd(A, MAT_FINAL_ASSEMBLY));
-
-  /*set right hand side*/
-  matrix->diag = 0.0 ;
-  matrix->potential = NBI_POTENTIAL_SINGLE ;
-  fprintf(stderr, "%s: forming right hand side [%lg]\n", progname,
-	  t=g_timer_elapsed(timer, NULL)) ;
-  PetscCall(VecGetArrayRead(b, (const PetscScalar **)(&p))) ;
-
-  nbi_matrix_multiply(matrix, &(src[1]), 2, 1.0, p, 1, 0.0, nthreads, work) ;
-
-  matrix->diag = -0.5 ;
-  matrix->potential = NBI_POTENTIAL_DOUBLE ;
-  fprintf(stderr, "%s: starting PETSc solver [%lg]\n",
-	  progname, g_timer_elapsed(timer, NULL)) ;
-
-  PetscCall(KSPCreate(PETSC_COMM_SELF, &ksp));
-  PetscCall(KSPSetNormType(ksp, KSP_NORM_UNPRECONDITIONED)) ;
-  PetscCall(KSPSetType(ksp, KSPGMRES));
-  PetscCall(KSPSetOperators(ksp, A, A));
-  PetscCall(KSPGetPC(ksp, &pc));
-  PetscCall(PCSetType(pc, PCNONE)) ;
-  PetscCall(KSPSetTolerances(ksp, tol, PETSC_DEFAULT, PETSC_DEFAULT,
-			     gmres_max_iter));
-
-  PetscCall(KSPSetFromOptions(ksp));
-  PetscCall(KSPSolve(ksp, b, sol));
-
-  PetscCall(VecGetArrayRead(sol, (const PetscScalar **)(&p))) ;
-
-  PetscCall(KSPGetIterationNumber(ksp, &i)) ;
-  fprintf(stderr, "%s: %d iterations [%lg] (%lg)\n",
-	  progname, i,
-	  g_timer_elapsed(timer, NULL),
-	  g_timer_elapsed(timer, NULL) - t) ;
+    PetscFunctionBeginUser;
+    i = 0 ;
+    if ( kspfile != NULL ) {
+      if ( !check_file_read(kspfile) ) {
+	fprintf(stderr, "%s: cannot open KSP file \"%s\"\n",
+		progname, kspfile) ;
+	return -1 ;
+      }
+      PetscCall(PetscInitialize(&i, &argv, kspfile, help)) ;
+    } else {
+      PetscCall(PetscInitialize(&i, &argv, (gchar *)0, help)) ;
+    }
+    
+    PetscCallMPI(MPI_Comm_size(PETSC_COMM_WORLD, &size));
+    PetscCheck(size == 1, PETSC_COMM_WORLD, PETSC_ERR_WRONG_MPI_SIZE,
+	       "%s: single processor only", progname);
+    
+    n = nbi_surface_node_number(s) ;
+    PetscCall(VecCreate(PETSC_COMM_SELF, &b));
+    PetscCall(PetscObjectSetName((PetscObject)b, "rhs"));
+    PetscCall(VecSetSizes(b, PETSC_DECIDE, n));
+    PetscCall(VecSetFromOptions(b));
+    PetscCall(VecDuplicate(b, &sol));
+    PetscCall(PetscObjectSetName((PetscObject)sol, "solution"));
+    
+    petsc_ctx[NBI_SOLVER_DATA_MATRIX]   =  matrix ;
+    petsc_ctx[NBI_SOLVER_DATA_WORK]     =  work ;
+    petsc_ctx[NBI_SOLVER_DATA_NTHREADS] = &nthreads ;
+    
+    PetscCall(MatCreateShell(PETSC_COMM_SELF, n, n, n, n, &petsc_ctx, &A)) ;
+    PetscCall(MatShellSetOperation(A, MATOP_MULT,
+				   (void *)nbi_petsc_MatMult_real)) ;
+    PetscCall(MatSetFromOptions(A));
+    PetscCall(MatSetUp(A));
+    
+    PetscCall(MatAssemblyBegin(A, MAT_FINAL_ASSEMBLY));
+    
+    PetscCall(MatAssemblyEnd(A, MAT_FINAL_ASSEMBLY));
+    
+    /*set right hand side*/
+    matrix->diag = 0.0 ;
+    matrix->potential = NBI_POTENTIAL_SINGLE ;
+    fprintf(stderr, "%s: forming right hand side [%lg]\n", progname,
+	    t=g_timer_elapsed(timer, NULL)) ;
+    PetscCall(VecGetArrayRead(b, (const PetscScalar **)(&p))) ;
+    
+    nbi_matrix_multiply(matrix, &(src[1]), 2, 1.0, p, 1, 0.0, nthreads, work) ;
+    
+    matrix->diag = -0.5 ;
+    matrix->potential = NBI_POTENTIAL_DOUBLE ;
+    fprintf(stderr, "%s: starting PETSc solver [%lg]\n",
+	    progname, g_timer_elapsed(timer, NULL)) ;
+    
+    PetscCall(KSPCreate(PETSC_COMM_SELF, &ksp));
+    PetscCall(KSPSetNormType(ksp, KSP_NORM_UNPRECONDITIONED)) ;
+    PetscCall(KSPSetType(ksp, KSPGMRES));
+    PetscCall(KSPSetOperators(ksp, A, A));
+    PetscCall(KSPGetPC(ksp, &pc));
+    PetscCall(PCSetType(pc, PCNONE)) ;
+    PetscCall(KSPSetTolerances(ksp, tol, PETSC_DEFAULT, PETSC_DEFAULT,
+			       gmres_max_iter));
+    
+    PetscCall(KSPSetFromOptions(ksp));
+    PetscCall(KSPSolve(ksp, b, sol));
+    
+    PetscCall(VecGetArrayRead(sol, (const PetscScalar **)(&p))) ;
+    
+    PetscCall(KSPGetIterationNumber(ksp, &i)) ;
+    fprintf(stderr, "%s: %d iterations [%lg] (%lg)\n",
+	    progname, i,
+	    g_timer_elapsed(timer, NULL),
+	    g_timer_elapsed(timer, NULL) - t) ;
   }
 #endif /*HAVE_PETSC*/
 

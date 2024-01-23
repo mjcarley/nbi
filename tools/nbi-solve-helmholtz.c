@@ -149,6 +149,18 @@ static void print_help_text(FILE *f, gint depth,
   return ;
 }
 
+static gboolean check_file_read(gchar *file)
+
+{
+  FILE *f ;
+
+  f = fopen(file, "r") ;
+  if ( f == NULL ) return FALSE ;
+  fclose(f) ;
+  
+  return TRUE ;
+}
+
 gint main(gint argc, gchar **argv)
 
 {
@@ -556,11 +568,17 @@ gint main(gint argc, gchar **argv)
     
     PetscFunctionBeginUser;
     i = 0 ;
-    if ( kspfile != NULL )
-      PetscCall(PetscInitialize(&i, &argv, kspfile, help));
-    else
-      PetscCall(PetscInitialize(&i, &argv, (gchar *)0, help));
-
+    if ( kspfile != NULL ) {
+      if ( !check_file_read(kspfile) ) {
+	fprintf(stderr, "%s: cannot open KSP file \"%s\"\n",
+		progname, kspfile) ;
+	return -1 ;
+      }
+      PetscCall(PetscInitialize(&i, &argv, kspfile, help)) ;
+    } else {
+      PetscCall(PetscInitialize(&i, &argv, (gchar *)0, help)) ;
+    }
+    
     PetscCallMPI(MPI_Comm_size(PETSC_COMM_WORLD, &size));
     PetscCheck(size == 1, PETSC_COMM_WORLD, PETSC_ERR_WRONG_MPI_SIZE,
 	       "This is a uniprocessor example only!");
