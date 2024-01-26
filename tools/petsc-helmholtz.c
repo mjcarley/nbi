@@ -45,7 +45,9 @@ PetscErrorCode nbi_petsc_MatMult_complex(Mat mat, Vec x, Vec y)
 {
   nbi_matrix_t *m ;
   gint nthreads ;
-  gdouble *work, *xx, *yy ;
+  gdouble *work ;
+  const PetscScalar *xx ;
+  PetscScalar *yy ;
   gpointer *petsc_ctx ;
   
   PetscCall(MatShellGetContext(mat, &petsc_ctx)) ;  
@@ -54,9 +56,11 @@ PetscErrorCode nbi_petsc_MatMult_complex(Mat mat, Vec x, Vec y)
   work = petsc_ctx[NBI_SOLVER_DATA_WORK] ;
   nthreads = *((gint *)(petsc_ctx[NBI_SOLVER_DATA_NTHREADS])) ;
 
-  PetscCall(VecGetArrayRead(x, (const PetscScalar **)(&xx))) ;
-  PetscCall(VecGetArrayRead(y, (const PetscScalar **)(&yy))) ;
-  nbi_matrix_multiply(m, xx, 2, 1.0, yy, 2, 0.0, nthreads, work) ;
+  PetscCall(VecGetArrayRead(x, &xx)) ;
+  PetscCall(VecGetArrayWrite(y, &yy)) ;
+  nbi_matrix_multiply(m, (gdouble *)xx, 2, 1.0, yy, 2, 0.0, nthreads, work) ;
+  PetscCall(VecRestoreArrayRead(x, (&xx))) ;
+  PetscCall(VecRestoreArrayWrite(y, (&yy))) ;
 
   return 0 ;
 }

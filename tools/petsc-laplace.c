@@ -64,7 +64,9 @@ PetscErrorCode nbi_petsc_MatMult_real(Mat mat, Vec x, Vec y)
 {
   nbi_matrix_t *m ;
   gint nthreads ;
-  gdouble *work, *xx, *yy ;
+  gdouble *work ;
+  const PetscScalar *xx ;
+  PetscScalar *yy ;
   gpointer *petsc_ctx ;
   
   PetscCall(MatShellGetContext(mat, &petsc_ctx)) ;  
@@ -72,38 +74,12 @@ PetscErrorCode nbi_petsc_MatMult_real(Mat mat, Vec x, Vec y)
   m    = petsc_ctx[NBI_SOLVER_DATA_MATRIX] ;
   work = petsc_ctx[NBI_SOLVER_DATA_WORK] ;
   nthreads = *((gint *)(petsc_ctx[NBI_SOLVER_DATA_NTHREADS])) ;
-  
-  /* if ( m->test != NULL ) { */
-  /*   /\*test code using an explicitly defined matrix*\/ */
-  /*   gdouble *A, t ; */
-  /*   gint i, j, n ; */
-    
-  /*   A = m->test ; n = m->nstr ; */
-  /*   PetscCall(VecGetArrayRead(x, &xx)) ; */
-  /*   PetscCall(VecGetArrayRead(y, &yy)) ; */
 
-  /*   PetscCall(VecGetSize(x, &i)) ; */
-  /*   g_assert(i == n) ; */
-  /*   PetscCall(VecGetSize(y, &i)) ; */
-  /*   g_assert(i == n) ; */
-    
-  /*   for ( i = 0 ; i < n ; i ++ ) { */
-  /*     /\* PetscCall(VecGetValues(y, 1, &i, &t)) ; *\/ */
-  /*     /\* g_assert(yy[i] == t) ; *\/ */
-  /*     yy[i] = 0.0 ; */
-  /*     for ( j = 0 ; j < n ; j ++ ) { */
-  /* 	yy[i] += A[i*n+j]*xx[j] ; */
-  /*     } */
-  /*   } */
-    
-  /*   return 0 ; */
-  /* } */
-
-  PetscCall(VecGetArrayRead(x, (const gdouble **)(&xx))) ;
-  PetscCall(VecGetArrayRead(y, (const gdouble **)(&yy))) ;
-  /* PetscCall(VecGetArrayRead(x, &xx)) ; */
-  /* PetscCall(VecGetArrayRead(y, &yy)) ;   */
-  nbi_matrix_multiply(m, xx, 1, 1.0, yy, 1, 0.0, nthreads, work) ;
+  PetscCall(VecGetArrayRead(x, &xx)) ;
+  PetscCall(VecGetArrayWrite(y, &yy)) ;
+  nbi_matrix_multiply(m, (gdouble *)xx, 1, 1.0, yy, 1, 0.0, nthreads, work) ;
+  PetscCall(VecRestoreArrayRead(x, (&xx))) ;
+  PetscCall(VecRestoreArrayWrite(y, (&yy))) ;
 
   return 0 ;
 }

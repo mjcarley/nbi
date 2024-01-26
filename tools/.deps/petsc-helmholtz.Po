@@ -148,6 +148,7 @@ petsc-helmholtz.o: petsc-helmholtz.c /usr/include/stdc-predef.h \
  /home/michael/Codes/include/petscfix.h \
  /home/michael/Codes/include/petscmacros.h \
  /home/michael/Codes/include/petscversion.h \
+ /home/michael/Codes/include/petsc/private/petscadvancedmacros.h \
  /home/michael/Codes/include/petscsystypes.h \
  /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/stdint.h \
  /usr/include/stdint.h /usr/include/bits/wchar.h \
@@ -161,10 +162,10 @@ petsc-helmholtz.o: petsc-helmholtz.c /usr/include/stdc-predef.h \
  /home/michael/Codes/include/petscoptions.h \
  /home/michael/Codes/include/petsclog.h \
  /home/michael/Codes/include/petsctime.h \
- /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/xmmintrin.h \
- /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/mmintrin.h \
- /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/mm_malloc.h \
- /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/emmintrin.h \
+ /home/michael/Codes/include/petscbt.h \
+ /home/michael/Codes/include/petscstring.h \
+ /home/michael/Codes/include/petsclogtypes.h \
+ /home/michael/Codes/include/petsclogdeprecated.h \
  /home/michael/Codes/include/petscsftypes.h \
  /home/michael/Codes/include/petscis.h \
  /home/michael/Codes/include/petscsectiontypes.h \
@@ -395,6 +396,7 @@ petsc-helmholtz.o: petsc-helmholtz.c /usr/include/stdc-predef.h \
 /home/michael/Codes/include/petscfix.h:
 /home/michael/Codes/include/petscmacros.h:
 /home/michael/Codes/include/petscversion.h:
+/home/michael/Codes/include/petsc/private/petscadvancedmacros.h:
 /home/michael/Codes/include/petscsystypes.h:
 /usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/stdint.h:
 /usr/include/stdint.h:
@@ -411,10 +413,10 @@ petsc-helmholtz.o: petsc-helmholtz.c /usr/include/stdc-predef.h \
 /home/michael/Codes/include/petscoptions.h:
 /home/michael/Codes/include/petsclog.h:
 /home/michael/Codes/include/petsctime.h:
-/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/xmmintrin.h:
-/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/mmintrin.h:
-/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/mm_malloc.h:
-/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/emmintrin.h:
+/home/michael/Codes/include/petscbt.h:
+/home/michael/Codes/include/petscstring.h:
+/home/michael/Codes/include/petsclogtypes.h:
+/home/michael/Codes/include/petsclogdeprecated.h:
 /home/michael/Codes/include/petscsftypes.h:
 /home/michael/Codes/include/petscis.h:
 /home/michael/Codes/include/petscsectiontypes.h:

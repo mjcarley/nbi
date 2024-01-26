@@ -613,10 +613,11 @@ gint main(gint argc, gchar **argv)
     matrix->potential = NBI_POTENTIAL_SINGLE ;
     fprintf(stderr, "%s: forming right hand side [%lg]\n", progname,
 	    t=g_timer_elapsed(timer, NULL)) ;
-    PetscCall(VecGetArrayRead(b, (const PetscScalar **)(&p))) ;
 
+    PetscCall(VecGetArrayWrite(b, &p)) ;
     nbi_matrix_multiply(matrix, &(src[2]), 4, 1.0, (gdouble *)p,
 			2, 0.0, nthreads, work) ;
+    PetscCall(VecRestoreArrayWrite(b, (&p))) ;
 
     matrix->diag = -0.5 ;
     matrix->potential = NBI_POTENTIAL_DOUBLE ;

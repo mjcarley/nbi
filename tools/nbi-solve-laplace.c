@@ -521,8 +521,9 @@ gint main(gint argc, gchar **argv)
     n = nbi_surface_node_number(s) ;
     PetscCall(VecCreate(PETSC_COMM_SELF, &b));
     PetscCall(PetscObjectSetName((PetscObject)b, "rhs"));
+    PetscCall(VecSetType(b, VECSEQ)) ; 
     PetscCall(VecSetSizes(b, PETSC_DECIDE, n));
-    PetscCall(VecSetFromOptions(b));
+    /* PetscCall(VecSetFromOptions(b)); */
     PetscCall(VecDuplicate(b, &sol));
     PetscCall(PetscObjectSetName((PetscObject)sol, "solution"));
     
@@ -545,9 +546,10 @@ gint main(gint argc, gchar **argv)
     matrix->potential = NBI_POTENTIAL_SINGLE ;
     fprintf(stderr, "%s: forming right hand side [%lg]\n", progname,
 	    t=g_timer_elapsed(timer, NULL)) ;
-    PetscCall(VecGetArrayRead(b, (const PetscScalar **)(&p))) ;
-    
+
+    PetscCall(VecGetArrayWrite(b, &p)) ;
     nbi_matrix_multiply(matrix, &(src[1]), 2, 1.0, p, 1, 0.0, nthreads, work) ;
+    PetscCall(VecRestoreArrayWrite(b, (&p))) ;
     
     matrix->diag = -0.5 ;
     matrix->potential = NBI_POTENTIAL_DOUBLE ;
@@ -565,7 +567,6 @@ gint main(gint argc, gchar **argv)
     
     PetscCall(KSPSetFromOptions(ksp));
     PetscCall(KSPSolve(ksp, b, sol));
-    
     PetscCall(VecGetArrayRead(sol, (const PetscScalar **)(&p))) ;
     
     PetscCall(KSPGetIterationNumber(ksp, &i)) ;

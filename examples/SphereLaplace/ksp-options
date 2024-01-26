@@ -2,3 +2,4 @@
 -ksp_gmres_cgs_refinement_type refine_always
 -ksp_gmres_restart 30
 -ksp_max_it 1000
+-ksp_converged_reason
