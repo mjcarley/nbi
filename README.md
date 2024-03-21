@@ -1,6 +1,22 @@
 NBI is a library and codes for the Nystrom Boundary Integral method.
+Boundary integral methods are a popular approach to solving potential
+problems, in particular for the Laplace and Helmholtz problems in such
+areas as fluid dynamics, acoustics, and electromagnetism. They are a
+natural choice for the solution of problems in unbounded domains, such
+as wave scattering, where the radiation boundary condition is
+automatically satisfied by the nature of the formulation. The Nystrom
+method is one approach to the solution of boundary integral problems,
+which lends itself to acceleration using the Fast Multipole Method
+(FMM). NBI is a library for the solution of boundary integral problems
+based on the approach of [@greengard-oneil-rachh-vico21] and the FMM
+methods of [@gumerov-duraiswami03; @gumerov-duraiswami04;
+@gumerov-duraiswami05; @gumerov-duraiswami09]. The code includes a
+number of executables which can be used to set up and solve problems
+on realistic geometries, with a number of examples provided for
+testing of the solver. Results can be visualized using GMSH
+[@geuzaine-remacle09], a standard free meshing program.
 
-It contains the tinyexpr parser and evaluation library written by
+NBI contains the tinyexpr parser and evaluation library written by
 Lewis Van Winkle and released under the zlib licence. It is maintained
 here:
 
