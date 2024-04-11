@@ -101,7 +101,7 @@ if test "$echo_cflags" = "yes"; then
     echo $nbi_cppflags $nbi_cflags $glib_cflags
 fi
 if test "$echo_libs" = "yes"; then
-    nbi_libs="-L${exec_prefix}/lib -lnbi -L/externals/sqt/src/.libs -L/home/michael/Codes/lib -lm $nbi_libs"
+    nbi_libs="-L${exec_prefix}/lib -lnbi -L/home/michael/Codes/Libraries/nbi/externals/sqt/src/.libs -L/home/michael/Codes/Libraries/nbi/externals/wbfmm/src/.libs -L/home/michael/Codes/Libraries/nbi/externals/agg/src/.libs -L/home/michael/Codes/lib -lm $nbi_libs"
     nbi_libs="-L${exec_prefix}/lib -lnbi -lglib-2.0 -lwbfmm -lsqt -lagg -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -lm -lgmsh   -L/home/michael/Codes/lib -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lgmsh -lquadmath -L/home/michael/Codes/lib -lpetsc"
     nbi_libs=`uniquify "$nbi_libs"`
     echo ${nbi_libs}

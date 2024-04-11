@@ -2,6 +2,9 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
+DEPS = $(top_builddir)/src/libnbi.la
+LDADD = $(top_builddir)/src/.libs/libnbi.a
+
 if SUBMODULES
 AM_CPPFLAGS = -I@abs_top_builddir@ -I@abs_top_builddir@/src -I$(includedir) \
 	-I@abs_top_builddir@/$(sqt_include) \
@@ -12,9 +15,6 @@ else
 AM_CPPFLAGS = -I@abs_top_builddir@ -I@abs_top_builddir@/src -I$(includedir) \
 		-DG_LOG_DOMAIN=\"NBI\"
 endif
-
-DEPS = $(top_builddir)/src/libnbi.la
-LDADD = $(top_builddir)/src/.libs/libnbi.a
 
 bin_PROGRAMS = \
 	nbi-assemble-laplace \

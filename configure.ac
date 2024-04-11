@@ -163,7 +163,7 @@ if test -d "externals/sqt" ; then
   AC_DEFINE(HAVE_SQT, 1, [singular quadrature library available])
 
   sqt_submodule=externals/sqt/src/.libs
-  sqt_ldflags=-L$(ac_abs_confdir)/externals/sqt/src/.libs
+  sqt_ldflags=-L$ac_pwd/externals/sqt/src/.libs
   sqt_libs=-lsqt
   sqt_include=externals/sqt/src
 else
@@ -194,6 +194,7 @@ if test -d "externals/wbfmm" ; then
   AC_DEFINE(HAVE_WBFMM, 1, [wide band FMM library available])
 
   wbfmm_submodule=externals/wbfmm/src/.libs
+  wbfmm_ldflags=-L$ac_pwd/externals/wbfmm/src/.libs
   wbfmm_libs=-lwbfmm
   wbfmm_include=externals/wbfmm/src
 else
@@ -224,6 +225,7 @@ if test -d "externals/agg" ; then
   AC_DEFINE(HAVE_AGG, 1, [aerodynamic geometry library available])
 
   agg_submodule=externals/agg/src/.libs
+  agg_ldflags=-L$ac_pwd/externals/agg/src/.libs
   agg_libs=-lagg
   agg_include=externals/agg/src
 else
@@ -246,7 +248,7 @@ else
 fi
 
 CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $GLIB_CFLAGS $blaswrap_cflags $wbfmm_cflags $sqt_cflags $agg_cflags $PETSC_CFLAGS"
-LDFLAGS="$sqt_ldflags $LDFLAGS"
+LDFLAGS="$sqt_ldflags $wbfmm_ldflags $agg_ldflags $LDFLAGS"
 LIBS="$GLIB_LIBS $wbfmm_libs $sqt_libs $agg_libs $blaswrap_libs $LIBS $FLIBS $PETSC_LIBS"
 
 AC_SUBST(sqt_submodule)

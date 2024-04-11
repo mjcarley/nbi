@@ -136,8 +136,7 @@ nbi-assemble-helmholtz.o: nbi-assemble-helmholtz.c \
  /usr/include/bits/types/struct___jmp_buf_tag.h \
  /usr/include/glib-2.0/glib/glib-autocleanups.h \
  /home/michael/Codes/Libraries/nbi/src/nbi.h \
- /home/michael/Codes/Libraries/nbi/externals/wbfmm/src/wbfmm.h \
- /home/michael/Codes/Libraries/nbi/externals/sqt/src/sqt.h \
+ /home/michael/Codes/include/wbfmm.h /home/michael/Codes/include/sqt.h \
  /home/michael/Codes/include/blaswrap.h \
  /home/michael/Codes/Libraries/nbi/src/nbi-private.h
 /usr/include/stdc-predef.h:
@@ -347,7 +346,7 @@ nbi-assemble-helmholtz.o: nbi-assemble-helmholtz.c \
 /usr/include/bits/types/struct___jmp_buf_tag.h:
 /usr/include/glib-2.0/glib/glib-autocleanups.h:
 /home/michael/Codes/Libraries/nbi/src/nbi.h:
-/home/michael/Codes/Libraries/nbi/externals/wbfmm/src/wbfmm.h:
-/home/michael/Codes/Libraries/nbi/externals/sqt/src/sqt.h:
+/home/michael/Codes/include/wbfmm.h:
+/home/michael/Codes/include/sqt.h:
 /home/michael/Codes/include/blaswrap.h:
 /home/michael/Codes/Libraries/nbi/src/nbi-private.h:
