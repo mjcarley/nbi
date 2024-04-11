@@ -71,12 +71,23 @@ else
 exit
 fi
 
-AC_CHECK_HEADERS(gmshc.h) 
+AC_CHECK_HEADERS(gmshc.h, [], [
+  echo \#################################################################
+  echo \#
+  echo \# GMSH headers not installed or not in path. You should install
+  echo \# these with the GMSH API or SDK, available from
+  echo \#
+  echo \# https://www.gmsh.info/
+  echo \#
+  echo \#################################################################
+  exit		   
+])
+
 AC_CHECK_LIB(gmsh, gmshInitialize, [], [
   echo \#################################################################
   echo \#
   echo \# GMSH API library not installed or not in library path
-  echo \# You can get it from
+  echo \# You can get the API library or SDK from
   echo \#
   echo \# https://www.gmsh.info/
   echo \#
