@@ -414,7 +414,11 @@ gint main(gint argc, gchar **argv)
   if ( gmshfile != NULL ) {
     /* gmshInitialize(argc, argv, 1, 0, &gmsh_err) ; */
     /*don't pass the nbi options to GMSH (who knows what might happen?)*/
+#if GMSH_API_VERSION_MINOR < 10
+    gmshInitialize(0, NULL, 1,    &gmsh_err) ;
+#else /*GMSH_API_VERSION_MINOR < 10*/
     gmshInitialize(0, NULL, 1, 0, &gmsh_err) ;
+#endif /*GMSH_API_VERSION_MINOR < 10*/
     gmshOptionSetNumber("General.Verbosity", 0, &gmsh_err) ;
 
     s = nbi_gmsh_mesh(gmshfile, nq) ;
