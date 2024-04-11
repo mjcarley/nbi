@@ -156,9 +156,6 @@ AC_F77_WRAPPERS
 ##DX_PS_FEATURE(OFF)
 #DX_INIT_DOXYGEN(nbi, doc/nbi.dxy)
 
-CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $GLIB_CFLAGS $blaswrap_cflags $wbfmm_cflags $sqt_cflags $agg_cflags $PETSC_CFLAGS"
-LIBS="$GLIB_LIBS $blaswrap_libs $LAPACK_LIBS $LIBS $FLIBS $PETSC_LIBS"
-
 if test -d "externals/sqt" ; then
   echo "SQT included as submodule."
   submodules=yes
@@ -166,6 +163,7 @@ if test -d "externals/sqt" ; then
   AC_DEFINE(HAVE_SQT, 1, [singular quadrature library available])
 
   sqt_submodule=externals/sqt/src/.libs
+  sqt_ldflags=-L$(ac_abs_confdir)/externals/sqt/src/.libs
   sqt_libs=-lsqt
   sqt_include=externals/sqt/src
 else
@@ -246,6 +244,10 @@ else
     exit
   fi
 fi
+
+CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $GLIB_CFLAGS $blaswrap_cflags $wbfmm_cflags $sqt_cflags $agg_cflags $PETSC_CFLAGS"
+LDFLAGS="$sqt_ldflags $LDFLAGS"
+LIBS="$GLIB_LIBS $wbfmm_libs $sqt_libs $agg_libs $blaswrap_libs $LIBS $FLIBS $PETSC_LIBS"
 
 AC_SUBST(sqt_submodule)
 AC_SUBST(sqt_include)
