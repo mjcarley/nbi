@@ -46,6 +46,11 @@ if test $# -eq 0; then
 	usage 1 1>&2
 fi
 
+echo_prefix=no
+echo_prefix_set=no
+echo_cflags=no
+echo_libs=no
+
 while test $# -gt 0; do
   case "$1" in
   -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
@@ -95,14 +100,14 @@ fi
 if test "$echo_exec_prefix" = "yes"; then
 	echo $exec_prefix
 fi
-if test "$echo_cflags" = "yes"; then
-    nbi_cflags="$nbi_cflags $openmp_cflags -I${prefix}/include"
+if test x"$echo_cflags" = "xyes"; then
+    nbi_cflags="-I${prefix}/include $nbi_cflags $openmp_cflags"
     nbi_cflags=`uniquify "$nbi_cflags"`
     echo $nbi_cppflags $nbi_cflags $glib_cflags
 fi
-if test "$echo_libs" = "yes"; then
-    nbi_libs="-L${exec_prefix}/lib -lnbi -L/home/michael/Codes/Libraries/nbi/externals/sqt/src/.libs -L/home/michael/Codes/Libraries/nbi/externals/wbfmm/src/.libs -L/home/michael/Codes/Libraries/nbi/externals/agg/src/.libs -L/home/michael/Codes/lib -lm $nbi_libs"
-    nbi_libs="-L${exec_prefix}/lib -lnbi -lglib-2.0 -lwbfmm -lsqt -lagg -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -lm -lgmsh   -L/home/michael/Codes/lib -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lgmsh -lquadmath -L/home/michael/Codes/lib -lpetsc"
+if test x"$echo_libs" = "xyes"; then
+    nbi_libs="-lnbi -lglib-2.0 -lwbfmm -lsqt -lagg -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -lm -lgmsh   -L/home/michael/Codes/lib -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lgmsh -lquadmath -L/home/michael/Codes/lib -lpetsc"
     nbi_libs=`uniquify "$nbi_libs"`
+    nbi_libs="-L${exec_prefix}/lib ${nbi_libs}"
     echo ${nbi_libs}
 fi
