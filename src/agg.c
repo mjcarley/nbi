@@ -210,29 +210,29 @@ nbi_surface_t *nbi_agg_mesh(gchar *file, gint nq)
   
   b = agg_body_new(64, 64) ;
   w = agg_surface_workspace_new() ;
-  g_debug("%s: reading AGG body", __FUNCTION__) ;
+  fprintf(stderr, "%s: reading AGG body\n", __FUNCTION__) ;
   agg_body_read(b, file, FALSE) ;
-  g_debug("%s: compiling AGG globals", __FUNCTION__) ;
+  fprintf(stderr, "%s: compiling AGG globals\n", __FUNCTION__) ;
   agg_body_globals_compile(b) ;
-  g_debug("%s: evaluating AGG globals", __FUNCTION__) ;
+  fprintf(stderr, "%s: evaluating AGG globals\n", __FUNCTION__) ;
   agg_body_globals_eval(b) ;
 
-  g_debug("%s: making new mesh", __FUNCTION__) ;
+  fprintf(stderr, "%s: making new mesh\n", __FUNCTION__) ;
   m = agg_mesh_new(65536, 65536, 65536) ;
   g_assert(m != NULL) ;
-  g_debug("%s: generating AGG mesh", __FUNCTION__) ;
+  fprintf(stderr, "%s: generating AGG mesh\n", __FUNCTION__) ;
   agg_mesh_body(m, b, pps, w) ;
-  g_debug("%s: AGG mesh generated", __FUNCTION__) ;
+  fprintf(stderr, "%s: AGG mesh generated\n", __FUNCTION__) ;
   s = nbi_surface_alloc(nq*2*agg_mesh_element_number(m),
 			2*agg_mesh_element_number(m)) ;
   sqt_quadrature_select(nq, &st, &order) ;
   
-  g_debug("%s: generating NBI surface", __FUNCTION__) ;
+  fprintf(stderr, "%s: generating NBI surface\n", __FUNCTION__) ;
   for ( i = 0 ; i < agg_mesh_element_number(m) ; i ++ ) {
     agg_mesh_element_nodes(m, i, nodes, &nnodes, &surf) ;
     add_nbi_patch(s, m, nodes, nnodes, surf, w, st, nq) ;
   }
-  g_debug("%s: NBI surface generated", __FUNCTION__) ;
+  fprintf(stderr, "%s: NBI surface generated\n", __FUNCTION__) ;
   
   return s ;
 }
