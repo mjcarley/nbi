@@ -210,10 +210,14 @@ nbi_surface_t *nbi_agg_mesh(gchar *file, gint nq)
   
   b = agg_body_new(64, 64) ;
   w = agg_surface_workspace_new() ;
+  g_debug("%s: reading AGG body", __FUNCTION__) ;
   agg_body_read(b, file, FALSE) ;
+  g_debug("%s: compiling AGG globals", __FUNCTION__) ;
   agg_body_globals_compile(b) ;
+  g_debug("%s: evaluating AGG globals", __FUNCTION__) ;
   agg_body_globals_eval(b) ;
 
+  g_debug("%s: making new mesh", __FUNCTION__) ;
   m = agg_mesh_new(65536, 65536, 65536) ;
   g_assert(m != NULL) ;
   g_debug("%s: generating AGG mesh", __FUNCTION__) ;
