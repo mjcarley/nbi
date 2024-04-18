@@ -216,19 +216,19 @@ nbi_surface_t *nbi_agg_mesh(gchar *file, gint nq)
 
   m = agg_mesh_new(65536, 65536, 65536) ;
   g_assert(m != NULL) ;
-  g_log("%s: generating AGG mesh", __FUNCTION__) ;
+  g_debug("%s: generating AGG mesh", __FUNCTION__) ;
   agg_mesh_body(m, b, pps, w) ;
-  g_log("%s: AGG mesh generated", __FUNCTION__) ;
+  g_debug("%s: AGG mesh generated", __FUNCTION__) ;
   s = nbi_surface_alloc(nq*2*agg_mesh_element_number(m),
 			2*agg_mesh_element_number(m)) ;
   sqt_quadrature_select(nq, &st, &order) ;
   
-  g_log("%s: generating NBI surface", __FUNCTION__) ;
+  g_debug("%s: generating NBI surface", __FUNCTION__) ;
   for ( i = 0 ; i < agg_mesh_element_number(m) ; i ++ ) {
     agg_mesh_element_nodes(m, i, nodes, &nnodes, &surf) ;
     add_nbi_patch(s, m, nodes, nnodes, surf, w, st, nq) ;
   }
-  g_log("%s: NBI surface generated", __FUNCTION__) ;
+  g_debug("%s: NBI surface generated", __FUNCTION__) ;
   
   return s ;
 }
