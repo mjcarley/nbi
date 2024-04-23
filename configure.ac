@@ -211,6 +211,9 @@ if test -d "externals/agg" ; then
   AC_DEFINE(HAVE_AGG, 1, [aerodynamic geometry library available])
 
   agg_submodule=externals/agg/src/.libs
+  ## the static flag is here because otherwise the agg mesh generation
+  ## hangs on entry to triangle when the system is compiled in a Docker
+  ## container
   agg_libs="-lagg -static -ltriangle-api"
   agg_include=externals/agg/src
 else
