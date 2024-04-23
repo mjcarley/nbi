@@ -211,7 +211,7 @@ if test -d "externals/agg" ; then
   AC_DEFINE(HAVE_AGG, 1, [aerodynamic geometry library available])
 
   agg_submodule=externals/agg/src/.libs
-  agg_libs="-lagg -ltriangle-api"
+  agg_libs="-lagg -static -ltriangle-api"
   agg_include=externals/agg/src
 else
   AC_CHECK_PROG(AGG, agg-config, yes, no)

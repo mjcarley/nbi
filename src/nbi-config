@@ -106,7 +106,7 @@ if test x"$echo_cflags" = "xyes"; then
     echo $nbi_cppflags $nbi_cflags $glib_cflags
 fi
 if test x"$echo_libs" = "xyes"; then
-    nbi_libs="-lnbi -lglib-2.0 -lwbfmm -lsqt -lagg -ltriangle-api -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -lm -lgmsh   -L/home/michael/Codes -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lgmsh -lquadmath -L/home/michael/Codes/lib -lpetsc"
+    nbi_libs="-lnbi -lglib-2.0 -lwbfmm -lsqt -lagg -static -ltriangle-api -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -lm -lgmsh   -L/home/michael/Codes -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lgmsh -lquadmath -L/home/michael/Codes/lib -lpetsc"
     nbi_libs=`uniquify "$nbi_libs"`
     nbi_libs="-L${exec_prefix}/lib ${nbi_libs}"
     echo ${nbi_libs}
