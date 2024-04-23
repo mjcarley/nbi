@@ -90,10 +90,10 @@ gpointer geometries[] = {"ellipsoid-ico",
 			 "subdivision depth",
 			 "semi-axis x, semi-axis y, semi-axis z",
 
-			 "stellarator",
-			 geometry_stellarator,
-			 "",
-			 "",
+			 /* "stellarator", */
+			 /* geometry_stellarator, */
+			 /* "", */
+			 /* "", */
 
 			 "grid-xy",
 			 geometry_grid_xy,
