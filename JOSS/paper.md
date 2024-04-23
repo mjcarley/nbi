@@ -63,7 +63,10 @@ Simple geometries, such as spheres and ellipsoids, are implemented as
 internal functions. More general shapes can be produced using standard
 GMSH inputs [@geuzaine-remacle09] or the CST method of Kulfan
 [@kulfan10] which is implemented in an extended and more general form
-in the AGG library which is included with the NBI distribution.
+in the AGG library which is included with the NBI distribution. This
+allows the parametric specification of forms which arise in
+aerodynamic applications, in a manner which is convenient for
+optimisation and parametric studies. 
 
 # Mathematics
 
