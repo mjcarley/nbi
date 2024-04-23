@@ -144,18 +144,6 @@ AC_F77_LIBRARY_LDFLAGS
 AC_F77_DUMMY_MAIN
 AC_F77_WRAPPERS
 
-#DX_DOXYGEN_FEATURE(ON)
-##DX_DOT_FEATURE(ON)
-#DX_HTML_FEATURE(ON)
-##DX_CHM_FEATURE(OFF)
-##DX_CHI_FEATURE(OFF)
-##DX_MAN_FEATURE(OFF)
-##DX_RTF_FEATURE(OFF)
-##DX_XML_FEATURE(OFF)
-##DX_PDF_FEATURE(OFF)
-##DX_PS_FEATURE(OFF)
-#DX_INIT_DOXYGEN(nbi, doc/nbi.dxy)
-
 if test -d "externals/sqt" ; then
   echo "SQT included as submodule."
   submodules=yes
@@ -223,7 +211,7 @@ if test -d "externals/agg" ; then
   AC_DEFINE(HAVE_AGG, 1, [aerodynamic geometry library available])
 
   agg_submodule=externals/agg/src/.libs
-  agg_libs=-lagg
+  agg_libs="-lagg -ltriangle-api"
   agg_include=externals/agg/src
 else
   AC_CHECK_PROG(AGG, agg-config, yes, no)
