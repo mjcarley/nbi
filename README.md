@@ -11,20 +11,14 @@ which lends itself to acceleration using the Fast Multipole Method
 based on the approach of [Greengard et
 al.](https://dx.doi.org/10.1016/j.jcpx.2021.100092) and the FMM
 methods of Gumerov and Duraiswami
-([2003](https://dx.doi.org/10.1137/S1064827501399705), 
-[2004](https://dx.doi.org/10.1016/b978-0-08-044371-3.x5000-5},
+([2003](https://dx.doi.org/10.1137/S1064827501399705),
+[2004](https://dx.doi.org/10.1016/b978-0-08-044371-3.x5000-5),
 [2005](https://www.academia.edu/2791247/Comparison_of_the_efficiency_of_translation_operators_used_in_the_fast_multipole_method_for_the_3D_Laplace_equation),
-[2009](https://dx.doi.org/10.1121/1.3021297))
-
-[@gumerov-duraiswami03; @gumerov-duraiswami04;
-@gumerov-duraiswami05; @gumerov-duraiswami09].
-
-[@gumerov-duraiswami03; @gumerov-duraiswami04;
-@gumerov-duraiswami05; @gumerov-duraiswami09]. The code includes a
+[2009](https://dx.doi.org/10.1121/1.3021297)). The code includes a
 number of executables which can be used to set up and solve problems
 on realistic geometries, with a number of examples provided for
-testing of the solver. Results can be visualized using GMSH
-[@geuzaine-remacle09], a standard free meshing program.
+testing of the solver. Results can be visualized using
+[GMSH](https://gmsh.info), a standard free meshing program.
 
 NBI contains the tinyexpr parser and evaluation library written by
 Lewis Van Winkle and released under the zlib licence. It is maintained
