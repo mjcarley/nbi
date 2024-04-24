@@ -82,13 +82,13 @@ distribution are given by a boundary integral
 	\,
 	\mathrm{d}S(\mathbf{y}),
 \end{equation}
-where $G$ is the Green's function for the problem. For points lying on
-the surface, the left hand side is replaced by $\phi/2$ and the
-equation is interpreted as a boundary integral equation to be solved
-subject to an appropriate boundary condition. By default, NBI
-implements a Neumann (surface normal derivative) boundary condition as
-that most appropriate to acoustic scattering and to potential problems
-in fluid dynamics.
+where $G(\mathbf{x},\mathbf{y})$ is the Green's function for the
+problem. For points lying on the surface, the left hand side is
+replaced by $\phi/2$ and the equation is interpreted as a boundary
+integral equation to be solved subject to an appropriate boundary
+condition. By default, NBI implements a Neumann (surface normal
+derivative) boundary condition as that most appropriate to acoustic
+scattering and to potential problems in fluid dynamics.
 
 # Features
 
@@ -110,10 +110,13 @@ elements of [@greengard-oneil-rachh-vico21] in a code which is
 relatively easy to use in applications. The principal differences
 which a user will note between NBI and the reference implementation of
 the method of [@greengard-oneil-rachh-vico21] are: the range of
-geometry formats supported, including the widely used GMSH standard;
-the use of the standard PETSc iterative solvers; and the ability to
-define boundary conditions using a built-in parser for mathematical
-expressions. 
+geometry formats supported, including the widely used GMSH standard,
+and an extension of Kulfan's CST method for ``aerodynamic'' shapes
+[@kulfan10]; the use of the standard PETSc iterative solvers, with the
+option to select a solver at runtime; and the ability to define
+boundary conditions using a built-in parser for mathematical
+expressions, or pre-defined functions for the sources which arise in
+realistic problems, such as scattering of rotor noise. 
 
 ## Surface generation and representation
 
@@ -122,7 +125,7 @@ interpolated using Koornwindwer orthogonal polynomials
 [@greengard-oneil-rachh-vico21]. A number of surface generation
 methods are provided (built-in basic geometries, parametric surfaces,
 GMSH geo files) allowing considerable flexibility in the workflow for
-real problems.
+real problems. 
 
 ## Quadrature rules
 
@@ -164,9 +167,11 @@ the test cases included in the package.
 ![GMSH visualisation of output from rotor noise
 example.\label{rotor}](rotor.png){width=50%}
 
-\autoref{rotor} shows the GMSH visualisation of the
-field scattered from an ellipsoid, subject to an incident field from a
-ring source, a simple model for scattering of rotor noise by a
-nacelle. 
+\autoref{rotor} shows the GMSH visualisation of the field scattered
+from an ellipsoid, subject to an incident field from a ring source, a
+simple model for scattering of rotor noise by a nacelle. This is an
+example of defining a boundary condition using a built-in function, in
+this case that for the incident field from a rotating source, a model
+for noise from propellers and rotors. 
 
 # References
