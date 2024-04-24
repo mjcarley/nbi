@@ -2,11 +2,11 @@
 
 To run all of the test cases for Laplace and Helmholtz problems:
 
-`. test-all-laplace`
+`./test-all-laplace`
 
 and
 
-`. test-all-helmholtz`
+`./test-all-helmholtz`
 
 These will enter each directory in turn and run the tests, logging
 output to `test-[laplace|helmholtz].log` and estimated error norms to

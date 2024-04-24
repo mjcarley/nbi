@@ -1,1 +1,1 @@
-${bin}/nbi-surface -q ${nqp} -g ellipsoid-ico -i 2 -d 4 -d 1 -d 1 -o ${gfile}
+${bin}nbi-surface -q ${nqp} -g ellipsoid-ico -i 2 -d 4 -d 1 -d 1 -o ${gfile}

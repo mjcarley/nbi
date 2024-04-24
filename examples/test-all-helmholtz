@@ -1,3 +1,5 @@
+#!/bin/bash
+
 rm -f test-helmholtz.log
 rm -f test-helmholtz-norm.log
 

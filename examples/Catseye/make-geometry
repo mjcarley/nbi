@@ -1,1 +1,1 @@
-${bin}/nbi-surface -q ${nqp} -m catseye.geo -o ${gfile}
+${bin}nbi-surface -q ${nqp} -m catseye.geo -o ${gfile}

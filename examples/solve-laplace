@@ -13,8 +13,29 @@ src=psource.bc
 petsc=no
 geometry=sphere
 
-## path to executables
-bin=../../tools
+## path to executables, relative to subdirectories: trailing slash is required
+bin=../../tools/
+
+function print_help() {
+    printf -- "$0 [options]\\n"
+    printf -- "\\n"
+    printf -- "Set up and run a Laplace boundary integral problem\\n"
+    printf -- "\\n"
+    printf -- "Options:\\n\\n"
+    printf -- "-a number of adaptive quadrature points ($nqa)\\n"
+    printf -- "-d maximum depth of adaptive quadrature ($depth)\\n"
+    printf -- "-e exclusion parameter for elements ($eta)\\n"
+    printf -- "-g geometry file name ($geometry)\\n"
+    printf -- "-h print this message and exit\\n"
+    printf -- "-i use installed executables (this requires that they be on PATH)\\n"
+    printf -- "-o singular quadrature order ($order)\\n"
+    printf -- "-P use PETSc solver if available ($petsc)\\n"
+    printf -- "-p number of quadrature points per element ($nqp)\\n"
+    printf -- "-s boundary condition file (source) name ($src)\\n"
+    printf -- "-T number of OpenMP threads to use ($nthreads)\\n"
+    printf -- "-t solution tolerance ($tol)\\n"
+    printf -- "-u number of upsampled quadrature nodes ($nqu)\\n"
+    }
 
 while test $# -gt 0; do
   case "$1" in
@@ -38,6 +59,13 @@ while test $# -gt 0; do
       -g)
 	  shift
 	  geometry=$1
+	  ;;
+      -h)
+	  print_help
+	  exit 0
+	  ;;
+      -i)
+	  unset bin
 	  ;;
       -o)
 	  shift
@@ -102,7 +130,7 @@ opts="-e ${tol} -a ${nqa} -u ${nqu} -n ${eta} -d ${depth} -N ${order} \
       -m ${mfile} -g ${gfile}"
 echo Assembling matrices with:
 echo nbi-assemble-laplace ${opts}
-${bin}/nbi-assemble-laplace ${opts} -T ${nthreads}
+${bin}nbi-assemble-laplace ${opts} -T ${nthreads}
 echo
 
 ## solve the problem
@@ -115,14 +143,14 @@ echo Solving with:
 echo nbi-solve-laplace ${opts}
 
 ## solve with specified source, using PETSc solver if requested
-${bin}/nbi-solve-laplace ${opts} >& solution.log
+${bin}nbi-solve-laplace ${opts} >& solution.log
 
 ## generate solution on surface mesh for visualisation
-${bin}/nbi-process -d solution.dat -g ${gfile} > ${geometry}.msh
+${bin}nbi-process -d solution.dat -g ${gfile} > ${geometry}.msh
 
 ## generate solution on surface mesh for visualisation
 tmpfile=`mktemp`
-${bin}/nbi-process -d solution.dat -g ${gfile} -o ${geometry}.msh \
+${bin}nbi-process -d solution.dat -g ${gfile} -o ${geometry}.msh \
       2>&1 | tee ${tmpfile}
 
 ## find the indices of the first node and element of the visualization
@@ -136,9 +164,9 @@ echo
 
 ## field radiated by surface solution
 echo Computing radiated field
-${bin}/nbi-field-laplace -g ${gfile} -d solution.dat -F grid.nbi > grid.dat
+${bin}nbi-field-laplace -g ${gfile} -d solution.dat -F grid.nbi > grid.dat
 ## generate gmsh files for visualization
-${bin}/nbi-process  -p ${offp} -e ${offe} -d grid.dat -g grid.nbi \
+${bin}nbi-process  -p ${offp} -e ${offe} -d grid.dat -g grid.nbi \
       -r 2 -o grid.msh
 echo
 echo

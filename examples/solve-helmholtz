@@ -14,8 +14,30 @@ src=pcsource.bc
 petsc=no
 geometry=sphere
 
-## path to executables
-bin=../../tools
+## path to executables, relative to subdirectories: trailing slash is required
+bin=../../tools/
+
+function print_help() {
+    printf -- "$0 [options]\\n"
+    printf -- "\\n"
+    printf -- "Set up and run a Helmholtz boundary integral problem\\n"
+    printf -- "\\n"
+    printf -- "Options:\\n\\n"
+    printf -- "-a number of adaptive quadrature points ($nqa)\\n"
+    printf -- "-d maximum depth of adaptive quadrature ($depth)\\n"
+    printf -- "-e exclusion parameter for elements ($eta)\\n"
+    printf -- "-g geometry file name ($geometry)\\n"
+    printf -- "-h print this message and exit\\n"
+    printf -- "-i use installed executables (this requires that they be on PATH)\\n"
+    printf -- "-k wavenumber (must be set explicitly to non-zero value)\\n"
+    printf -- "-o singular quadrature order ($order)\\n"
+    printf -- "-P use PETSc solver if available ($petsc)\\n"
+    printf -- "-p number of quadrature points per element ($nqp)\\n"
+    printf -- "-s boundary condition file (source) name ($src)\\n"
+    printf -- "-T number of OpenMP threads to use ($nthreads)\\n"
+    printf -- "-t solution tolerance ($tol)\\n"
+    printf -- "-u number of upsampled quadrature nodes ($nqu)\\n"
+    }
 
 while test $# -gt 0; do
   case "$1" in
@@ -39,6 +61,13 @@ while test $# -gt 0; do
       -g)
 	  shift
 	  geometry=$1
+	  ;;
+      -h)
+	  print_help
+	  exit 0
+	  ;;
+      -i)
+	  unset bin
 	  ;;
       -k)
 	  shift
@@ -109,7 +138,7 @@ opts="-e ${tol} -a ${nqa} -u ${nqu} -n ${eta} -d ${depth} -N ${order} \
       -m ${mfile} -g ${gfile} -k ${k}"
 echo Assembling matrices with:
 echo nbi-assemble-helmholtz ${opts}
-${bin}/nbi-assemble-helmholtz ${opts} -T ${nthreads}
+${bin}nbi-assemble-helmholtz ${opts} -T ${nthreads}
 echo
 
 ## solve the problem
@@ -125,12 +154,12 @@ echo nbi-solve-helmholtz ${opts}
 sed s/WAVENUMBER/${k}/ ${src}.in > ${src}
 
 ## solve with specified source, using PETSc solver if requested
-${bin}/nbi-solve-helmholtz ${opts} >& solution.log
+${bin}nbi-solve-helmholtz ${opts} >& solution.log
 echo
 
 ## generate solution on surface mesh for visualisation
 tmpfile=`mktemp`
-${bin}/nbi-process -d solution.dat -g ${gfile} -o ${geometry}.msh -v "Surface" \
+${bin}nbi-process -d solution.dat -g ${gfile} -o ${geometry}.msh -v "Surface" \
       2>&1 | tee ${tmpfile}
 
 ## find the indices of the first node and element of the visualization
@@ -144,10 +173,10 @@ echo
 
 ## field radiated by surface solution
 echo Computing radiated field
-${bin}/nbi-field-helmholtz -g ${gfile} -d solution.dat \
+${bin}nbi-field-helmholtz -g ${gfile} -d solution.dat \
       -k ${k} -F grid.nbi > grid.dat
 ## generate gmsh files for visualization
-${bin}/nbi-process  -p ${offp} -e ${offe} -d grid.dat -g grid.nbi \
+${bin}nbi-process  -p ${offp} -e ${offe} -d grid.dat -g grid.nbi \
       -r 2 -o grid.msh -v "Grid"
 echo
 echo
