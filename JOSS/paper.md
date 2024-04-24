@@ -169,9 +169,9 @@ example.\label{rotor}](rotor.png){width=50%}
 
 \autoref{rotor} shows the GMSH visualisation of the field scattered
 from an ellipsoid, subject to an incident field from a ring source, a
-simple model for scattering of rotor noise by a nacelle. This is an
-example of defining a boundary condition using a built-in function, in
-this case that for the incident field from a rotating source, a model
-for noise from propellers and rotors. 
+simple model for scattering of rotor noise by a nacelle. In this case,
+the boundary condition is defined using a built-in function in NBI,
+demonstrating its application to realistic problems with complex
+boundary conditions.
 
 # References
