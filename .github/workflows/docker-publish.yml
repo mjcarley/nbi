@@ -1,8 +1,5 @@
 name: Publish Docker image to GitHub Container Registry
-on:
-  release:
-    types:
-      - created
+on: [push]
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
