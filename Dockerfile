@@ -53,4 +53,7 @@ RUN bash autogen.sh
 RUN ./configure --prefix=/usr/
 RUN make 
 RUN make install
-WORKDIR /
+WORKDIR /nbi/examples
+## run one Laplace and one Helmholtz example as a test of installation
+RUN ./docker-laplace
+RUN ./docker-helmholtz

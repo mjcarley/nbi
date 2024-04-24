@@ -1,0 +1,17 @@
+#!/bin/bash
+
+## Run examples using installed versions of codes, intended as a test of a
+## Docker build, hence the name
+
+logfile=docker-laplace.log
+normfile=docker-laplace-norm.log
+rm -f ${logfile} ${normfile}
+
+## point source inside a catseye
+echo Catseye test >> ${logfile}
+echo Catseye test >> ${normfile}
+cd Catseye
+../solve-laplace -i -p 7 -u 25 -g catseye &>> ../${logfile}
+echo Catseye test >> ../${normfile}
+grep norm solution.log | grep -v KSP  >> ../${normfile}
+cd ..

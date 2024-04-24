@@ -1,40 +1,41 @@
 #!/bin/bash
 
-rm -f test-laplace.log
-rm -f test-laplace-norm.log
+logfile=test-laplace.log
+normfile=test-laplace-norm.log
+rm -f ${logfile} ${normfile}
 
 ## point source inside a sphere
-echo SphereLaplace test >> test-laplace.log
-echo SphereLaplace test >> test-laplace-norm.log
+echo SphereLaplace test >> ${logfile}
+echo SphereLaplace test >> ${normfile}
 cd SphereLaplace
-../solve-laplace -P -p 7 -u 25 &>> ../test-laplace.log
-echo SphereLaplace test >> ../test-laplace-norm.log
-grep norm solution.log >> ../test-laplace-norm.log
+../solve-laplace -P -p 7 -u 25 &>> ../${logfile}
+echo SphereLaplace test >> ../${normfile}
+grep norm solution.log | grep -v KSP  >> ../${normfile}
 cd ..
 
 ## potential flow around sphere
-echo Flow test >> test-laplace.log
-echo Flow test >> test-laplace-norm.log
+echo Flow test >> ${logfile}
+echo Flow test >> ${normfile}
 cd Flow
-../solve-laplace -p 7 -u 25 -s axial.bc &>> ../test-laplace.log
-echo Flow test >> ../test-laplace-norm.log
-grep norm solution.log >> ../test-laplace-norm.log
+../solve-laplace -p 7 -u 25 -s axial.bc &>> ../${logfile}
+echo Flow test >> ../${normfile}
+grep norm solution.log | grep -v KSP  >> ../${normfile}
 cd ..
 
 ## point source inside a wing
-echo Wing test >> test-laplace.log
-echo Wing test >> test-laplace-norm.log
+echo Wing test >> ${logfile}
+echo Wing test >> ${normfile}
 cd Wing
-../solve-laplace -p 25 -u 54 -g wing &>> ../test-laplace.log
-echo Wing test >> ../test-laplace-norm.log
-grep norm solution.log >> ../test-laplace-norm.log
+../solve-laplace -p 25 -u 54 -g wing &>> ../${logfile}
+echo Wing test >> ../${normfile}
+grep norm solution.log | grep -v KSP  >> ../${normfile}
 cd ..
 
 ## point source inside a catseye
-echo Catseye test >> test-laplace.log
-echo Catseye test >> test-laplace-norm.log
+echo Catseye test >> ${logfile}
+echo Catseye test >> ${normfile}
 cd Catseye
-../solve-laplace -p 7 -u 25 -g catseye &>> ../test-laplace.log
-echo Catseye test >> ../test-laplace-norm.log
-grep norm solution.log >> ../test-laplace-norm.log
+../solve-laplace -p 7 -u 25 -g catseye &>> ../${logfile}
+echo Catseye test >> ../${normfile}
+grep norm solution.log | grep -v KSP  >> ../${normfile}
 cd ..

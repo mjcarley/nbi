@@ -1,0 +1,22 @@
+#!/bin/bash
+
+## Run examples using installed versions of codes, intended as a test of a
+## Docker build, hence the name
+
+logfile=docker-helmholtz.log
+normfile=docker-helmholtz-norm.log
+rm -f ${logfile} ${normfile}
+
+## scattering of rotor noise by an ellipsoid
+## wavenumber is calculated from source Mach number and azimuthal order
+k=`echo 4*1.1/0.7 | bc -l`
+nqp=25
+nqu=54
+echo Rotor test k=${k} nqp=${nqp} nqu=${nqu} >> ${logfile}
+echo Rotor test k=${k} nqp=${nqp} nqu=${nqu} >> ${normfile}
+cd Rotor
+../solve-helmholtz -i -k ${k} -d 2 -p ${nqp} -u ${nqu} -s ring.bc -g rotor -P \
+     &>> ../${logfile}
+echo Rotor test >> ../${normfile}
+grep norm solution.log | grep -v KSP >> ../${normfile}
+cd ..

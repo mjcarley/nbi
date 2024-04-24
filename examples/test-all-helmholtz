@@ -1,66 +1,57 @@
 #!/bin/bash
 
-rm -f test-helmholtz.log
-rm -f test-helmholtz-norm.log
+logfile=test-helmholtz.log
+normfile=test-helmholtz-norm.log
+rm -f ${logfile} ${normfile}
 
 ## scattering of a plane wave
 k=10
 nqp=25
 nqu=54
-echo Scattering test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     test-helmholtz.log
-echo Scattering test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     test-helmholtz-norm.log
+echo Scattering test k=${k} nqp=${nqp} nqu=${nqu} >> ${logfile}
+echo Scattering test k=${k} nqp=${nqp} nqu=${nqu} >> ${normfile}
 cd Scattering
-../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s plane.bc -P \
-     &>> ../test-helmholtz.log
-echo Scattering test >> ../test-helmholtz-norm.log
-grep norm solution.log >> ../test-helmholtz-norm.log
+../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s plane.bc -P &>> ../${logfile}
+echo Scattering test >> ../${normfile}
+grep norm solution.log | grep -v KSP >> ../${normfile}
 cd ..
 
 ## ring source inside sphere
 k=3.5
 nqp=25
 nqu=54
-echo SphereHelmholtz test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     test-helmholtz.log
-echo SphereHelmholtz test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     test-helmholtz-norm.log
+echo SphereHelmholtz test k=${k} nqp=${nqp} nqu=${nqu} >> ${logfile}
+echo SphereHelmholtz test k=${k} nqp=${nqp} nqu=${nqu} >> ${normfile}
 cd SphereHelmholtz
-../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s ring.bc \
-     &>> ../test-helmholtz.log
-echo SphereHelmholtz test >> ../test-helmholtz-norm.log
-grep norm solution.log >> ../test-helmholtz-norm.log
+../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s ring.bc &>> ../${logfile}
+echo SphereHelmholtz test >> ../${normfile}
+grep norm solution.log | grep -v KSP >> ../${normfile}
 cd ..
 
 ## point source inside a wing 
 k=3.0
 nqp=25
 nqu=54
-echo Wing test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     test-helmholtz.log
-echo Wing test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     test-helmholtz-norm.log
+echo Wing test k=${k} nqp=${nqp} nqu=${nqu} >> ${logfile}
+echo Wing test k=${k} nqp=${nqp} nqu=${nqu} >> ${normfile}
 cd Wing
 ../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s pcsource.bc -g wing \
-     &>> ../test-helmholtz.log
-echo Wing test >> ../test-helmholtz-norm.log
-grep norm solution.log >> ../test-helmholtz-norm.log
+     &>> ../${logfile}
+echo Wing test >> ../${normfile}
+grep norm solution.log | grep -v KSP  >> ../${normfile}
 cd ..
 
 ## point source inside a catseye 
 k=3.0
 nqp=25
 nqu=54
-echo Catseye test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     test-helmholtz.log
-echo Catseye test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     test-helmholtz-norm.log
+echo Catseye test k=${k} nqp=${nqp} nqu=${nqu} >> ${logfile}
+echo Catseye test k=${k} nqp=${nqp} nqu=${nqu} >> ${normfile}
 cd Catseye
 ../solve-helmholtz -k ${k} -p ${nqp} -u ${nqu} -s pcsource.bc -g catseye \
-     &>> ../test-helmholtz.log
-echo Catseye test >> ../test-helmholtz-norm.log
-grep norm solution.log >> ../test-helmholtz-norm.log
+     &>> ../${logfile}
+echo Catseye test >> ../${normfile}
+grep norm solution.log | grep -v KSP  >> ../${normfile}
 cd ..
 
 ## scattering of rotor noise by an ellipsoid
@@ -68,13 +59,11 @@ cd ..
 k=`echo 4*1.1/0.7 | bc -l`
 nqp=25
 nqu=54
-echo Rotor test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     test-helmholtz.log
-echo Rotor test k=${k} nqp=${nqp} nqu=${nqu} >> \
-     test-helmholtz-norm.log
+echo Rotor test k=${k} nqp=${nqp} nqu=${nqu} >> ${logfile}
+echo Rotor test k=${k} nqp=${nqp} nqu=${nqu} >> ${normfile}
 cd Rotor
 ../solve-helmholtz -k ${k} -d 2 -p ${nqp} -u ${nqu} -s ring.bc -g rotor \
-     &>> ../test-helmholtz.log
-echo Rotor test >> ../test-helmholtz-norm.log
-grep norm solution.log >> ../test-helmholtz-norm.log
+     &>> ../${logfile}
+echo Rotor test >> ../${normfile}
+grep norm solution.log | grep -v KSP  >> ../${normfile}
 cd ..

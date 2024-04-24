@@ -1,2 +1,2 @@
 ## a tube wrapped round the nacelle to see the near field
-${bin}/nbi-surface -q 25 -m tube.geo > grid.nbi
+${bin}nbi-surface -q 25 -m tube.geo > grid.nbi
