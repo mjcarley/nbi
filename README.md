@@ -10,7 +10,16 @@ which lends itself to acceleration using the Fast Multipole Method
 (FMM). NBI is a library for the solution of boundary integral problems
 based on the approach of [Greengard et
 al.](https://dx.doi.org/10.1016/j.jcpx.2021.100092) and the FMM
-methods of [@gumerov-duraiswami03; @gumerov-duraiswami04;
+methods of Gumerov and Duraiswami
+([2003](https://dx.doi.org/10.1137/S1064827501399705), 
+[2004](https://dx.doi.org/10.1016/b978-0-08-044371-3.x5000-5},
+[2005](https://www.academia.edu/2791247/Comparison_of_the_efficiency_of_translation_operators_used_in_the_fast_multipole_method_for_the_3D_Laplace_equation),
+[2009](https://dx.doi.org/10.1121/1.3021297))
+
+[@gumerov-duraiswami03; @gumerov-duraiswami04;
+@gumerov-duraiswami05; @gumerov-duraiswami09].
+
+[@gumerov-duraiswami03; @gumerov-duraiswami04;
 @gumerov-duraiswami05; @gumerov-duraiswami09]. The code includes a
 number of executables which can be used to set up and solve problems
 on realistic geometries, with a number of examples provided for
