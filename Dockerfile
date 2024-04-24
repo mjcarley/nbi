@@ -1,3 +1,6 @@
+LABEL org.opencontainers.image.description="Nystrom Boundary Integral library"
+LABEL org.opencontainers.image.source=https://github.com/mjcarley/nbi
+LABEL org.opencontainers.image.licenses=GPL
 FROM ubuntu:latest
 
 ## all these packages are required for compiling, etc, except for
