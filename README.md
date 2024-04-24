@@ -31,6 +31,10 @@ recommended (see under Installation) to clone it using
 
 in order to facilitate installation of dependencies as submodules.
 
+Alternatively, a Docker image of the current version is available from
+https://github.com/mjcarley/nbi/pkgs/container/nbi More details on
+using the Docker image are given below.
+
 # Prerequisites
 
 NBI requires the following packages:
@@ -124,5 +128,48 @@ installation location and where to find any required libraries:
 The main documentation, including details of examples, is in the
 `.../doc` subdirectory of the distribution. The `.../examples`
 subdirectory contains a number of examples which can be run using the
-scripts test-all-laplace and test-all-helmholtz. Further details are
+scripts `test-all-laplace` and `test-all-helmholtz`. Further details are
 given in `.../examples/README.md`
+
+# Running NBI using the Docker image
+
+It is recommended to compile and install NBI on your system, to take
+advantage of properly optimized versions of libraries such as BLAS and
+LAPACK, but a Docker image is available to allow some testing and
+experimentation. It can be installed from
+https://github.com/mjcarley/nbi/pkgs/container/nbi and the Dockerfile
+used to generate it is distributed with the NBI source code.
+
+Once installed, the Docker image contains results for two sample
+calculations, one Laplace and one Helmholtz, which are generated using
+the scripts `docker-laplace` and `docker-helmholtz` respectively, in
+the directory `.../examples`. 
+
+To install the Docker image:
+
+`docker pull ghcr.io/mjcarley/nbi:main`
+
+and to start an interactive shell which will allow you to run the NBI
+codes:
+
+`docker run -it -d [image name]`
+
+`docker exec -i [container name] bash`
+
+where `[container name]` can be found using `docker ps`.
+
+In the newly running interactive shell, the full set of examples can
+be run using
+
+`cd /nbi/examples`
+
+`./test-all-laplace`
+
+`./test-all-helmholtz`
+
+and results can be extracted to the host using
+
+`docker cp [container name]:/nbi/examples .`
+
+which will copy the full `examples` directory tree with all results
+and visualization files.
