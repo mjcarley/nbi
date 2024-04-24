@@ -8,7 +8,8 @@ automatically satisfied by the nature of the formulation. The Nystrom
 method is one approach to the solution of boundary integral problems,
 which lends itself to acceleration using the Fast Multipole Method
 (FMM). NBI is a library for the solution of boundary integral problems
-based on the approach of [@greengard-oneil-rachh-vico21] and the FMM
+based on the approach of [Greengard et
+al.](https://dx.doi.org/10.1016/j.jcpx.2021.100092) and the FMM
 methods of [@gumerov-duraiswami03; @gumerov-duraiswami04;
 @gumerov-duraiswami05; @gumerov-duraiswami09]. The code includes a
 number of executables which can be used to set up and solve problems
