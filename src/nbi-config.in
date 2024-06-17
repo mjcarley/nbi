@@ -25,7 +25,7 @@ Options:
 Libraries:
 	nbi
 EOF
-	exit $1
+	exit 1
 }
 
 uniquify()
