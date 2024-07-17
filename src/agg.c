@@ -194,7 +194,7 @@ static void add_nbi_patch(nbi_surface_t *s, agg_mesh_t *m,
   return ;
 }
 
-nbi_surface_t *nbi_agg_mesh(gchar *file, gint nq)
+nbi_surface_t *nbi_agg_mesh(char *file, gint nq)
 
 {
   nbi_surface_t *s = NULL ;

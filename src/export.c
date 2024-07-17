@@ -162,7 +162,7 @@ gint NBI_FUNCTION_NAME(nbi_mesh_triangulate)(nbi_surface_t *s,
   return 0 ;
 }  
 
-gint NBI_FUNCTION_NAME(nbi_mesh_export_gmsh)(FILE *f, gchar *view,
+gint NBI_FUNCTION_NAME(nbi_mesh_export_gmsh)(FILE *f, char *view,
 					     NBI_REAL *x, gint xstr, gint np,
 					     gint offp,
 					     gint *tri, gint tstr, gint nt,
@@ -171,7 +171,7 @@ gint NBI_FUNCTION_NAME(nbi_mesh_export_gmsh)(FILE *f, gchar *view,
 
 {
   gint i, j ;
-  gchar *vn ;
+  char *vn ;
 
   if ( view == NULL ) {
     vn = g_strdup("NBI view") ;

@@ -41,7 +41,7 @@
 #define NBI_THREAD_NUMBER_MAX     8
 
 GTimer *timer ;
-gchar *progname ;
+char *progname ;
 
 /**
  * @page nbiassemblelaplace Assembling matrices for Laplace problems
@@ -91,7 +91,7 @@ static void print_help_text(FILE *f, gint nqa, gint dmax, gdouble tol,
   return ;
 }
 
-gint main(gint argc, gchar **argv)
+gint main(gint argc, char **argv)
 
 {
   nbi_surface_t *s ;
@@ -99,7 +99,7 @@ gint main(gint argc, gchar **argv)
   gint nqa, dmax, N, nnmax, nqu ;
   gdouble eta, tol, t ;
   FILE *output, *input ;
-  gchar ch, *mfile, *gfile ;
+  char ch, *mfile, *gfile ;
   gint nthreads, nproc ;
   
   nthreads = 1 ;

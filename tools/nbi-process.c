@@ -43,7 +43,7 @@
 #include "nbi-private.h"
 
 GTimer *timer ;
-gchar *progname ;
+char *progname ;
 
 /**
  * @page nbiprocess Processing NBI output
@@ -113,10 +113,10 @@ static void print_help_text(FILE *f, gint offt, gint field, gint offp,
   return ;
 }
 
-gint main(gint argc, gchar **argv)
+gint main(gint argc, char **argv)
 
 {
-  gchar *gfile, *dfile, *ofile, ch, *view ;
+  char *gfile, *dfile, *ofile, ch, *view ;
   nbi_surface_t *s ;
   FILE *input, *output ;
   gint np, fstr, dmax, Nk, xistr, ni, fistr, npmax, ntmax ;

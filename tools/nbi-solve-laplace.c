@@ -53,7 +53,7 @@ PetscErrorCode nbi_petsc_MatMult_real(Mat mat, Vec x, Vec y) ;
 #endif
 
 GTimer *timer ;
-gchar *progname ;
+char *progname ;
 
 /**
  * @page nbisolvelaplace Solving Laplace problems
@@ -148,7 +148,7 @@ static void print_help_text(FILE *f, gint depth,
   return ;
 }
 
-static gboolean check_file_read(gchar *file)
+static gboolean check_file_read(char *file)
 
 {
   FILE *f ;
@@ -160,7 +160,7 @@ static gboolean check_file_read(gchar *file)
   return TRUE ;
 }
 
-gint main(gint argc, gchar **argv)
+gint main(gint argc, char **argv)
 
 {
   nbi_surface_t *s ;
@@ -169,7 +169,7 @@ gint main(gint argc, gchar **argv)
   gdouble *f, *xp, *src, *p, *rhs, t, emax, fmax, e2, f2, G, dtree, pwt, nwt ;
   gdouble error, erms ;
   FILE *output, *input ;
-  gchar ch, *gfile, *mfile, *bfile, *sfile, *kspfile ;
+  char ch, *gfile, *mfile, *bfile, *sfile, *kspfile ;
   gdouble *work, tol ;
   gint fmm_work_size, nqfmm, order_fmm, order_inc, i, fstr, solver_work_size ;
   gint gmres_max_iter, gmres_restart ;
@@ -186,7 +186,7 @@ gint main(gint argc, gchar **argv)
   PetscInt    n ;
   PetscMPIInt size ;
   gpointer petsc_ctx[NBI_SOLVER_DATA_SIZE] ;
-  gchar *help = "" ;
+  char *help = "" ;
 #endif /*HAVE_PETSC*/
   
   nthreads = 1 ;
@@ -511,7 +511,7 @@ gint main(gint argc, gchar **argv)
       }
       PetscCall(PetscInitialize(&i, &argv, kspfile, help)) ;
     } else {
-      PetscCall(PetscInitialize(&i, &argv, (gchar *)0, help)) ;
+      PetscCall(PetscInitialize(&i, &argv, (char *)0, help)) ;
     }
     
     PetscCallMPI(MPI_Comm_size(PETSC_COMM_WORLD, &size));

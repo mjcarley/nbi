@@ -48,7 +48,7 @@
  * @return 0 on success.
  */
 
-gint nbi_header_insert_string(gchar *header, gint i, gint len, gchar *str)
+gint nbi_header_insert_string(char *header, gint i, gint len, char *str)
 
 {
   gint slen, j ;
@@ -80,11 +80,11 @@ gint nbi_header_insert_string(gchar *header, gint i, gint len, gchar *str)
  * @return 0 on success.
  */
 
-gint nbi_header_init(gchar *header,
-		     gchar *id,
-		     gchar *version,
-		     gchar *type,
-		     gchar *format)
+gint nbi_header_init(char *header,
+		     char *id,
+		     char *version,
+		     char *type,
+		     char *format)
 
 {
   gint i ;
@@ -113,13 +113,13 @@ gint nbi_header_init(gchar *header,
  * @return 0 on success.
  */
 
-gint nbi_header_read(FILE *f, gchar header[])
+gint nbi_header_read(FILE *f, char header[])
 
 {
-  gchar c ;
+  char c ;
   
-  fread(header, sizeof(gchar), NBI_HEADER_LENGTH, f) ;
-  fread(&c    , sizeof(gchar), 1,                 f) ;
+  fread(header, sizeof(char), NBI_HEADER_LENGTH, f) ;
+  fread(&c    , sizeof(char), 1,                 f) ;
 
   return 0 ;
 }
@@ -133,13 +133,13 @@ gint nbi_header_read(FILE *f, gchar header[])
  * @return 0 on success.
  */
 
-gint nbi_header_write(FILE *f, gchar header[])
+gint nbi_header_write(FILE *f, char header[])
 
 {
-  gchar c = '\n' ;
+  char c = '\n' ;
 
-  fwrite(header, sizeof(gchar), NBI_HEADER_LENGTH, f) ;
-  fwrite(&c    , sizeof(gchar), 1,                 f) ;
+  fwrite(header, sizeof(char), NBI_HEADER_LENGTH, f) ;
+  fwrite(&c    , sizeof(char), 1,                 f) ;
 
   return 0 ;
 }
@@ -152,7 +152,7 @@ gint nbi_header_write(FILE *f, gchar header[])
  * @return string identifying \a p.
  */
 
-gchar *nbi_problem_type_string(nbi_problem_t p)
+char *nbi_problem_type_string(nbi_problem_t p)
 
 {
   switch ( p ) {
@@ -173,7 +173,7 @@ gchar *nbi_problem_type_string(nbi_problem_t p)
  * @return ::nbi_problem_t corresponding to \a p, or ::NBI_PROBLEM_UNDEFINED.
  */
 
-nbi_problem_t nbi_problem_from_string(gchar *p)
+nbi_problem_t nbi_problem_from_string(char *p)
 
 {
   if ( strcmp(p, "UNDEFINED") == 0 ) return NBI_PROBLEM_UNDEFINED ;

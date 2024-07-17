@@ -44,7 +44,7 @@
 #include "nbi-private.h"
 
 GTimer *timer ;
-gchar *progname ;
+char *progname ;
 
 /**
  * @page nbifieldlaplace Evaluating the Laplace potential field
@@ -89,10 +89,10 @@ static void print_help_text(FILE *f, gint field)
   return ;
 }
 
-gint main(gint argc, gchar **argv)
+gint main(gint argc, char **argv)
 
 {
-  gchar *gfile, *dfile, ch, *ffile, *bfile ;
+  char *gfile, *dfile, ch, *ffile, *bfile ;
   nbi_surface_t *s, *sf ;
   nbi_boundary_condition_t *bc ;
   gboolean surface_data ;

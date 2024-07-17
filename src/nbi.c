@@ -72,7 +72,7 @@ gint NBI_FUNCTION_NAME(nbi_surface_write)(nbi_surface_t *s, FILE *f)
 {
   gint i, j ;
   NBI_REAL *e ;
-  gchar header[NBI_HEADER_LENGTH], buf[40] ;
+  char header[NBI_HEADER_LENGTH], buf[40] ;
 
   nbi_header_init(header, "NBI", "1.0", "GEO", "A") ;
 
@@ -106,7 +106,7 @@ nbi_surface_t *NBI_FUNCTION_NAME(nbi_surface_read)(FILE *f)
   nbi_surface_t *s ;
   gint nn, np, i, j ;
   NBI_REAL *e ;
-  gchar header[NBI_HEADER_LENGTH] ;
+  char header[NBI_HEADER_LENGTH] ;
 
   nbi_header_read(f, header) ;
 
@@ -381,8 +381,8 @@ static void read_upsampled_patches(FILE *f,
   m->bc = g_malloc(m->idxu[np]*(m->pstr)*sizeof(NBI_REAL)) ;
   bc = (NBI_REAL *)(m->bc) ;
   
-  m->p  = (gchar *)(&(bc[0])) ;
-  m->pn = (gchar *)(&(bc[(m->pstr)/2])) ;
+  m->p  = (char *)(&(bc[0])) ;
+  m->pn = (char *)(&(bc[(m->pstr)/2])) ;
   
   return ;
 }
@@ -417,7 +417,7 @@ static gint read_correction_matrices(FILE *f,
   }
 
   Ast = (NBI_REAL *)g_malloc0(lda*(m->idxp[np])*sizeof(NBI_REAL)) ;
-  m->Ast = (gchar *)Ast ;
+  m->Ast = (char *)Ast ;
   for ( i = 0 ; i < lda*(m->idxp[np]) ; i ++ ) {
     fscanf(f, "%lg", &(Ast[i])) ;
   }
@@ -428,7 +428,7 @@ static gint read_correction_matrices(FILE *f,
 gint NBI_FUNCTION_NAME(nbi_matrix_read)(FILE *f, nbi_matrix_t *m)
 
 {
-  gchar header[NBI_HEADER_LENGTH] ;
+  char header[NBI_HEADER_LENGTH] ;
   gint np, str, nst ;
   
   nbi_header_read(f, header) ;
@@ -444,7 +444,7 @@ gint NBI_FUNCTION_NAME(nbi_matrix_read)(FILE *f, nbi_matrix_t *m)
 gint NBI_FUNCTION_NAME(nbi_matrix_write)(FILE *f, nbi_matrix_t *m)
 
 {
-  gchar header[80], buf[40] ;
+  char header[80], buf[40] ;
   NBI_REAL *Ast, *xu ;
   gint i, j, xstr, lda, nst, nntot ;
   
@@ -503,7 +503,7 @@ gint NBI_FUNCTION_NAME(nbi_data_write)(FILE *f, NBI_REAL *dat,
 				       gint dstr, gint ne, gint nd)
 
 {
-  gchar header[NBI_HEADER_LENGTH], buf[40] ;
+  char header[NBI_HEADER_LENGTH], buf[40] ;
   gint i, j ;
   
   nbi_header_init(header, "NBI", "1.0", "DAT", "A") ;
@@ -525,7 +525,7 @@ NBI_REAL *NBI_FUNCTION_NAME(nbi_data_read)(FILE *f, gint *nd, gint *ne)
 
 {
   NBI_REAL *dat ;
-  gchar header[NBI_HEADER_LENGTH] ;
+  char header[NBI_HEADER_LENGTH] ;
   gint i ;
   
   nbi_header_read(f, header) ;
@@ -712,7 +712,7 @@ static gint boundary_condition_laplace(nbi_surface_t *s,
 {
   gdouble *x, *n ;
   gint i ;
-  gchar *terms[] = {"rp", "rdp", NULL} ;
+  char *terms[] = {"rp", "rdp", NULL} ;
 
   if ( pstr < 1 && p != NULL ) {
     g_error("%s: stride for Laplace problem must be at least 1 (pstr == %d)",
@@ -783,7 +783,7 @@ static gint boundary_condition_helmholtz(nbi_surface_t *s,
 {
   gdouble *x, *n ;
   gint i ;
-  gchar *terms[] = {"rp", "ip", "rdp", "idp", NULL} ;
+  char *terms[] = {"rp", "ip", "rdp", "idp", NULL} ;
   
   if ( pstr < 2 && p != NULL ) {
     g_error("%s: stride for Helmholtz problem must be at least 2 (pstr == %d)",

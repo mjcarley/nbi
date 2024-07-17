@@ -430,7 +430,7 @@ gint nbi_mesh_triangulate_FLOAT(nbi_surface_t *s,
  * @return 0 on success.
  */
 
-gint nbi_mesh_export_gmsh_FLOAT(FILE *f, gchar *view,
+gint nbi_mesh_export_gmsh_FLOAT(FILE *f, char *view,
 				NBI_REAL *x, gint xstr, gint np,
 				gint offp,
 				gint *tri, gint tstr, gint nt,

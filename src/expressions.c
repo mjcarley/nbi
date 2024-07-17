@@ -32,7 +32,7 @@
 
 #include "nbi-private.h"
 
-const gchar *variables[] = {"x", "y", "z", "nx", "ny", "nz", "rp", "ip",
+const char *variables[] = {"x", "y", "z", "nx", "ny", "nz", "rp", "ip",
   "rdp", "idp", NULL} ;
 
 /**
@@ -70,7 +70,7 @@ const te_variable functions[] = {
   {NULL , NULL, TE_FUNCTION0}
 } ;
 
-const gchar *function_help[] = {
+const char *function_help[] = {
   "laplace_G(x, y, z)",
   " = 1/4 PI R; R^2 = x^2 + y^2 + z^2;\n"
   "  Green's function for Laplace equation",
@@ -117,7 +117,7 @@ const gchar *function_help[] = {
   NULL, NULL
 } ;
 
-const gchar *nbi_function_help(gchar *f)
+const char *nbi_function_help(char *f)
 
 {
   gint i ;
@@ -210,10 +210,10 @@ nbi_boundary_condition_t *nbi_boundary_condition_new(nbi_problem_t problem)
   return b ;
 }
 
-static gint getlongline(FILE *f, gchar *buf, gint nbmax, gchar *cont)
+static gint getlongline(FILE *f, char *buf, gint nbmax, char *cont)
 
 {
-  gchar *line ;
+  char *line ;
   gint i ;
   gint len ;
   gsize n ;
@@ -262,7 +262,7 @@ static gint getlongline(FILE *f, gchar *buf, gint nbmax, gchar *cont)
 gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *b)
 
 {
-  gchar **tokens, buf[16384], *cont = "\\" ;
+  char **tokens, buf[16384], *cont = "\\" ;
   te_variable *vars ;
   ssize_t nc ;
   gint nt, i, err, nbmax = 16384 ;
@@ -327,7 +327,7 @@ gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *b)
  */
 
 gint nbi_boundary_condition_has_variable(nbi_boundary_condition_t *b,
-					 gchar *v)
+					 char *v)
 
 {
   gint i ;
@@ -417,7 +417,7 @@ gint nbi_boundary_condition_eval(nbi_boundary_condition_t *b, gdouble *x,
  */
 
 gboolean nbi_boundary_condition_defined(nbi_boundary_condition_t *b,
-					gchar *v)
+					char *v)
 
 {
   te_variable *vars = b->vars ;

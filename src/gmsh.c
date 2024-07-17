@@ -276,7 +276,7 @@ static void add_gmsh_grid_patch(gint *tags, gint *tri, gdouble *uvtri,
  * surface generated from \a file.
  */
 
-nbi_surface_t *nbi_gmsh_mesh(gchar *file, gint nq)
+nbi_surface_t *nbi_gmsh_mesh(char *file, gint nq)
 
 {
   gint ierr, *tags, npts, *tri, ntri, *pdata, t ;

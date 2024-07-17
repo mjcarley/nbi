@@ -156,7 +156,7 @@ struct _nbi_surface_t {
     np,       /*< number of patches */
     npmax,    /*< maximum number of patches */
     *ip ;     /*< index of first node and number of nodes on each patch*/
-  gchar  *pcr,       /*< patch data (centroids and radii)*/
+  char  *pcr,       /*< patch data (centroids and radii)*/
     *xc ;       /*< collocation nodes, normals, and quadrature weights*/
   gsize
   fpsize ; /*< size of floating point data (single or double precision)*/
@@ -222,7 +222,7 @@ struct _nbi_matrix_t {
     *idxu,  /*< upsampled node indices */
     *idxp,
     *idx ;
-  gchar
+  char
   *Ast,    /*< correction matrices */
     *xu,   /*< upsampled nodes */
     *bc,    /*< upsampled boundary condition buffer */
@@ -295,7 +295,7 @@ struct _nbi_boundary_condition_t {
   gpointer compiled[NBI_BOUNDARY_CONDITION_VARIABLE_NUMBER] ;
   /*< compiled version for evaluation by tinyexpr */
   gpointer vars ;
-  gchar *expr[NBI_BOUNDARY_CONDITION_VARIABLE_NUMBER] ;
+  char *expr[NBI_BOUNDARY_CONDITION_VARIABLE_NUMBER] ;
 } ;
 
 #define NBI_BOUNDARY_CONDITION_POINT   0
@@ -337,16 +337,16 @@ gint nbi_surface_write(nbi_surface_t *s, FILE *f) ;
 nbi_surface_t *nbi_surface_read(FILE *f) ;
 gint nbi_surface_set_weights(nbi_surface_t *s) ;
 
-gint nbi_header_read(FILE *f, gchar header[]) ;
-gint nbi_header_write(FILE *f, gchar header[]) ;
-gint nbi_header_init(gchar *header,
-		     gchar *id,
-		     gchar *version,
-		     gchar *type,
-		     gchar *format) ;
-gint nbi_header_insert_string(gchar *header, gint i, gint len, gchar *str) ;
-gchar *nbi_problem_type_string(nbi_problem_t p) ;
-nbi_problem_t nbi_problem_from_string(gchar *p) ;
+gint nbi_header_read(FILE *f, char header[]) ;
+gint nbi_header_write(FILE *f, char header[]) ;
+gint nbi_header_init(char *header,
+		     char *id,
+		     char *version,
+		     char *type,
+		     char *format) ;
+gint nbi_header_insert_string(char *header, gint i, gint len, char *str) ;
+char *nbi_problem_type_string(nbi_problem_t p) ;
+nbi_problem_t nbi_problem_from_string(char *p) ;
 
 gint nbi_surface_patch_centroid(gdouble *x, gint xstr,
 				gdouble *w, gint wstr,
@@ -465,18 +465,18 @@ gint nbi_matrix_multiply_laplace(nbi_matrix_t *A,
 				 gdouble *work) ;
 
 nbi_boundary_condition_t *nbi_boundary_condition_new(nbi_problem_t problem) ;
-gint nbi_boundary_condition_add(nbi_boundary_condition_t *b, gchar *e) ;
+gint nbi_boundary_condition_add(nbi_boundary_condition_t *b, char *e) ;
 gint nbi_boundary_condition_set(nbi_surface_t *s,
 				gdouble *p , gint pstr,
 				gdouble *pn, gint nstr,
 				nbi_boundary_condition_t *b) ;
 gint nbi_boundary_condition_has_variable(nbi_boundary_condition_t *b,
-					 gchar *v) ;
+					 char *v) ;
 gint nbi_boundary_condition_write(FILE *f, nbi_boundary_condition_t *b) ;
 gint nbi_boundary_condition_eval(nbi_boundary_condition_t *b, gdouble *x,
 				 gdouble *n) ;
 gboolean nbi_boundary_condition_defined(nbi_boundary_condition_t *b,
-					gchar *v) ;
+					char *v) ;
 
 gint nbi_gmres_real(nbi_matrix_t *A, gint n,
 		    gdouble *x, gint xstr,
@@ -499,9 +499,9 @@ gdouble *nbi_data_read(FILE *f, gint *nd, gint *ne) ;
 gint nbi_data_write(FILE *f, gdouble *dat, gint dstr, gint ne, gint nd) ;
 gint nbi_boundary_condition_read(FILE *f, nbi_boundary_condition_t *bc) ;
 
-nbi_surface_t *nbi_agg_mesh(gchar *file, gint nq) ;
+nbi_surface_t *nbi_agg_mesh(char *file, gint nq) ;
 
-nbi_surface_t *nbi_gmsh_mesh(gchar *file, gint nq) ;
+nbi_surface_t *nbi_gmsh_mesh(char *file, gint nq) ;
 
 gint nbi_mesh_triangulate(nbi_surface_t *s,
 			  gint dmax,
@@ -511,12 +511,12 @@ gint nbi_mesh_triangulate(nbi_surface_t *s,
 			  gdouble *f, gint fstr,
 			  gdouble *fi, gint fistr,
 			  gint *np, gint *nt) ;
-gint nbi_mesh_export_gmsh(FILE *f, gchar *view,
+gint nbi_mesh_export_gmsh(FILE *f, char *view,
 			  gdouble *x, gint xstr, gint np, gint offp,
 			  gint *tri, gint tstr, gint nt, gint offt,
 			  gdouble *data, gint dstr) ;
 
-const gchar *nbi_function_help(gchar *f) ;
+const char *nbi_function_help(char *f) ;
 gint nbi_functions_list(FILE *f, gboolean help) ;
 
 nbi_matrix_t *nbi_matrix_assemble_helmholtz(nbi_surface_t *s,

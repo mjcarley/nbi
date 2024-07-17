@@ -51,7 +51,7 @@
 #endif /*HAVE_GMSHC_H*/
 
 GTimer *timer ;
-gchar *progname ;
+char *progname ;
 
 /**
  * @page nbisurface Generating surfaces for NBI calculations
@@ -236,13 +236,13 @@ nbi_surface_t *geometry_grid_zx(gdouble argd[], gint argi[], gint nq)
   return s ;
 }
 
-static geometry_function parse_geometry(gchar *str)
+static geometry_function parse_geometry(char *str)
 
 {
   gint i ;
 
   for ( i = 0 ; geometries[i] != NULL ; i += 4 ) {
-    if ( strcmp(str, (gchar *)geometries[i]) == 0 )
+    if ( strcmp(str, (char *)geometries[i]) == 0 )
       return geometries[i+1] ;
   }
   
@@ -255,9 +255,9 @@ static gint list_geometries(FILE *f)
   gint i ;
   
   for ( i = 0 ; geometries[i] != NULL ; i += 4 ) {
-    fprintf(f, "%s\n", (gchar *)geometries[i]) ;
-    fprintf(f, "  integer arguments: %s\n", (gchar *)geometries[i+2]) ;
-    fprintf(f, "     real arguments: %s\n", (gchar *)geometries[i+3]) ;
+    fprintf(f, "%s\n", (char *)geometries[i]) ;
+    fprintf(f, "  integer arguments: %s\n", (char *)geometries[i+2]) ;
+    fprintf(f, "     real arguments: %s\n", (char *)geometries[i+3]) ;
   }
 
   return 0 ;
@@ -306,16 +306,16 @@ static void list_input_formats(FILE *f)
   return ; 
 }
 
-gint main(gint argc, gchar **argv)
+gint main(gint argc, char **argv)
 
 {
   geometry_function gfunc ;
-  gchar ch, *opfile ;
+  char ch, *opfile ;
 #ifdef HAVE_LIBGMSH
-  gchar *gmshfile ;
+  char *gmshfile ;
 #endif /*HAVE_LIBGMSH*/
 #ifdef HAVE_AGG
-  gchar *aggfile ;
+  char *aggfile ;
 #endif /*HAVE_AGG*/
   gdouble argd[16] ;
   gint argi[16], nq, argci, argcd ;
