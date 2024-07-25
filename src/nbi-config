@@ -1,8 +1,8 @@
 #!/bin/sh
 # src/nbi-config.  Generated from nbi-config.in by configure.
 
-nbi_cflags="-g -O2 -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -fopenmp  -mavx -DWBFMM_USE_AVX -mfma -DWBFMM_USE_AVX -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/home/michael/Codes/include    -fopenmp -I/home/michael/Codes/include"
-nbi_cppflags="-I/home/michael/Codes/include"
+nbi_cflags="-I/home/michael/Codes/include -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -fopenmp  -mavx -DWBFMM_USE_AVX -mfma -DWBFMM_USE_AVX -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/home/michael/Codes/include    -fopenmp -I/home/michael/Codes/include"
+nbi_cppflags=""
 openmp_cflags="-fopenmp"
 glib_libs="@glib_libs@"
 
@@ -25,7 +25,7 @@ Options:
 Libraries:
 	nbi
 EOF
-	exit $1
+	exit 1
 }
 
 uniquify()
@@ -75,7 +75,7 @@ while test $# -gt 0; do
       echo_exec_prefix=yes
       ;;
     --version)
-      echo 1.0.0
+      echo 1.1.0
       exit 0
       ;;
     --cflags)
@@ -106,7 +106,7 @@ if test x"$echo_cflags" = "xyes"; then
     echo $nbi_cppflags $nbi_cflags $glib_cflags
 fi
 if test x"$echo_libs" = "xyes"; then
-    nbi_libs="-lnbi -lglib-2.0 -lwbfmm -lsqt -lagg -static -ltriangle-api -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -lm -lgmsh   -L/home/michael/Codes -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lgmsh -lquadmath -L/home/michael/Codes/lib -lpetsc"
+    nbi_libs="-lnbi -lglib-2.0 -lwbfmm -lsqt -lagg -static -ltriangle-api -lglib-2.0 -lblas -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lquadmath -lm -lm -lgmsh   -L/home/michael/Codes/lib -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/../../.. -lgfortran -lm -lgmsh -lquadmath -L/home/michael/Codes/lib -lpetsc"
     nbi_libs=`uniquify "$nbi_libs"`
     nbi_libs="-L${exec_prefix}/lib ${nbi_libs}"
     echo ${nbi_libs}
