@@ -29,8 +29,8 @@ automatically satisfied by the nature of the formulation. The Nystrom
 method is one approach to the solution of boundary integral problems,
 which lends itself to acceleration using the Fast Multipole Method
 (FMM). NBI is a library for the solution of boundary integral problems
-based on the approach of [@greengard-oneil-rachh-vico21] and the FMM
-methods of [@gumerov-duraiswami03; @gumerov-duraiswami04;
+based on the approach of @greengard-oneil-rachh-vico21 and the FMM
+methods of Gumerov & Duraiswami [@gumerov-duraiswami03; @gumerov-duraiswami04;
 @gumerov-duraiswami05; @gumerov-duraiswami09]. The code includes a
 number of executables which can be used to set up and solve problems
 on realistic geometries, with a number of examples provided for
@@ -39,14 +39,14 @@ testing of the solver. Results can be visualized using GMSH
 
 # Statement of need
 
-A number of free boundary integral codes exist which can be used for
+A number of free boundary integral codes exist that can be used for
 problems of the type handled by NBI [@kirkup07; @betcke-scroggs21, for
 example], with different approaches to discretization and solution,
 ranging from collocation methods with direct solvers, suitable for
 relatively small problems, to FMM-accelerated Galerkin techniques with
 iterative solvers, which can be used on large complex geometries. NBI
 implements recent work on high-order solution of boundary integral
-problems [@greengard-oneil-rachh-vico21] in a form which can be used
+problems [@greengard-oneil-rachh-vico21] in a form that can be used
 for a range of engineering applications. The principal motivation is
 the solution of potential problems in acoustics and aerodynamics. As
 well as the library proper, there are codes for discretization of
@@ -55,17 +55,17 @@ and problem solution; field evaluation; and post-processing and
 visualization of results. A built-in parser gives a flexible and
 intuitive means of evaluating boundary conditions, which are supplied
 as analytical expressions parsed and evaluated on the surface. This
-allows boundary conditions to be specified in a form which makes it
+allows boundary conditions to be specified in a form that makes it
 easier to perform parametric studies by systematically modifying
 internal variables. 
 
 Simple geometries, such as spheres and ellipsoids, are implemented as
 internal functions. More general shapes can be produced using standard
-GMSH inputs [@geuzaine-remacle09] or the CST method of Kulfan
-[@kulfan10] which is implemented in an extended and more general form
-in the AGG library which is included with the NBI distribution. This
-allows the parametric specification of forms which arise in
-aerodynamic applications, in a manner which is convenient for
+GMSH inputs [@geuzaine-remacle09] or the CST method of @kulfan10,
+which is implemented in an extended and more general form
+in the AGG library that is included with the NBI distribution. This
+allows the parametric specification of forms that arise in
+aerodynamic applications, in a manner that is convenient for
 optimisation and parametric studies. 
 
 # Mathematics
@@ -97,25 +97,25 @@ code documentation, but the basic steps are:
 
 - generation of a surface discretization;
 - assembly of the system matrices;
-- solution of the problem subject to a specified boundary condition;
+- solution of the problem subject to a specified boundary condition; and
 - postprocessing, including evaluation of the potential field, and
   visualization.
   
 Each of these steps is carried out using an appropriate executable,
 and a full problem can be solved using a Unix or Linux shell script
-which runs each step in turn. 
+that runs each step in turn. 
 
 The intention has been to develop an implementation of the main
-elements of [@greengard-oneil-rachh-vico21] in a code which is
+elements of @greengard-oneil-rachh-vico21 in a code that is
 relatively easy to use in applications. The principal differences
-which a user will note between NBI and the reference implementation of
-the method of [@greengard-oneil-rachh-vico21] are: the range of
+that a user will note between NBI and the reference implementation of
+the method of @greengard-oneil-rachh-vico21 are: the range of
 geometry formats supported, including the widely used GMSH standard,
 and an extension of Kulfan's CST method for ``aerodynamic'' shapes
 [@kulfan10]; the use of the standard PETSc iterative solvers, with the
 option to select a solver at runtime; and the ability to define
 boundary conditions using a built-in parser for mathematical
-expressions, or pre-defined functions for the sources which arise in
+expressions, or pre-defined functions for the sources that arise in
 realistic problems, such as scattering of rotor noise. 
 
 ## Surface generation and representation
@@ -148,7 +148,7 @@ evaluation of integrals. The evaluation uses a Fast Multipole Method
 @gumerov-duraiswami09]. A GMRES solver is built in and there is an
 optional interface to the PETSc library and its solvers
 [@petsc-web-page]. Boundary conditions in NBI are specified using
-analytical formulae which are parsed and evaluated at each surface
+analytical formulae that are parsed and evaluated at each surface
 node. This allows an intuitive definition of boundary conditions,
 where user-defined variables simplify parametric variation, and a
 range of built-in functions for the most common boundary conditions
