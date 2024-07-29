@@ -177,3 +177,10 @@ and results can be extracted to the host using
 
 which will copy the full `examples` directory tree with all results
 and visualization files.
+
+# Citing NBI
+
+If you use NBI and want to cite it in your publications, you can cite
+the Journal of Open Source Software
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.05972/status.svg)](https://doi.org/10.21105/joss.05972)
+
