@@ -96,7 +96,7 @@ AC_CHECK_LIB(gmsh, gmshInitialize, [], [
 ])
 
 PKG_CHECK_MODULES([PETSC], [petsc >= 3.17],
-		  AC_DEFINE([HAVE_PETSC], [1], [Have PETSc]),
+		  [AC_DEFINE([HAVE_PETSC], [1], [Have PETSc])],
 		  [
   echo \#################################################################
   echo \# 
