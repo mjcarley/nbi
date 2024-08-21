@@ -238,7 +238,7 @@ static void point_source_summation(nbi_matrix_t *m,
     }
     wbfmm_tree_laplace_leaf_expansions(tree,
 				       pnu, nustr,
-				       &(xu[3]), ustr,
+				       /* &(xu[3]), ustr, */
 				       pu, pustr,
 				       TRUE, work) ;
     /* fprintf(stderr, "%s: upward pass\n", __FUNCTION__) ; */
@@ -262,7 +262,7 @@ static void point_source_summation(nbi_matrix_t *m,
 					   (NBI_REAL *)nbi_surface_node(s,i),
 					   &(f[i*fstr]),
 					   pnu, nustr,
-					   &(xu[3]), ustr,
+					   /* &(xu[3]), ustr, */
 					   pu, pustr,
 					   TRUE, work) ;
 	/* local_source_field(tree, tree->depth, box, */
