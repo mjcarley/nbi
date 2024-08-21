@@ -285,7 +285,6 @@ static void point_source_summation(nbi_matrix_t *m,
     }
     wbfmm_tree_leaf_expansions(tree, k,
 			       pnu, nustr,
-			       /* &(xu[3]), ustr, */
 			       pu, pustr,
 			       TRUE, work) ;
     for ( level = depth ; level >= 3 ; level -- ) {
@@ -312,7 +311,6 @@ static void point_source_summation(nbi_matrix_t *m,
 				   (NBI_REAL *)nbi_surface_node(s,i),
 				   df, 2,
 				   pnu, nustr,
-				   /* &(xu[3]), ustr, */
 				   pu, pustr,
 				   TRUE, WBFMM_FIELD_SCALAR, work) ;
 	/*wbfmm calculates h_{0}(kR)/4\pi rather than the Green's
