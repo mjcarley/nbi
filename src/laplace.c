@@ -104,7 +104,6 @@ static void upsample_sources(nbi_surface_t *s,
   for ( pt = 0 ; pt < nbi_surface_patch_number(s) ; pt ++ ) {
     ns = nbi_surface_patch_node_number(s, pt) ;
     nu = idxu[pt+1] - idxu[pt] ;
-    /* fprintf(stderr, "%d %d %d\n", pt, idxu[pt+1], idxu[pt]) ; */
     K = NBI_FUNCTION_NAME(nbi_patch_upsample_matrix)(ns, nu) ;
 
     i = nbi_surface_patch_node(s, pt) ;
@@ -151,53 +150,6 @@ gint NBI_FUNCTION_NAME(nbi_matrix_upsample_laplace)(nbi_matrix_t *m,
   return 0 ;
 }
 
-/* static void local_source_field(wbfmm_tree_t *t, */
-/* 			       guint level, */
-/* 			       guint64 b, */
-/* 			       NBI_REAL *x, */
-/* 			       NBI_REAL *f, */
-/* 			       NBI_REAL *src, gint sstr, */
-/* 			       NBI_REAL *normals, gint nstr, */
-/* 			       NBI_REAL *d, gint dstr) */
-
-/* { */
-/*   NBI_REAL xb[3], wb, *C, *xs, r, rr[3], nr, g ; */
-/*   wbfmm_box_t *boxes, box ; */
-/*   guint64 neighbours[27] ; */
-/*   gint nnbr, i, k, idx, nq ; */
-/*   guint j ; */
-  
-/*   nnbr = wbfmm_box_neighbours(level, b, neighbours) ; */
-/*   g_assert(nnbr >= 0 && nnbr < 28) ; */
-
-/*   nq = wbfmm_tree_source_size(t) ; */
-
-/*   boxes = t->boxes[level] ; */
-/*   for ( i = 0 ; i < nnbr ; i ++ ) { */
-/*     box = boxes[neighbours[i]] ; */
-/*     for ( j = 0 ; j < box.n ; j ++ ) { */
-/*       idx = t->ip[box.i+j] ; */
-/*       xs = wbfmm_tree_point_index(t, idx) ; */
-/*       rr[0] = x[0] - xs[0] ;  */
-/*       rr[1] = x[1] - xs[1] ;  */
-/*       rr[2] = x[2] - xs[2] ; */
-/*       r = rr[0]*rr[0] + rr[1]*rr[1] + rr[2]*rr[2] ; */
-/*       if ( r > WBFMM_LOCAL_CUTOFF_RADIUS*WBFMM_LOCAL_CUTOFF_RADIUS ) { */
-/* 	r = SQRT(r) ; */
-/* 	nr = */
-/* 	  rr[0]*normals[idx*nstr+0] +  */
-/* 	  rr[1]*normals[idx*nstr+1] +  */
-/* 	  rr[2]*normals[idx*nstr+2] ; */
-/* 	g = 0.25*M_1_PI/r ; */
-/* 	for ( k = 0 ; k < nq ; k ++ ) { */
-/* 	  f[k] += (d[idx*dstr+k]*nr/r/r + src[idx*sstr+k])*g ; */
-/* 	} */
-/*       } */
-/*     } */
-    
-/*   }    */
-/* } */
-
 static void point_source_summation(nbi_matrix_t *m,
 				   NBI_REAL *f, gint fstr,
 				   NBI_REAL *work, gint nthreads)
@@ -241,11 +193,9 @@ static void point_source_summation(nbi_matrix_t *m,
 				       /* &(xu[3]), ustr, */
 				       pu, pustr,
 				       TRUE, work) ;
-    /* fprintf(stderr, "%s: upward pass\n", __FUNCTION__) ; */
     for ( level = depth ; level >= 3 ; level -- ) {
       wbfmm_laplace_upward_pass(tree, shifts, level, work) ;
     }  
-    /* fprintf(stderr, "%s: downward pass\n", __FUNCTION__) ; */
     for ( level = 2 ; level <= depth ; level ++ ) {      
       wbfmm_laplace_downward_pass(tree, shifts, level, work, nthreads) ;
     }
@@ -253,24 +203,15 @@ static void point_source_summation(nbi_matrix_t *m,
       wbfmm_target_list_local_field(targets, pnu, nustr, pu, pustr, f, fstr) ;
     } else {
       for ( i = 0 ; i < nbi_surface_node_number(s) ; i ++ ) {
-	/* NBI_REAL fl[32] ; */
 	guint64 box ;
-	/* fprintf(stderr, "%s: surface node %d\n", __FUNCTION__, i) ; */
 	box = wbfmm_point_box(tree, tree->depth,
 			      (NBI_REAL *)nbi_surface_node(s, i)) ;
 	wbfmm_tree_laplace_box_local_field(tree, tree->depth, box,
 					   (NBI_REAL *)nbi_surface_node(s,i),
-					   &(f[i*fstr]),
+					   &(f[i*fstr]), 1,
 					   pnu, nustr,
-					   /* &(xu[3]), ustr, */
 					   pu, pustr,
 					   TRUE, work) ;
-	/* local_source_field(tree, tree->depth, box, */
-	/* 		   (NBI_REAL *)nbi_surface_node(s,i), */
-	/* 		   &(f[i*fstr]), */
-	/* 		   pnu, nustr, */
-	/* 		   &(xu[3]), ustr, */
-	/* 		   pu, pustr) ; */
       }
     }
   }
@@ -319,9 +260,6 @@ static void local_matrix_correction(nbi_matrix_t *m,
 		   &(pn[ip*nstr]), nstr, bt, work, one) ;
 #endif /*NBI_SINGLE_PRECISION*/    
     
-    /* for ( i = 0 ; i < nnbrs ; i ++ ) { */
-    /*   f[fstr*nbrs[i]] += work[i] ; */
-    /* } */
     for ( i = 0 ; i < nnbrs ; i ++ ) {
       buf[nbrs[i]] += work[i] ;
     }
@@ -399,9 +337,7 @@ gint NBI_FUNCTION_NAME(nbi_surface_greens_identity_laplace)(nbi_matrix_t *m,
 						 p , pstr, pwt,
 						 pn, nstr, nwt) ;
   /*point source approximation (FMM handled internally)*/
-  /* fprintf(stderr, "%s: calling point source summation\n", __FUNCTION__) ; */
   point_source_summation(m, f, fstr, work, nth) ;
-  /* fprintf(stderr, "%s: point source summation complete\n", __FUNCTION__) ; */
 
   nnmax = nbi_matrix_neighbour_number_max(m) ;
   npts = nbi_surface_node_number(m->s) ;
@@ -504,8 +440,6 @@ static void upsample_sources_single(nbi_surface_t *s,
     blaswrap_sgemv(FALSE, nu, ns, al, K, ns,
 		   &(pn[i*pstr]), nstr, bt, &(pnu[j*pustr]), nustr) ;
 #else  /*NBI_SINGLE_PRECISION*/
-    /* blaswrap_dgemv(FALSE, nu, ns, al, K, ns, */
-    /* 		   &(x[i*xstr]), xstr, bt, &(pnu[j*pustr]), nustr) ; */
     blaswrap_dgemv(FALSE, nu, ns, al, K, ns,
 		   &(pn[i*nstr]), nstr, bt, &(pnu[j*pustr]), nustr) ;
 #endif /*NBI_SINGLE_PRECISION*/
@@ -543,8 +477,6 @@ static void upsample_sources_double(nbi_surface_t *s,
     blaswrap_sgemv(FALSE, nu, ns, al, K, ns,
     		   &(x[i*xstr]), xstr, bt, &(pu[j*pustr]), pustr) ;
 #else  /*NBI_SINGLE_PRECISION*/
-    /* blaswrap_dgemv(FALSE, nu, ns, al, K, ns, */
-    /* 		   &(x[i*xstr]), xstr, bt, &(pu[j*pustr]), pustr) ; */
     blaswrap_dgemv(FALSE, nu, ns, al, K, ns,
     		   &(p[i*pstr]), pstr, bt, &(pu[j*pustr]), pustr) ;
 #endif /*NBI_SINGLE_PRECISION*/
@@ -575,7 +507,6 @@ static void local_matrix_multiply(nbi_matrix_t *m, NBI_REAL *p, gint pstr,
   nsts = nbi_surface_patch_node_number(m->s, 0) ;
   lda = 2*nsts ;
 
-  /* for ( pt = pt0 ; pt < nbi_surface_patch_number(m->s) ; pt ++ ) { */
   for ( pt = pt0 ; pt < pt1 ; pt ++ ) {
     ip = nbi_surface_patch_node(m->s, pt) ;
     nnbrs = m->idxp[pt+1] - m->idxp[pt] ;
@@ -591,9 +522,6 @@ static void local_matrix_multiply(nbi_matrix_t *m, NBI_REAL *p, gint pstr,
 		   &(p[ip*pstr]) , pstr, bt, work, one) ;
 #endif /*NBI_SINGLE_PRECISION*/    
     
-    /* for ( i = 0 ; i < nnbrs ; i ++ ) { */
-    /*   f[fstr*nbrs[i]] += work[i] ; */
-    /* } */
     for ( i = 0 ; i < nnbrs ; i ++ ) {
       buf[nbrs[i]] += work[i] ;
     }
@@ -629,17 +557,14 @@ static gpointer matrix_multiply_thread(gpointer tdata)
   }
 
   p = dpdata[NBI_THREAD_DATA_REAL_PTR_P] ;
-  /* f = dpdata[NBI_THREAD_DATA_REAL_PTR_F] ; */
 
   pstr = idata[NBI_THREAD_DATA_INT_PSTR] ;
   off  = idata[NBI_THREAD_DATA_INT_OFFSET] ;
-  /* fstr = idata[NBI_THREAD_DATA_INT_FSTR] ; */
   
   al = ddata[NBI_THREAD_DATA_REAL_WT1] ;
   bt = ddata[NBI_THREAD_DATA_REAL_WT2] ;
   
-  local_matrix_multiply(m, p, pstr, off, al, bt, buf, work, /* f, fstr, */
-			pt0, pt1, nth) ;
+  local_matrix_multiply(m, p, pstr, off, al, bt, buf, work, pt0, pt1, nth) ;
 
   return NULL ;
 }
@@ -648,7 +573,6 @@ static void local_matrix_multiply_thread(nbi_matrix_t *m,
 					 NBI_REAL *p, gint pstr,
 					 gint off, NBI_REAL al, NBI_REAL bt,
 					 NBI_REAL *work,
-					 /* NBI_REAL *f, gint fstr, */
 					 gint nthreads)
 {
   gint nth, i, nnmax, npts, idata[NBI_THREAD_DATA_INT_SIZE] ;
@@ -666,11 +590,9 @@ static void local_matrix_multiply_thread(nbi_matrix_t *m,
   if ( nthreads < 0 ) nth = g_get_num_processors() ; else nth = nthreads ;
 
   dpdata[NBI_THREAD_DATA_REAL_PTR_P] = p ;
-  /* dpdata[NBI_THREAD_DATA_REAL_PTR_F] = f ; */
 
   idata[NBI_THREAD_DATA_INT_PSTR]   = pstr ;
   idata[NBI_THREAD_DATA_INT_OFFSET] = off ;
-  /* idata[NBI_THREAD_DATA_INT_FSTR]   = fstr ; */
   
   ddata[NBI_THREAD_DATA_REAL_WT1] = al ;
   ddata[NBI_THREAD_DATA_REAL_WT2] = bt ;
@@ -694,7 +616,6 @@ static void local_matrix_multiply_thread(nbi_matrix_t *m,
       &(buffer[i*npts]) ;
   }
   
-  /* memset(buffer, 0, nth*npts*sizeof(NBI_REAL)) ; */
   for ( i = 0 ; i < nth ; i ++ ) {
     threads[i] = g_thread_new(NULL, matrix_multiply_thread,
 			      &(main_data[NBI_THREAD_MAIN_DATA_SIZE*i])) ;    
@@ -737,9 +658,7 @@ static void matrix_multiply_single(nbi_matrix_t *m,
 			  pu, pustr, 0.0, pnu, nustr, nwt) ;
 			  
   /*point source approximation (FMM handled internally)*/
-  /* fprintf(stderr, "%s: calling point source summation\n", __FUNCTION__) ; */
   point_source_summation(m, f, fstr, work, nth) ;
-  /* fprintf(stderr, "%s: point source summation complete\n", __FUNCTION__) ; */
 
   /*local corrections*/
   al = -nwt*sgn ; bt = 0.0 ;
@@ -797,10 +716,7 @@ static void matrix_multiply_double(nbi_matrix_t *m,
   upsample_sources_double(s, p, pstr, &(xu[6]), ustr, idxu,
 			  pu , pustr, pwt, pnu, nustr, 0.0) ;
   /*point source approximation (FMM handled internally)*/
-  /* fprintf(stderr, "%s: calling point source summation\n", __FUNCTION__) ; */
   point_source_summation(m, f, fstr, work, nth) ;
-  /* fprintf(stderr, "%s: point source summation complete\n", __FUNCTION__) ; */
-  /* point_source_summation(m, f, fstr, work, nth) ; */
 
   /*local corrections*/
   nsts = nbi_surface_patch_node_number(s, 0) ;
