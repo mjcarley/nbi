@@ -190,7 +190,6 @@ static void point_source_summation(nbi_matrix_t *m,
     }
     wbfmm_tree_laplace_leaf_expansions(tree,
 				       pnu, nustr,
-				       /* &(xu[3]), ustr, */
 				       pu, pustr,
 				       TRUE, work) ;
     for ( level = depth ; level >= 3 ; level -- ) {
@@ -206,12 +205,18 @@ static void point_source_summation(nbi_matrix_t *m,
 	guint64 box ;
 	box = wbfmm_point_box(tree, tree->depth,
 			      (NBI_REAL *)nbi_surface_node(s, i)) ;
-	wbfmm_tree_laplace_box_local_field(tree, tree->depth, box,
-					   (NBI_REAL *)nbi_surface_node(s,i),
-					   &(f[i*fstr]), 1,
-					   pnu, nustr,
-					   pu, pustr,
-					   TRUE, work) ;
+	wbfmm_laplace_box_field(tree, level, box,
+				pnu, nustr, pu, pustr,
+				WBFMM_FIELD_SCALAR, TRUE,
+				(NBI_REAL *)nbi_surface_node(s,i),
+				&(f[i*fstr]), 1, work) ;
+
+	/* wbfmm_tree_laplace_box_local_field(tree, tree->depth, box, */
+	/* 				   (NBI_REAL *)nbi_surface_node(s,i), */
+	/* 				   &(f[i*fstr]), 1, */
+	/* 				   pnu, nustr, */
+	/* 				   pu, pustr, */
+	/* 				   TRUE, work) ; */
       }
     }
   }
