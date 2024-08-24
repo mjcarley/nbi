@@ -6,7 +6,6 @@ rm -f ${logfile} ${normfile}
 
 ## point source inside a sphere
 echo SphereLaplace test >> ${logfile}
-echo SphereLaplace test >> ${normfile}
 cd SphereLaplace
 ../solve-laplace -P -p 7 -u 25 &>> ../${logfile}
 echo SphereLaplace test >> ../${normfile}
@@ -15,7 +14,6 @@ cd ..
 
 ## potential flow around sphere
 echo Flow test >> ${logfile}
-echo Flow test >> ${normfile}
 cd Flow
 ../solve-laplace -p 7 -u 25 -s axial.bc &>> ../${logfile}
 echo Flow test >> ../${normfile}
@@ -24,7 +22,6 @@ cd ..
 
 ## point source inside a wing
 echo Wing test >> ${logfile}
-echo Wing test >> ${normfile}
 cd Wing
 ../solve-laplace -p 25 -u 54 -g wing &>> ../${logfile}
 echo Wing test >> ../${normfile}
@@ -33,7 +30,6 @@ cd ..
 
 ## point source inside a catseye
 echo Catseye test >> ${logfile}
-echo Catseye test >> ${normfile}
 cd Catseye
 ../solve-laplace -p 7 -u 25 -g catseye &>> ../${logfile}
 echo Catseye test >> ../${normfile}
