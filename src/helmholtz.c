@@ -312,7 +312,7 @@ static void point_source_summation(nbi_matrix_t *m,
 				   df, 2,
 				   pnu, nustr,
 				   pu, pustr,
-				   TRUE, WBFMM_FIELD_SCALAR, work) ;
+				   TRUE, WBFMM_FIELD_POTENTIAL, work) ;
 	/*wbfmm calculates h_{0}(kR)/4\pi rather than the Green's
 	  function, so we need to multiply by -j k*/
 	nbi_scale_complex(df, kc) ;

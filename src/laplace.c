@@ -207,7 +207,7 @@ static void point_source_summation(nbi_matrix_t *m,
 			      (NBI_REAL *)nbi_surface_node(s, i)) ;
 	wbfmm_laplace_box_field(tree, level, box,
 				pnu, nustr, pu, pustr,
-				WBFMM_FIELD_SCALAR, TRUE,
+				WBFMM_FIELD_POTENTIAL, TRUE,
 				(NBI_REAL *)nbi_surface_node(s,i),
 				&(f[i*fstr]), 1, work) ;
       }

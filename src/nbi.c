@@ -570,7 +570,7 @@ gint NBI_FUNCTION_NAME(nbi_matrix_fmm_init)(nbi_matrix_t *m,
   nsrc = m->idxu[nbi_surface_patch_number(s)] ;
   
   source = WBFMM_SOURCE_MONOPOLE | WBFMM_SOURCE_DIPOLE ;
-  field = WBFMM_FIELD_SCALAR ;
+  field = WBFMM_FIELD_POTENTIAL ;
   xtree[0] = xtree[1] = xtree[2] = 0.0 ;
   wbfmm_points_origin_width(xu, ustr, nsrc, xtree, xtmax, &D, TRUE) ;
   wbfmm_points_origin_width((NBI_REAL *)nbi_surface_node(s,0),
