@@ -71,7 +71,7 @@ static void element_interp(agg_mesh_t *m, gint surf, gint *nodes,
       g_assert(agg_mesh_point_tag(m, nodes[i]) == tag) ;
       st[2*i+0] = agg_mesh_point_s(m, nodes[i]) ;
       st[2*i+1] = agg_mesh_point_t(m, nodes[i]) ;
-      agg_patch_map(P, st[2*i+0], st[2*i+1], &u, &v) ;
+      agg_patch_map(S, P, st[2*i+0], st[2*i+1], &u, &v) ;
       agg_surface_point_eval(S, u, v, xc, w) ;
 
       p = agg_mesh_point(m, nodes[i]) ;
@@ -93,7 +93,7 @@ static void element_interp(agg_mesh_t *m, gint surf, gint *nodes,
 				st[2*1+0], st[2*1+1],
 				st[2*2+0], st[2*2+1],
 				s[i*sstr], t[i*tstr], &si, &ti) ;
-      agg_patch_map(P, si, ti, &u, &v) ;
+      agg_patch_map(S, P, si, ti, &u, &v) ;
       agg_surface_point_eval(S, u, v, &(x[i*xstr]), w) ;    
     }
 
