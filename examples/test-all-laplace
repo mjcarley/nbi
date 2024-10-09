@@ -23,7 +23,7 @@ cd ..
 ## point source inside a wing
 echo Wing test >> ${logfile}
 cd Wing
-../solve-laplace -p 25 -u 54 -g wing &>> ../${logfile}
+../solve-laplace -p 7 -u 25 -g wing &>> ../${logfile}
 echo Wing test >> ../${normfile}
 grep norm solution.log | grep -v KSP  >> ../${normfile}
 cd ..

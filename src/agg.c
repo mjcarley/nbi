@@ -129,6 +129,21 @@ static void element_interp(agg_mesh_t *m, gint surf, gint *nodes,
   return ;
 }
 
+static gdouble element_area(gdouble *x0, gdouble *x1, gdouble *x2)
+
+{
+  gdouble A, r1[3], r2[3], c[3] ;
+
+  nbi_vector_diff(r1, x1, x0) ;
+  nbi_vector_diff(r2, x2, x1) ;
+
+  nbi_vector_cross(c, r1, r2) ;
+
+  A = nbi_vector_length(c)/2 ;
+  
+  return A ;
+}  
+
 static void add_nbi_triangle(nbi_surface_t *s, agg_mesh_t *m, gint *nodes,
 			     gint surf, agg_surface_workspace_t *w,
 			     gdouble *st, gint nst)
@@ -136,7 +151,7 @@ static void add_nbi_triangle(nbi_surface_t *s, agg_mesh_t *m, gint *nodes,
 {
   gint i, np, nn, i3 = 3, xstr ;
   gdouble *x, work[3*453], K[454*454], ci[453*453], N ;
-  gdouble al, bt ;
+  gdouble al, bt, A ;
   
   np = nbi_surface_patch_number(s) ;
   nn = nbi_surface_node_number(s) ;
@@ -146,6 +161,13 @@ static void add_nbi_triangle(nbi_surface_t *s, agg_mesh_t *m, gint *nodes,
   N = sqt_koornwinder_interp_matrix(&(st[0]), 3, &(st[1]), 3, &(st[2]), 3,
 				    nst, K) ;
 
+  /*check for a degenerate element*/
+  A = element_area(agg_mesh_point(m,nodes[0]),
+		   agg_mesh_point(m,nodes[1]),
+		   agg_mesh_point(m,nodes[2])) ;		   
+
+  g_assert(A > 1e-12) ;
+  
   /*generate the mesh nodes*/
   al = 1.0 ; bt = 0.0 ; xstr = NBI_SURFACE_NODE_LENGTH ;
   x = (gdouble *)nbi_surface_node(s, nn) ;
