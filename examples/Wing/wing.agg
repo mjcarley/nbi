@@ -9,21 +9,35 @@
 global {
   span = 8
   root = "span/6"
+  sweep = "15*pi/180"
 }
 
 surface {
-  name("wing")
-  patch("spherical", "nowrap", "wrap")
-  grid("sphere-uv", 24, 16)
-  ##patch("tubular", "nowrap", "wrap")
-  ##grid("regular", 16, 16)
-  ##limits(0.1, 0.9)
+  name("left")
+  patch("hemispherical", "nowrap", "wrap")
+  grid("hemisphere-uv", 32, 32)
   section(0, "aerofoil", 0.5, 0.2, 0.0)
   transform("translate", -0.5, 0, 0)
   transform("scale", "root")
-  ##transform("translate", 0, 0, "root*(u-1/2)")
-  ##transform("scale", 1, "sqrt(u*(1-u)*2)", 1.0) ;
-  transform("translate", 0, 0, "root*(u-1/2)")
-  transform("scale", "sqrt(u*(1-u)*2)","sqrt(u*(1-u)*2)",1)
-  ##section(0, "circle")
+  transform("scale",
+  "sqrt((1-u)/0.1)*step(u-0.9) + step(0.9-u)",
+  "sqrt((1-u)/0.1)*step(u-0.9) + step(0.9-u)",
+  1)
+  transform("translate", "u*sin(sweep)*span", 0, "span*u")
+  axes("+x+y-z")
+  invert() ;
+}
+
+surface {
+  name("right")
+  patch("hemispherical", "nowrap", "wrap")
+  grid("hemisphere-uv", 32, 32)
+  section(0, "aerofoil", 0.5, 0.2, 0.0)
+  transform("translate", -0.5, 0, 0)
+  transform("scale", "root")
+  transform("scale",
+  "sqrt((1-u)/0.1)*step(u-0.9) + step(0.9-u)",
+  "sqrt((1-u)/0.1)*step(u-0.9) + step(0.9-u)",
+  1)
+  transform("translate", "u*sin(sweep)*span", 0, "span*u")
 }
