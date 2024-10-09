@@ -13,43 +13,17 @@ global {
 
 surface {
   name("wing")
-  ##patch("spherical", "nowrap", "wrap")
-  ##grid("sphere-uv", 16, 32)
-  patch("tubular", "nowrap", "wrap")
-  grid("regular", 16, 16)
-  limits(0.1, 0.9)
+  patch("spherical", "nowrap", "wrap")
+  grid("sphere-uv", 24, 16)
+  ##patch("tubular", "nowrap", "wrap")
+  ##grid("regular", 16, 16)
+  ##limits(0.1, 0.9)
   section(0, "aerofoil", 0.5, 0.2, 0.0)
   transform("translate", -0.5, 0, 0)
   transform("scale", "root")
-  transform("translate", 0, 0, "span*(u-1/2)")
-}
-
-surface {
-  name("tip:left")
-  limits(0.9, 1.0)
-  patch("hemispherical", "nowrap", "wrap")
-  grid("hemisphere-uv", 8, 16)
-  section(0, "aerofoil", 0.5, 0.2, 0.0)
-  transform("translate", -0.5, 0, 0)
-  transform("scale", 1,
-  		     "sqrt(1-u)*(1/sqrt(0.1) +0.5/(0.1)^1.5*(u-0.9))",
-                     1.0)		
-  transform("scale", "root")
-
-  transform("translate", 0, 0, "span*(u-1/2)")
-}
-
-surface {
-  name("tip:right")
-  limits(0.0, 0.1)
-  patch("hemispherical", "nowrap", "wrap")
-  grid("hemisphere-uv", 8, 16)
-  section(0, "aerofoil", 0.5, 0.2, 0.01)
-  transform("translate", -0.5, 0, 0)
-  transform("scale", 1,
-  		     "sqrt(u)*(1/sqrt(0.1) +0.5/(0.1)^1.5*(0.1-u))", 1.0)
-                     
-  transform("scale", "root")
-
-  transform("translate", 0, 0, "span*(u-1/2)")
+  ##transform("translate", 0, 0, "root*(u-1/2)")
+  ##transform("scale", 1, "sqrt(u*(1-u)*2)", 1.0) ;
+  transform("translate", 0, 0, "root*(u-1/2)")
+  transform("scale", "sqrt(u*(1-u)*2)","sqrt(u*(1-u)*2)",1)
+  ##section(0, "circle")
 }
