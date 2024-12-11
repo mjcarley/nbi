@@ -78,7 +78,6 @@ while test $# -gt 0; do
 	  order=$1
 	  ;;
       -P)
-	  shift
 	  petsc=yes
 	  ;;
       -p)
@@ -90,6 +89,7 @@ while test $# -gt 0; do
 	  src=$1
 	  ;;
       -T)
+	  echo Hello
 	  shift
 	  nthreads=$1
 	  ;;

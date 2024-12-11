@@ -72,7 +72,6 @@ while test $# -gt 0; do
 	  order=$1
 	  ;;
       -P)
-	  shift
 	  petsc=yes
 	  ;;
       -p)
