@@ -50,6 +50,8 @@ NBI requires the following packages:
 NBI can also make use of:
 - AGG (Aerodynamic Geometry Generator) https://github.com/mjcarley/agg,
   which requires the Triangle API https://github.com/wo80/Triangle/
+  and libmatheval https://github.com/mjcarley/libmatheval-no-guile
+
 - the iterative solvers in PETSc https://petsc.org/ with a version
   number greater than or equal to 3.17
 
