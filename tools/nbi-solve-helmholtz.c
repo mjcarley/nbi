@@ -276,6 +276,13 @@ gint main(gint argc, char **argv)
   if ( gfile == NULL ) gfile = g_strdup("geometry.dat") ;
   if ( mfile == NULL ) mfile = g_strdup("matrix.dat") ;
 
+  if ( nthreads > nproc ) {
+    fprintf(stderr,
+	    "%s: number of threads requested (%d) is greater than number of "
+	    "processes available (%d)\n", progname, nthreads, nproc) ;
+    return -1 ;
+  }
+  
   fprintf(stderr, "%s: %d threads (%d processors)\n",
 	  progname, nthreads, nproc) ;
   

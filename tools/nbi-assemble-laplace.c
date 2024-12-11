@@ -141,6 +141,13 @@ gint main(gint argc, char **argv)
 
   if ( nthreads < 0 ) nthreads = nproc ;
   
+  if ( nthreads > nproc ) {
+    fprintf(stderr,
+	    "%s: number of threads requested (%d) is greater than number of "
+	    "processes available (%d)\n", progname, nthreads, nproc) ;
+    return -1 ;
+  }
+  
   if ( mfile == NULL ) mfile = g_strdup("matrix.dat") ;
   
   timer = g_timer_new() ;
