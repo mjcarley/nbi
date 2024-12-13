@@ -68,6 +68,13 @@ PETSc version 3.17 or higher is required.
 
 # Installation
 
+If you need to install everything required for NBI, you may find the
+`install-nbi` script, in this directory a helpful start. It downloads,
+and compiles the various components of NBI and installs them in a
+subdirectory of your home directory. It may need modifying for your
+installation, depending on your setup. Otherwise, the sequence of
+installation is broken down as follows.
+
 You need to install the BLAS wrapper separately before installing NBI
 or its dependencies, as it is used by a number of different
 dependencies of NBI.

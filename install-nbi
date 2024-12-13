@@ -1,0 +1,75 @@
+## This is a basic script which downloads and installs the components
+## of NBI in a personal account. It was put together for installing
+## the codes on a High Performance Computing system using locally
+## selected modules, where it might not be possible to install
+## software at system level. You will probably need to modify it to
+## suit your own setup
+
+## The script assumes that you install your codes in a subdirectory of
+## your home directory called ~/Codes so that executables, libraries,
+## includes, etc will be installed in
+## ~/Codes/bin
+## ~/Codes/lib
+## ~/Codes/include
+## and that you have set your PATH to include ~/Codes/bin, so that
+## configuration scripts will be found correctly.
+
+## If you want to install your codes elsewhere, you will need to
+## change .../Codes to something else.
+
+## download, compile, and install GMSH library
+cd ~/Codes
+rm -rf gmsh
+git clone http://gitlab.onelab.info/gmsh/gmsh.git
+cd gmsh
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX:PATH=${HOME}/Codes -DENABLE_BUILD_DYNAMIC=1 ..
+make
+make install
+
+## download, compile, and install triangle meshing library
+cd ~/Codes
+rm -rf Triangle
+git clone https://github.com/wo80/Triangle.git
+cd Triangle/src
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX:PATH=${HOME}/Codes ..
+make 
+make install
+
+## download, compile, and install libmatheval symbolic evaluation library
+cd ~/Codes
+rm -rf libmatheval-no-guile
+git clone https://github.com/mjcarley/libmatheval-no-guile.git
+cd libmatheval-no-guile
+. autogen.sh
+./configure --prefix=$HOME/Codes \
+	    CPPFLAGS=-I$HOME/Codes/include LDFLAGS=-L$HOME/Codes/lib 
+make
+make install
+
+## remove old versions of libraries and codes
+cd ~/Codes
+rm -rf blaswrap
+
+## clone, compile, and install BLAS wrapper
+cd ~/Codes
+git clone https://github.com/mjcarley/blaswrap
+cd blaswrap
+. autogen.sh
+./configure --prefix=$HOME/Codes --with-blas=openblas \
+	    CPPFLAGS=-I$HOME/Codes/include LDFLAGS=-L$HOME/Codes/lib 
+make
+make install
+
+## clone, compile, and install main NBI code
+cd ~/Codes
+rm -rf nbi
+git clone --recursive https://github.com/mjcarley/nbi 
+cd nbi
+. autogen.sh
+./configure --prefix=$HOME/Codes CPPFLAGS=-I$HOME/Codes/include \
+	    LDFLAGS="-L$HOME/Codes/lib -L$HOME/Codes/lib64" 
+make
