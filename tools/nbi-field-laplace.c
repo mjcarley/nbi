@@ -79,10 +79,10 @@ static void print_help_text(FILE *f, gint field)
 	  "Options:\n\n"
 	  "  -h print this message and exit\n"
 	  "  -b # add boundary condition from file\n"
-	  "  -d # input data file\n"
-	  "  -F # field geometry file\n"
+	  "  -d [input data file name]\n"
+	  "  -F [field geometry file name]\n"
 	  "  -f # field element index (%d)\n"
-	  "  -g # geometry file\n"
+	  "  -g [geometry file name]\n"
 	  "  -S use surface geometry and data, and do not compute field\n",
 	  field) ;
 	  

@@ -121,26 +121,26 @@ static void print_help_text(FILE *f, gint depth,
 	  "Options:\n\n"
 	  "  -h print this message and exit\n"
 	  "  -B list built-in boundary condition functions and exit\n"
-	  "  -b # boundary condition file\n"
+	  "  -b [boundary condition file name]\n"
 	  "  -D # FMM tree depth (%d)\n"
 	  "  -d # FMM tree increment in expansion order between levels (%d)\n"
 	  "  -f use FMM\n"
 	  "  -G evaluate Green's identity\n"
-	  "  -g # geometry file name\n"
+	  "  -g [geometry file name]\n"
 	  "  -I estimate error in interior potential\n"
 	  "  -i # maximum number of GMRES iterations (%d)\n"
 #ifdef HAVE_PETSC
-	  "  -K # ksp options file name for PETSc solver\n"
+	  "  -K [ksp options file name for PETSc solver]\n"
 #endif /*HAVE_PETSC*/
 	  "  -L evaluate single and double layer potentials\n"
-	  "  -m # matrix file name\n"
+	  "  -m [matrix file name]\n"
 	  "  -o # FMM order (%d)\n"
 #ifdef HAVE_PETSC
 	  "  -P use PETSc solver\n"
 #endif /*HAVE_PETSC*/
 	  "  -p precompute local interactions in FMM\n"
 	  "  -r GMRES restart interval (%d)\n"
-	  "  -s # solution file name\n"
+	  "  -s [solution file name]\n"
 	  "  -T # number of threads (%d)\n"
 	  "  -t # GMRES solution tolerance (%lg)\n",
 	  depth, order_inc, gmres_max_iter, order_fmm, gmres_restart,

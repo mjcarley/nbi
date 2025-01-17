@@ -14,7 +14,6 @@
  * along with NBI.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif /*HAVE_CONFIG_H*/
@@ -79,10 +78,10 @@ static void print_help_text(FILE *f, gint field)
   fprintf(f,
 	  "Options:\n\n"
 	  "  -h print this message and exit\n"
-	  "  -d # input data file\n"
-	  "  -F # field geometry file\n"
+	  "  -d [input data file name]\n"
+	  "  -F [field geometry file name]\n"
 	  "  -f # field element index (%d)\n"
-	  "  -g # geometry file\n"
+	  "  -g [geometry file name]\n"
 	  "  -k # wavenumber\n"
 	  "  -S use surface geometry and data, and do not compute field\n",
 	  /* "  -r # recursion depth for triangle generation (%d)\n", */

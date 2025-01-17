@@ -276,7 +276,7 @@ static void print_help_text(FILE *output, gint nqp)
 	  "Options:\n\n"
 	  "  -h print this message and exit\n"
 #ifdef HAVE_AGG
-	  "  -a # AGG geometry file\n"
+	  "  -a [AGG geometry file name]\n"
 #endif /*HAVE_AGG*/
 	  "  -d # append a real argument for geometry specification\n"
 	  "  -f write list of geometry formats handled, and exit\n"
@@ -284,9 +284,9 @@ static void print_help_text(FILE *output, gint nqp)
 	  "  -G list available built-in geometries\n"
 	  "  -i # append an integer argument for geometry specification\n"
 #ifdef HAVE_LIBGMSH
-	  "  -m # GMSH geometry file\n"
+	  "  -m [GMSH geometry file name]\n"
 #endif /*HAVE_LIBGMSH*/
-	  "  -o # output file\n"
+	  "  -o [output file name]\n"
 	  "  -q # number of quadrature points per surface patch (%d)\n",
 	  nqp
 	  ) ;

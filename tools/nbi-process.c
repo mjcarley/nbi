@@ -100,14 +100,14 @@ static void print_help_text(FILE *f, gint offt, gint field, gint offp,
   fprintf(f,
 	  "Options:\n\n"
 	  "  -h print this message and exit\n"
-	  "  -d # input data file\n"
+	  "  -d [input data file name]\n"
 	  "  -e # element index offset (%d)\n"
 	  "  -f # field element index (%d)\n"
-	  "  -g # geometry file\n"
-	  "  -o # output file (default is stdout)\n"
+	  "  -g [geometry file name]\n"
+	  "  -o [output file name] (default is stdout)\n"
 	  "  -p # point index offset (%d)\n"
 	  "  -r # recursion depth for triangle generation (%d)\n"
-	  "  -v # name of view in GMSH file\n",
+	  "  -v [name of view in GMSH file]\n",
 	  offt, field, offp, dmax) ;
 	  
   return ;
