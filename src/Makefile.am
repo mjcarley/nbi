@@ -2,14 +2,14 @@ ACLOCAL_AMFLAGS = -I m4
 
 if SUBMODULES
 AM_CPPFLAGS = -I@abs_top_builddir@ -I@abs_top_builddir@/src -I$(includedir) \
-	-I@abs_top_builddir@/$(sqt_include) \
-	-I@abs_top_builddir@/$(wbfmm_include) \
+	-I@abs_top_builddir@/$(SQT_INCLUDE) \
+	-I@abs_top_builddir@/$(WBFMM_INCLUDE) \
 	-I@abs_top_builddir@/$(agg_include) \
 	-DG_LOG_DOMAIN=\"NBI\"
 libnbi_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)\
 	-release $(LT_RELEASE) -export-dynamic \
-	-L@abs_top_builddir@/$(sqt_submodule) \
-	-L@abs_top_builddir@/$(wbfmm_submodule) \
+	-L@abs_top_builddir@/$(SQT_SUBMODULE) \
+	-L@abs_top_builddir@/$(WBFMM_SUBMODULE) \
 	-L@abs_top_builddir@/$(agg_submodule)
 else
 AM_CPPFLAGS = -I@abs_top_builddir@ -I@abs_top_builddir@/src -I$(includedir) \
@@ -18,13 +18,8 @@ libnbi_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)\
 	-release $(LT_RELEASE) -export-dynamic
 endif
 
-bin_SCRIPTS=nbi-config
-
 BUILT_SOURCES= \
-	nbi-config \
 	documentation.c
-
-nbi-config: nbi-config.in
 
 lib_LTLIBRARIES = libnbi.la
 

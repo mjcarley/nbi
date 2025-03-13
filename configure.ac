@@ -146,7 +146,7 @@ if test -d "externals/sqt" ; then
   AC_CONFIG_SUBDIRS([externals/sqt])
   AC_DEFINE(HAVE_SQT, 1, [singular quadrature library available])
 
-  sqt_submodule=externals/sqt/src/.libs
+  SQT_SUBMODULE=externals/sqt/src/.libs
   SQT_LIBS=-lsqt
   SQT_INCLUDE=externals/sqt/src
 else
@@ -172,28 +172,24 @@ if test -d "externals/wbfmm" ; then
   AC_CONFIG_SUBDIRS([externals/wbfmm])
   AC_DEFINE(HAVE_WBFMM, 1, [wide band FMM library available])
 
-  wbfmm_submodule=externals/wbfmm/src/.libs
-  wbfmm_libs=-lwbfmm
-  wbfmm_include=externals/wbfmm/src
+  WBFMM_SUBMODULE=externals/wbfmm/src/.libs
+  WBFMM_LIBS=-lwbfmm
+  WBFMM_INCLUDE=externals/wbfmm/src
 else
   echo "WBFMM not included as submodule."
   wbfmm_submodule=
-  AC_CHECK_PROG(WBFMM, wbfmm-config, yes, no)
-  if test x$WBFMM = xyes ; then
-    AC_DEFINE(HAVE_WBFMM, 1, [wide band FMM library available])
-    wbfmm_cflags=`wbfmm-config --cflags`
-    wbfmm_libs=`wbfmm-config --libs`
-  else
+  PKG_CHECK_MODULES([WBFMM], [wbfmm], [],
+  [ 
     echo \#################################################################
-    echo \#
-    echo \# Wide Band Fast Multipole Method library not installed or
-    echo \# not properly installed. You can get it from
+    echo \# 
+    echo \# WBFMM not installed. You can install it using your 
+    echo \# distribution's package manager or from:
     echo \#
     echo \# https://github.com/mjcarley/wbfmm
     echo \#
     echo \#################################################################
     exit
-  fi
+])
 fi
 
 if test -d "externals/agg" ; then
@@ -227,15 +223,15 @@ else
   fi
 fi
 
-CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $GLIB_CFLAGS $BLASWRAP_CFLAGS $wbfmm_cflags $SQT_CFLAGS $agg_cflags $PETSC_CFLAGS"
-LIBS="$GLIB_LIBS $wbfmm_libs $SQT_LIBS $agg_libs $BLASWRAP_LIBS $LIBS $FLIBS $PETSC_LIBS"
+CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $GLIB_CFLAGS $BLASWRAP_CFLAGS $WBFMM_CFLAGS $SQT_CFLAGS $agg_cflags $PETSC_CFLAGS"
+LIBS="$GLIB_LIBS $WBFMM_LIBS $SQT_LIBS $agg_libs $BLASWRAP_LIBS $LIBS $FLIBS $PETSC_LIBS"
 
-AC_SUBST(sqt_submodule)
-AC_SUBST(sqt_include)
-AC_SUBST(sqt_libs)
-AC_SUBST(wbfmm_submodule)
-AC_SUBST(wbfmm_include)
-AC_SUBST(wbfmm_libs)
+AC_SUBST(SQT_SUBMODULE)
+AC_SUBST(SQT_INCLUDE)
+AC_SUBST(SQT_LIBS)
+AC_SUBST(WBFMM_SUBMODULE)
+AC_SUBST(WBFMM_INCLUDE)
+AC_SUBST(WBFMM_LIBS)
 AC_SUBST(agg_submodule)
 AC_SUBST(agg_include)
 AC_SUBST(agg_libs)
@@ -249,8 +245,8 @@ AM_CONDITIONAL(SUBMODULES, test x$submodules = xyes)
 
 AC_CONFIG_FILES([
 Makefile
+nbi.pc
 src/Makefile
-src/nbi-config
 tools/Makefile
 doc/Makefile
 doc/html/Makefile])
