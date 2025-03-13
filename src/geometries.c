@@ -28,13 +28,9 @@
 
 #include <nbi.h>
 
-#ifdef HAVE_SQT
 #include <sqt.h>
-#endif /*HAVE_SQT*/
 
-#ifdef HAVE_BLASWRAP
 #include <blaswrap.h>
-#endif /*HAVE_BLASWRAP*/
 
 #include "nbi-private.h"
 

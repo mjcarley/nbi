@@ -65,22 +65,18 @@ AC_PROG_AWK
 AC_SEARCH_LIBS([strerror],[cposix])
 
 submodules=no
-AC_CHECK_PROG(BLASWRAP, blaswrap-config, yes, no)
-if test x$BLASWRAP = xyes ; then
-  AC_DEFINE(HAVE_BLASWRAP, 1, [BLAS wrapper header available])
-  blaswrap_cflags=`blaswrap-config --cflags`
-  blaswrap_libs=`blaswrap-config --libs`
-else
+PKG_CHECK_MODULES([BLASWRAP], [blaswrap], [],
+[
   echo \#################################################################
-  echo \#
-  echo \# BLAS wrapper library not installed or not properly installed.
-  echo \# You can get it from
+  echo \# 
+  echo \# BLASWRAP not installed. You can install it using your 
+  echo \# distribution's package manager or from:
   echo \#
   echo \# https://github.com/mjcarley/blaswrap
   echo \#
   echo \#################################################################
-exit
-fi
+  exit
+])
 
 AC_CHECK_HEADERS(gmshc.h, [], [
   echo \#################################################################
@@ -151,27 +147,23 @@ if test -d "externals/sqt" ; then
   AC_DEFINE(HAVE_SQT, 1, [singular quadrature library available])
 
   sqt_submodule=externals/sqt/src/.libs
-  sqt_libs=-lsqt
-  sqt_include=externals/sqt/src
+  SQT_LIBS=-lsqt
+  SQT_INCLUDE=externals/sqt/src
 else
   echo "SQT not included as submodule."
   sqt_submodule=
-  AC_CHECK_PROG(SQT, sqt-config, yes, no)
-  if test x$SQT = xyes ; then
-  AC_DEFINE(HAVE_SQT, 1, [singular quadrature library available])
-  sqt_cflags=`sqt-config --cflags`
-  sqt_libs=`sqt-config --libs`
-  else
+  PKG_CHECK_MODULES([SQT], [sqt], [],
+  [ 
     echo \#################################################################
-    echo \#
-    echo \# Singular Quadrature on Triangles library not installed or
-    echo \# not properly installed. You can get it from
+    echo \# 
+    echo \# SQT not installed. You can install it using your 
+    echo \# distribution's package manager or from:
     echo \#
     echo \# https://github.com/mjcarley/sqt
     echo \#
     echo \#################################################################
     exit
-  fi
+])
 fi
 
 if test -d "externals/wbfmm" ; then
@@ -235,8 +227,8 @@ else
   fi
 fi
 
-CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $GLIB_CFLAGS $blaswrap_cflags $wbfmm_cflags $sqt_cflags $agg_cflags $PETSC_CFLAGS"
-LIBS="$GLIB_LIBS $wbfmm_libs $sqt_libs $agg_libs $blaswrap_libs $LIBS $FLIBS $PETSC_LIBS"
+CFLAGS="$CFLAGS $OPENMP_CFLAGS $SIMD_FLAGS $GLIB_CFLAGS $BLASWRAP_CFLAGS $wbfmm_cflags $SQT_CFLAGS $agg_cflags $PETSC_CFLAGS"
+LIBS="$GLIB_LIBS $wbfmm_libs $SQT_LIBS $agg_libs $BLASWRAP_LIBS $LIBS $FLIBS $PETSC_LIBS"
 
 AC_SUBST(sqt_submodule)
 AC_SUBST(sqt_include)

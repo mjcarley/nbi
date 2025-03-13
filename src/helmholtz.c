@@ -28,13 +28,9 @@
 
 #include <nbi.h>
 
-#ifdef HAVE_WBFMM
 #include <wbfmm.h>
-#endif /*HAVE_WBFMM*/
 
-#ifdef HAVE_BLASWRAP
 #include <blaswrap.h>
-#endif /*HAVE_BLASWRAP*/
 
 #include "nbi-private.h"
 #define wbfmm_tree_point_index(_t,_i)			\

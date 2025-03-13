@@ -136,8 +136,8 @@ nbi-solve-helmholtz.o: nbi-solve-helmholtz.c /usr/include/stdc-predef.h \
  /usr/include/glib-2.0/glib/glib-autocleanups.h \
  /home/michael/Codes/Libraries/nbi/src/nbi.h \
  /home/michael/Codes/include/wbfmm.h /home/michael/Codes/include/sqt.h \
- /home/michael/Codes/include/blaswrap.h /usr/include/fenv.h \
- /usr/include/bits/fenv.h /home/michael/Codes/include/petscksp.h \
+ /usr/include/fenv.h /usr/include/bits/fenv.h \
+ /home/michael/Codes/include/petscksp.h \
  /home/michael/Codes/include/petscpc.h \
  /home/michael/Codes/include/petscmat.h \
  /home/michael/Codes/include/petscvec.h \
@@ -385,7 +385,6 @@ nbi-solve-helmholtz.o: nbi-solve-helmholtz.c /usr/include/stdc-predef.h \
 /home/michael/Codes/Libraries/nbi/src/nbi.h:
 /home/michael/Codes/include/wbfmm.h:
 /home/michael/Codes/include/sqt.h:
-/home/michael/Codes/include/blaswrap.h:
 /usr/include/fenv.h:
 /usr/include/bits/fenv.h:
 /home/michael/Codes/include/petscksp.h:

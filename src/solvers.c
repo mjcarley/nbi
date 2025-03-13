@@ -26,9 +26,7 @@
 
 #include <glib.h>
 
-#ifdef HAVE_BLASWRAP
 #include <blaswrap.h>
-#endif /*HAVE_BLASWRAP*/
 
 #include <nbi.h>
 

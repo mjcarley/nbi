@@ -136,7 +136,6 @@ nbi-process.o: nbi-process.c /usr/include/stdc-predef.h ../config.h \
  /usr/include/glib-2.0/glib/glib-autocleanups.h \
  /home/michael/Codes/Libraries/nbi/src/nbi.h \
  /home/michael/Codes/include/wbfmm.h /home/michael/Codes/include/sqt.h \
- /home/michael/Codes/include/blaswrap.h \
  /home/michael/Codes/Libraries/nbi/src/nbi-private.h
 /usr/include/stdc-predef.h:
 ../config.h:
@@ -347,5 +346,4 @@ nbi-process.o: nbi-process.c /usr/include/stdc-predef.h ../config.h \
 /home/michael/Codes/Libraries/nbi/src/nbi.h:
 /home/michael/Codes/include/wbfmm.h:
 /home/michael/Codes/include/sqt.h:
-/home/michael/Codes/include/blaswrap.h:
 /home/michael/Codes/Libraries/nbi/src/nbi-private.h:
