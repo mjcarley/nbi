@@ -65,8 +65,8 @@ static gint find_tag(gsize *tags, gint ntags, gsize tag)
   return -1 ;
 }
 
-static void gmesh_get(gdouble **p, gint **pt, gint *np,
-		      gint **t, gdouble **uvt, gint *nt)
+static void gmsh_get(gdouble **p, gint **pt, gint *np,
+		     gint **t, gdouble **uvt, gint *nt)
 
 /*
  * on exit:
@@ -287,7 +287,7 @@ nbi_surface_t *nbi_gmsh_mesh(char *file, gint nq)
   gmshModelGetEntities(&tags, &ntags, 2, &ierr) ;
   gmshModelMeshGenerate(2, &ierr) ;
 
-  gmesh_get(&pts, &pdata, &npts, &tri, &uvtri, &ntri) ;
+  gmsh_get(&pts, &pdata, &npts, &tri, &uvtri, &ntri) ;
 
   s = nbi_surface_alloc(nq*ntri, ntri) ;
   sqt_quadrature_select(nq, &st, &order) ;
