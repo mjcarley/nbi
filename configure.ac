@@ -50,9 +50,13 @@ if test x$GCC = xyes ; then
   CFLAGS="$CFLAGS -Wall -Werror-implicit-function-declaration -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations"
 fi
 
-AX_GCC_X86_CPU_SUPPORTS(avx, hasavx=yes) 
-AX_GCC_X86_CPU_SUPPORTS(avx2, hasavx2=yes) 
-AX_GCC_X86_CPU_SUPPORTS(fma, hasfma=yes) 
+## want this in case we're compiling on a Mac (say) and should not try to use
+## X86 vectorised operations
+if test x$build_cpu = xx86_64; then
+   AX_GCC_X86_CPU_SUPPORTS(avx, hasavx=yes) 
+   AX_GCC_X86_CPU_SUPPORTS(avx2, hasavx2=yes) 
+   AX_GCC_X86_CPU_SUPPORTS(fma, hasfma=yes) 
+fi
 
 if test x$hasavx = xyes; then
  SIMD_FLAGS="$SIMD_FLAGS -mavx -DWBFMM_USE_AVX"

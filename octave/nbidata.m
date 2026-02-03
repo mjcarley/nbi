@@ -1,6 +1,6 @@
 function f=nbidata(file)
 
-  ## -- F = nbisurf(FILE)
+  ## -- F = nbidata(FILE)
   ##
   ## Read data from an NBI data file
   ##
